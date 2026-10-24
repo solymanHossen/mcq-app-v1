@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// Phase 1 — Authentication
+//
+// Exam/question-bank/attempt/result/anti-cheat models are intentionally not
+// modeled yet. They depend on an unresolved design question (reusable question
+// bank vs. exam-owned questions) and belong to Phase 2+, not this migration.
+// ============================================================================
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id              String    @id @default(uuid())
+  name            String
+  email           String    @unique
+  passwordHash    String
+  role            Role      @default(STUDENT)
+  isActive        Boolean   @default(true)
+  isEmailVerified Boolean   @default(false)
+  lastLoginAt     DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  authTokens      AuthToken[]
+
+  @@index([role, isActive])
+}
+
+enum AuthTokenPurpose {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+// Backs both the 6-digit email-verification OTP and the password-reset link.
+// Only a SHA-256 hash of the code/token is ever stored, so a DB leak doesn't
+// hand out usable codes. `attempts` throttles brute-forcing the 6-digit OTP
+// space (10^6 is small enough to matter).
+model AuthToken {
+  id         String           @id @default(uuid())
+  tokenHash  String           @unique
+  purpose    AuthTokenPurpose
+  expiresAt  DateTime
+  consumedAt DateTime?
+  attempts   Int              @default(0)
+
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime         @default(now())
+
+  @@index([userId, purpose, consumedAt])
+}

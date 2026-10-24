@@ -20,7 +20,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  if (isAdminRoute(pathname) && token?.role !== 'admin') {
+  if (isAdminRoute(pathname) && token?.role !== 'ADMIN') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
