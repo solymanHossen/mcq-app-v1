@@ -1,5 +1,6 @@
 "use server"
 
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/db"
 import { Prisma } from "@/prisma/generated/prisma/client"
@@ -14,12 +15,32 @@ import {
   hasExceededVerifyAttempts,
 } from "@/lib/auth/tokens"
 import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/auth/mail"
+import { getClientIp } from "@/lib/auth/ip"
+import { recordAuditEvent } from "@/lib/auth/audit"
+import {
+  isRegisterRateLimited,
+  isForgotPasswordRateLimited,
+  isVerifyEmailRateLimited,
+  isResendOtpRateLimited,
+} from "@/lib/auth/rate-limit"
+import { revokeAllSessions } from "@/lib/auth/guards"
 import {
   registerSchema,
   verifyEmailSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
 } from "@/lib/validators"
+
+async function clientIp() {
+  // Best-effort only: IP extraction must never be able to break the actual
+  // auth operation (and has no request to read from outside one, e.g. tests
+  // or a direct function call).
+  try {
+    return getClientIp(await headers())
+  } catch {
+    return undefined
+  }
+}
 
 // ─── Register ─────────────────────────────────────────
 export async function registerAction(_state: unknown, formData: FormData) {
@@ -28,37 +49,65 @@ export async function registerAction(_state: unknown, formData: FormData) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { name, email, password } = parsed.data
+  const ip = await clientIp()
 
-  const existing = await prisma.user.findUnique({ where: { email } })
-  if (existing) return { error: "Email already registered" }
-
-  const passwordHash = await hashPassword(password)
-
-  let user
-  try {
-    user = await prisma.user.create({ data: { name, email, passwordHash } })
-  } catch (e) {
-    if (
-      e instanceof Prisma.PrismaClientKnownRequestError &&
-      e.code === "P2002"
-    ) {
-      return { error: "Email already registered" }
-    }
-    throw e
+  if (await isRegisterRateLimited(ip)) {
+    await recordAuditEvent({
+      action: "RATE_LIMITED",
+      identifier: email,
+      ip,
+      metadata: { context: "register" },
+    })
+    return { error: "Too many attempts, please try again later" }
   }
 
+  const existing = await prisma.user.findUnique({ where: { email } })
+
+  if (!existing) {
+    // Explicit field list, never a spread of raw input — `role` can never
+    // arrive from the client this way.
+    const passwordHash = await hashPassword(password)
+    try {
+      const user = await prisma.user.create({
+        data: { name, email, passwordHash },
+      })
+      await issueEmailVerificationOtp(user.id, email)
+    } catch (e) {
+      if (
+        !(e instanceof Prisma.PrismaClientKnownRequestError) ||
+        e.code !== "P2002"
+      ) {
+        throw e
+      }
+      // Lost a create race to a concurrent registration for the same email;
+      // the winning request already sent a verification OTP.
+    }
+  } else if (!existing.isEmailVerified) {
+    // Account exists but was never verified — treat this like a resend
+    // rather than silently failing. Never touches password/name here.
+    await issueEmailVerificationOtp(existing.id, email)
+  }
+  // else: already registered and verified — silent no-op. Never overwrite an
+  // existing account's password just because the register form was resubmitted.
+
+  await recordAuditEvent({ action: "REGISTER", identifier: email, ip })
+
+  // Identical response whether or not the email was already taken — the
+  // register form must not reveal which emails already have an account.
+  redirect(`/verify-email?email=${encodeURIComponent(email)}`)
+}
+
+async function issueEmailVerificationOtp(userId: string, email: string) {
   const otp = generateOtp()
   await prisma.authToken.create({
     data: {
-      userId: user.id,
+      userId,
       purpose: "EMAIL_VERIFICATION",
       tokenHash: hashToken(otp),
       expiresAt: otpExpiry(),
     },
   })
   await sendVerificationEmail(email, otp)
-
-  redirect(`/verify-email?email=${encodeURIComponent(email)}`)
 }
 
 // ─── Verify Email OTP ─────────────────────────────────
@@ -68,6 +117,15 @@ export async function verifyEmailAction(_state: unknown, formData: FormData) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { email, otp } = parsed.data
+
+  if (await isVerifyEmailRateLimited(email)) {
+    await recordAuditEvent({
+      action: "RATE_LIMITED",
+      identifier: email,
+      metadata: { context: "verify-email" },
+    })
+    return { error: "Too many attempts, please try again later" }
+  }
 
   const user = await prisma.user.findUnique({ where: { email } })
   const token = user
@@ -87,6 +145,11 @@ export async function verifyEmailAction(_state: unknown, formData: FormData) {
     token.expiresAt < new Date() ||
     hasExceededVerifyAttempts(token.attempts)
   ) {
+    await recordAuditEvent({
+      action: "EMAIL_VERIFY_FAILED",
+      success: false,
+      identifier: email,
+    })
     return { error: "Invalid or expired OTP" }
   }
 
@@ -94,6 +157,11 @@ export async function verifyEmailAction(_state: unknown, formData: FormData) {
     await prisma.authToken.update({
       where: { id: token.id },
       data: { attempts: { increment: 1 } },
+    })
+    await recordAuditEvent({
+      action: "EMAIL_VERIFY_FAILED",
+      success: false,
+      identifier: email,
     })
     return { error: "Invalid or expired OTP" }
   }
@@ -108,6 +176,11 @@ export async function verifyEmailAction(_state: unknown, formData: FormData) {
       data: { isEmailVerified: true },
     }),
   ])
+  await recordAuditEvent({
+    action: "EMAIL_VERIFIED",
+    identifier: email,
+    actorId: user.id,
+  })
 
   redirect("/login?verified=true")
 }
@@ -119,6 +192,10 @@ export async function resendOTPAction(email: string) {
   // Don't reveal whether the account exists or is already verified.
   if (!user || user.isEmailVerified) return { success: true }
 
+  if (await isResendOtpRateLimited(email)) {
+    return { error: "Too many attempts, please try again later" }
+  }
+
   const recent = await prisma.authToken.findFirst({
     where: { userId: user.id, purpose: "EMAIL_VERIFICATION" },
     orderBy: { createdAt: "desc" },
@@ -127,16 +204,12 @@ export async function resendOTPAction(email: string) {
     return { error: "Please wait a minute before requesting another code" }
   }
 
-  const otp = generateOtp()
-  await prisma.authToken.create({
-    data: {
-      userId: user.id,
-      purpose: "EMAIL_VERIFICATION",
-      tokenHash: hashToken(otp),
-      expiresAt: otpExpiry(),
-    },
+  await issueEmailVerificationOtp(user.id, email)
+  await recordAuditEvent({
+    action: "OTP_RESENT",
+    identifier: email,
+    actorId: user.id,
   })
-  await sendVerificationEmail(email, otp)
 
   return { success: true }
 }
@@ -151,22 +224,32 @@ export async function forgotPasswordAction(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { email } = parsed.data
-  const user = await prisma.user.findUnique({ where: { email } })
+  const ip = await clientIp()
 
-  if (user) {
-    const token = generateResetToken()
-    await prisma.authToken.create({
-      data: {
-        userId: user.id,
-        purpose: "PASSWORD_RESET",
-        tokenHash: hashToken(token),
-        expiresAt: resetTokenExpiry(),
-      },
-    })
-    await sendPasswordResetEmail(email, token)
+  // Rate-limited or not, pre-auth responses on this endpoint must look
+  // identical — otherwise the response itself becomes an enumeration oracle.
+  if (!(await isForgotPasswordRateLimited(email, ip))) {
+    const user = await prisma.user.findUnique({ where: { email } })
+    if (user) {
+      const token = generateResetToken()
+      await prisma.authToken.create({
+        data: {
+          userId: user.id,
+          purpose: "PASSWORD_RESET",
+          tokenHash: hashToken(token),
+          expiresAt: resetTokenExpiry(),
+        },
+      })
+      await sendPasswordResetEmail(email, token)
+    }
   }
 
-  // Always report success — don't reveal whether the email is registered.
+  await recordAuditEvent({
+    action: "PASSWORD_RESET_REQUESTED",
+    identifier: email,
+    ip,
+  })
+
   return { success: true }
 }
 
@@ -205,6 +288,14 @@ export async function resetPasswordAction(
       data: { consumedAt: new Date() },
     }),
   ])
+  // A password reset must kill every session issued before it, not just let
+  // old ones expire naturally — otherwise a stolen cookie survives its own
+  // victim's password change.
+  await revokeAllSessions(authToken.userId)
+  await recordAuditEvent({
+    action: "PASSWORD_RESET_COMPLETED",
+    actorId: authToken.userId,
+  })
 
   redirect("/login?reset=true")
 }

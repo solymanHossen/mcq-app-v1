@@ -1,5 +1,4 @@
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
+import { requireRole } from '@/lib/auth/guards';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -9,8 +8,6 @@ export const instant = false;
 export default async function AdminLayout({
   children,
 }: { children: React.ReactNode }) {
-  const session = await auth();
-  if (!session) redirect('/login');
-  if (session.user.role !== 'ADMIN') redirect('/dashboard');
+  await requireRole('ADMIN');
   return <>{children}</>;
 }

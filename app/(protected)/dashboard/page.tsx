@@ -1,5 +1,4 @@
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
+import { requireUser } from '@/lib/auth/guards';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -7,9 +6,7 @@ import { redirect } from 'next/navigation';
 export const instant = false;
 
 export default async function DashboardPage() {
-  const session = await auth();
-
-  if (!session) redirect('/login');
+  const user = await requireUser();
 
   return (
     <div className="flex min-h-svh flex-col gap-4 p-6">
@@ -18,7 +15,7 @@ export default async function DashboardPage() {
           Dashboard
         </p>
         <h1 className="text-3xl font-semibold">
-          Welcome back{session.user?.name ? `, ${session.user.name}` : ''}
+          Welcome back{user.name ? `, ${user.name}` : ''}
         </h1>
         <p className="text-muted-foreground">
           You are signed in and can start building protected pages from here.

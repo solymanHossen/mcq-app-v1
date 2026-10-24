@@ -31,10 +31,17 @@ model User {
   isEmailVerified Boolean   @default(false)
   lastLoginAt     DateTime?
 
+  // Bumped to invalidate every existing session at once (forced logout on
+  // password reset, admin-triggered revocation). Server-side guards re-check
+  // this against the value embedded in the session on every protected
+  // request — see lib/auth/guards.ts.
+  tokenVersion    Int       @default(0)
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   authTokens      AuthToken[]
+  auditLogs       AuditLog[]
 
   @@index([role, isActive])
 }
@@ -62,4 +69,42 @@ model AuthToken {
   createdAt  DateTime         @default(now())
 
   @@index([userId, purpose, consumedAt])
+}
+
+enum AuditAction {
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  REGISTER
+  EMAIL_VERIFIED
+  EMAIL_VERIFY_FAILED
+  OTP_RESENT
+  PASSWORD_RESET_REQUESTED
+  PASSWORD_RESET_COMPLETED
+  RATE_LIMITED
+  SESSION_REVOKED
+}
+
+// Doubles as the security audit trail AND the data source for rate-limit
+// counters (count rows of a given action/key within a time window). No
+// separate ephemeral rate-limit store yet — see lib/auth/rate-limit.ts for
+// the tradeoff this implies at high volume.
+model AuditLog {
+  id         String      @id @default(uuid())
+  action     AuditAction
+  success    Boolean     @default(true)
+
+  // `identifier` carries the email for pre-auth actions (login, register,
+  // forgot-password) where there's no authenticated actor yet.
+  identifier String?
+  ip         String?
+  metadata   Json?
+
+  actorId    String?
+  actor      User?       @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt  DateTime    @default(now())
+
+  @@index([action, identifier, createdAt])
+  @@index([action, ip, createdAt])
+  @@index([actorId, createdAt])
 }

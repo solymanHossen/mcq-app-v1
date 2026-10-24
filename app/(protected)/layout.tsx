@@ -1,5 +1,5 @@
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
+import { requireUser } from '@/lib/auth/guards';
+import { LogoutButton } from '@/components/logout-button';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -9,7 +9,13 @@ export const instant = false;
 export default async function ProtectedLayout({
   children,
 }: { children: React.ReactNode }) {
-  const session = await auth();
-  if (!session) redirect('/login');
-  return <>{children}</>;
+  await requireUser();
+  return (
+    <div className="flex min-h-svh flex-col">
+      <header className="flex justify-end border-b p-3">
+        <LogoutButton />
+      </header>
+      {children}
+    </div>
+  );
 }
