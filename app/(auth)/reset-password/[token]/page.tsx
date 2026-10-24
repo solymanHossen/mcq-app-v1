@@ -1,59 +1,44 @@
-'use client';
-
-import { useActionState } from 'react';
-import { useParams } from 'next/navigation';
-import { resetPasswordAction } from '@/actions/auth.actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Suspense } from "react"
+import { ResetPasswordForm } from "./reset-password-form"
 import {
-  Card, CardContent, CardDescription,
-  CardFooter, CardHeader, CardTitle
-} from '@/components/ui/card';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
-export default function ResetPasswordPage() {
-  const { token } = useParams<{ token: string }>();
+export default function ResetPasswordPage({
+  params,
+}: {
+  params: Promise<{ token: string }>
+}) {
+  return (
+    <Suspense fallback={<ResetPasswordCardSkeleton />}>
+      <ResetPasswordLoader params={params} />
+    </Suspense>
+  )
+}
 
-  // bind token to action so server action receives it
-  const actionWithToken = resetPasswordAction.bind(null, token);
-  const [state, action, isPending] = useActionState(actionWithToken, undefined);
+async function ResetPasswordLoader({
+  params,
+}: {
+  params: Promise<{ token: string }>
+}) {
+  const { token } = await params
+  return <ResetPasswordForm token={token} />
+}
 
+function ResetPasswordCardSkeleton() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>New password</CardTitle>
         <CardDescription>Choose a strong password</CardDescription>
       </CardHeader>
-
-      <form action={action}>
-        <CardContent className="space-y-4">
-          {state?.error && (
-            <Alert variant="destructive">
-              <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
-          )}
-
-          <div className="space-y-1">
-            <Label htmlFor="password">New password</Label>
-            <Input id="password" name="password"
-              type="password" placeholder="Min 8 characters" required />
-          </div>
-
-          <div className="space-y-1">
-            <Label htmlFor="confirmPassword">Confirm password</Label>
-            <Input id="confirmPassword" name="confirmPassword"
-              type="password" required />
-          </div>
-        </CardContent>
-
-        <CardFooter>
-          <Button type="submit" className="w-full"
-            disabled={isPending}>
-            {isPending ? 'Updating...' : 'Set new password'}
-          </Button>
-        </CardFooter>
-      </form>
+      <CardContent className="text-sm text-muted-foreground">
+        Loading...
+      </CardContent>
     </Card>
-  );
+  )
 }

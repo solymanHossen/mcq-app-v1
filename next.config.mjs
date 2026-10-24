@@ -5,6 +5,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  cacheComponents: true,
+  partialPrefetching: true,
   turbopack: {
     root: __dirname,
   },
