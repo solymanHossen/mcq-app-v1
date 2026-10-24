@@ -7,6 +7,7 @@ import { assertRole } from "@/lib/auth/guards"
 import { finalizeIfExpired } from "@/lib/attempts/expire"
 import { countAttempts, findActiveOrLatestAttempt } from "@/lib/attempts/queries"
 import { shuffledQuestionOrder } from "@/lib/attempts/shuffle"
+import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
 
 // ─── Start (idempotent: resumes an existing in-progress attempt) ──
 export type StartAttemptResult = { attemptId: string } | { error: string }
@@ -179,18 +180,15 @@ export async function submitAttemptAction(attemptId: string) {
   if (!attempt) return { error: "Attempt not found" }
   if (attempt.studentId !== user.id) return { error: "Not your attempt" }
 
-  const now = new Date()
-  const nextStatus = now > attempt.deadline ? "TIMEOUT" : "COMPLETED"
+  const nextStatus = new Date() > attempt.deadline ? "TIMEOUT" : "COMPLETED"
 
-  // Conditional on status still being IN_PROGRESS: two concurrent submits
-  // (double-click, or a manual submit racing the auto-submit timer) can only
-  // have one actually transition the row.
-  const result = await prisma.examAttempt.updateMany({
-    where: { id: attemptId, status: "IN_PROGRESS" },
-    data: { status: nextStatus, submittedAt: now },
-  })
+  // finalizeAndGradeAttempt's status transition is conditional on the
+  // attempt still being IN_PROGRESS, so two concurrent submits (double-click,
+  // or a manual submit racing the auto-submit timer) can only have one
+  // actually transition — and grade — the row.
+  const { graded } = await finalizeAndGradeAttempt(attemptId, nextStatus)
 
-  if (result.count === 0) {
+  if (!graded) {
     const settled = await prisma.examAttempt.findUniqueOrThrow({
       where: { id: attemptId },
     })

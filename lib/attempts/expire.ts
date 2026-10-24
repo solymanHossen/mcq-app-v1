@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db"
 import type { AttemptStatus } from "@/prisma/generated/prisma/client"
+import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
 
 /**
  * Lazily self-heals an attempt that's past its deadline but still marked
@@ -7,11 +8,7 @@ import type { AttemptStatus } from "@/prisma/generated/prisma/client"
  * (save, submit, resume). This means correctness never depends on a
  * background sweep actually running: even if the cron worker is down for a
  * week, the very next time anyone touches an expired attempt it flips to
- * TIMEOUT before anything else happens.
- *
- * The update is conditional (`updateMany` + `status: "IN_PROGRESS"` in the
- * WHERE clause) so two concurrent callers racing on the same expired attempt
- * can't both "win" — only one UPDATE actually matches a row.
+ * TIMEOUT (and gets graded) before anything else happens.
  */
 export async function finalizeIfExpired<
   T extends { id: string; status: AttemptStatus; deadline: Date },
@@ -20,25 +17,38 @@ export async function finalizeIfExpired<
     return attempt
   }
 
-  const { count } = await prisma.examAttempt.updateMany({
-    where: { id: attempt.id, status: "IN_PROGRESS" },
-    data: { status: "TIMEOUT", submittedAt: new Date() },
-  })
+  const { graded } = await finalizeAndGradeAttempt(attempt.id, "TIMEOUT")
+  if (graded) return { ...attempt, status: "TIMEOUT" }
 
-  return count > 0 ? { ...attempt, status: "TIMEOUT" } : attempt
+  // Someone else (a racing request, or the sweep worker) finalized it first
+  // — re-read to report whatever status it actually ended up with.
+  const fresh = await prisma.examAttempt.findUniqueOrThrow({
+    where: { id: attempt.id },
+    select: { status: true },
+  })
+  return { ...attempt, status: fresh.status }
 }
 
 /**
- * Background-worker entry point: sweeps every attempt past its deadline in
- * one pass. Intended to be hit by a scheduled job (see
+ * Background-worker entry point: sweeps every attempt past its deadline.
+ * Intended to be hit by a scheduled job (see
  * app/api/cron/sweep-expired-attempts/route.ts), but it's purely a
  * convenience/promptness optimization — finalizeIfExpired() above makes the
- * system correct even if this never runs.
+ * system correct even if this never runs. Grading needs each attempt's own
+ * answers, so this can't be a single bulk UPDATE like before Phase 4 — it
+ * finalizes (and grades) one attempt at a time.
  */
 export async function sweepExpiredAttempts() {
-  const { count } = await prisma.examAttempt.updateMany({
+  const expired = await prisma.examAttempt.findMany({
     where: { status: "IN_PROGRESS", deadline: { lt: new Date() } },
-    data: { status: "TIMEOUT", submittedAt: new Date() },
+    select: { id: true },
   })
-  return { expired: count }
+
+  let gradedCount = 0
+  for (const { id } of expired) {
+    const { graded } = await finalizeAndGradeAttempt(id, "TIMEOUT")
+    if (graded) gradedCount++
+  }
+
+  return { expired: gradedCount }
 }

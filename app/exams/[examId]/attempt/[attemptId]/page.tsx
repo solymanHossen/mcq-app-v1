@@ -3,7 +3,9 @@ import Link from "next/link"
 import { requireRole } from "@/lib/auth/guards"
 import { getAttemptForStudent } from "@/lib/attempts/queries"
 import { finalizeIfExpired } from "@/lib/attempts/expire"
+import { getResultForStudent } from "@/lib/grading/queries"
 import { ExamAttemptClient } from "@/components/student/exam-attempt-client"
+import { ResultSummary } from "@/components/student/result-summary"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -30,8 +32,9 @@ export default async function AttemptPage({
   const current = await finalizeIfExpired(attempt)
 
   if (current.status !== "IN_PROGRESS") {
+    const result = await getResultForStudent(attemptId)
     return (
-      <div className="mx-auto max-w-md p-6">
+      <div className="mx-auto max-w-2xl space-y-4 p-6">
         <Card>
           <CardHeader>
             <CardTitle>
@@ -41,7 +44,8 @@ export default async function AttemptPage({
               This attempt has ended and can no longer be changed.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {result && <ResultSummary result={result} />}
             <Button asChild size="sm">
               <Link href={`/exams/${examId}`}>Back to exam</Link>
             </Button>

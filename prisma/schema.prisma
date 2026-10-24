@@ -48,6 +48,7 @@ model User {
   reportsFiled    QuestionReport[] @relation("ReportedQuestions")
   reportsResolved QuestionReport[] @relation("ResolvedReports")
   examAttempts    ExamAttempt[]    @relation("StudentAttempts")
+  gradingAuditLogs GradingAuditLog[]
 
   @@index([role, isActive])
 }
@@ -222,11 +223,19 @@ model Exam {
   publishedAt      DateTime?
   archivedAt       DateTime?
 
+  // Two independent disclosure gates: a result can be published (the
+  // student sees their score) without the answer key being released (the
+  // student still never sees which option was correct). Both are one-way,
+  // like publishing itself — never un-release.
+  answerKeyReleased   Boolean   @default(false)
+  answerKeyReleasedAt DateTime?
+
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
   examQuestions    ExamQuestion[]
   attempts         ExamAttempt[]
+  gradingAuditLogs GradingAuditLog[]
 
   @@index([teacherId, status])
 }
@@ -244,6 +253,16 @@ model ExamQuestion {
 
   order                 Int
   marks                 Float        @default(1)
+  // Deducted (not added) for a wrong answer; 0 disables negative marking for
+  // this question. Never negative itself — see lib/validators/exam.ts.
+  negativeMarks         Float        @default(0)
+
+  // Post-publication correction, not a Phase 2 edit: a teacher can cancel a
+  // question found to be wrong/ambiguous after students have already
+  // attempted it. A cancelled question awards full marks to every attempt
+  // regardless of what was selected, and is excluded from correct/incorrect
+  // counts — see lib/grading/engine.ts for the exact policy.
+  isCancelled           Boolean      @default(false)
 
   questionTextSnapshot  String       @db.Text
   optionASnapshot       String
@@ -256,6 +275,7 @@ model ExamQuestion {
   createdAt             DateTime     @default(now())
 
   attemptAnswers        AttemptAnswer[]
+  gradingAuditLogs      GradingAuditLog[]
 
   @@unique([examId, questionId])
   @@index([examId, order])
@@ -328,6 +348,8 @@ model ExamAttempt {
   submittedAt   DateTime?
 
   answers       AttemptAnswer[]
+  result        ExamResult?
+  gradingAuditLogs GradingAuditLog[]
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -367,4 +389,88 @@ model AttemptAnswer {
 
   @@unique([attemptId, examQuestionId])
   @@index([attemptId])
+}
+
+// ============================================================================
+// Phase 4 — Grading & results
+//
+// Grading always re-reads the CURRENT ExamQuestion rows (marks,
+// negativeMarks, correctOptionSnapshot, isCancelled) at the moment it runs —
+// never a cached value — so a later answer-key correction is automatically
+// reflected the next time an attempt is (re)graded. See lib/grading/engine.ts
+// for the scoring policy and lib/grading/arithmetic.ts for the rounding
+// policy.
+// ============================================================================
+
+enum ResultStatus {
+  PROVISIONAL
+  PUBLISHED
+}
+
+model ExamResult {
+  id             String       @id @default(uuid())
+
+  attemptId      String       @unique
+  attempt        ExamAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  status         ResultStatus @default(PROVISIONAL)
+
+  totalMarks     Float
+  obtainedMarks  Float
+  correctCount   Int
+  incorrectCount Int
+  skippedCount   Int
+  cancelledCount Int
+  accuracy       Float
+  isPassed       Boolean?
+
+  // Optimistic-concurrency guard for regrading — see
+  // lib/grading/regrade.ts. Bumped on every regrade.
+  gradingVersion Int          @default(1)
+
+  gradedAt       DateTime     @default(now())
+  publishedAt    DateTime?
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+enum GradingAuditAction {
+  GRADED
+  REGRADED
+  RESULTS_PUBLISHED
+  QUESTION_CORRECTED
+  QUESTION_CANCELLED
+}
+
+// Separate from the Phase 1 AuditLog (auth/security events): this is
+// pedagogically/legally significant data about how a specific score came to
+// be, keyed by exam/attempt/question rather than by identifier/ip.
+model GradingAuditLog {
+  id             String             @id @default(uuid())
+
+  examId         String
+  exam           Exam               @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  attemptId      String?
+  attempt        ExamAttempt?       @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  examQuestionId String?
+  examQuestion   ExamQuestion?      @relation(fields: [examQuestionId], references: [id], onDelete: SetNull)
+
+  action         GradingAuditAction
+  // Null actor = the automatic system grading that runs on every submission;
+  // non-null = a teacher/admin-initiated correction, regrade, or publish.
+  actorId        String?
+  actor          User?              @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  previousScore  Float?
+  newScore       Float?
+  reason         String?            @db.Text
+  metadata       Json?
+
+  createdAt      DateTime           @default(now())
+
+  @@index([examId, createdAt])
+  @@index([attemptId, createdAt])
 }

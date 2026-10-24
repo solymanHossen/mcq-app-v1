@@ -53,6 +53,11 @@ export default async function ExamDetailPage({
           <Button variant="outline" size="sm" asChild>
             <Link href={`/teacher/exams/${examId}/preview`}>Preview</Link>
           </Button>
+          {!isDraft && (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/teacher/exams/${examId}/results`}>Results</Link>
+            </Button>
+          )}
           <ExamStatusActions examId={exam.id} status={exam.status} />
         </div>
       </div>
