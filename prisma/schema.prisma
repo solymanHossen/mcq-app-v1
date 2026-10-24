@@ -43,6 +43,11 @@ model User {
   authTokens      AuthToken[]
   auditLogs       AuditLog[]
 
+  questions       Question[]       @relation("TeacherQuestions")
+  exams           Exam[]           @relation("TeacherExams")
+  reportsFiled    QuestionReport[] @relation("ReportedQuestions")
+  reportsResolved QuestionReport[] @relation("ResolvedReports")
+
   @@index([role, isActive])
 }
 
@@ -107,4 +112,176 @@ model AuditLog {
   @@index([action, identifier, createdAt])
   @@index([action, ip, createdAt])
   @@index([actorId, createdAt])
+}
+
+// ============================================================================
+// Phase 2 — Teacher dashboard & reusable question bank
+//
+// Questions are owned per-teacher and private to them (no shared/school-wide
+// pool yet — see the cross-teacher authorization requirement this phase
+// implements). Adding a bank Question to an Exam SNAPSHOTS its content onto
+// the ExamQuestion row at that moment: editing or even deleting the bank
+// Question afterward never changes an exam that already includes it. This is
+// the simplest rule that satisfies "preserve the integrity of published
+// exams" — no separate "snapshot at publish" behavior to reason about.
+// ============================================================================
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum OptionChoice {
+  A
+  B
+  C
+  D
+}
+
+enum QuestionType {
+  // The only type implemented so far; the field/filter exist so a future
+  // type (true/false, multi-select, …) doesn't require a schema migration.
+  SINGLE_CORRECT_MCQ
+}
+
+enum QuestionStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model Question {
+  id            String         @id @default(uuid())
+  teacherId     String
+  teacher       User           @relation("TeacherQuestions", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  type          QuestionType   @default(SINGLE_CORRECT_MCQ)
+  status        QuestionStatus @default(DRAFT)
+
+  subject       String
+  topic         String
+  difficulty    Difficulty     @default(MEDIUM)
+
+  questionText  String         @db.Text
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctOption OptionChoice
+
+  explanation   String?        @db.Text
+  imageUrl      String?
+  codeSnippet   String?        @db.Text
+  codeLanguage  String?
+
+  // sha256 of normalized question text + option set, for duplicate detection.
+  contentHash   String
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  examQuestions ExamQuestion[]
+  reports       QuestionReport[]
+
+  @@index([teacherId, status])
+  @@index([teacherId, subject])
+  @@index([teacherId, topic])
+  @@index([teacherId, difficulty])
+  @@index([teacherId, contentHash])
+}
+
+enum ExamStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Exam {
+  id               String     @id @default(uuid())
+  teacherId        String
+  teacher          User       @relation("TeacherExams", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  title            String
+  description      String?    @db.Text
+  status           ExamStatus @default(DRAFT)
+
+  durationMinutes  Int
+  maxAttempts      Int        @default(1)
+  shuffleQuestions Boolean    @default(true)
+  shuffleOptions   Boolean    @default(false)
+  passingMarks     Float?
+
+  // Scheduling window. "Is this exam currently open" is derived from
+  // (status == PUBLISHED && now within [startTime, endTime]) rather than
+  // stored as its own status, so the two can never disagree.
+  startTime        DateTime?
+  endTime          DateTime?
+
+  publishedAt      DateTime?
+  archivedAt       DateTime?
+
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  examQuestions    ExamQuestion[]
+
+  @@index([teacherId, status])
+}
+
+model ExamQuestion {
+  id                    String       @id @default(uuid())
+
+  examId                String
+  exam                  Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  // Nullable + SetNull: if the source bank question is later deleted, this
+  // exam's own (already-snapshotted) copy must still survive intact.
+  questionId            String?
+  question              Question?    @relation(fields: [questionId], references: [id], onDelete: SetNull)
+
+  order                 Int
+  marks                 Float        @default(1)
+
+  questionTextSnapshot  String       @db.Text
+  optionASnapshot       String
+  optionBSnapshot       String
+  optionCSnapshot       String
+  optionDSnapshot       String
+  correctOptionSnapshot OptionChoice
+  explanationSnapshot   String?      @db.Text
+
+  createdAt             DateTime     @default(now())
+
+  @@unique([examId, questionId])
+  @@index([examId, order])
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+model QuestionReport {
+  id             String       @id @default(uuid())
+
+  questionId     String
+  question       Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  reportedById   String
+  reportedBy     User         @relation("ReportedQuestions", fields: [reportedById], references: [id], onDelete: Cascade)
+
+  reason         String
+  status         ReportStatus @default(OPEN)
+  resolutionNote String?      @db.Text
+
+  resolvedById   String?
+  resolvedBy     User?        @relation("ResolvedReports", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedAt     DateTime?
+
+  createdAt      DateTime     @default(now())
+
+  @@index([questionId, status])
+  @@index([status])
 }

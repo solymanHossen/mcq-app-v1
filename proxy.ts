@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { authConfig, isAdminRoute, isPublicRoute } from './auth.config';
+import { authConfig, isAdminRoute, isPublicRoute, isTeacherRoute } from './auth.config';
 
 export async function proxy(request: NextRequest) {
   const token = await getToken({
@@ -21,6 +21,14 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAdminRoute(pathname) && token?.role !== 'ADMIN') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  if (
+    isTeacherRoute(pathname) &&
+    token?.role !== 'TEACHER' &&
+    token?.role !== 'ADMIN'
+  ) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

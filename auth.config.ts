@@ -22,3 +22,7 @@ export function isPublicRoute(pathname: string) {
 export function isAdminRoute(pathname: string) {
   return pathname.startsWith('/admin');
 }
+
+export function isTeacherRoute(pathname: string) {
+  return pathname.startsWith('/teacher');
+}
