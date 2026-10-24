@@ -47,6 +47,7 @@ model User {
   exams           Exam[]           @relation("TeacherExams")
   reportsFiled    QuestionReport[] @relation("ReportedQuestions")
   reportsResolved QuestionReport[] @relation("ResolvedReports")
+  examAttempts    ExamAttempt[]    @relation("StudentAttempts")
 
   @@index([role, isActive])
 }
@@ -225,6 +226,7 @@ model Exam {
   updatedAt        DateTime   @updatedAt
 
   examQuestions    ExamQuestion[]
+  attempts         ExamAttempt[]
 
   @@index([teacherId, status])
 }
@@ -252,6 +254,8 @@ model ExamQuestion {
   explanationSnapshot   String?      @db.Text
 
   createdAt             DateTime     @default(now())
+
+  attemptAnswers        AttemptAnswer[]
 
   @@unique([examId, questionId])
   @@index([examId, order])
@@ -284,4 +288,83 @@ model QuestionReport {
 
   @@index([questionId, status])
   @@index([status])
+}
+
+// ============================================================================
+// Phase 3 — Exam-taking engine
+//
+// AttemptAnswer rows are pre-created for every ExamQuestion the moment an
+// attempt starts (selectedOption null = unanswered). This fixes the set of
+// answerable questions for that attempt up front: an autosave can only ever
+// update an existing (attemptId, examQuestionId) row, so a tampered or
+// stale examQuestionId naturally matches nothing instead of needing a
+// separate membership check. No grading/scoring here — that's a later phase;
+// this one only captures what the student selected.
+// ============================================================================
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  TIMEOUT
+}
+
+model ExamAttempt {
+  id            String        @id @default(uuid())
+
+  examId        String
+  exam          Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  studentId     String
+  student       User          @relation("StudentAttempts", fields: [studentId], references: [id], onDelete: Cascade)
+
+  attemptNumber Int
+  status        AttemptStatus @default(IN_PROGRESS)
+
+  // Server-computed once at creation: startedAt + exam.durationMinutes,
+  // capped by exam.endTime if the exam closes sooner. This is the ONLY
+  // source of truth for how long the student has — never a client timer.
+  startedAt     DateTime      @default(now())
+  deadline      DateTime
+  submittedAt   DateTime?
+
+  answers       AttemptAnswer[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([studentId, examId, attemptNumber])
+  @@index([examId, status])
+  @@index([studentId, examId])
+  @@index([status, deadline])
+}
+
+model AttemptAnswer {
+  id                String       @id @default(uuid())
+
+  attemptId         String
+  attempt           ExamAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  examQuestionId    String
+  examQuestion      ExamQuestion @relation(fields: [examQuestionId], references: [id], onDelete: Cascade)
+
+  selectedOption    OptionChoice?
+  isMarkedForReview Boolean      @default(false)
+
+  // Presentation order when exam.shuffleQuestions is on — randomized once at
+  // attempt start and stable for the rest of the attempt.
+  presentationOrder Int
+
+  // The client's own clock at the moment of the edit that produced the
+  // current value, NOT a trusted timestamp for anything else. Conflict
+  // resolution for concurrent saves (e.g. two open tabs) compares this: a
+  // save only applies if its clientUpdatedAt is strictly newer than what's
+  // stored, so an out-of-order network retry can never clobber a later
+  // edit, and resubmitting the same edit is a safe no-op (idempotent).
+  clientUpdatedAt   DateTime
+
+  updatedAt         DateTime     @updatedAt
+  createdAt         DateTime     @default(now())
+
+  @@unique([attemptId, examQuestionId])
+  @@index([attemptId])
 }
