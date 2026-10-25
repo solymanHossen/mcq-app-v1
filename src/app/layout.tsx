@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Geist_Mono, Inter } from "next/font/google"
 
 import "./globals.css"
@@ -9,6 +10,12 @@ import { cn } from "@/lib/utils";
 // Remove this opt-out after verifying the segment passes validation without it.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
+
+export const metadata: Metadata = {
+  title: "ExamHub",
+  description:
+    "Build question banks, run timed exams, and auto-grade results with proctoring, leaderboards, and AI explanations.",
+}
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 
