@@ -47,6 +47,11 @@ export default async function ExamResultsPage({
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{exam.title} — Results</h1>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/teacher/exams/${examId}/violations`}>
+              Flagged attempts
+            </Link>
+          </Button>
           {exam.leaderboardEnabled && (
             <Button variant="outline" size="sm" asChild>
               <Link href={`/exams/${examId}/leaderboard`}>Leaderboard</Link>

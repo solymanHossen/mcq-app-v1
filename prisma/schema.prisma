@@ -49,6 +49,10 @@ model User {
   reportsResolved QuestionReport[] @relation("ResolvedReports")
   examAttempts    ExamAttempt[]    @relation("StudentAttempts")
   gradingAuditLogs GradingAuditLog[]
+  violationEvents    ViolationEvent[]  @relation("StudentViolations")
+  reviewedViolations ViolationEvent[]  @relation("ReviewedViolations")
+  appealsFiled       ViolationAppeal[] @relation("StudentAppeals")
+  appealsResolved    ViolationAppeal[] @relation("ResolvedAppeals")
 
   @@index([role, isActive])
 }
@@ -241,6 +245,16 @@ model Exam {
   leaderboardEnabled Boolean          @default(true)
   tieBreakerPolicy   TieBreakerPolicy @default(TIME_TAKEN_ASC)
 
+  // Anti-cheat config — see lib/anti-cheat/engine.ts for the fixed,
+  // documented severity weight per ViolationType. Crossing this cumulative
+  // score FLAGS the attempt for mandatory human review; it never
+  // disqualifies anything by itself.
+  violationReviewThreshold Int     @default(5)
+  // No image/video is ever captured or stored by this system — see
+  // lib/anti-cheat/engine.ts. This only gates starting the attempt behind
+  // an explicit, recorded consent.
+  webcamMonitoringRequired Boolean @default(false)
+
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
@@ -366,10 +380,32 @@ model ExamAttempt {
   // query regardless of its (still-computed, still-visible-to-the-student)
   // ExamResult.
   disqualifiedReason String?  @db.Text
+  // Preserved at disqualification time so an ACCEPTED appeal can restore
+  // the exact prior state instead of guessing what it should revert to.
+  statusBeforeDisqualification AttemptStatus?
 
-  answers       AttemptAnswer[]
-  result        ExamResult?
+  // Set the moment a cumulative violation severity score first crosses
+  // exam.violationReviewThreshold — a visible, mandatory-review marker,
+  // never an automatic status change. Left set even after review so the
+  // history is visible.
+  flaggedForReviewAt DateTime?
+
+  // Session-conflict detection: the opaque per-page-load token the
+  // exam-taking client sends with every answer save. A different token
+  // appearing for the same attempt while the previous one was recently
+  // active is itself the server-detected evidence — see
+  // lib/anti-cheat/engine.ts. Never a device fingerprint or IP.
+  activeSessionToken   String?
+  activeSessionTokenAt DateTime?
+
+  // Required before starting an attempt on a webcamMonitoringRequired exam.
+  webcamConsentGivenAt DateTime?
+
+  answers          AttemptAnswer[]
+  result           ExamResult?
   gradingAuditLogs GradingAuditLog[]
+  violationEvents  ViolationEvent[]
+  appeals          ViolationAppeal[]
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -462,6 +498,8 @@ enum GradingAuditAction {
   QUESTION_CORRECTED
   QUESTION_CANCELLED
   ATTEMPT_DISQUALIFIED
+  ATTEMPT_REQUALIFIED
+  ATTEMPT_FLAGGED_FOR_REVIEW
 }
 
 // Separate from the Phase 1 AuditLog (auth/security events): this is
@@ -494,4 +532,120 @@ model GradingAuditLog {
 
   @@index([examId, createdAt])
   @@index([attemptId, createdAt])
+}
+
+// ============================================================================
+// Phase 6 — Anti-cheat & examination audit
+//
+// ViolationEvent rows are append-only: once created, type / source /
+// severity / metadata / timestamp / studentId / attemptId never change —
+// only reviewStatus (and the review fields that go with it) is ever
+// updated, itself an explicitly audited transition, never a silent edit of
+// the original evidence. See lib/anti-cheat/engine.ts for the severity
+// policy, the never-auto-disqualify rule, and exactly what each event type's
+// metadata is allowed to contain (deliberately minimal — never raw device
+// fingerprints, IP, or location).
+// ============================================================================
+
+enum ViolationType {
+  TAB_SWITCH
+  WINDOW_BLUR
+  FULLSCREEN_EXIT
+  COPY_ATTEMPT
+  PASTE_ATTEMPT
+  RIGHT_CLICK_ATTEMPT
+  DEVTOOLS_DETECTED
+  MULTIPLE_TABS_DETECTED
+  // Server-detected only — see below. A client can never report these two
+  // itself; the server derives them from its own observations.
+  SESSION_CONFLICT
+  SUSPICIOUS_REQUEST_PATTERN
+  // Reserved for a future client-side webcam integration (not implemented
+  // here — see lib/anti-cheat/engine.ts). The consent gate and these event
+  // types exist now so that integration has somewhere to report into.
+  WEBCAM_NO_FACE
+  WEBCAM_MULTIPLE_FACES
+}
+
+enum ViolationSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// The structural answer to "do not assume client-reported events are
+// trustworthy proof of misconduct": CLIENT_REPORTED is the browser's own
+// account of what it observed (spoofable, suppressible, sometimes just
+// wrong); SERVER_DETECTED is derived entirely from the server's own
+// observations of request behavior and needs no trust in the client at all.
+// A review UI must show this distinction, never blur it.
+enum ViolationSource {
+  CLIENT_REPORTED
+  SERVER_DETECTED
+}
+
+enum ViolationReviewStatus {
+  OPEN
+  REVIEWED_NO_ACTION
+  REVIEWED_WARNING_ISSUED
+  REVIEWED_DISQUALIFIED
+}
+
+model ViolationEvent {
+  id        String            @id @default(uuid())
+
+  attemptId String
+  attempt   ExamAttempt       @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   User              @relation("StudentViolations", fields: [studentId], references: [id], onDelete: Cascade)
+
+  type      ViolationType
+  source    ViolationSource
+  severity  ViolationSeverity
+
+  metadata  Json?
+
+  // Server-generated, always — the entire point is that this can't be
+  // backdated or forged by the client.
+  occurredAt DateTime @default(now())
+
+  reviewStatus ViolationReviewStatus @default(OPEN)
+  reviewNote   String?               @db.Text
+  reviewedById String?
+  reviewedBy   User?                 @relation("ReviewedViolations", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt   DateTime?
+
+  @@index([attemptId, occurredAt])
+  @@index([studentId, occurredAt])
+  @@index([reviewStatus])
+}
+
+enum AppealStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model ViolationAppeal {
+  id        String       @id @default(uuid())
+
+  attemptId String
+  attempt   ExamAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   User         @relation("StudentAppeals", fields: [studentId], references: [id], onDelete: Cascade)
+
+  explanation String     @db.Text
+  status      AppealStatus @default(PENDING)
+
+  resolvedById   String?
+  resolvedBy     User?     @relation("ResolvedAppeals", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolutionNote String?   @db.Text
+  resolvedAt     DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([attemptId])
+  @@index([status])
 }

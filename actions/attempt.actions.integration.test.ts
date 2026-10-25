@@ -12,6 +12,7 @@ import {
 } from "./attempt.actions"
 import { getAttemptForStudent } from "@/lib/attempts/queries"
 import { sweepExpiredAttempts } from "@/lib/attempts/expire"
+import { SESSION_CONFLICT_WINDOW_MS } from "@/lib/anti-cheat/engine"
 
 const mockAuth = vi.mocked(auth)
 
@@ -42,7 +43,12 @@ async function makeUser(role: "TEACHER" | "STUDENT", label: string) {
 
 async function makePublishedExam(
   teacherId: string,
-  opts: { maxAttempts?: number; durationMinutes?: number; questionCount?: number } = {}
+  opts: {
+    maxAttempts?: number
+    durationMinutes?: number
+    questionCount?: number
+    webcamMonitoringRequired?: boolean
+  } = {}
 ) {
   const exam = await prisma.exam.create({
     data: {
@@ -52,6 +58,7 @@ async function makePublishedExam(
       maxAttempts: opts.maxAttempts ?? 1,
       status: "PUBLISHED",
       publishedAt: new Date(),
+      webcamMonitoringRequired: opts.webcamMonitoringRequired ?? false,
     },
   })
   examIds.push(exam.id)
@@ -164,6 +171,7 @@ describe("saveAnswerAction — ownership and snapshot scoping", () => {
       examQuestionId: exam.examQuestions[0].id,
       selectedOption: "B",
       clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "test-session",
     })
     expect(result && "error" in result).toBe(true)
 
@@ -190,6 +198,7 @@ describe("saveAnswerAction — ownership and snapshot scoping", () => {
       examQuestionId: examB.examQuestions[0].id, // belongs to a different exam
       selectedOption: "A",
       clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "test-session",
     })
     expect(result && "error" in result).toBe(true)
   })
@@ -209,6 +218,7 @@ describe("saveAnswerAction — idempotency and conflict resolution", () => {
       examQuestionId,
       selectedOption: "C",
       clientUpdatedAt,
+      sessionToken: "test-session",
     })
     expect(first).toEqual({ success: true, applied: true })
 
@@ -218,6 +228,7 @@ describe("saveAnswerAction — idempotency and conflict resolution", () => {
       examQuestionId,
       selectedOption: "C",
       clientUpdatedAt,
+      sessionToken: "test-session",
     })
     expect(retry).toEqual({ success: true, applied: false })
 
@@ -243,6 +254,7 @@ describe("saveAnswerAction — idempotency and conflict resolution", () => {
       examQuestionId,
       selectedOption: "D",
       clientUpdatedAt: later,
+      sessionToken: "test-session",
     })
 
     // the "older" click's request arrives after, out of order
@@ -251,6 +263,7 @@ describe("saveAnswerAction — idempotency and conflict resolution", () => {
       examQuestionId,
       selectedOption: "A",
       clientUpdatedAt: earlier,
+      sessionToken: "test-session",
     })
     expect(staleResult).toEqual({ success: true, applied: false })
 
@@ -281,6 +294,7 @@ describe("expired attempts", () => {
       examQuestionId: exam.examQuestions[0].id,
       selectedOption: "A",
       clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "test-session",
     })
     expect(result && "error" in result).toBe(true)
 
@@ -355,6 +369,7 @@ describe("submitAttemptAction — duplicate submission", () => {
       examQuestionId: exam.examQuestions[0].id,
       selectedOption: "B",
       clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "test-session",
     })
     expect(result && "error" in result).toBe(true)
 
@@ -383,5 +398,118 @@ describe("getAttemptForStudent — never leaks correct answers", () => {
     expect(serialized).not.toMatch(/correctOption/i)
     expect(serialized).not.toMatch(/explanation/i)
     expect(serialized).not.toContain("Because 1 is correct")
+  })
+})
+
+describe("startAttemptAction — webcam consent gating", () => {
+  it("refuses to start a webcam-monitored exam without explicit consent", async () => {
+    const exam = await makePublishedExam(teacher.id, { webcamMonitoringRequired: true })
+    asUser(studentA)
+
+    const result = await startAttemptAction(exam.id)
+    expect("error" in result).toBe(true)
+
+    const count = await prisma.examAttempt.count({
+      where: { studentId: studentA.id, examId: exam.id },
+    })
+    expect(count).toBe(0)
+  })
+
+  it("starts and records the consent timestamp once consent is given", async () => {
+    const exam = await makePublishedExam(teacher.id, { webcamMonitoringRequired: true })
+    asUser(studentA)
+
+    const result = await startAttemptAction(exam.id, { webcamConsent: true })
+    if (!("attemptId" in result)) throw new Error("expected an attemptId")
+
+    const attempt = await prisma.examAttempt.findUniqueOrThrow({
+      where: { id: result.attemptId },
+    })
+    expect(attempt.webcamConsentGivenAt).not.toBeNull()
+  })
+
+  it("does not require consent for an exam with no webcam monitoring", async () => {
+    const exam = await makePublishedExam(teacher.id, { webcamMonitoringRequired: false })
+    asUser(studentA)
+
+    const result = await startAttemptAction(exam.id)
+    expect("attemptId" in result).toBe(true)
+  })
+})
+
+describe("saveAnswerAction — session-conflict detection", () => {
+  it("logs a SESSION_CONFLICT when a second session token appears within the window", async () => {
+    const exam = await makePublishedExam(teacher.id)
+    asUser(studentA)
+    const started = await startAttemptAction(exam.id)
+    if (!("attemptId" in started)) throw new Error("expected an attemptId")
+    const examQuestionId = exam.examQuestions[0].id
+
+    await saveAnswerAction({
+      attemptId: started.attemptId,
+      examQuestionId,
+      selectedOption: "A",
+      clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "tab-1",
+    })
+
+    // A different token shows up almost immediately — still well within
+    // SESSION_CONFLICT_WINDOW_MS, so this looks like two simultaneous tabs.
+    await saveAnswerAction({
+      attemptId: started.attemptId,
+      examQuestionId,
+      selectedOption: "B",
+      clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "tab-2",
+    })
+
+    const events = await prisma.violationEvent.findMany({
+      where: { attemptId: started.attemptId, type: "SESSION_CONFLICT" },
+    })
+    expect(events).toHaveLength(1)
+    expect(events[0].source).toBe("SERVER_DETECTED")
+
+    const attempt = await prisma.examAttempt.findUniqueOrThrow({
+      where: { id: started.attemptId },
+    })
+    expect(attempt.activeSessionToken).toBe("tab-2") // still saved, not blocked
+  })
+
+  it("treats a token handoff after the window as a silent resume, not a conflict", async () => {
+    const exam = await makePublishedExam(teacher.id)
+    asUser(studentA)
+    const started = await startAttemptAction(exam.id)
+    if (!("attemptId" in started)) throw new Error("expected an attemptId")
+    const examQuestionId = exam.examQuestions[0].id
+
+    await saveAnswerAction({
+      attemptId: started.attemptId,
+      examQuestionId,
+      selectedOption: "A",
+      clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "tab-1",
+    })
+
+    // Simulate the first tab having gone quiet well past the window (e.g. a
+    // reload or a resumed session on a new tab), not a live second tab.
+    await prisma.examAttempt.update({
+      where: { id: started.attemptId },
+      data: {
+        activeSessionTokenAt: new Date(Date.now() - SESSION_CONFLICT_WINDOW_MS - 5_000),
+      },
+    })
+
+    await saveAnswerAction({
+      attemptId: started.attemptId,
+      examQuestionId,
+      selectedOption: "B",
+      clientUpdatedAt: new Date().toISOString(),
+      sessionToken: "tab-2",
+    })
+
+    const events = await prisma.violationEvent.findMany({
+      where: { attemptId: started.attemptId, type: "SESSION_CONFLICT" },
+    })
+    expect(events).toHaveLength(0)
   })
 })

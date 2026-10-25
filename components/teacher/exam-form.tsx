@@ -19,6 +19,8 @@ export type ExamFormValues = {
   endTime?: Date | null
   shuffleQuestions?: boolean
   shuffleOptions?: boolean
+  webcamMonitoringRequired?: boolean
+  violationReviewThreshold?: number
 }
 
 function toLocalInputValue(date?: Date | null) {
@@ -138,6 +140,37 @@ export function ExamForm({
           />
           <FieldLabel htmlFor="shuffleOptions" className="font-normal">
             Shuffle option order per student
+          </FieldLabel>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="violationReviewThreshold">
+            Violation review threshold
+          </FieldLabel>
+          <Input
+            id="violationReviewThreshold"
+            name="violationReviewThreshold"
+            type="number"
+            min={1}
+            max={1000}
+            defaultValue={initialValues?.violationReviewThreshold ?? 5}
+            required
+          />
+          <p className="text-xs text-muted-foreground">
+            Cumulative violation severity score that flags an attempt for
+            your review. This only ever flags for review — it never
+            disqualifies anyone automatically.
+          </p>
+        </Field>
+
+        <Field orientation="horizontal">
+          <Checkbox
+            id="webcamMonitoringRequired"
+            name="webcamMonitoringRequired"
+            defaultChecked={initialValues?.webcamMonitoringRequired ?? false}
+          />
+          <FieldLabel htmlFor="webcamMonitoringRequired" className="font-normal">
+            Require webcam monitoring consent to start
           </FieldLabel>
         </Field>
 

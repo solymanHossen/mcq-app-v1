@@ -13,6 +13,7 @@ import {
   type OptionChoice,
 } from "@/lib/attempts/use-attempt-sync"
 import { useCountdown, formatRemaining } from "@/lib/attempts/use-countdown"
+import { useViolationReporting } from "@/lib/anti-cheat/use-violation-reporting"
 import { cn } from "@/lib/utils"
 
 type AttemptQuestion = {
@@ -49,6 +50,8 @@ export function ExamAttemptClient({
       isMarkedForReview: q.isMarkedForReview,
     }))
   )
+
+  useViolationReporting(attemptId, !ended)
 
   const submit = useCallback(async () => {
     setSubmitting(true)

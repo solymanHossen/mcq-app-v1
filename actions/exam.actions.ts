@@ -21,6 +21,7 @@ function parseExamFormData(formData: FormData) {
     // convert presence to an explicit boolean before Zod sees it.
     shuffleQuestions: formData.get("shuffleQuestions") === "on",
     shuffleOptions: formData.get("shuffleOptions") === "on",
+    webcamMonitoringRequired: formData.get("webcamMonitoringRequired") === "on",
   })
 }
 
@@ -50,6 +51,8 @@ export async function createExamAction(
       endTime: parsed.data.endTime ? new Date(parsed.data.endTime) : null,
       shuffleQuestions: parsed.data.shuffleQuestions,
       shuffleOptions: parsed.data.shuffleOptions,
+      webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
+      violationReviewThreshold: parsed.data.violationReviewThreshold,
     },
   })
 
@@ -90,6 +93,8 @@ export async function updateExamAction(
       endTime: parsed.data.endTime ? new Date(parsed.data.endTime) : null,
       shuffleQuestions: parsed.data.shuffleQuestions,
       shuffleOptions: parsed.data.shuffleOptions,
+      webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
+      violationReviewThreshold: parsed.data.violationReviewThreshold,
     },
   })
 

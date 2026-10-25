@@ -83,6 +83,8 @@ export default async function ExamDetailPage({
             endTime: exam.endTime,
             shuffleQuestions: exam.shuffleQuestions,
             shuffleOptions: exam.shuffleOptions,
+            webcamMonitoringRequired: exam.webcamMonitoringRequired,
+            violationReviewThreshold: exam.violationReviewThreshold,
           }}
         />
       ) : (

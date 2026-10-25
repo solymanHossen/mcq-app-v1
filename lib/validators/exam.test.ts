@@ -7,6 +7,8 @@ const validExam = {
   maxAttempts: "1",
   shuffleQuestions: true,
   shuffleOptions: false,
+  webcamMonitoringRequired: false,
+  violationReviewThreshold: "5",
 }
 
 describe("examSchema", () => {

@@ -40,6 +40,12 @@ export const examSchema = z
     // before this schema runs — see actions/exam.actions.ts.
     shuffleQuestions: z.boolean(),
     shuffleOptions: z.boolean(),
+    webcamMonitoringRequired: z.boolean(),
+    violationReviewThreshold: z.coerce
+      .number({ error: "Review threshold is required" })
+      .int()
+      .min(1, "Must be at least 1")
+      .max(1000),
   })
   .refine(
     (data) =>

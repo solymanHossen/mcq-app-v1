@@ -168,7 +168,13 @@ export async function disqualifyAttemptAction(
   await prisma.$transaction([
     prisma.examAttempt.update({
       where: { id: attemptId },
-      data: { status: "DISQUALIFIED", disqualifiedReason: reason },
+      data: {
+        status: "DISQUALIFIED",
+        disqualifiedReason: reason,
+        // Preserved so an accepted appeal can restore the exact prior
+        // state later, rather than guessing what it should revert to.
+        statusBeforeDisqualification: attempt.status,
+      },
     }),
     prisma.gradingAuditLog.create({
       data: {

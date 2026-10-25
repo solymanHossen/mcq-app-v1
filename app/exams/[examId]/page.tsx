@@ -76,6 +76,7 @@ export default async function ExamInfoPage({
             <StartExamButton
               examId={examId}
               label={attempts.length > 0 ? "Start next attempt" : "Start exam"}
+              webcamMonitoringRequired={exam.webcamMonitoringRequired}
             />
           )}
         </CardContent>

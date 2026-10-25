@@ -1,4 +1,4 @@
-import { Redis } from "ioredis"
+import { getRedisClient, _resetRedisClientForTests } from "@/lib/redis"
 
 /**
  * Entirely optional: every function here no-ops (never throws, never
@@ -21,27 +21,6 @@ import { Redis } from "ioredis"
 const TTL_SECONDS = 30
 const INDEX_TTL_SECONDS = TTL_SECONDS * 4
 
-let client: Redis | null | undefined
-
-function getClient(): Redis | null {
-  if (client !== undefined) return client
-  const url = process.env.REDIS_URL
-  if (!url) {
-    client = null
-    return client
-  }
-  client = new Redis(url, {
-    lazyConnect: true,
-    maxRetriesPerRequest: 1,
-    retryStrategy: () => null, // don't keep retrying a dead connection
-  })
-  client.on("error", () => {
-    // Swallowed deliberately — every call site below already falls back to
-    // Postgres on any cache error. Logging would just be noise in dev.
-  })
-  return client
-}
-
 function pageKey(scope: string, page: number, pageSize: number) {
   return `leaderboard:${scope}:p${page}:s${pageSize}`
 }
@@ -55,7 +34,7 @@ export async function getCachedPage(
   page: number,
   pageSize: number
 ): Promise<string | null> {
-  const redis = getClient()
+  const redis = getRedisClient()
   if (!redis) return null
   try {
     return await redis.get(pageKey(scope, page, pageSize))
@@ -70,7 +49,7 @@ export async function setCachedPage(
   pageSize: number,
   data: string
 ): Promise<void> {
-  const redis = getClient()
+  const redis = getRedisClient()
   if (!redis) return
   const key = pageKey(scope, page, pageSize)
   try {
@@ -85,7 +64,7 @@ export async function setCachedPage(
 }
 
 export async function invalidateScope(scope: string): Promise<void> {
-  const redis = getClient()
+  const redis = getRedisClient()
   if (!redis) return
   try {
     const keys = await redis.smembers(indexKey(scope))
@@ -101,6 +80,5 @@ export async function invalidateScope(scope: string): Promise<void> {
 
 /** Test-only: forces a fresh client on the next call (env var changed). */
 export function _resetClientForTests() {
-  client?.disconnect()
-  client = undefined
+  _resetRedisClientForTests()
 }

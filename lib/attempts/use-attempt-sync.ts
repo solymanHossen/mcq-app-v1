@@ -36,6 +36,13 @@ export function useAttemptSync(
     isMarkedForReview: boolean
   }[]
 ) {
+  // One opaque token per page load, not persisted — the server uses it to
+  // detect two tabs/browsers active on the same attempt at once (see
+  // lib/anti-cheat/engine.ts's session-conflict detection). An ordinary
+  // reload just gets a new token, which the server treats as a handoff, not
+  // a conflict, once the old one goes quiet.
+  const sessionTokenRef = useRef(crypto.randomUUID())
+
   const [answers, setAnswers] = useState<Record<string, AnswerState>>(() =>
     Object.fromEntries(
       initial.map((a) => [
@@ -70,6 +77,7 @@ export function useAttemptSync(
           selectedOption: answer.selectedOption,
           isMarkedForReview: answer.isMarkedForReview,
           clientUpdatedAt: answer.clientUpdatedAt,
+          sessionToken: sessionTokenRef.current,
         })
       } catch {
         retryTimers.current[examQuestionId] = setTimeout(() => {

@@ -8,18 +8,32 @@ import { finalizeIfExpired } from "@/lib/attempts/expire"
 import { countAttempts, findActiveOrLatestAttempt } from "@/lib/attempts/queries"
 import { shuffledQuestionOrder } from "@/lib/attempts/shuffle"
 import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
+import {
+  checkSessionConflict,
+  SESSION_CONFLICT_WINDOW_MS,
+} from "@/lib/anti-cheat/engine"
+import { recordRequestAndCheckSuspicious } from "@/lib/anti-cheat/rate-detection"
+import { recordViolationEvent } from "@/lib/anti-cheat/record"
 
 // ─── Start (idempotent: resumes an existing in-progress attempt) ──
 export type StartAttemptResult = { attemptId: string } | { error: string }
 
 export async function startAttemptAction(
-  examId: string
+  examId: string,
+  opts: { webcamConsent?: boolean } = {}
 ): Promise<StartAttemptResult> {
   const user = await assertRole("STUDENT")
 
   const exam = await prisma.exam.findUnique({ where: { id: examId } })
   if (!exam) return { error: "Exam not found" }
   if (exam.status !== "PUBLISHED") return { error: "This exam isn't available" }
+
+  if (exam.webcamMonitoringRequired && opts.webcamConsent !== true) {
+    return {
+      error:
+        "This exam requires webcam monitoring — you must consent before starting.",
+    }
+  }
 
   const now = new Date()
   if (exam.startTime && now < exam.startTime) {
@@ -69,6 +83,7 @@ export async function startAttemptAction(
             attemptNumber: count + 1,
             startedAt: now,
             deadline,
+            webcamConsentGivenAt: opts.webcamConsent ? now : null,
           },
         })
 
@@ -110,6 +125,9 @@ const saveAnswerSchema = z.object({
   selectedOption: z.enum(["A", "B", "C", "D"]).nullable().optional(),
   isMarkedForReview: z.boolean().optional(),
   clientUpdatedAt: z.coerce.date(),
+  // Opaque per-page-load token, not a device fingerprint — see
+  // lib/anti-cheat/engine.ts's session-conflict detection.
+  sessionToken: z.string().min(1).max(200),
 })
 
 export type SaveAnswerInput = z.infer<typeof saveAnswerSchema>
@@ -125,6 +143,7 @@ export async function saveAnswerAction(input: unknown) {
     selectedOption,
     isMarkedForReview,
     clientUpdatedAt,
+    sessionToken,
   } = parsed.data
 
   const attempt = await prisma.examAttempt.findUnique({
@@ -138,6 +157,36 @@ export async function saveAnswerAction(input: unknown) {
   const current = await finalizeIfExpired(attempt)
   if (current.status !== "IN_PROGRESS") {
     return { error: "This attempt has ended", status: current.status }
+  }
+
+  // Server-detected signals — never trust a client to report these two
+  // itself (see CLIENT_REPORTABLE_TYPES). Both are best-effort: detection
+  // never blocks the actual save underneath it.
+  const now = new Date()
+  const conflict = checkSessionConflict(attempt, sessionToken, now)
+  await prisma.examAttempt.update({
+    where: { id: attemptId },
+    data: { activeSessionToken: sessionToken, activeSessionTokenAt: now },
+  })
+  if (conflict.conflict) {
+    await recordViolationEvent({
+      attemptId,
+      studentId: user.id,
+      examId: attempt.examId,
+      type: "SESSION_CONFLICT",
+      source: "SERVER_DETECTED",
+      metadata: { withinMs: SESSION_CONFLICT_WINDOW_MS },
+    })
+  }
+  if (await recordRequestAndCheckSuspicious(attemptId, "save")) {
+    await recordViolationEvent({
+      attemptId,
+      studentId: user.id,
+      examId: attempt.examId,
+      type: "SUSPICIOUS_REQUEST_PATTERN",
+      source: "SERVER_DETECTED",
+      metadata: { context: "save-rate" },
+    })
   }
 
   const data: Prisma.AttemptAnswerUpdateManyMutationInput = {

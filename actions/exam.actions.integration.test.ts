@@ -59,6 +59,7 @@ function examFormData(overrides: Record<string, string> = {}) {
     title: `Midterm ${suffix}`,
     durationMinutes: "60",
     maxAttempts: "1",
+    violationReviewThreshold: "5",
     ...overrides,
   }
   for (const [key, value] of Object.entries(base)) data.set(key, value)
