@@ -18,6 +18,16 @@ export type AnswerState = {
   syncStatus: "synced" | "pending" | "error" | "ended"
 }
 
+// A Phase 8 load-test finding: every answer click fired an immediate
+// network save with no debounce, so a student changing their mind rapidly
+// (A, then B, then C within a second) produced one DB write per click
+// instead of one write for the answer they actually settled on. Debouncing
+// only the NETWORK call — never the IndexedDB write or the local state
+// update just above, both still immediate — keeps the "never lose an
+// answer on reload" guarantee intact while cutting write volume for the
+// common case of a student still deciding.
+const AUTOSAVE_DEBOUNCE_MS = 600
+
 type TrySave = (examQuestionId: string, answer: AnswerState) => Promise<void>
 
 /**
@@ -61,6 +71,7 @@ export function useAttemptSync(
   }, [answers])
 
   const retryTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
   // Self-referential retry goes through this ref (updated in an effect,
   // never during render) instead of trySave calling itself directly.
   const trySaveRef = useRef<TrySave>(async () => {})
@@ -140,9 +151,13 @@ export function useAttemptSync(
         isMarkedForReview: next.isMarkedForReview,
         clientUpdatedAt,
       })
-      trySave(examQuestionId, next)
+
+      clearTimeout(debounceTimers.current[examQuestionId])
+      debounceTimers.current[examQuestionId] = setTimeout(() => {
+        trySaveRef.current(examQuestionId, next)
+      }, AUTOSAVE_DEBOUNCE_MS)
     },
-    [attemptId, trySave]
+    [attemptId]
   )
 
   // Recover anything left pending in IndexedDB from before a reload/crash.
@@ -182,5 +197,22 @@ export function useAttemptSync(
     return () => window.removeEventListener("online", flush)
   }, [trySave])
 
-  return { answers, update }
+  // Submitting must never race the autosave debounce: a student can select
+  // an answer and click Submit within the debounce window, and grading
+  // reads whatever is currently stored — so every pending debounce is
+  // cancelled and saved immediately, awaited here, before the caller (the
+  // Submit button) proceeds to submitAttemptAction.
+  const flushPending = useCallback(async () => {
+    const pending = Object.entries(answersRef.current).filter(
+      ([, a]) => a.syncStatus === "pending" || a.syncStatus === "error"
+    )
+    await Promise.all(
+      pending.map(([id, answer]) => {
+        clearTimeout(debounceTimers.current[id])
+        return trySaveRef.current(id, answer)
+      })
+    )
+  }, [])
+
+  return { answers, update, flushPending }
 }

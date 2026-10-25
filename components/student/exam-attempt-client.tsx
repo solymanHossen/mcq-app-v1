@@ -42,7 +42,7 @@ export function ExamAttemptClient({
   const [submitting, setSubmitting] = useState(false)
   const [ended, setEnded] = useState(false)
 
-  const { answers, update } = useAttemptSync(
+  const { answers, update, flushPending } = useAttemptSync(
     attemptId,
     questions.map((q) => ({
       examQuestionId: q.examQuestionId,
@@ -55,6 +55,10 @@ export function ExamAttemptClient({
 
   const submit = useCallback(async () => {
     setSubmitting(true)
+    // A debounced autosave (see use-attempt-sync.ts) could still be
+    // waiting to send the student's last click — grading reads whatever is
+    // currently stored, so that save must land before submitAttemptAction.
+    await flushPending()
     // Best-effort, client-reported, and only ever used for the daily-streak
     // day boundary — never a security- or grading-relevant value. Falls
     // back to the server's own UTC default if unavailable.
@@ -73,7 +77,7 @@ export function ExamAttemptClient({
     } else if (result && "error" in result) {
       toast.error(result.error)
     }
-  }, [attemptId, router])
+  }, [attemptId, router, flushPending])
 
   const remainingMs = useCountdown(deadline, () => {
     if (!ended) submit()

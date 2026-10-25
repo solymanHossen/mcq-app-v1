@@ -10,6 +10,7 @@ import { shuffledQuestionOrder } from "@/lib/attempts/shuffle"
 import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
 import {
   checkSessionConflict,
+  shouldWriteSessionToken,
   SESSION_CONFLICT_WINDOW_MS,
 } from "@/lib/anti-cheat/engine"
 import { recordRequestAndCheckSuspicious } from "@/lib/anti-cheat/rate-detection"
@@ -167,10 +168,12 @@ export async function saveAnswerAction(input: unknown) {
   // never blocks the actual save underneath it.
   const now = new Date()
   const conflict = checkSessionConflict(attempt, sessionToken, now)
-  await prisma.examAttempt.update({
-    where: { id: attemptId },
-    data: { activeSessionToken: sessionToken, activeSessionTokenAt: now },
-  })
+  if (shouldWriteSessionToken(attempt, sessionToken, now)) {
+    await prisma.examAttempt.update({
+      where: { id: attemptId },
+      data: { activeSessionToken: sessionToken, activeSessionTokenAt: now },
+    })
+  }
   if (conflict.conflict) {
     await recordViolationEvent({
       attemptId,

@@ -19,6 +19,13 @@ type Tx = PrismaClient | Prisma.TransactionClient
  * (lib/learning/spaced-repetition.ts) grows the interval/repetitions. A
  * correct retake just clears nextReviewAt (nothing left to review right
  * now); an incorrect retake re-enters the item into tomorrow's review queue.
+ *
+ * One batched `INSERT ... ON CONFLICT DO UPDATE`, not N sequential
+ * `upsert()` round-trips — a Phase 8 profiling run measured the N-upsert
+ * version at ~93ms for a 30-question exam (versus ~6ms each for the other,
+ * single-row writes in the same transaction), by far the largest single
+ * contributor to grading-transaction time and therefore to how long each
+ * submission holds a pooled connection under concurrent load.
  */
 export async function recordAttemptProgress(tx: Tx, attemptId: string, studentId: string) {
   const answers = await tx.attemptAnswer.findMany({
@@ -31,42 +38,38 @@ export async function recordAttemptProgress(tx: Tx, attemptId: string, studentId
   })
 
   const now = new Date()
+  const rows = answers
+    .filter((a) => !a.examQuestion.isCancelled)
+    .map((a) => ({
+      examQuestionId: a.examQuestionId,
+      correct: a.selectedOption === a.examQuestion.correctOptionSnapshot,
+    }))
+  if (rows.length === 0) return
 
-  for (const answer of answers) {
-    if (answer.examQuestion.isCancelled) continue
-    const correct = answer.selectedOption === answer.examQuestion.correctOptionSnapshot
+  const values = Prisma.join(
+    rows.map(
+      (r) =>
+        Prisma.sql`(gen_random_uuid(), ${studentId}::text, ${r.examQuestionId}::text, ${r.correct ? 1 : 0}::int, ${r.correct ? 0 : 1}::int, ${r.correct}::boolean, ${now}::timestamp, ${r.correct ? null : addDays(now, 1)}::timestamp)`
+    )
+  )
 
-    await tx.questionProgress.upsert({
-      where: {
-        studentId_examQuestionId: { studentId, examQuestionId: answer.examQuestionId },
-      },
-      create: {
-        studentId,
-        examQuestionId: answer.examQuestionId,
-        timesSeen: 1,
-        timesCorrect: correct ? 1 : 0,
-        timesIncorrect: correct ? 0 : 1,
-        lastOutcomeCorrect: correct,
-        lastAttemptedAt: now,
-        nextReviewAt: correct ? null : addDays(now, 1),
-      },
-      update: {
-        timesSeen: { increment: 1 },
-        timesCorrect: { increment: correct ? 1 : 0 },
-        timesIncorrect: { increment: correct ? 0 : 1 },
-        lastOutcomeCorrect: correct,
-        lastAttemptedAt: now,
-        ...(correct
-          ? { nextReviewAt: null }
-          : {
-              masteryStatus: "LEARNING",
-              repetitions: 0,
-              intervalDays: 1,
-              nextReviewAt: addDays(now, 1),
-            }),
-      },
-    })
-  }
+  await tx.$executeRaw`
+    INSERT INTO "QuestionProgress"
+      (id, "studentId", "examQuestionId", "timesCorrect", "timesIncorrect", "lastOutcomeCorrect", "lastAttemptedAt", "nextReviewAt", "timesSeen", "createdAt", "updatedAt")
+    SELECT id, "studentId", "examQuestionId", "timesCorrect", "timesIncorrect", "lastOutcomeCorrect", "lastAttemptedAt", "nextReviewAt", 1, now(), now()
+    FROM (VALUES ${values}) AS v(id, "studentId", "examQuestionId", "timesCorrect", "timesIncorrect", "lastOutcomeCorrect", "lastAttemptedAt", "nextReviewAt")
+    ON CONFLICT ("studentId", "examQuestionId") DO UPDATE SET
+      "timesSeen" = "QuestionProgress"."timesSeen" + 1,
+      "timesCorrect" = "QuestionProgress"."timesCorrect" + EXCLUDED."timesCorrect",
+      "timesIncorrect" = "QuestionProgress"."timesIncorrect" + EXCLUDED."timesIncorrect",
+      "lastOutcomeCorrect" = EXCLUDED."lastOutcomeCorrect",
+      "lastAttemptedAt" = EXCLUDED."lastAttemptedAt",
+      "nextReviewAt" = EXCLUDED."nextReviewAt",
+      "masteryStatus" = CASE WHEN EXCLUDED."lastOutcomeCorrect" THEN "QuestionProgress"."masteryStatus" ELSE 'LEARNING'::"MasteryStatus" END,
+      "repetitions" = CASE WHEN EXCLUDED."lastOutcomeCorrect" THEN "QuestionProgress"."repetitions" ELSE 0 END,
+      "intervalDays" = CASE WHEN EXCLUDED."lastOutcomeCorrect" THEN "QuestionProgress"."intervalDays" ELSE 1 END,
+      "updatedAt" = now()
+  `
 }
 
 function addDays(date: Date, days: number): Date {

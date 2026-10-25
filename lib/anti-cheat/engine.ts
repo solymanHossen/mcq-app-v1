@@ -95,6 +95,29 @@ export function parseClientViolationMetadata(
 // an ordinary reload or resume is not a violation.
 export const SESSION_CONFLICT_WINDOW_MS = 30_000
 
+// Every autosave call used to unconditionally write ExamAttempt's
+// activeSessionToken/activeSessionTokenAt — under a Phase 8 load test this
+// doubled write volume on the hottest path for no behavioral benefit, since
+// the overwhelming majority of autosaves reuse the SAME token as the
+// previous call. The timestamp still needs to be refreshed periodically
+// (never updating it at all would make an old, truly-idle tab look
+// "recently active" forever, hiding a real conflict — see
+// checkSessionConflict), so this only skips the write when the token is
+// unchanged AND the stored timestamp is already fresh enough — i.e. the
+// worst-case staleness is bounded well under SESSION_CONFLICT_WINDOW_MS, so
+// conflict detection's accuracy is unaffected.
+export const SESSION_TOKEN_REFRESH_INTERVAL_MS = 5_000
+
+export function shouldWriteSessionToken(
+  current: { activeSessionToken: string | null; activeSessionTokenAt: Date | null },
+  incomingToken: string,
+  now: Date
+): boolean {
+  if (current.activeSessionToken !== incomingToken) return true
+  const age = now.getTime() - (current.activeSessionTokenAt?.getTime() ?? 0)
+  return age >= SESSION_TOKEN_REFRESH_INTERVAL_MS
+}
+
 export type SessionConflictCheck =
   | { conflict: false }
   | { conflict: true; previousToken: string }

@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest"
 import {
   severityScore,
   checkSessionConflict,
+  shouldWriteSessionToken,
   parseClientViolationMetadata,
   SESSION_CONFLICT_WINDOW_MS,
+  SESSION_TOKEN_REFRESH_INTERVAL_MS,
   CLIENT_REPORTABLE_TYPES,
 } from "./engine"
 
@@ -63,6 +65,48 @@ describe("checkSessionConflict", () => {
       now
     )
     expect(result.conflict).toBe(false)
+  })
+})
+
+describe("shouldWriteSessionToken", () => {
+  const now = new Date("2026-01-01T00:01:00.000Z")
+
+  it("always writes when the token has never been set", () => {
+    expect(shouldWriteSessionToken({ activeSessionToken: null, activeSessionTokenAt: null }, "a", now)).toBe(true)
+  })
+
+  it("always writes when the token has changed, regardless of timing", () => {
+    expect(
+      shouldWriteSessionToken(
+        { activeSessionToken: "a", activeSessionTokenAt: now },
+        "b",
+        now
+      )
+    ).toBe(true)
+  })
+
+  it("skips the write for a same-token refresh within the interval (the autosave-burst case)", () => {
+    const recentlyWritten = new Date(now.getTime() - SESSION_TOKEN_REFRESH_INTERVAL_MS / 2)
+    expect(
+      shouldWriteSessionToken(
+        { activeSessionToken: "a", activeSessionTokenAt: recentlyWritten },
+        "a",
+        now
+      )
+    ).toBe(false)
+  })
+
+  it("writes again for the same token once the refresh interval has elapsed", () => {
+    const stale = new Date(now.getTime() - SESSION_TOKEN_REFRESH_INTERVAL_MS - 1)
+    expect(
+      shouldWriteSessionToken({ activeSessionToken: "a", activeSessionTokenAt: stale }, "a", now)
+    ).toBe(true)
+  })
+
+  it("the refresh interval stays safely smaller than the conflict window", () => {
+    // Otherwise a long-idle-but-never-refreshed timestamp could make a truly
+    // stale tab look recently active, masking a genuine conflict.
+    expect(SESSION_TOKEN_REFRESH_INTERVAL_MS).toBeLessThan(SESSION_CONFLICT_WINDOW_MS)
   })
 })
 
