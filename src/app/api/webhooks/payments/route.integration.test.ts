@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 import { NextRequest } from "next/server"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { signWebhookPayload } from "@/lib/payments/signature"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { signWebhookPayload } from "@/modules/payments/signature"
 import { POST } from "./route"
 
 const WEBHOOK_SECRET = "whsec_integration_test"

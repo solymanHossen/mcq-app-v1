@@ -1,12 +1,12 @@
 "use server"
 
 import { z } from "zod"
-import { prisma } from "@/lib/db"
-import { assertUser } from "@/lib/auth/guards"
-import { ForbiddenError } from "@/lib/auth/errors"
+import { prisma } from "@/lib/prisma"
+import { assertUser } from "@/lib/authorization"
+import { ForbiddenError } from "@/lib/errors"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { getPaymentProvider } from "@/lib/payments/provider"
-import { validateCoupon } from "@/lib/payments/coupons"
+import { getPaymentProvider } from "@/modules/payments/provider"
+import { validateCoupon } from "@/modules/payments/coupons"
 
 /**
  * User-facing billing — any authenticated user, not role-restricted (a

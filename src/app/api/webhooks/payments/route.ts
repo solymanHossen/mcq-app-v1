@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { prisma } from "@/lib/db"
-import { getPaymentProvider } from "@/lib/payments/provider"
-import { recordWebhookEvent, markWebhookEventProcessed, markWebhookEventFailed } from "@/lib/payments/events"
-import { applyWebhookEvent } from "@/lib/payments/webhook-processor"
+import { prisma } from "@/lib/prisma"
+import { getPaymentProvider } from "@/modules/payments/provider"
+import { recordWebhookEvent, markWebhookEventProcessed, markWebhookEventFailed } from "@/modules/payments/events"
+import { applyWebhookEvent } from "@/modules/payments/webhook-processor"
 
 /**
  * The only HTTP entry point for payment events, and the only place in the

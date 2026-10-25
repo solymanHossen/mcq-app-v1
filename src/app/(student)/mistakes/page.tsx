@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { requireRole } from "@/lib/auth/guards"
-import { getMistakeNotebook, getBookmarks } from "@/lib/learning/queries"
-import { MistakeReviewCard } from "@/components/student/mistake-review-card"
+import { requireRole } from "@/lib/authorization"
+import { getMistakeNotebook, getBookmarks } from "@/modules/learning/queries"
+import { MistakeReviewCard } from "@/modules/learning/components/mistake-review-card"
 import {
   Empty,
   EmptyHeader,

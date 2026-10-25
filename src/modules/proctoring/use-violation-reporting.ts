@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { reportViolationAction } from "@/actions/anti-cheat.actions"
+import { reportViolationAction } from "@/modules/proctoring/actions"
 
 /**
  * Wires up the browser event listeners for the violation types that have a

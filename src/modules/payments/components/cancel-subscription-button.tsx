@@ -4,7 +4,7 @@ import { useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { cancelSubscriptionAction } from "@/actions/billing.actions"
+import { cancelSubscriptionAction } from "@/modules/payments/actions"
 
 export function CancelSubscriptionButton({ subscriptionId }: { subscriptionId: string }) {
   const [isPending, startTransition] = useTransition()

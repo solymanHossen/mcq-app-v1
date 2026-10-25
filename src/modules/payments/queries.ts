@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 /**
  * Access policy: every "for a user" query here is scoped by a `userId`

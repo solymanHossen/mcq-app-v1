@@ -1,5 +1,5 @@
-import { createQuestionAction } from "@/actions/question.actions"
-import { QuestionForm } from "@/components/teacher/question-form"
+import { createQuestionAction } from "@/modules/question-bank/actions"
+import { QuestionForm } from "@/modules/question-bank/components/question-form"
 
 export default function NewQuestionPage() {
   return (

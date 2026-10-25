@@ -1,5 +1,5 @@
-import { requireRole } from "@/lib/auth/guards"
-import { getGlobalLeaderboard, LEADERBOARD_PAGE_SIZE } from "@/lib/leaderboard/engine"
+import { requireRole } from "@/lib/authorization"
+import { getGlobalLeaderboard, LEADERBOARD_PAGE_SIZE } from "@/modules/leaderboard/engine"
 import {
   Table,
   TableHeader,
@@ -9,7 +9,7 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { PagePagination } from "@/components/teacher/page-pagination"
+import { PagePagination } from "@/components/shared/page-pagination"
 import { cn } from "@/lib/utils"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.

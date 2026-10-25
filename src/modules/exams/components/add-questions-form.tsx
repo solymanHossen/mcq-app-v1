@@ -3,11 +3,11 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { addQuestionsToExamAction } from "@/actions/exam-question.actions"
+import { addQuestionsToExamAction } from "@/modules/exams/exam-question-actions"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { LatexText } from "@/components/latex-text"
+import { LatexText } from "@/components/shared/latex-text"
 
 type PickerQuestion = {
   id: string

@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { setQuestionStatusAction, deleteQuestionAction } from "@/actions/question.actions"
+import { setQuestionStatusAction, deleteQuestionAction } from "@/modules/question-bank/actions"
 
 export function QuestionStatusActions({
   questionId,

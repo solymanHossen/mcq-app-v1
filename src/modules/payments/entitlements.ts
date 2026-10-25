@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 /**
  * What a user with no active paid subscription gets. Plans override this

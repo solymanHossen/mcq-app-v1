@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { getOrGenerateExplanation, AI_DAILY_EXPLANATION_LIMIT } from "./explain"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { getOrGenerateExplanation, AI_DAILY_EXPLANATION_LIMIT } from "./ai-explain"
 
 const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`
 const userIds: string[] = []

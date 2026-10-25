@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { suspendUserAction, reinstateUserAction } from "@/actions/admin.actions"
+import { suspendUserAction, reinstateUserAction } from "@/modules/users/actions"
 
 export function UserRowActions({
   userId,

@@ -1,7 +1,7 @@
 import { cache } from "react"
-import { auth } from "@/auth"
+import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { Role, TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
 import { UnauthorizedError, ForbiddenError } from "./errors"
 

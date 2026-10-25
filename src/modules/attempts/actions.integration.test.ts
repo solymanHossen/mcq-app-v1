@@ -1,18 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 
-vi.mock("@/auth", () => ({ auth: vi.fn() }))
+vi.mock("@/lib/auth", () => ({ auth: vi.fn() }))
 
-import { auth } from "@/auth"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
+import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
 import {
   startAttemptAction,
   saveAnswerAction,
   submitAttemptAction,
-} from "./attempt.actions"
-import { getAttemptForStudent } from "@/lib/attempts/queries"
-import { sweepExpiredAttempts } from "@/lib/attempts/expire"
-import { SESSION_CONFLICT_WINDOW_MS } from "@/lib/anti-cheat/engine"
+} from "./actions"
+import { getAttemptForStudent } from "@/modules/attempts/queries"
+import { sweepExpiredAttempts } from "@/modules/attempts/expire"
+import { SESSION_CONFLICT_WINDOW_MS } from "@/modules/proctoring/engine"
 
 const mockAuth = vi.mocked(auth)
 

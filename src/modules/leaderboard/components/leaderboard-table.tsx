@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import type { LeaderboardEntry } from "@/lib/leaderboard/engine"
+import type { LeaderboardEntry } from "@/modules/leaderboard/engine"
 
 export function LeaderboardTable({
   entries,

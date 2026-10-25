@@ -1,4 +1,4 @@
-import { listUsers } from "@/lib/payments/queries"
+import { listUsers } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
-import { PagePagination } from "@/components/teacher/page-pagination"
-import { UserRowActions } from "@/components/admin/user-row-actions"
+import { PagePagination } from "@/components/shared/page-pagination"
+import { UserRowActions } from "@/modules/users/components/user-row-actions"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

@@ -3,16 +3,16 @@
 import Papa from "papaparse"
 import { redirect } from "next/navigation"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { prisma } from "@/lib/db"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/auth/guards"
-import { computeQuestionContentHash } from "@/lib/questions/content-hash"
-import { findDuplicateQuestion } from "@/lib/questions/queries"
+import { prisma } from "@/lib/prisma"
+import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { computeQuestionContentHash } from "@/modules/question-bank/content-hash"
+import { findDuplicateQuestion } from "@/modules/question-bank/queries"
 import {
   questionSchema,
   questionImportRowSchema,
   questionReportSchema,
   questionReportResolutionSchema,
-} from "@/lib/validators/question"
+} from "@/modules/question-bank/validators"
 
 async function requireQuestionOwner(questionId: string, user: CurrentUser) {
   const question = await prisma.question.findUnique({

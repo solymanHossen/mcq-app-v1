@@ -1,9 +1,9 @@
 "use server"
 
-import { prisma } from "@/lib/db"
-import { assertRole } from "@/lib/auth/guards"
-import { getExplanationSchema } from "@/lib/validators/learning"
-import { getOrGenerateExplanation } from "@/lib/ai/explain"
+import { prisma } from "@/lib/prisma"
+import { assertRole } from "@/lib/authorization"
+import { getExplanationSchema } from "@/modules/learning/validators"
+import { getOrGenerateExplanation } from "@/modules/learning/ai-explain"
 
 /**
  * The only entry point into the AI module from the rest of the app — kept

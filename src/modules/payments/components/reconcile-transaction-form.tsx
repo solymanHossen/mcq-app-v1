@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { reconcileTransactionAction } from "@/actions/admin-billing.actions"
+import { reconcileTransactionAction } from "@/modules/payments/admin-actions"
 
 export function ReconcileTransactionForm({ transactionId }: { transactionId: string }) {
   const [resolution, setResolution] = useState<"SUCCEEDED" | "FAILED" | null>(null)

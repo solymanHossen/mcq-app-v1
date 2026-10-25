@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient, XPReason } from "@/prisma/generated/prisma/client"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 export const XP_PER_CORRECT_ANSWER = 10
 export const XP_PERFECT_SCORE_BONUS = 50

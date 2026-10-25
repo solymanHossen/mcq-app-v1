@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "./password"
-import { resolveCurrentUser, revokeAllSessions } from "./guards"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { resolveCurrentUser, revokeAllSessions } from "./authorization"
 
 const email = `guards-test+${Date.now()}@example.com`
 let userId: string

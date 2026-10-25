@@ -1,5 +1,5 @@
 import { connection } from "next/server"
-import { adminListPaymentTransactions, getStalePendingTransactions } from "@/lib/payments/queries"
+import { adminListPaymentTransactions, getStalePendingTransactions } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -10,9 +10,9 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
-import { PagePagination } from "@/components/teacher/page-pagination"
-import { RefundForm } from "@/components/admin/payment-transaction-row"
-import { ReconcileTransactionForm } from "@/components/admin/reconcile-transaction-form"
+import { PagePagination } from "@/components/shared/page-pagination"
+import { RefundForm } from "@/modules/payments/components/payment-transaction-row"
+import { ReconcileTransactionForm } from "@/modules/payments/components/reconcile-transaction-form"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

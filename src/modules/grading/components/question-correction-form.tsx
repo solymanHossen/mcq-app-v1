@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { correctExamQuestionAction } from "@/actions/grading.actions"
+import { correctExamQuestionAction } from "@/modules/grading/actions"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { LatexText } from "@/components/latex-text"
+import { LatexText } from "@/components/shared/latex-text"
 
 type Props = {
   examId: string

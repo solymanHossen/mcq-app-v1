@@ -1,6 +1,6 @@
-import { requireUser } from "@/lib/auth/guards"
-import { getCurrentSubscription } from "@/lib/payments/entitlements"
-import { getPaymentHistoryForUser, listActivePlans } from "@/lib/payments/queries"
+import { requireUser } from "@/lib/authorization"
+import { getCurrentSubscription } from "@/modules/payments/entitlements"
+import { getPaymentHistoryForUser, listActivePlans } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import {
@@ -11,8 +11,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
-import { SubscribeButton } from "@/components/billing/subscribe-button"
-import { CancelSubscriptionButton } from "@/components/billing/cancel-subscription-button"
+import { SubscribeButton } from "@/modules/payments/components/subscribe-button"
+import { CancelSubscriptionButton } from "@/modules/payments/components/cancel-subscription-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

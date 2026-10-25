@@ -5,9 +5,9 @@ import { toast } from "sonner"
 import {
   reorderExamQuestionsAction,
   removeQuestionFromExamAction,
-} from "@/actions/exam-question.actions"
+} from "@/modules/exams/exam-question-actions"
 import { Button } from "@/components/ui/button"
-import { LatexText } from "@/components/latex-text"
+import { LatexText } from "@/components/shared/latex-text"
 import { ArrowUpIcon, ArrowDownIcon, XIcon } from "lucide-react"
 
 type ListedQuestion = {

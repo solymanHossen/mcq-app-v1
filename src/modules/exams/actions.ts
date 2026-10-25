@@ -2,9 +2,9 @@
 
 import { redirect } from "next/navigation"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { prisma } from "@/lib/db"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/auth/guards"
-import { examSchema } from "@/lib/validators/exam"
+import { prisma } from "@/lib/prisma"
+import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { examSchema } from "@/modules/exams/validators"
 
 async function requireExamOwner(examId: string, user: CurrentUser) {
   const exam = await prisma.exam.findUnique({ where: { id: examId } })

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/prisma/generated/prisma/client"
 import type { TieBreakerPolicy } from "@/prisma/generated/prisma/client"
 import { getOrComputeCachedPage } from "./cache"

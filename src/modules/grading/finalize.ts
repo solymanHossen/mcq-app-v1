@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { computeGrade } from "./engine"
-import { recordAttemptProgress } from "@/lib/learning/progress"
-import { awardXP, XP_PER_CORRECT_ANSWER, XP_PERFECT_SCORE_BONUS } from "@/lib/learning/xp"
-import { evaluateBadgesAfterExamCompletion } from "@/lib/learning/badges"
+import { recordAttemptProgress } from "@/modules/learning/progress"
+import { awardXP, XP_PER_CORRECT_ANSWER, XP_PERFECT_SCORE_BONUS } from "@/modules/learning/xp"
+import { evaluateBadgesAfterExamCompletion } from "@/modules/learning/badges"
 
 /**
  * The single place an attempt transitions out of IN_PROGRESS and gets

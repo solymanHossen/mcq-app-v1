@@ -6,14 +6,14 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
-import { LatexText } from "@/components/latex-text"
-import { submitAttemptAction } from "@/actions/attempt.actions"
+import { LatexText } from "@/components/shared/latex-text"
+import { submitAttemptAction } from "@/modules/attempts/actions"
 import {
   useAttemptSync,
   type OptionChoice,
-} from "@/lib/attempts/use-attempt-sync"
-import { useCountdown, formatRemaining } from "@/lib/attempts/use-countdown"
-import { useViolationReporting } from "@/lib/anti-cheat/use-violation-reporting"
+} from "@/modules/attempts/use-attempt-sync"
+import { useCountdown, formatRemaining } from "@/modules/attempts/use-countdown"
+import { useViolationReporting } from "@/modules/proctoring/use-violation-reporting"
 import { cn } from "@/lib/utils"
 
 type AttemptQuestion = {

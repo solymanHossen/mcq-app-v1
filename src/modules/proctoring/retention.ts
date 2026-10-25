@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 /**
  * Retention policy: violation evidence is kept for the life of the exam and

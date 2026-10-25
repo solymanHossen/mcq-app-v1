@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 /**
  * Access policy (enforced by the caller via assertOwner before calling

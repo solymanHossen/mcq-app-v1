@@ -16,8 +16,8 @@
  * marker in emails/titles, so `--cleanup` finds and removes it precisely —
  * safe to run against a database that also has real data in it.
  */
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
 import { randomUUID } from "crypto"
 
 const MARKER = "scale-seed-"

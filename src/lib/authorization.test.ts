@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
-import { assertOwner } from "./guards"
+import { assertOwner } from "./authorization"
 import { ForbiddenError } from "./errors"
-import type { CurrentUser } from "./guards"
+import type { CurrentUser } from "./authorization"
 
 function user(overrides: Partial<CurrentUser> = {}): CurrentUser {
   return {

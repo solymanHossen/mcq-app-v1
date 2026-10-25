@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState } from "react"
-import { resolveAppealAction } from "@/actions/anti-cheat.actions"
+import { resolveAppealAction } from "@/modules/proctoring/actions"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { FieldError } from "@/components/ui/field"

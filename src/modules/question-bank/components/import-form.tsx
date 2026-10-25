@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState } from "react"
-import { bulkImportQuestionsAction } from "@/actions/question.actions"
+import { bulkImportQuestionsAction } from "@/modules/question-bank/actions"
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"

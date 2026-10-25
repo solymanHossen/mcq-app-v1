@@ -1,18 +1,18 @@
 "use server"
 
-import { prisma } from "@/lib/db"
-import { assertRole, assertOwner } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { assertRole, assertOwner } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { applyCorrectionAndRegrade } from "@/lib/grading/regrade"
-import { invalidateScope } from "@/lib/leaderboard/cache"
+import { applyCorrectionAndRegrade } from "@/modules/grading/regrade"
+import { invalidateScope } from "@/modules/leaderboard/cache"
 import {
   examLeaderboardScope,
   globalLeaderboardScope,
-} from "@/lib/leaderboard/engine"
+} from "@/modules/leaderboard/engine"
 import {
   examQuestionCorrectionSchema,
   examQuestionMarksSchema,
-} from "@/lib/validators/grading"
+} from "@/modules/grading/validators"
 
 async function requireExamOwner(examId: string) {
   const user = await assertRole("TEACHER", "ADMIN")

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { issueRefundAction } from "@/actions/admin-billing.actions"
+import { issueRefundAction } from "@/modules/payments/admin-actions"
 
 export function RefundForm({ transactionId }: { transactionId: string }) {
   const [open, setOpen] = useState(false)

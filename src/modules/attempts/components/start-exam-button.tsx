@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Checkbox } from "@/components/ui/checkbox"
-import { startAttemptAction } from "@/actions/attempt.actions"
+import { startAttemptAction } from "@/modules/attempts/actions"
 
 export function StartExamButton({
   examId,

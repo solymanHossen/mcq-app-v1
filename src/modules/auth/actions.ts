@@ -2,9 +2,9 @@
 
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/prisma/generated/prisma/client"
-import { hashPassword } from "@/lib/auth/password"
+import { hashPassword } from "@/modules/auth/password"
 import {
   generateOtp,
   generateResetToken,
@@ -13,23 +13,23 @@ import {
   otpExpiry,
   resetTokenExpiry,
   hasExceededVerifyAttempts,
-} from "@/lib/auth/tokens"
-import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/auth/mail"
-import { getClientIp } from "@/lib/auth/ip"
-import { recordAuditEvent } from "@/lib/auth/audit"
+} from "@/modules/auth/tokens"
+import { sendVerificationEmail, sendPasswordResetEmail } from "@/modules/notifications/mail"
+import { getClientIp } from "@/modules/auth/ip"
+import { recordAuditEvent } from "@/modules/auth/audit"
 import {
   isRegisterRateLimited,
   isForgotPasswordRateLimited,
   isVerifyEmailRateLimited,
   isResendOtpRateLimited,
-} from "@/lib/auth/rate-limit"
-import { revokeAllSessions } from "@/lib/auth/guards"
+} from "@/modules/auth/rate-limit"
+import { revokeAllSessions } from "@/lib/authorization"
 import {
   registerSchema,
   verifyEmailSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from "@/lib/validators"
+} from "@/modules/auth/validators"
 
 async function clientIp() {
   // Best-effort only: IP extraction must never be able to break the actual

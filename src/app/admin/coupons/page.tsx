@@ -1,4 +1,4 @@
-import { listAllCoupons } from "@/lib/payments/queries"
+import { listAllCoupons } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
-import { CreateCouponForm } from "@/components/admin/create-coupon-form"
-import { DeactivateCouponButton } from "@/components/admin/deactivate-coupon-button"
+import { CreateCouponForm } from "@/modules/payments/components/create-coupon-form"
+import { DeactivateCouponButton } from "@/modules/payments/components/deactivate-coupon-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

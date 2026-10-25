@@ -1,23 +1,23 @@
 "use server"
 
 import { z } from "zod"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/prisma/generated/prisma/client"
-import { assertRole } from "@/lib/auth/guards"
-import { finalizeIfExpired } from "@/lib/attempts/expire"
-import { countAttempts, findActiveOrLatestAttempt } from "@/lib/attempts/queries"
-import { shuffledQuestionOrder } from "@/lib/attempts/shuffle"
-import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
+import { assertRole } from "@/lib/authorization"
+import { finalizeIfExpired } from "@/modules/attempts/expire"
+import { countAttempts, findActiveOrLatestAttempt } from "@/modules/attempts/queries"
+import { shuffledQuestionOrder } from "@/modules/attempts/shuffle"
+import { finalizeAndGradeAttempt } from "@/modules/grading/finalize"
 import {
   checkSessionConflict,
   shouldWriteSessionToken,
   SESSION_CONFLICT_WINDOW_MS,
-} from "@/lib/anti-cheat/engine"
-import { recordRequestAndCheckSuspicious } from "@/lib/anti-cheat/rate-detection"
-import { recordViolationEvent } from "@/lib/anti-cheat/record"
-import { recordDailyActivity } from "@/lib/learning/streak"
-import { awardXP, XP_PER_STREAK_DAY } from "@/lib/learning/xp"
-import { evaluateBadgesAfterStreakUpdate } from "@/lib/learning/badges"
+} from "@/modules/proctoring/engine"
+import { recordRequestAndCheckSuspicious } from "@/modules/proctoring/rate-detection"
+import { recordViolationEvent } from "@/modules/proctoring/record"
+import { recordDailyActivity } from "@/modules/learning/streak"
+import { awardXP, XP_PER_STREAK_DAY } from "@/modules/learning/xp"
+import { evaluateBadgesAfterStreakUpdate } from "@/modules/learning/badges"
 
 // ─── Start (idempotent: resumes an existing in-progress attempt) ──
 export type StartAttemptResult = { attemptId: string } | { error: string }

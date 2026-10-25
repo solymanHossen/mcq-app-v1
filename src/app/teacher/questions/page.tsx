@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { requireUser } from "@/lib/auth/guards"
+import { requireUser } from "@/lib/authorization"
 import {
   listQuestions,
   getDistinctSubjects,
   getDistinctTopics,
   type QuestionFilters as Filters,
-} from "@/lib/questions/queries"
+} from "@/modules/question-bank/queries"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -25,8 +25,8 @@ import {
   EmptyContent,
 } from "@/components/ui/empty"
 import { FileQuestionIcon } from "lucide-react"
-import { QuestionFilters } from "@/components/teacher/question-filters"
-import { PagePagination } from "@/components/teacher/page-pagination"
+import { QuestionFilters } from "@/modules/question-bank/components/question-filters"
+import { PagePagination } from "@/components/shared/page-pagination"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

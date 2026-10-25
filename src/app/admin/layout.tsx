@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { requireRole } from '@/lib/auth/guards';
-import { LogoutButton } from '@/components/logout-button';
+import { requireRole } from '@/lib/authorization';
+import { LogoutButton } from '@/components/shared/logout-button';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

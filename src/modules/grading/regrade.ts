@@ -1,11 +1,11 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { OptionChoice } from "@/prisma/generated/prisma/client"
 import { computeGrade } from "./engine"
-import { invalidateScope } from "@/lib/leaderboard/cache"
+import { invalidateScope } from "@/modules/leaderboard/cache"
 import {
   examLeaderboardScope,
   globalLeaderboardScope,
-} from "@/lib/leaderboard/engine"
+} from "@/modules/leaderboard/engine"
 
 export type QuestionCorrection = {
   correctOption?: OptionChoice

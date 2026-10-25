@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { AttemptStatus } from "@/prisma/generated/prisma/client"
-import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
+import { finalizeAndGradeAttempt } from "@/modules/grading/finalize"
 
 /**
  * Lazily self-heals an attempt that's past its deadline but still marked

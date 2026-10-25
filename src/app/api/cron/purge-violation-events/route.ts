@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { purgeExpiredViolationEvents } from "@/lib/anti-cheat/retention"
+import { purgeExpiredViolationEvents } from "@/modules/proctoring/retention"
 
 // Scheduled worker — see lib/anti-cheat/retention.ts for the retention
 // policy this enforces (archived exams only, past the grace period, never

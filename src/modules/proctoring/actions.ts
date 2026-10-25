@@ -1,20 +1,20 @@
 "use server"
 
 import { z } from "zod"
-import { prisma } from "@/lib/db"
-import { assertRole, assertOwner } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { assertRole, assertOwner } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import {
   CLIENT_REPORTABLE_TYPES,
   parseClientViolationMetadata,
-} from "@/lib/anti-cheat/engine"
-import { recordRequestAndCheckSuspicious } from "@/lib/anti-cheat/rate-detection"
-import { recordViolationEvent } from "@/lib/anti-cheat/record"
-import { invalidateScope } from "@/lib/leaderboard/cache"
+} from "@/modules/proctoring/engine"
+import { recordRequestAndCheckSuspicious } from "@/modules/proctoring/rate-detection"
+import { recordViolationEvent } from "@/modules/proctoring/record"
+import { invalidateScope } from "@/modules/leaderboard/cache"
 import {
   examLeaderboardScope,
   globalLeaderboardScope,
-} from "@/lib/leaderboard/engine"
+} from "@/modules/leaderboard/engine"
 
 // ─── Client-reported violation events ──────────────────────────────────
 const reportSchema = z.object({

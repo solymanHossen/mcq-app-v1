@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation"
-import { requireUser, assertOwner } from "@/lib/auth/guards"
-import { getQuestionById } from "@/lib/questions/queries"
-import { updateQuestionAction } from "@/actions/question.actions"
-import { QuestionForm } from "@/components/teacher/question-form"
-import { QuestionStatusActions } from "@/components/teacher/question-status-actions"
-import { QuestionReports } from "@/components/teacher/question-reports"
+import { requireUser, assertOwner } from "@/lib/authorization"
+import { getQuestionById } from "@/modules/question-bank/queries"
+import { updateQuestionAction } from "@/modules/question-bank/actions"
+import { QuestionForm } from "@/modules/question-bank/components/question-form"
+import { QuestionStatusActions } from "@/modules/question-bank/components/question-status-actions"
+import { QuestionReports } from "@/modules/question-bank/components/question-reports"
 import { Separator } from "@/components/ui/separator"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.

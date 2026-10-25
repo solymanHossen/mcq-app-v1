@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { sweepExpiredAttempts } from "@/lib/attempts/expire"
+import { sweepExpiredAttempts } from "@/modules/attempts/expire"
 
 // Scheduled worker (e.g. Vercel Cron, or any external scheduler) hits this
 // on an interval to promptly flip expired attempts to TIMEOUT. It's a

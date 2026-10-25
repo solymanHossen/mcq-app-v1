@@ -1,8 +1,8 @@
-import { listAllSubscriptionPlans } from "@/lib/payments/queries"
+import { listAllSubscriptionPlans } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { CreatePlanForm } from "@/components/admin/create-plan-form"
-import { PlanActiveToggle } from "@/components/admin/plan-active-toggle"
+import { CreatePlanForm } from "@/modules/payments/components/create-plan-form"
+import { PlanActiveToggle } from "@/modules/payments/components/plan-active-toggle"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

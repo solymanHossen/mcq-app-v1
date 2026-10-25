@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { authConfig, isAdminRoute, isPublicRoute, isTeacherRoute } from './auth.config';
+import { authConfig, isAdminRoute, isPublicRoute, isTeacherRoute } from './lib/auth.config';
 
 export async function proxy(request: NextRequest) {
   const token = await getToken({

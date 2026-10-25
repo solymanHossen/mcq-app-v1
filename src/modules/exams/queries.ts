@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { ExamStatus, Prisma } from "@/prisma/generated/prisma/client"
 
 export const EXAM_PAGE_SIZE = 20

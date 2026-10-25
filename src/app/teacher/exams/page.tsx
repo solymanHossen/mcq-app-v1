@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { requireUser } from "@/lib/auth/guards"
-import { listExams } from "@/lib/exams/queries"
+import { requireUser } from "@/lib/authorization"
+import { listExams } from "@/modules/exams/queries"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -20,7 +20,7 @@ import {
   EmptyContent,
 } from "@/components/ui/empty"
 import { ClipboardListIcon } from "lucide-react"
-import { PagePagination } from "@/components/teacher/page-pagination"
+import { PagePagination } from "@/components/shared/page-pagination"
 import type { ExamStatus } from "@/prisma/generated/prisma/client"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.

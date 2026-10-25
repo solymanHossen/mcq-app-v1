@@ -1,4 +1,4 @@
-import { listAdminAuditLog } from "@/lib/payments/queries"
+import { listAdminAuditLog } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
-import { PagePagination } from "@/components/teacher/page-pagination"
+import { PagePagination } from "@/components/shared/page-pagination"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

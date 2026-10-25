@@ -2,7 +2,7 @@
 
 import { useActionState, useTransition, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { verifyEmailAction, resendOTPAction } from "@/actions/auth.actions"
+import { verifyEmailAction, resendOTPAction } from "@/modules/auth/actions"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {

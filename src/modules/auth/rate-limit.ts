@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { AuditAction } from "@/prisma/generated/prisma/client"
 
 const MINUTE = 60_000

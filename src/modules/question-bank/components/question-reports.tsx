@@ -4,7 +4,7 @@ import { useActionState } from "react"
 import {
   createQuestionReportAction,
   resolveQuestionReportAction,
-} from "@/actions/question.actions"
+} from "@/modules/question-bank/actions"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"

@@ -1,9 +1,9 @@
 "use server"
 
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { prisma } from "@/lib/db"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/auth/guards"
-import { addQuestionsToExamSchema } from "@/lib/validators/exam"
+import { prisma } from "@/lib/prisma"
+import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { addQuestionsToExamSchema } from "@/modules/exams/validators"
 
 async function requireDraftExamOwner(examId: string, user: CurrentUser) {
   const exam = await prisma.exam.findUnique({ where: { id: examId } })

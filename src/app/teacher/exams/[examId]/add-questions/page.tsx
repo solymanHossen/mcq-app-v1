@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation"
-import { prisma } from "@/lib/db"
-import { requireUser, assertOwner } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { requireUser, assertOwner } from "@/lib/authorization"
 import {
   listActiveUnusedQuestions,
   getDistinctSubjects,
   getDistinctTopics,
   type QuestionFilters as Filters,
-} from "@/lib/questions/queries"
-import { QuestionFilters } from "@/components/teacher/question-filters"
-import { AddQuestionsForm } from "@/components/teacher/add-questions-form"
-import { PagePagination } from "@/components/teacher/page-pagination"
+} from "@/modules/question-bank/queries"
+import { QuestionFilters } from "@/modules/question-bank/components/question-filters"
+import { AddQuestionsForm } from "@/modules/exams/components/add-questions-form"
+import { PagePagination } from "@/components/shared/page-pagination"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

@@ -1,5 +1,5 @@
-import { listPendingTeacherVerifications } from "@/lib/payments/queries"
-import { TeacherVerificationRow } from "@/components/admin/teacher-verification-row"
+import { listPendingTeacherVerifications } from "@/modules/payments/queries"
+import { TeacherVerificationRow } from "@/modules/users/components/teacher-verification-row"
 import {
   Empty,
   EmptyHeader,

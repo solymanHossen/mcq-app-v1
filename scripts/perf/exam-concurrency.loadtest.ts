@@ -21,17 +21,17 @@
  */
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 
-vi.mock("@/auth", () => ({ auth: vi.fn() }))
+vi.mock("@/lib/auth", () => ({ auth: vi.fn() }))
 
-import { auth } from "@/auth"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
+import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
 import {
   startAttemptAction,
   saveAnswerAction,
   submitAttemptAction,
-} from "@/actions/attempt.actions"
-import { getExamLeaderboard } from "@/lib/leaderboard/engine"
+} from "@/modules/attempts/actions"
+import { getExamLeaderboard } from "@/modules/leaderboard/engine"
 import { printStats, timed } from "./stats"
 
 const mockAuth = vi.mocked(auth)

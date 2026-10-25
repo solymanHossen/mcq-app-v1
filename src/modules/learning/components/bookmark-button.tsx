@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { BookmarkIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { toggleBookmarkAction } from "@/actions/learning.actions"
+import { toggleBookmarkAction } from "@/modules/learning/actions"
 import { cn } from "@/lib/utils"
 
 export function BookmarkButton({

@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { reviewViolationEventAction } from "@/actions/anti-cheat.actions"
+import { reviewViolationEventAction } from "@/modules/proctoring/actions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"

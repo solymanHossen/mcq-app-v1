@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { isLoginRateLimited, RATE_LIMITS } from "./rate-limit"
 
 const email = `rate-limit-test+${Date.now()}@example.com`

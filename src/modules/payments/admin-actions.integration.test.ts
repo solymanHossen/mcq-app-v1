@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest"
 
-vi.mock("@/auth", () => ({ auth: vi.fn() }))
+vi.mock("@/lib/auth", () => ({ auth: vi.fn() }))
 
-import { auth } from "@/auth"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { ForbiddenError } from "@/lib/auth/errors"
-import { _setPaymentProviderForTests, type PaymentProvider } from "@/lib/payments/provider"
+import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { ForbiddenError } from "@/lib/errors"
+import { _setPaymentProviderForTests, type PaymentProvider } from "@/modules/payments/provider"
 import {
   createPlanAction,
   updatePlanAction,
@@ -15,7 +15,7 @@ import {
   deactivateCouponAction,
   issueRefundAction,
   reconcileTransactionAction,
-} from "./admin-billing.actions"
+} from "./admin-actions"
 
 const mockAuth = vi.mocked(auth)
 

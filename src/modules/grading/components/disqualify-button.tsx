@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { disqualifyAttemptAction } from "@/actions/grading.actions"
+import { disqualifyAttemptAction } from "@/modules/grading/actions"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { FieldError } from "@/components/ui/field"

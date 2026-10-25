@@ -9,7 +9,7 @@ import {
   publishExamAction,
   archiveExamAction,
   deleteExamAction,
-} from "@/actions/exam.actions"
+} from "@/modules/exams/actions"
 
 export function ExamStatusActions({
   examId,

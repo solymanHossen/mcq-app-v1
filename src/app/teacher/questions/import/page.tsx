@@ -1,6 +1,6 @@
-import { IMPORT_TEMPLATE_HEADER } from "@/lib/validators/question"
-import { ImportForm } from "@/components/teacher/import-form"
-import { CodeSnippet } from "@/components/code-snippet"
+import { IMPORT_TEMPLATE_HEADER } from "@/modules/question-bank/validators"
+import { ImportForm } from "@/modules/question-bank/components/import-form"
+import { CodeSnippet } from "@/components/shared/code-snippet"
 
 export default function ImportQuestionsPage() {
   return (

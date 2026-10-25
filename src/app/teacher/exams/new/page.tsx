@@ -1,5 +1,5 @@
-import { createExamAction } from "@/actions/exam.actions"
-import { ExamForm } from "@/components/teacher/exam-form"
+import { createExamAction } from "@/modules/exams/actions"
+import { ExamForm } from "@/modules/exams/components/exam-form"
 
 export default function NewExamPage() {
   return (

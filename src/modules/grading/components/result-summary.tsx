@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { LatexText } from "@/components/latex-text"
+import { LatexText } from "@/components/shared/latex-text"
 import { cn } from "@/lib/utils"
-import type { ResultForStudent } from "@/lib/grading/queries"
+import type { ResultForStudent } from "@/modules/grading/queries"
 
 export function ResultSummary({ result }: { result: ResultForStudent }) {
   if (!result.result || result.result.status !== "PUBLISHED") {

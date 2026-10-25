@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { saveAnswerAction } from "@/actions/attempt.actions"
+import { saveAnswerAction } from "@/modules/attempts/actions"
 import {
   queuePendingAnswer,
   clearPendingAnswer,

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { getTotalXP, levelForXP } from "./xp"
 import { BADGES } from "./badges"
 

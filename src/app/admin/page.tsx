@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { connection } from "next/server"
-import { prisma } from "@/lib/db"
-import { getStalePendingTransactions } from "@/lib/payments/queries"
+import { prisma } from "@/lib/prisma"
+import { getStalePendingTransactions } from "@/modules/payments/queries"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.

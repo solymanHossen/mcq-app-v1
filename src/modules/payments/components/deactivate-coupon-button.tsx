@@ -4,7 +4,7 @@ import { useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { deactivateCouponAction } from "@/actions/admin-billing.actions"
+import { deactivateCouponAction } from "@/modules/payments/admin-actions"
 
 export function DeactivateCouponButton({ couponId }: { couponId: string }) {
   const [isPending, startTransition] = useTransition()

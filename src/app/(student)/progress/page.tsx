@@ -1,8 +1,8 @@
 import Link from "next/link"
-import { requireRole } from "@/lib/auth/guards"
-import { getLearningSummary } from "@/lib/learning/queries"
-import { getPracticeRecommendations } from "@/lib/learning/recommendations"
-import { getSubjectTopicPerformance, getOverallStats } from "@/lib/analytics/engine"
+import { requireRole } from "@/lib/authorization"
+import { getLearningSummary } from "@/modules/learning/queries"
+import { getPracticeRecommendations } from "@/modules/learning/recommendations"
+import { getSubjectTopicPerformance, getOverallStats } from "@/modules/analytics/engine"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,

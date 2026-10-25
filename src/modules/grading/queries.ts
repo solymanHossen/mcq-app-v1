@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 export function listExamResults(examId: string) {
   return prisma.examAttempt.findMany({

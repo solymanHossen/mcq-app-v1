@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field"
-import type { ExamFormState } from "@/actions/exam.actions"
+import type { ExamFormState } from "@/modules/exams/actions"
 
 export type ExamFormValues = {
   title?: string

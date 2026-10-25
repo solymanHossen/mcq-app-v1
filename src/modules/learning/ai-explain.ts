@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 
 /**
  * Optional end-to-end: disabled by default (no ANTHROPIC_API_KEY configured)

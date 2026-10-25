@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { examSchema } from "./exam"
+import { examSchema } from "./validators"
 
 const validExam = {
   title: "Midterm Exam",

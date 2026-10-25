@@ -1,11 +1,11 @@
 "use server"
 
-import { prisma } from "@/lib/db"
-import { assertRole } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { assertRole } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { recordAdminAction } from "@/lib/admin/audit"
-import { getPaymentProvider } from "@/lib/payments/provider"
-import { planSchema, couponSchema, refundSchema, reconcileSchema } from "@/lib/validators/billing"
+import { recordAdminAction } from "@/lib/admin-audit"
+import { getPaymentProvider } from "@/modules/payments/provider"
+import { planSchema, couponSchema, refundSchema, reconcileSchema } from "@/modules/payments/validators"
 
 // ─── Subscription plans ─────────────────────────────────────────────────
 

@@ -1,12 +1,12 @@
 import { getServerSession, type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { authConfig } from "./auth.config"
-import { loginSchema } from "@/lib/validators"
-import { prisma } from "@/lib/db"
-import { verifyPassword } from "@/lib/auth/password"
-import { getClientIp } from "@/lib/auth/ip"
-import { recordAuditEvent } from "@/lib/auth/audit"
-import { isLoginRateLimited } from "@/lib/auth/rate-limit"
+import { loginSchema } from "@/modules/auth/validators"
+import { prisma } from "@/lib/prisma"
+import { verifyPassword } from "@/modules/auth/password"
+import { getClientIp } from "@/modules/auth/ip"
+import { recordAuditEvent } from "@/modules/auth/audit"
+import { isLoginRateLimited } from "@/modules/auth/rate-limit"
 import type { Role } from "@/prisma/generated/prisma/client"
 
 // Absolute session lifetime. Re-authentication is required after this even

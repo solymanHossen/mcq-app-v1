@@ -1,6 +1,6 @@
 import "dotenv/config"
-import { prisma } from "../lib/db"
-import { hashPassword } from "../lib/auth/password"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
 
 async function upsertVerifiedUser(
   email: string,

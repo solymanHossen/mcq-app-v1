@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import type { Coupon, Prisma, PrismaClient } from "@/prisma/generated/prisma/client"
 
 type Tx = PrismaClient | Prisma.TransactionClient

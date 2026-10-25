@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import {
   publishExamResultsAction,
   releaseAnswerKeyAction,
-} from "@/actions/grading.actions"
+} from "@/modules/grading/actions"
 
 export function ResultDisclosureActions({
   examId,

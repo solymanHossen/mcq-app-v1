@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import type { QuestionFormState } from "@/actions/question.actions"
+import type { QuestionFormState } from "@/modules/question-bank/actions"
 
 export type QuestionFormValues = {
   subject?: string

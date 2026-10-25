@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
 import { finalizeAndGradeAttempt } from "./finalize"
 import { applyCorrectionAndRegrade } from "./regrade"
 import { getResultForStudent } from "./queries"

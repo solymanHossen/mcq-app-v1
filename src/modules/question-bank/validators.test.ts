@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { questionSchema, questionImportRowSchema } from "./question"
+import { questionSchema, questionImportRowSchema } from "./validators"
 
 const validQuestion = {
   subject: "Math",

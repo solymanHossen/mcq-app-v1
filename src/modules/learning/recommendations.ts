@@ -1,5 +1,5 @@
 import { getDueReviews } from "./queries"
-import { getWeakestTopics } from "@/lib/analytics/engine"
+import { getWeakestTopics } from "@/modules/analytics/engine"
 
 /**
  * Pure composition over existing read queries — no new schema, no stored

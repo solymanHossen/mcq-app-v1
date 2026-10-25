@@ -4,7 +4,7 @@ import { useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { setPlanActiveAction } from "@/actions/admin-billing.actions"
+import { setPlanActiveAction } from "@/modules/payments/admin-actions"
 
 export function PlanActiveToggle({ planId, isActive }: { planId: string; isActive: boolean }) {
   const [isPending, startTransition] = useTransition()

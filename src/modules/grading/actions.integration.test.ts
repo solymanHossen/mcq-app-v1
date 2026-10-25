@@ -1,18 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 
-vi.mock("@/auth", () => ({ auth: vi.fn() }))
+vi.mock("@/lib/auth", () => ({ auth: vi.fn() }))
 
-import { auth } from "@/auth"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { ForbiddenError } from "@/lib/auth/errors"
-import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
+import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { ForbiddenError } from "@/lib/errors"
+import { finalizeAndGradeAttempt } from "@/modules/grading/finalize"
 import {
   correctExamQuestionAction,
   updateExamQuestionMarksAction,
   publishExamResultsAction,
   releaseAnswerKeyAction,
-} from "./grading.actions"
+} from "./actions"
 
 const mockAuth = vi.mocked(auth)
 

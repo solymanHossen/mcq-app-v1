@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { optionChoiceEnum } from "./question"
+import { optionChoiceEnum } from "@/modules/question-bank/validators"
 
 export const examQuestionCorrectionSchema = z
   .object({

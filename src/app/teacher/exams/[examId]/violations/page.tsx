@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { requireUser, assertOwner } from "@/lib/auth/guards"
-import { prisma } from "@/lib/db"
-import { listFlaggedAttempts } from "@/lib/anti-cheat/queries"
+import { requireUser, assertOwner } from "@/lib/authorization"
+import { prisma } from "@/lib/prisma"
+import { listFlaggedAttempts } from "@/modules/proctoring/queries"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { ViolationEventRow } from "@/components/teacher/violation-event-row"
-import { AppealResolutionForm } from "@/components/teacher/appeal-resolution-form"
-import { DisqualifyButton } from "@/components/teacher/disqualify-button"
+import { ViolationEventRow } from "@/modules/proctoring/components/violation-event-row"
+import { AppealResolutionForm } from "@/modules/proctoring/components/appeal-resolution-form"
+import { DisqualifyButton } from "@/modules/grading/components/disqualify-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

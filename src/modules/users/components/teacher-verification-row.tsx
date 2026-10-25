@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
-import { verifyTeacherAction, rejectTeacherAction } from "@/actions/admin.actions"
+import { verifyTeacherAction, rejectTeacherAction } from "@/modules/users/actions"
 
 export function TeacherVerificationRow({ userId }: { userId: string }) {
   const [mode, setMode] = useState<"idle" | "verify" | "reject">("idle")

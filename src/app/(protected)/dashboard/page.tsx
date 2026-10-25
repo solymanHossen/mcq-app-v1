@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { requireUser } from '@/lib/auth/guards';
-import { getLearningSummary } from '@/lib/learning/queries';
-import { getPracticeRecommendations } from '@/lib/learning/recommendations';
+import { requireUser } from '@/lib/authorization';
+import { getLearningSummary } from '@/modules/learning/queries';
+import { getPracticeRecommendations } from '@/modules/learning/recommendations';
 import { Badge } from '@/components/ui/badge';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.

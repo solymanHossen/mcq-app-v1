@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { shuffledOptionOrder } from "./shuffle"
 
 export function countAttempts(studentId: string, examId: string) {

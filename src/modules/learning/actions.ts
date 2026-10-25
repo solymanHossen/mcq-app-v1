@@ -1,13 +1,13 @@
 "use server"
 
-import { prisma } from "@/lib/db"
-import { assertRole } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { assertRole } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { toggleBookmarkSchema, submitMistakeReviewSchema } from "@/lib/validators/learning"
-import { applyReviewOutcome } from "@/lib/learning/spaced-repetition"
-import { awardXP, XP_PER_MISTAKE_CORRECTED } from "@/lib/learning/xp"
-import { evaluateBadgesAfterMistakeReview } from "@/lib/learning/badges"
-import { recordDailyActivity } from "@/lib/learning/streak"
+import { toggleBookmarkSchema, submitMistakeReviewSchema } from "@/modules/learning/validators"
+import { applyReviewOutcome } from "@/modules/learning/spaced-repetition"
+import { awardXP, XP_PER_MISTAKE_CORRECTED } from "@/modules/learning/xp"
+import { evaluateBadgesAfterMistakeReview } from "@/modules/learning/badges"
+import { recordDailyActivity } from "@/modules/learning/streak"
 
 /** A student may only bookmark/review an ExamQuestion they've actually been
  * given — i.e. one they hold an AttemptAnswer row for. This also means a

@@ -1,10 +1,10 @@
 "use server"
 
 import { z } from "zod"
-import { prisma } from "@/lib/db"
-import { assertRole, revokeAllSessions } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { assertRole, revokeAllSessions } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
-import { recordAdminAction } from "@/lib/admin/audit"
+import { recordAdminAction } from "@/lib/admin-audit"
 
 /**
  * Every action here is ADMIN-only and leaves an AdminAuditLog row — see

@@ -1,9 +1,9 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { requireUser, assertOwner } from "@/lib/auth/guards"
-import { prisma } from "@/lib/db"
-import { listExamResults, getExamQuestionsForCorrection } from "@/lib/grading/queries"
-import { getLiveContestStats } from "@/lib/leaderboard/stats"
+import { requireUser, assertOwner } from "@/lib/authorization"
+import { prisma } from "@/lib/prisma"
+import { listExamResults, getExamQuestionsForCorrection } from "@/modules/grading/queries"
+import { getLiveContestStats } from "@/modules/leaderboard/stats"
 import {
   Table,
   TableHeader,
@@ -15,9 +15,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { ResultDisclosureActions } from "@/components/teacher/result-disclosure-actions"
-import { QuestionCorrectionForm } from "@/components/teacher/question-correction-form"
-import { DisqualifyButton } from "@/components/teacher/disqualify-button"
+import { ResultDisclosureActions } from "@/modules/grading/components/result-disclosure-actions"
+import { QuestionCorrectionForm } from "@/modules/grading/components/question-correction-form"
+import { DisqualifyButton } from "@/modules/grading/components/disqualify-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

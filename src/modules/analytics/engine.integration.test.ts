@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { finalizeAndGradeAttempt } from "@/lib/grading/finalize"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { finalizeAndGradeAttempt } from "@/modules/grading/finalize"
 import { getSubjectTopicPerformance, getOverallStats, getWeakestTopics } from "./engine"
 
 const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`

@@ -1,11 +1,11 @@
 import { afterAll, describe, expect, it } from "vitest"
-import { prisma } from "@/lib/db"
-import { hashPassword } from "@/lib/auth/password"
-import { resolveCurrentUser } from "@/lib/auth/guards"
+import { prisma } from "@/lib/prisma"
+import { hashPassword } from "@/modules/auth/password"
+import { resolveCurrentUser } from "@/lib/authorization"
 import {
   registerAction,
   resetPasswordAction,
-} from "./auth.actions"
+} from "./actions"
 
 const createdEmails: string[] = []
 
@@ -96,7 +96,7 @@ describe("resetPasswordAction (integration, live Postgres)", () => {
     expect((await resolveCurrentUser(staleIdentity))?.id).toBe(user.id)
 
     const rawToken = "test-raw-reset-token-value"
-    const { hashToken, resetTokenExpiry } = await import("@/lib/auth/tokens")
+    const { hashToken, resetTokenExpiry } = await import("@/modules/auth/tokens")
     await prisma.authToken.create({
       data: {
         userId: user.id,

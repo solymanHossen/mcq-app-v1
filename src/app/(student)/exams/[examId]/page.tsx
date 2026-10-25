@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import { requireRole } from "@/lib/auth/guards"
-import { prisma } from "@/lib/db"
-import { finalizeIfExpired } from "@/lib/attempts/expire"
+import { requireRole } from "@/lib/authorization"
+import { prisma } from "@/lib/prisma"
+import { finalizeIfExpired } from "@/modules/attempts/expire"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { StartExamButton } from "@/components/student/start-exam-button"
+import { StartExamButton } from "@/modules/attempts/components/start-exam-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.

@@ -1,6 +1,6 @@
 import Image from "next/image"
-import { LatexText } from "@/components/latex-text"
-import { CodeSnippet } from "@/components/code-snippet"
+import { LatexText } from "@/components/shared/latex-text"
+import { CodeSnippet } from "@/components/shared/code-snippet"
 import { cn } from "@/lib/utils"
 
 export type QuestionContentData = {

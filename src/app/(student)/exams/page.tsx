@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { requireRole } from "@/lib/auth/guards"
-import { prisma } from "@/lib/db"
+import { requireRole } from "@/lib/authorization"
+import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import {
   Card,
