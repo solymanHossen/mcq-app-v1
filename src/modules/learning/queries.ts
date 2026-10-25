@@ -15,6 +15,7 @@ export function getBookmarks(studentId: string) {
   return prisma.questionBookmark.findMany({
     where: { studentId },
     orderBy: { createdAt: "desc" },
+    take: 200,
     include: {
       examQuestion: {
         select: {
@@ -39,6 +40,7 @@ export function getMistakeNotebook(studentId: string) {
   return prisma.questionProgress.findMany({
     where: { studentId, lastOutcomeCorrect: false },
     orderBy: { lastAttemptedAt: "desc" },
+    take: 200,
     include: {
       examQuestion: {
         select: {

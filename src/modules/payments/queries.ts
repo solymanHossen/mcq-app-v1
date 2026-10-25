@@ -13,6 +13,7 @@ export function getPaymentHistoryForUser(userId: string) {
   return prisma.paymentTransaction.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
+    take: 200,
   })
 }
 
@@ -20,6 +21,7 @@ export function getSubscriptionHistoryForUser(userId: string) {
   return prisma.subscription.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
+    take: 200,
     include: { plan: true },
   })
 }
@@ -63,7 +65,7 @@ export function listAllSubscriptionPlans() {
 }
 
 export function listAllCoupons() {
-  return prisma.coupon.findMany({ orderBy: { createdAt: "desc" } })
+  return prisma.coupon.findMany({ orderBy: { createdAt: "desc" }, take: 500 })
 }
 
 export function listPendingTeacherVerifications() {
@@ -71,6 +73,7 @@ export function listPendingTeacherVerifications() {
     where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
     orderBy: { createdAt: "asc" },
     select: { id: true, name: true, email: true, createdAt: true },
+    take: 500,
   })
 }
 

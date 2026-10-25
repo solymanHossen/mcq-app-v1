@@ -158,6 +158,35 @@ describe("reportViolationAction", () => {
     })
     expect(events).toHaveLength(0) // nothing was actually recorded
   })
+
+  it("stops recording new events once the per-attempt cap is reached", async () => {
+    const { attempt } = await makeInProgressAttempt(teacherA.id, studentA.id)
+
+    // Pre-seed the attempt right at the cap via one bulk insert, rather
+    // than 500 serial reportViolationAction calls.
+    await prisma.violationEvent.createMany({
+      data: Array.from({ length: 500 }, () => ({
+        attemptId: attempt.id,
+        studentId: studentA.id,
+        type: "TAB_SWITCH" as const,
+        source: "CLIENT_REPORTED" as const,
+        severity: "LOW" as const,
+      })),
+    })
+    asUser(studentA)
+
+    const result = await reportViolationAction({
+      attemptId: attempt.id,
+      type: "TAB_SWITCH",
+      metadata: { awayDurationMs: 2000 },
+    })
+    expect(result).toEqual({ success: true })
+
+    const count = await prisma.violationEvent.count({
+      where: { attemptId: attempt.id },
+    })
+    expect(count).toBe(500)
+  })
 })
 
 describe("flagging for review — never auto-disqualifies", () => {

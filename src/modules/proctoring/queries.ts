@@ -19,6 +19,7 @@ export function listFlaggedAttempts(examId: string) {
       appeals: { orderBy: { createdAt: "desc" } },
     },
     orderBy: { flaggedForReviewAt: "desc" },
+    take: 1000,
   })
 }
 

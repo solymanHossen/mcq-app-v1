@@ -8,6 +8,11 @@ export function listExamResults(examId: string) {
       result: true,
     },
     orderBy: [{ result: { obtainedMarks: "desc" } }, { submittedAt: "asc" }],
+    // A generous safety net, not a realistic page size: this is a single
+    // teacher-owned exam's full roster, which legitimately needs to render
+    // in full today. Revisit with real pagination if contest sizes ever
+    // approach this.
+    take: 5000,
   })
 }
 
@@ -32,11 +37,13 @@ export function getExamQuestionsForCorrection(examId: string) {
 }
 
 /**
- * The only query the student-facing result view may use. Only returns
- * per-question answer-key detail (which option was correct) when the exam's
- * answerKeyReleased flag is set — otherwise that detail is omitted entirely
- * at the query level, the same defense-in-depth approach as the live
- * attempt view in Phase 3.
+ * The only query the student-facing result view may use. The score/result
+ * object itself is only returned once ExamResult.status is PUBLISHED, and
+ * per-question answer-key detail (which option was correct) is only
+ * returned once the exam's answerKeyReleased flag is set — both omitted
+ * entirely at the query level (not just hidden in the UI) so a provisional
+ * score or answer key can never leak through a future consumer of this
+ * query that forgets to re-check disclosure state.
  */
 export async function getResultForStudent(attemptId: string) {
   const attempt = await prisma.examAttempt.findUnique({
@@ -70,6 +77,7 @@ export async function getResultForStudent(attemptId: string) {
   if (!attempt) return null
 
   const revealAnswerKey = attempt.exam.answerKeyReleased
+  const revealResult = attempt.result?.status === "PUBLISHED"
 
   return {
     id: attempt.id,
@@ -77,7 +85,7 @@ export async function getResultForStudent(attemptId: string) {
     examId: attempt.examId,
     examTitle: attempt.exam.title,
     status: attempt.status,
-    result: attempt.result,
+    result: revealResult ? attempt.result : null,
     answerKeyReleased: revealAnswerKey,
     questions: revealAnswerKey
       ? attempt.answers.map((a) => ({
