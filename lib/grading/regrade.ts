@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/db"
 import type { OptionChoice } from "@/prisma/generated/prisma/client"
 import { computeGrade } from "./engine"
+import { invalidateScope } from "@/lib/leaderboard/cache"
+import {
+  examLeaderboardScope,
+  globalLeaderboardScope,
+} from "@/lib/leaderboard/engine"
 
 export type QuestionCorrection = {
   correctOption?: OptionChoice
@@ -64,6 +69,15 @@ export async function applyCorrectionAndRegrade(opts: {
       opts.reason
     )
     if (didChange) regradedCount++
+  }
+
+  if (regradedCount > 0) {
+    // A regrade only matters to the leaderboard if it touched a score that
+    // was already PUBLISHED and visible there — but checking that per
+    // attempt isn't worth it: invalidation is cheap, and worst case this is
+    // a no-op cache clear for an exam with no published results yet.
+    await invalidateScope(examLeaderboardScope(opts.examId))
+    await invalidateScope(globalLeaderboardScope)
   }
 
   return { regradedCount }

@@ -1,9 +1,11 @@
+import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { requireRole } from "@/lib/auth/guards"
 import { prisma } from "@/lib/db"
 import { finalizeIfExpired } from "@/lib/attempts/expire"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { StartExamButton } from "@/components/student/start-exam-button"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -81,8 +83,13 @@ export default async function ExamInfoPage({
 
       {attempts.length > 0 && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex items-center justify-between">
             <CardTitle className="text-base">Your attempts</CardTitle>
+            {exam.leaderboardEnabled && (
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/exams/${examId}/leaderboard`}>Leaderboard</Link>
+              </Button>
+            )}
           </CardHeader>
           <CardContent className="space-y-2">
             {attempts.map((a) => (

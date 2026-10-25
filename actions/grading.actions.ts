@@ -4,6 +4,11 @@ import { prisma } from "@/lib/db"
 import { assertRole, assertOwner } from "@/lib/auth/guards"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { applyCorrectionAndRegrade } from "@/lib/grading/regrade"
+import { invalidateScope } from "@/lib/leaderboard/cache"
+import {
+  examLeaderboardScope,
+  globalLeaderboardScope,
+} from "@/lib/leaderboard/engine"
 import {
   examQuestionCorrectionSchema,
   examQuestionMarksSchema,
@@ -126,8 +131,63 @@ export async function publishExamResultsAction(examId: string) {
     },
   })
 
+  // Publishing is exactly when previously-invisible (PROVISIONAL) results
+  // become eligible for the leaderboard, which only ever ranks PUBLISHED
+  // ones — this is the one event that can add a whole batch of new entries.
+  await invalidateScope(examLeaderboardScope(examId))
+  await invalidateScope(globalLeaderboardScope)
+
   safeRevalidatePath(`/teacher/exams/${examId}/results`)
   return { success: true, published: count }
+}
+
+// ─── Disqualification (excludes an attempt from every leaderboard) ──
+export async function disqualifyAttemptAction(
+  attemptId: string,
+  _state: unknown,
+  formData: FormData
+) {
+  const user = await assertRole("TEACHER", "ADMIN")
+
+  const attempt = await prisma.examAttempt.findUnique({
+    where: { id: attemptId },
+    include: { exam: { select: { teacherId: true } } },
+  })
+  if (!attempt) return { error: "Attempt not found" }
+  assertOwner(user, attempt.exam.teacherId)
+
+  if (attempt.status === "DISQUALIFIED") {
+    return { error: "This attempt is already disqualified" }
+  }
+
+  const reason = String(formData.get("reason") ?? "").trim()
+  if (reason.length < 5) {
+    return { error: "Explain the reason for disqualifying this attempt" }
+  }
+
+  await prisma.$transaction([
+    prisma.examAttempt.update({
+      where: { id: attemptId },
+      data: { status: "DISQUALIFIED", disqualifiedReason: reason },
+    }),
+    prisma.gradingAuditLog.create({
+      data: {
+        examId: attempt.examId,
+        attemptId,
+        action: "ATTEMPT_DISQUALIFIED",
+        actorId: user.id,
+        reason,
+      },
+    }),
+  ])
+
+  // The attempt may have already had a PUBLISHED result counted on the
+  // leaderboard — disqualifying it must remove that entry immediately.
+  await invalidateScope(examLeaderboardScope(attempt.examId))
+  await invalidateScope(globalLeaderboardScope)
+
+  safeRevalidatePath(`/teacher/exams/${attempt.examId}/results`)
+  return { success: true }
 }
 
 export async function releaseAnswerKeyAction(examId: string) {

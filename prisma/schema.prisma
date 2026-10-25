@@ -199,6 +199,12 @@ enum ExamStatus {
   ARCHIVED
 }
 
+enum TieBreakerPolicy {
+  TIME_TAKEN_ASC // faster submission (submittedAt - startedAt) wins — the default
+  SUBMITTED_AT_ASC // earlier wall-clock submission wins
+  ACCURACY_DESC // higher correct/(correct+incorrect) wins
+}
+
 model Exam {
   id               String     @id @default(uuid())
   teacherId        String
@@ -229,6 +235,11 @@ model Exam {
   // like publishing itself — never un-release.
   answerKeyReleased   Boolean   @default(false)
   answerKeyReleasedAt DateTime?
+
+  // Leaderboard config — see lib/leaderboard/engine.ts for exactly how each
+  // policy breaks a tie.
+  leaderboardEnabled Boolean          @default(true)
+  tieBreakerPolicy   TieBreakerPolicy @default(TIME_TAKEN_ASC)
 
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
@@ -326,6 +337,10 @@ enum AttemptStatus {
   IN_PROGRESS
   COMPLETED
   TIMEOUT
+  // No anti-cheat engine sets this yet (out of scope so far) — it exists now
+  // specifically so the leaderboard's filtering logic has a real status to
+  // exclude, per Phase 5's explicit requirement, via disqualifyAttemptAction.
+  DISQUALIFIED
 }
 
 model ExamAttempt {
@@ -346,6 +361,11 @@ model ExamAttempt {
   startedAt     DateTime      @default(now())
   deadline      DateTime
   submittedAt   DateTime?
+
+  // Set only via disqualifyAttemptAction — excluded from every leaderboard
+  // query regardless of its (still-computed, still-visible-to-the-student)
+  // ExamResult.
+  disqualifiedReason String?  @db.Text
 
   answers       AttemptAnswer[]
   result        ExamResult?
@@ -441,6 +461,7 @@ enum GradingAuditAction {
   RESULTS_PUBLISHED
   QUESTION_CORRECTED
   QUESTION_CANCELLED
+  ATTEMPT_DISQUALIFIED
 }
 
 // Separate from the Phase 1 AuditLog (auth/security events): this is

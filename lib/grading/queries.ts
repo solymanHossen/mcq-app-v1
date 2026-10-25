@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db"
 
 export function listExamResults(examId: string) {
   return prisma.examAttempt.findMany({
-    where: { examId, status: { in: ["COMPLETED", "TIMEOUT"] } },
+    where: { examId, status: { in: ["COMPLETED", "TIMEOUT", "DISQUALIFIED"] } },
     include: {
       student: { select: { id: true, name: true, email: true } },
       result: true,
