@@ -55,7 +55,11 @@ export function ExamAttemptClient({
 
   const submit = useCallback(async () => {
     setSubmitting(true)
-    const result = await submitAttemptAction(attemptId)
+    // Best-effort, client-reported, and only ever used for the daily-streak
+    // day boundary — never a security- or grading-relevant value. Falls
+    // back to the server's own UTC default if unavailable.
+    const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const result = await submitAttemptAction(attemptId, { clientTimezone })
     setSubmitting(false)
     if (result?.status) {
       toast.success(

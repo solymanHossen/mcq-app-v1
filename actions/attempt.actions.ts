@@ -14,6 +14,9 @@ import {
 } from "@/lib/anti-cheat/engine"
 import { recordRequestAndCheckSuspicious } from "@/lib/anti-cheat/rate-detection"
 import { recordViolationEvent } from "@/lib/anti-cheat/record"
+import { recordDailyActivity } from "@/lib/learning/streak"
+import { awardXP, XP_PER_STREAK_DAY } from "@/lib/learning/xp"
+import { evaluateBadgesAfterStreakUpdate } from "@/lib/learning/badges"
 
 // ─── Start (idempotent: resumes an existing in-progress attempt) ──
 export type StartAttemptResult = { attemptId: string } | { error: string }
@@ -220,7 +223,10 @@ export async function saveAnswerAction(input: unknown) {
 }
 
 // ─── Submit: idempotent, server decides COMPLETED vs TIMEOUT ──────
-export async function submitAttemptAction(attemptId: string) {
+export async function submitAttemptAction(
+  attemptId: string,
+  opts: { clientTimezone?: string } = {}
+) {
   const user = await assertRole("STUDENT")
 
   const attempt = await prisma.examAttempt.findUnique({
@@ -242,6 +248,25 @@ export async function submitAttemptAction(attemptId: string) {
       where: { id: attemptId },
     })
     return { success: true, status: settled.status, alreadySubmitted: true }
+  }
+
+  // The daily-activity streak is deliberately NOT part of
+  // finalizeAndGradeAttempt itself: it needs the live client's own reported
+  // timezone to mean anything ("today" has no meaning without one), so it
+  // can only be recorded from a request that actually came from the
+  // student's browser just now — never from the passive expiry sweep, which
+  // has no client to ask. See lib/learning/streak.ts.
+  const streak = await recordDailyActivity(user.id, opts.clientTimezone)
+  if (streak.isNewDay) {
+    await awardXP(
+      prisma,
+      user.id,
+      XP_PER_STREAK_DAY,
+      "STREAK_DAY",
+      "STREAK_DAY",
+      streak.lastActiveDate ?? ""
+    )
+    await evaluateBadgesAfterStreakUpdate(prisma, user.id, streak.currentStreak)
   }
 
   return { success: true, status: nextStatus }

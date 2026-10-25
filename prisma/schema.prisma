@@ -54,6 +54,13 @@ model User {
   appealsFiled       ViolationAppeal[] @relation("StudentAppeals")
   appealsResolved    ViolationAppeal[] @relation("ResolvedAppeals")
 
+  bookmarks        QuestionBookmark[]      @relation("StudentBookmarks")
+  questionProgress QuestionProgress[]      @relation("StudentQuestionProgress")
+  xpTransactions   XPTransaction[]         @relation("StudentXP")
+  streak           UserStreak?             @relation("StudentStreak")
+  badges           UserBadge[]             @relation("StudentBadges")
+  aiExplanationRequests AIExplanationRequest[] @relation("StudentAIRequests")
+
   @@index([role, isActive])
 }
 
@@ -301,6 +308,9 @@ model ExamQuestion {
 
   attemptAnswers        AttemptAnswer[]
   gradingAuditLogs      GradingAuditLog[]
+  bookmarks             QuestionBookmark[]
+  learningProgress      QuestionProgress[]
+  aiExplanation         AIExplanation?
 
   @@unique([examId, questionId])
   @@index([examId, order])
@@ -648,4 +658,192 @@ model ViolationAppeal {
 
   @@index([attemptId])
   @@index([status])
+}
+
+// ============================================================================
+// Phase 7 — Learning, retention & gamification
+//
+// Everything here is derived FROM, but never mutates, the immutable
+// historical record (AttemptAnswer, ExamResult). QuestionProgress is a
+// separate, mutable, per-student-per-ExamQuestion summary maintained
+// exclusively by lib/learning/progress.ts (at grading time) and
+// lib/learning/spaced-repetition.ts (at review time) — recomputing it from
+// scratch from AttemptAnswer history would always be possible and would
+// always agree, by construction; it's materialized only because spaced
+// repetition needs mutable state (ease factor, interval, next-due date) that
+// has no other home.
+//
+// A bookmark/progress row references ExamQuestion, never the shared
+// Question bank row: students never have visibility into the bank itself
+// (Phase 2's privacy rule), only into the snapshot they actually attempted.
+// One consequence: if a teacher reuses the same bank Question across two
+// exams, a student who sees it in both gets two independent progress rows,
+// not one consolidated card — the snapshot architecture has no stable
+// cross-exam identity to merge on, and this phase doesn't invent one.
+// ============================================================================
+
+model QuestionBookmark {
+  id             String       @id @default(uuid())
+
+  studentId      String
+  student        User         @relation("StudentBookmarks", fields: [studentId], references: [id], onDelete: Cascade)
+
+  examQuestionId String
+  examQuestion   ExamQuestion @relation(fields: [examQuestionId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime     @default(now())
+
+  @@unique([studentId, examQuestionId])
+  @@index([studentId, createdAt])
+}
+
+enum MasteryStatus {
+  LEARNING
+  REVIEWING
+  MASTERED
+}
+
+// One row per (student, examQuestion) ever answered (skips don't create a
+// row — there's nothing to measure). timesSeen/timesCorrect/timesIncorrect
+// and lastOutcomeCorrect are updated every time the student answers this
+// exact ExamQuestion again (e.g. a retake of an exam with maxAttempts > 1).
+// The spaced-repetition fields (easeFactor/intervalDays/repetitions/
+// nextReviewAt) are untouched by ordinary grading and only ever advanced by
+// an explicit mistake-notebook review submission — see
+// lib/learning/spaced-repetition.ts for the SM-2-derived update rule, and
+// lib/learning/progress.ts for exactly what grading itself does (and
+// doesn't) touch here.
+model QuestionProgress {
+  id             String        @id @default(uuid())
+
+  studentId      String
+  student        User          @relation("StudentQuestionProgress", fields: [studentId], references: [id], onDelete: Cascade)
+
+  examQuestionId String
+  examQuestion   ExamQuestion  @relation(fields: [examQuestionId], references: [id], onDelete: Cascade)
+
+  timesSeen          Int       @default(0)
+  timesCorrect       Int       @default(0)
+  timesIncorrect     Int       @default(0)
+  lastOutcomeCorrect Boolean?
+  lastAttemptedAt    DateTime?
+
+  masteryStatus  MasteryStatus @default(LEARNING)
+  easeFactor     Float         @default(2.5)
+  intervalDays   Int           @default(0)
+  repetitions    Int           @default(0)
+  nextReviewAt   DateTime?
+  lastReviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, examQuestionId])
+  @@index([studentId, masteryStatus])
+  @@index([studentId, nextReviewAt])
+}
+
+enum XPReason {
+  EXAM_COMPLETED
+  STREAK_DAY
+  MISTAKE_REVIEWED
+}
+
+// Append-only ledger, never summed-and-cached elsewhere — a student's total
+// XP is always SUM(amount), computed on read, so it can never drift from
+// this table. The unique constraint on (studentId, sourceType, sourceId) is
+// the entire duplicate-award defense: lib/learning/xp.ts's awardXP treats a
+// unique-constraint violation as "already awarded for this event", not an
+// error, so a retried request (or a request racing itself) can never double
+// an award no matter how many times it's retried.
+model XPTransaction {
+  id         String   @id @default(uuid())
+
+  studentId  String
+  student    User     @relation("StudentXP", fields: [studentId], references: [id], onDelete: Cascade)
+
+  amount     Int
+  reason     XPReason
+  sourceType String
+  sourceId   String
+
+  createdAt  DateTime @default(now())
+
+  @@unique([studentId, sourceType, sourceId])
+  @@index([studentId, createdAt])
+}
+
+// One row per student. lastActiveDate is a plain YYYY-MM-DD string in
+// `timezone` (an IANA zone name), not a DateTime — day boundaries are
+// meaningless without a zone, and storing the already-localized date avoids
+// ever re-deriving "today" in the wrong zone later. Both fields are updated
+// from the client-reported zone on every activity event (see
+// lib/learning/streak.ts); a student who travels gets their new zone picked
+// up the next time they're active, never retroactively reinterpreted.
+model UserStreak {
+  studentId      String   @id
+  student        User     @relation("StudentStreak", fields: [studentId], references: [id], onDelete: Cascade)
+
+  currentStreak  Int      @default(0)
+  longestStreak  Int      @default(0)
+  lastActiveDate String?
+  timezone       String   @default("UTC")
+
+  updatedAt      DateTime @updatedAt
+}
+
+// The badge catalog (key, name, description, criteria) lives in code —
+// lib/learning/badges.ts — not in the database. This table only records
+// which keys a given student has actually earned, and when; the unique
+// constraint makes (re-)evaluating badge criteria after every event safe to
+// call repeatedly without ever awarding the same badge twice.
+model UserBadge {
+  id        String   @id @default(uuid())
+
+  studentId String
+  student   User     @relation("StudentBadges", fields: [studentId], references: [id], onDelete: Cascade)
+
+  badgeKey  String
+  earnedAt  DateTime @default(now())
+
+  @@unique([studentId, badgeKey])
+  @@index([studentId])
+}
+
+// Generated once per ExamQuestion and shared by every student who asks for
+// it: the explanation of a fixed question/correct-answer pair doesn't
+// depend on who's asking, so a cache hit here never calls the AI provider
+// again — see lib/ai/explain.ts. This is the primary cost control; the
+// per-student daily rate limit in lib/ai/explain.ts only ever applies to the
+// cache-miss path.
+model AIExplanation {
+  id             String       @id @default(uuid())
+
+  examQuestionId String       @unique
+  examQuestion   ExamQuestion @relation(fields: [examQuestionId], references: [id], onDelete: Cascade)
+
+  content        String       @db.Text
+  model          String
+
+  createdAt      DateTime     @default(now())
+}
+
+// One row per cache-MISS generation request (never per request overall — a
+// cache hit is free and logs nothing here). This is the entire cost-control
+// mechanism: lib/ai/explain.ts counts a student's rows in the last 24h
+// against a fixed daily limit before ever calling the provider. Deliberately
+// backed by Postgres, not the optional Redis cache (lib/redis.ts runs with
+// no cache at all when REDIS_URL is unset) — a cost control that silently
+// stops working without Redis would defeat its own purpose.
+model AIExplanationRequest {
+  id             String   @id @default(uuid())
+
+  studentId      String
+  student        User     @relation("StudentAIRequests", fields: [studentId], references: [id], onDelete: Cascade)
+
+  examQuestionId String
+
+  createdAt      DateTime @default(now())
+
+  @@index([studentId, createdAt])
 }
