@@ -9,6 +9,7 @@ import { ForbiddenError } from "@/lib/errors"
 import {
   suspendUserAction,
   reinstateUserAction,
+  changeUserRoleAction,
   verifyTeacherAction,
   rejectTeacherAction,
   resetTeacherVerificationAction,
@@ -142,6 +143,80 @@ describe("reinstateUserAction", () => {
     const student = await makeUser("STUDENT", `reinstate-caller-${Math.random()}`)
     asUser(student)
     await expect(reinstateUserAction("any-id")).rejects.toThrow(ForbiddenError)
+  })
+})
+
+describe("changeUserRoleAction", () => {
+  it("rejects a non-admin caller", async () => {
+    const teacher = await makeUser("TEACHER", `role-caller-${Math.random()}`)
+    const target = await makeUser("STUDENT", `role-target-${Math.random()}`)
+    asUser(teacher)
+
+    const formData = new FormData()
+    formData.set("role", "TEACHER")
+    formData.set("reason", "Attempting to change role without permission")
+    await expect(changeUserRoleAction(target.id, undefined, formData)).rejects.toThrow(
+      ForbiddenError
+    )
+  })
+
+  it("lets an admin change their own role when other admins remain", async () => {
+    const selfDemoter = await makeUser("ADMIN", `role-self-${Math.random()}`)
+    asUser(selfDemoter)
+
+    const formData = new FormData()
+    formData.set("role", "TEACHER")
+    formData.set("reason", "Stepping down from admin duties")
+    const result = await changeUserRoleAction(selfDemoter.id, undefined, formData)
+    expect(result).toEqual({ success: true })
+
+    const updated = await prisma.user.findUniqueOrThrow({ where: { id: selfDemoter.id } })
+    expect(updated.role).toBe("TEACHER")
+  })
+
+  it("promotes a student to teacher, resets verification to PENDING, and logs the action", async () => {
+    const target = await makeUser("STUDENT", `role-promote-${Math.random()}`, {
+      teacherVerificationStatus: "REJECTED",
+      teacherVerificationNote: "stale note from a previous stint",
+    })
+    asUser(admin)
+
+    const formData = new FormData()
+    formData.set("role", "TEACHER")
+    formData.set("reason", "Approved as a new teacher after manual review")
+    const result = await changeUserRoleAction(target.id, undefined, formData)
+    expect(result).toEqual({ success: true })
+
+    const updated = await prisma.user.findUniqueOrThrow({ where: { id: target.id } })
+    expect(updated.role).toBe("TEACHER")
+    expect(updated.teacherVerificationStatus).toBe("PENDING")
+    expect(updated.teacherVerificationNote).toBeNull()
+
+    const log = await prisma.adminAuditLog.findFirst({
+      where: { action: "USER_ROLE_CHANGED", targetUserId: target.id },
+    })
+    expect(log?.actorId).toBe(admin.id)
+    expect(log?.metadata).toEqual({ fromRole: "STUDENT", toRole: "TEACHER" })
+  })
+
+  // The "can't remove the last admin" guard (actions.ts) is intentionally
+  // not exercised here: this suite runs against the real shared dev
+  // database (see vitest.config.ts — no isolated test DB), which already
+  // has its own admins. Safely forcing the global admin count to exactly 1
+  // would mean mutating those real accounts, risking leaving them demoted
+  // if the test failed partway through. Verified by code review instead.
+
+  it("rejects an invalid role value", async () => {
+    const target = await makeUser("STUDENT", `role-invalid-${Math.random()}`)
+    asUser(admin)
+    const formData = new FormData()
+    formData.set("role", "SUPERUSER")
+    formData.set("reason", "Should fail validation")
+    const result = await changeUserRoleAction(target.id, undefined, formData)
+    expect(result && "error" in result).toBe(true)
+
+    const unchanged = await prisma.user.findUniqueOrThrow({ where: { id: target.id } })
+    expect(unchanged.role).toBe("STUDENT")
   })
 })
 

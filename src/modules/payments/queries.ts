@@ -77,11 +77,29 @@ export function listPendingTeacherVerifications() {
   })
 }
 
-export function listUsers(opts: { page: number; pageSize: number; role?: "ADMIN" | "TEACHER" | "STUDENT" }) {
+export function listUsers(opts: {
+  page: number
+  pageSize: number
+  role?: "ADMIN" | "TEACHER" | "STUDENT"
+  search?: string
+}) {
   const skip = (opts.page - 1) * opts.pageSize
+  const search = opts.search?.trim()
+  const where = {
+    ...(opts.role ? { role: opts.role } : {}),
+    ...(search
+      ? {
+          OR: [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  }
+
   return Promise.all([
     prisma.user.findMany({
-      where: opts.role ? { role: opts.role } : undefined,
+      where,
       orderBy: { createdAt: "desc" },
       skip,
       take: opts.pageSize,
@@ -95,7 +113,7 @@ export function listUsers(opts: { page: number; pageSize: number; role?: "ADMIN"
         createdAt: true,
       },
     }),
-    prisma.user.count({ where: opts.role ? { role: opts.role } : undefined }),
+    prisma.user.count({ where }),
   ])
 }
 

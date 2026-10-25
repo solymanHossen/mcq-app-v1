@@ -17,6 +17,11 @@ const reasonSchema = z.object({
   reason: z.string().trim().min(5, "Explain the reason for this action").max(1000),
 })
 
+const roleChangeSchema = z.object({
+  role: z.enum(["ADMIN", "TEACHER", "STUDENT"]),
+  reason: z.string().trim().min(5, "Explain the reason for this change").max(1000),
+})
+
 export async function suspendUserAction(userId: string, _state: unknown, formData: FormData) {
   const admin = await assertRole("ADMIN")
 
@@ -70,6 +75,59 @@ export async function reinstateUserAction(userId: string) {
       action: "ACCOUNT_REINSTATED",
       actorId: admin.id,
       targetUserId: userId,
+    })
+  })
+
+  safeRevalidatePath("/admin/users")
+  return { success: true }
+}
+
+export async function changeUserRoleAction(userId: string, _state: unknown, formData: FormData) {
+  const admin = await assertRole("ADMIN")
+
+  const target = await prisma.user.findUnique({ where: { id: userId } })
+  if (!target) return { error: "User not found" }
+
+  const parsed = roleChangeSchema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid request" }
+
+  const { role: newRole, reason } = parsed.data
+  if (newRole === target.role) return { error: "User already has this role" }
+
+  // The only invariant this guards: never end up with zero admins. An admin
+  // stepping down (even out of their own account) is fine as long as
+  // another admin remains to take over — this also covers "can I change my
+  // own role" without a separate self-check, since the sole remaining admin
+  // changing their own role is exactly the adminCount <= 1 case.
+  if (target.role === "ADMIN" && newRole !== "ADMIN") {
+    const adminCount = await prisma.user.count({ where: { role: "ADMIN" } })
+    if (adminCount <= 1) return { error: "Can't remove the last remaining admin" }
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.user.update({
+      where: { id: userId },
+      data: {
+        role: newRole,
+        // Moving someone into TEACHER always starts a fresh verification
+        // cycle — a prior VERIFIED/REJECTED status (from an earlier stint as
+        // a teacher, or a stale default) shouldn't carry over silently.
+        ...(newRole === "TEACHER" && target.role !== "TEACHER"
+          ? {
+              teacherVerificationStatus: "PENDING",
+              teacherVerifiedAt: null,
+              teacherVerifiedById: null,
+              teacherVerificationNote: null,
+            }
+          : {}),
+      },
+    })
+    await recordAdminAction(tx, {
+      action: "USER_ROLE_CHANGED",
+      actorId: admin.id,
+      targetUserId: userId,
+      reason,
+      metadata: { fromRole: target.role, toRole: newRole },
     })
   })
 
