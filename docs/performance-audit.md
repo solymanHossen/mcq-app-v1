@@ -6,13 +6,17 @@ capacity limit rather than papering over it.
 
 **Read this before citing any number below.** Every measurement here was
 taken on one shared development machine (8 CPU cores, 18GB RAM with ~11GB
-already in use by other processes at test time, a single `postgres:17-alpine`
-container with its *default, unconfigured* settings — `max_connections=100`,
-`shared_buffers=128MB`). Nothing here is a production capacity guarantee. The
-numbers are useful for three things: finding real bottlenecks, verifying a
-fix actually moved the needle, and giving an honest order-of-magnitude sense
-of where this specific configuration starts to strain — not for predicting
-how many concurrent students a real deployment can serve. Run-to-run variance
+already in use by other processes at test time). Sections 1-8 were measured
+against a single `postgres:17-alpine` container on its *default,
+unconfigured* settings (`max_connections=100`, `shared_buffers=128MB`);
+section 9 then tunes that configuration for a specific small-host deployment
+target and re-measures against it — read each section's numbers against the
+configuration that section itself describes, not an assumed constant one.
+Nothing here is a production capacity guarantee. The numbers are useful for
+three things: finding real bottlenecks, verifying a fix actually moved the
+needle, and giving an honest order-of-magnitude sense of where a given
+configuration starts to strain — not for predicting how many concurrent
+students a real deployment can serve. Run-to-run variance
 on this shared machine was itself measurable (±20-30% on some figures); read
 every number as "this order of magnitude," not a precise constant.
 
@@ -312,7 +316,7 @@ or alert on exactly the condition demonstrated above.
 
 ---
 
-## 6. Caching and invalidation — evaluated
+## 6. Caching and invalidation — evaluated, stampede fixed
 
 The existing Redis leaderboard cache (Phase 5: 30s TTL, explicit
 invalidation on grade/regrade/publish/disqualify, a per-scope key-index set
@@ -321,27 +325,53 @@ section 1 and judged structurally correct: it's the right mitigation
 specifically for the global leaderboard's unavoidable full-aggregation
 shape.
 
-**Found, not fixed:** a cache-stampede pattern. The 40-way concurrent
-leaderboard-read measurement in section 2 (p50=300ms) is roughly 10x the
-~20-40ms a single uncontended query costs per section 1 — because on a cold
-cache (right after invalidation, or simply the first read), every concurrent
-request independently recomputes and re-caches the same page instead of the
-first one computing it and the rest waiting for that result. **Not fixed in
-this pass**: the severity is moderate (a leaderboard page, not the
-core exam-taking critical path measured in sections 2-4) and a correct
-single-flight/lock implementation on top of the existing Redis client is
-real additional complexity that deserved more time than remained in this
-audit to get right without risking the well-tested Phase 5 cache/invalidation
-logic. Recommended concrete next step: a short-lived `SET ... NX PX <ms>`
-lock per cache key in `lib/leaderboard/cache.ts`; a request that doesn't win
-the lock polls the cache briefly for the winner's result and falls back to
-computing directly if that wait times out, so a stalled lock-holder can never
-block anyone indefinitely.
+**Found and fixed: a cache-stampede pattern.** The original 40-way
+concurrent leaderboard-read measurement (p50≈270-420ms across runs) was
+roughly 10x the ~20-40ms a single uncontended query costs per section 1 —
+because on a cold cache (right after invalidation, or simply the first
+read), every concurrent request independently recomputed and re-cached the
+same page instead of the first one computing it and the rest waiting for
+that result.
+
+**Fix:** `lib/leaderboard/cache.ts` gained a short-lived, advisory
+compute lock (`acquireComputeLock`/`releaseComputeLock`, a `SET key val NX
+PX 3000` with a compare-and-delete Lua script for release — never a blind
+delete, so releasing late can't clobber a different request's legitimately
+re-acquired lock) and a bounded wait (`waitForCachedPage`, 2s timeout,
+50ms poll). `getOrComputeCachedPage` composes all of this into the one
+read-through pattern both `getExamLeaderboard` and `getGlobalLeaderboard`
+now use: cache hit → return; cache miss → try to acquire the lock; winner
+computes and caches; everyone else polls briefly for the winner's result,
+falling back to computing it themselves only if that wait times out — so a
+slow or crashed computer can never make anyone hang indefinitely. The whole
+mechanism no-ops identically to before when `REDIS_URL` isn't set.
+
+**Measured improvement**, same 40-way concurrent-read scenario, re-seeded
+dataset, cold cache (verified via a fresh exam the first run, and via an
+explicit `FLUSHALL` the second, to rule out a fluke):
+
+| | Before | After (2 runs) |
+|---|---|---|
+| p50 | ~270-420ms | **118ms / 117ms** |
+| p95 | ~390-510ms | **119ms / 117ms** |
+| p99 | ~393-518ms | **119ms / 119ms** |
+
+The tight, consistent p50-p99 spread after the fix (as opposed to the wider
+range measured before) is itself evidence the stampede is gone: before, some
+requests "won" the race to compute while others redundantly recomputed,
+producing more variance; now nearly all of them wait for one winner.
+Verified correct (not just fast) with 9 new tests in
+`lib/leaderboard/cache.integration.test.ts` covering lock acquisition,
+release, the wrong-token-can't-steal-the-lock case, the wait-and-fall-back
+behavior, and that `getOrComputeCachedPage` computes far fewer than N times
+under N-way concurrent contention while every caller still gets the correct
+result — plus the existing 19 leaderboard-engine/cache tests continue to
+pass unchanged, confirming the ranking logic itself wasn't touched.
 
 **No new caching layer was added, and Redis was not newly introduced** — it
-was already in the stack for this exact purpose; this phase only evaluated
-and documented it, consistent with not adding infrastructure beyond a
-demonstrated need.
+was already in the stack for this exact purpose; this phase used it more
+effectively, consistent with not adding infrastructure beyond a demonstrated
+need.
 
 ---
 
@@ -411,3 +441,105 @@ these would need their own reproducible test before being claimed.
 
 None of the above required, or now uses, a queue. Redis usage was not
 expanded beyond its existing, already-justified role (leaderboard caching).
+
+---
+
+## 9. Postgres configuration for a small (1-2GB RAM) deployment target
+
+Section 8 flagged that Postgres was running on the `postgres:17-alpine`
+image's bare, unconfigured defaults — sized for nothing in particular. Once
+the actual target was specified (a small host, 1-2GB RAM, running Postgres,
+Redis, and the Next.js app together), `docker-compose.yml` was given an
+explicit, reasoned configuration instead of relying on defaults that happen
+to coincidentally fit or not.
+
+**Method, and its honest limit:** the sizing below follows standard,
+well-established Postgres tuning heuristics for an OLTP "web application"
+workload under a memory budget (the same reasoning tools like PGTune encode)
+— it is derived, not measured, for the memory-sizing choices, because this
+sandboxed dev environment has 18GB of host RAM and there is no way to
+honestly simulate "the whole host only has 1-2GB" here. What *was* measured
+directly, and is reported as such below: that Postgres actually starts and
+runs correctly under a hard, Docker-enforced cgroup memory cap matching the
+target (not just configured to a value and hoped), that the full regular
+test suite (225 tests) passes unchanged against it, that specific planner
+settings produce the expected, observable change in query plans, and —
+importantly — a configuration choice that looked reasonable on paper but
+measurably hurt a real workload, caught before being left in place.
+
+### What changed, and why
+
+`mem_limit: 512m` on the Postgres container and `128m` on Redis are the
+actual safety net: a hard cap Docker enforces via cgroups regardless of how
+much RAM other processes on the host consume. Verified by recreating both
+containers with `docker compose up -d` and confirming `docker inspect`
+reports the limits applied (536870912 / 134217728 bytes) and both report
+`healthy`.
+
+Inside that 512MB budget, sized for "web application" OLTP (many small, fast
+transactions — this app's actual shape) at `max_connections=40`:
+
+| Setting | Value | Reasoning |
+|---|---|---|
+| `shared_buffers` | 128MB | ~25% of the 512MB cap — standard OLTP guidance; this happens to match the image's own default value, so no change in behavior here, just made deliberate instead of incidental |
+| `effective_cache_size` | 384MB | ~75% of the cap; a planner-only hint about total available cache (not actually allocated) — was previously Postgres's default of 4GB, wildly oversized for a 512MB container and liable to mislead the planner into assuming cache hits that can't happen |
+| `work_mem` | 4MB | Conservative per-sort/hash allocation; with up to `max_connections` operations potentially running concurrent sorts, this needs to stay small on a memory-constrained host — matches Postgres's own default, made explicit |
+| `maintenance_work_mem` | 32MB | Used by VACUUM/index builds, infrequent and not concurrent across many connections, so a larger allowance than `work_mem` is safe |
+| `max_connections` | 40 | The app's own pool (`DB_POOL_MAX`, default 20 — section 2) needs roughly half of this for one instance, leaving 2x headroom for migrations/admin tools/future scaling, while reserving less per-possible-connection memory overhead than Postgres's own default of 100 |
+| `random_page_cost` | 1.1 | Assumes SSD storage (true of virtually every modern small VPS) instead of the spinning-disk-era default of 4 — **directly verified** below to change a real query plan |
+| `effective_io_concurrency` | 200 | Same SSD assumption, lets the planner issue more concurrent prefetch reads |
+| `wal_buffers` | 16MB | Small, standard value; not memory-constrained at this scale |
+| `min_wal_size` / `max_wal_size` | 80MB / 1GB | See the correction below — this is the *final*, corrected value |
+| `checkpoint_completion_target` | 0.9 | Standard: spreads checkpoint I/O over most of the checkpoint interval instead of bursting it |
+
+Redis: `maxmemory 96mb` with `maxmemory-policy allkeys-lru`. Every value Redis
+holds here is a disposable, safely-recomputable cached leaderboard page (see
+section 6) — capping memory and evicting the least-recently-used key under
+pressure is strictly safe, never a correctness risk, and protects a small
+host from an OOM over cache data that was never required to persist.
+
+### Verified: the SSD planner hint actually changes a query plan
+
+Re-ran the exam-leaderboard EXPLAIN ANALYZE from section 1 (same query
+shape, a freshly reseeded ~9k-attempt dataset) against the tuned
+configuration. The per-exam attempt filter now uses a plain **Index Scan**
+on `ExamAttempt_examId_status_idx`, where the untuned configuration (section
+1, `random_page_cost` at its default of 4) used a **Bitmap Heap Scan +
+Bitmap Index Scan** for the identical filter. This is the expected,
+textbook effect of lowering `random_page_cost` for SSD storage — the planner
+now correctly judges a direct index scan cheaper than a bitmap scan for this
+selectivity. Total execution time was unchanged within this machine's normal
+run-to-run noise (29.8ms vs. ~20ms), as expected — the plan shape changed,
+not the underlying data volume.
+
+### Found and corrected: `max_wal_size` was the wrong place to save disk space
+
+An initial pass set `max_wal_size=256MB` (down from Postgres's default 1GB)
+specifically to reduce disk footprint on a small host. Re-running the 50-way
+concurrent-submission-storm load test (section 2) against it found p50
+submission latency had **more than doubled: 552.7ms → 1,034.5ms** (p99
+573.0ms → 1,067.7ms), consistently across repeated runs — smaller
+`max_wal_size` forces Postgres to checkpoint far more often, and more
+frequent checkpoints mean more periodic write-amplification exactly when a
+burst of grading transactions is trying to commit.
+
+**Isolated, not assumed:** reverted only `max_wal_size` to 1GB (keeping the
+512MB memory cap and every other setting unchanged) and re-ran the identical
+test — p50 returned to 552.7ms, matching the pre-tuning baseline exactly.
+This conclusively identifies `max_wal_size`, not the memory cap itself, as
+the cause. **Corrected to 1GB in the shipped configuration.** The lesson
+generalizes: disk space is cheap on virtually every small host; trading
+submission latency during an exam deadline rush — one of the most
+user-visible moments this whole audit exists to protect — for a few hundred
+MB of disk was the wrong tradeoff, and it would have been easy to ship
+without ever measuring it.
+
+### What this does, and doesn't, establish
+
+Demonstrated: Postgres functions correctly, passes the full test suite, and
+exhibits the expected planner behavior under a real, enforced 512MB memory
+cap. Not demonstrated: full end-to-end behavior with the Next.js app and
+Redis *also* genuinely confined to a shared 1-2GB host total (this sandbox's
+Node/tsx/Vitest tooling itself runs on the host's full 18GB throughout this
+investigation) — that would need testing on the actual target host before
+going live, the same caveat as every other number in this document.

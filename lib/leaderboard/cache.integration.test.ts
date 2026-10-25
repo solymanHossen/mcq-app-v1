@@ -3,6 +3,10 @@ import {
   getCachedPage,
   setCachedPage,
   invalidateScope,
+  acquireComputeLock,
+  releaseComputeLock,
+  waitForCachedPage,
+  getOrComputeCachedPage,
   _resetClientForTests,
 } from "./cache"
 
@@ -76,6 +80,81 @@ describe("leaderboard cache (requires REDIS_URL, see docker-compose.yml)", () =>
   })
 })
 
+describe("compute lock (stampede control)", () => {
+  it("only the first caller acquires the lock for a given page", async () => {
+    const first = await acquireComputeLock(scope, 1, 20)
+    const second = await acquireComputeLock(scope, 1, 20)
+
+    expect(first).not.toBeNull()
+    expect(second).toBeNull()
+
+    await releaseComputeLock(scope, 1, 20, first!)
+  })
+
+  it("releasing frees the lock for the next caller", async () => {
+    const first = await acquireComputeLock(scope, 1, 20)
+    await releaseComputeLock(scope, 1, 20, first!)
+
+    const second = await acquireComputeLock(scope, 1, 20)
+    expect(second).not.toBeNull()
+
+    await releaseComputeLock(scope, 1, 20, second!)
+  })
+
+  it("releasing with the wrong token never clobbers a different holder's lock", async () => {
+    const real = await acquireComputeLock(scope, 1, 20)
+    await releaseComputeLock(scope, 1, 20, "not-the-real-token")
+
+    // The real lock must still be held — a second acquire must still fail.
+    const stillLocked = await acquireComputeLock(scope, 1, 20)
+    expect(stillLocked).toBeNull()
+
+    await releaseComputeLock(scope, 1, 20, real!)
+  })
+
+  it("waitForCachedPage returns the winner's result once it's cached", async () => {
+    const waiter = waitForCachedPage(scope, 1, 20)
+    await new Promise((r) => setTimeout(r, 100))
+    await setCachedPage(scope, 1, 20, "winner-result")
+
+    expect(await waiter).toBe("winner-result")
+  })
+
+  it("waitForCachedPage gives up and returns null if nothing appears", async () => {
+    const result = await waitForCachedPage(scope, 1, 20)
+    expect(result).toBeNull()
+  })
+})
+
+describe("getOrComputeCachedPage", () => {
+  it("computes once and serves every concurrent caller the same result", async () => {
+    let computeCalls = 0
+    const compute = async () => {
+      computeCalls++
+      await new Promise((r) => setTimeout(r, 150)) // simulate real query latency
+      return { value: "computed-once" }
+    }
+
+    const results = await Promise.all(
+      Array.from({ length: 10 }, () => getOrComputeCachedPage(scope, 1, 20, compute))
+    )
+
+    expect(results.every((r) => r.value === "computed-once")).toBe(true)
+    // The lock makes 9 of the 10 wait for the 1st instead of recomputing —
+    // not a hard guarantee of exactly 1 (a slow waiter can still time out and
+    // compute independently), but it must be far fewer than all 10.
+    expect(computeCalls).toBeLessThan(10)
+  })
+
+  it("returns a fresh value on a genuine cache miss with no contention", async () => {
+    const result = await getOrComputeCachedPage(scope, 1, 20, async () => ({ value: "fresh" }))
+    expect(result).toEqual({ value: "fresh" })
+
+    const cached = await getCachedPage(scope, 1, 20)
+    expect(JSON.parse(cached!)).toEqual({ value: "fresh" })
+  })
+})
+
 describe("leaderboard cache — disabled (no REDIS_URL)", () => {
   beforeEach(() => {
     vi.stubEnv("REDIS_URL", "")
@@ -94,5 +173,24 @@ describe("leaderboard cache — disabled (no REDIS_URL)", () => {
   it("setCachedPage and invalidateScope are safe no-ops", async () => {
     await expect(setCachedPage(scope, 1, 20, "x")).resolves.toBeUndefined()
     await expect(invalidateScope(scope)).resolves.toBeUndefined()
+  })
+
+  it("acquireComputeLock always reports no lock, never blocking a caller", async () => {
+    expect(await acquireComputeLock(scope, 1, 20)).toBeNull()
+  })
+
+  it("getOrComputeCachedPage still returns a correct value for every call, just uncached", async () => {
+    let calls = 0
+    const compute = async () => {
+      calls++
+      return { value: "always-fresh" }
+    }
+
+    const results = await Promise.all(
+      Array.from({ length: 5 }, () => getOrComputeCachedPage(scope, 1, 20, compute))
+    )
+
+    expect(results.every((r) => r.value === "always-fresh")).toBe(true)
+    expect(calls).toBe(5) // no cache, no lock — every call computes independently
   })
 })

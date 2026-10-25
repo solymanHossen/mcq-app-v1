@@ -1,7 +1,51 @@
 services:
+  # Tuned for a small (1-2GB RAM) deployment target running Postgres,
+  # Redis, and the Next.js app together on one host — see
+  # docs/performance-audit.md section 9 for the sizing rationale and how to
+  # retune this for a different host. `mem_limit` is the actual safety net
+  # (a hard cgroup cap Docker enforces regardless of how much RAM other
+  # processes on the host use); the `-c` flags size Postgres's own memory
+  # use to comfortably fit inside that cap rather than relying on the image's
+  # unconfigured defaults, which were never chosen for any particular host.
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
+    mem_limit: 512m
+    command:
+      - postgres
+      - -c
+      - max_connections=40
+      - -c
+      - shared_buffers=128MB
+      - -c
+      - effective_cache_size=384MB
+      - -c
+      - maintenance_work_mem=32MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - wal_buffers=16MB
+      - -c
+      - min_wal_size=80MB
+      # Measured, not assumed: an earlier pass set this to 256MB to save
+      # disk space on a small host, which more than doubled p50 submission
+      # latency under a 50-way concurrent-submit load test (552ms -> 1034ms)
+      # by forcing far more frequent checkpoints. Disk is cheap on virtually
+      # every small host; submission latency during an exam deadline rush
+      # is not something to trade away for it — reverted to Postgres's own
+      # default. See docs/performance-audit.md section 9 for the full
+      # before/after numbers.
+      - -c
+      - max_wal_size=1GB
+      - -c
+      - checkpoint_completion_target=0.9
+      # Assumes SSD-backed storage (true of virtually every modern VPS/cloud
+      # disk) — revert these two to their defaults (4 and 1) on spinning
+      # disk, where they'd make the planner favor sequential scans too little.
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=200
     environment:
       POSTGRES_USER: mcq
       POSTGRES_PASSWORD: mcq
@@ -18,9 +62,16 @@ services:
 
   # Optional leaderboard cache — the app runs correctly without this; it
   # only activates if REDIS_URL is set. See lib/leaderboard/cache.ts.
+  # maxmemory + allkeys-lru: Redis holds nothing here but disposable cached
+  # pages (every entry is safely recomputable from Postgres), so capping
+  # memory and evicting the least-recently-used key under pressure is
+  # strictly safe — never a correctness risk — and keeps a small host from
+  # risking an OOM over cache data that was never required to persist.
   redis:
     image: redis:8-alpine
     restart: unless-stopped
+    mem_limit: 128m
+    command: redis-server --maxmemory 96mb --maxmemory-policy allkeys-lru
     ports:
       - '6379:6379'
     volumes:

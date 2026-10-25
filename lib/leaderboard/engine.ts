@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db"
 import { Prisma } from "@/prisma/generated/prisma/client"
 import type { TieBreakerPolicy } from "@/prisma/generated/prisma/client"
-import { getCachedPage, setCachedPage } from "./cache"
+import { getOrComputeCachedPage } from "./cache"
 
 export const LEADERBOARD_PAGE_SIZE = 20
 
@@ -90,71 +90,68 @@ export async function getExamLeaderboard(opts: {
 }): Promise<LeaderboardPage> {
   const page = Math.max(1, opts.page ?? 1)
   const pageSize = opts.pageSize ?? LEADERBOARD_PAGE_SIZE
-
   const cacheScope = `exam:${opts.examId}`
-  const cached = await getCachedPage(cacheScope, page, pageSize)
-  if (cached) return JSON.parse(cached) as LeaderboardPage
 
-  const exam = await prisma.exam.findUniqueOrThrow({
-    where: { id: opts.examId },
-    select: { tieBreakerPolicy: true },
+  return getOrComputeCachedPage(cacheScope, page, pageSize, async () => {
+    const exam = await prisma.exam.findUniqueOrThrow({
+      where: { id: opts.examId },
+      select: { tieBreakerPolicy: true },
+    })
+    const tieBreak = tieBreakerSql(exam.tieBreakerPolicy)
+
+    const rows = await prisma.$queryRaw<RawRow[]>(Prisma.sql`
+      WITH best_attempts AS (
+        SELECT DISTINCT ON (ea."studentId")
+          ea."id" AS attempt_id,
+          ea."studentId" AS student_id,
+          u."name" AS student_name,
+          er."obtainedMarks" AS obtained_marks,
+          er."totalMarks" AS total_marks,
+          er."accuracy" AS accuracy,
+          EXTRACT(EPOCH FROM (ea."submittedAt" - ea."startedAt"))::int AS time_taken_sec,
+          ea."submittedAt" AS submitted_at
+        FROM "ExamAttempt" ea
+        JOIN "ExamResult" er ON er."attemptId" = ea."id"
+        JOIN "User" u ON u."id" = ea."studentId"
+        WHERE ea."examId" = ${opts.examId}
+          AND ea."status" IN ('COMPLETED', 'TIMEOUT')
+          AND er."status" = 'PUBLISHED'
+        ORDER BY ea."studentId", obtained_marks DESC, ${tieBreak}, attempt_id ASC
+      ),
+      ranked AS (
+        SELECT
+          *,
+          RANK() OVER (ORDER BY obtained_marks DESC, ${tieBreak}) AS rnk,
+          PERCENT_RANK() OVER (ORDER BY obtained_marks ASC) AS percentile,
+          COUNT(*) OVER () AS total_count
+        FROM best_attempts
+      )
+      SELECT * FROM ranked
+      ORDER BY obtained_marks DESC, ${tieBreak}, attempt_id ASC
+      LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+    `)
+
+    const totalParticipants = rows.length > 0 ? Number(rows[0].total_count) : 0
+    const entries: LeaderboardEntry[] = rows.map((r) => ({
+      rank: Number(r.rnk),
+      studentId: r.student_id,
+      studentName: r.student_name,
+      obtainedMarks: r.obtained_marks,
+      totalMarks: r.total_marks,
+      accuracy: r.accuracy,
+      timeTakenSec: r.time_taken_sec,
+      submittedAt: r.submitted_at.toISOString(),
+      percentile: r.percentile,
+    }))
+
+    const result: LeaderboardPage = {
+      entries,
+      totalParticipants,
+      page,
+      pageCount: Math.max(1, Math.ceil(totalParticipants / pageSize)),
+    }
+    return result
   })
-  const tieBreak = tieBreakerSql(exam.tieBreakerPolicy)
-
-  const rows = await prisma.$queryRaw<RawRow[]>(Prisma.sql`
-    WITH best_attempts AS (
-      SELECT DISTINCT ON (ea."studentId")
-        ea."id" AS attempt_id,
-        ea."studentId" AS student_id,
-        u."name" AS student_name,
-        er."obtainedMarks" AS obtained_marks,
-        er."totalMarks" AS total_marks,
-        er."accuracy" AS accuracy,
-        EXTRACT(EPOCH FROM (ea."submittedAt" - ea."startedAt"))::int AS time_taken_sec,
-        ea."submittedAt" AS submitted_at
-      FROM "ExamAttempt" ea
-      JOIN "ExamResult" er ON er."attemptId" = ea."id"
-      JOIN "User" u ON u."id" = ea."studentId"
-      WHERE ea."examId" = ${opts.examId}
-        AND ea."status" IN ('COMPLETED', 'TIMEOUT')
-        AND er."status" = 'PUBLISHED'
-      ORDER BY ea."studentId", obtained_marks DESC, ${tieBreak}, attempt_id ASC
-    ),
-    ranked AS (
-      SELECT
-        *,
-        RANK() OVER (ORDER BY obtained_marks DESC, ${tieBreak}) AS rnk,
-        PERCENT_RANK() OVER (ORDER BY obtained_marks ASC) AS percentile,
-        COUNT(*) OVER () AS total_count
-      FROM best_attempts
-    )
-    SELECT * FROM ranked
-    ORDER BY obtained_marks DESC, ${tieBreak}, attempt_id ASC
-    LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
-  `)
-
-  const totalParticipants = rows.length > 0 ? Number(rows[0].total_count) : 0
-  const entries: LeaderboardEntry[] = rows.map((r) => ({
-    rank: Number(r.rnk),
-    studentId: r.student_id,
-    studentName: r.student_name,
-    obtainedMarks: r.obtained_marks,
-    totalMarks: r.total_marks,
-    accuracy: r.accuracy,
-    timeTakenSec: r.time_taken_sec,
-    submittedAt: r.submitted_at.toISOString(),
-    percentile: r.percentile,
-  }))
-
-  const result: LeaderboardPage = {
-    entries,
-    totalParticipants,
-    page,
-    pageCount: Math.max(1, Math.ceil(totalParticipants / pageSize)),
-  }
-
-  await setCachedPage(cacheScope, page, pageSize, JSON.stringify(result))
-  return result
 }
 
 export type GlobalLeaderboardEntry = {
@@ -207,71 +204,68 @@ export async function getGlobalLeaderboard(opts: {
   const page = Math.max(1, opts.page ?? 1)
   const pageSize = opts.pageSize ?? LEADERBOARD_PAGE_SIZE
 
-  const cached = await getCachedPage(GLOBAL_SCOPE, page, pageSize)
-  if (cached) return JSON.parse(cached) as GlobalLeaderboardPage
+  return getOrComputeCachedPage(GLOBAL_SCOPE, page, pageSize, async () => {
+    const rows = await prisma.$queryRaw<GlobalRawRow[]>(Prisma.sql`
+      WITH best_per_exam AS (
+        SELECT DISTINCT ON (ea."studentId", ea."examId")
+          ea."studentId" AS student_id,
+          ea."examId" AS exam_id,
+          ea."id" AS attempt_id,
+          CASE WHEN er."totalMarks" > 0
+            THEN (er."obtainedMarks" / er."totalMarks") * 100
+            ELSE 0
+          END AS pct
+        FROM "ExamAttempt" ea
+        JOIN "ExamResult" er ON er."attemptId" = ea."id"
+        JOIN "Exam" e ON e."id" = ea."examId"
+        WHERE ea."status" IN ('COMPLETED', 'TIMEOUT')
+          AND er."status" = 'PUBLISHED'
+          AND e."leaderboardEnabled" = true
+        ORDER BY ea."studentId", ea."examId", er."obtainedMarks" DESC, ea."id" ASC
+      ),
+      aggregated AS (
+        SELECT
+          student_id,
+          SUM(pct) AS total_score,
+          COUNT(*) AS exams_completed
+        FROM best_per_exam
+        GROUP BY student_id
+      ),
+      ranked AS (
+        SELECT
+          a.student_id,
+          u."name" AS student_name,
+          a.total_score,
+          a.exams_completed,
+          RANK() OVER (ORDER BY a.total_score DESC) AS rnk,
+          PERCENT_RANK() OVER (ORDER BY a.total_score ASC) AS percentile,
+          COUNT(*) OVER () AS total_count
+        FROM aggregated a
+        JOIN "User" u ON u."id" = a.student_id
+      )
+      SELECT * FROM ranked
+      ORDER BY total_score DESC, exams_completed DESC, student_id ASC
+      LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+    `)
 
-  const rows = await prisma.$queryRaw<GlobalRawRow[]>(Prisma.sql`
-    WITH best_per_exam AS (
-      SELECT DISTINCT ON (ea."studentId", ea."examId")
-        ea."studentId" AS student_id,
-        ea."examId" AS exam_id,
-        ea."id" AS attempt_id,
-        CASE WHEN er."totalMarks" > 0
-          THEN (er."obtainedMarks" / er."totalMarks") * 100
-          ELSE 0
-        END AS pct
-      FROM "ExamAttempt" ea
-      JOIN "ExamResult" er ON er."attemptId" = ea."id"
-      JOIN "Exam" e ON e."id" = ea."examId"
-      WHERE ea."status" IN ('COMPLETED', 'TIMEOUT')
-        AND er."status" = 'PUBLISHED'
-        AND e."leaderboardEnabled" = true
-      ORDER BY ea."studentId", ea."examId", er."obtainedMarks" DESC, ea."id" ASC
-    ),
-    aggregated AS (
-      SELECT
-        student_id,
-        SUM(pct) AS total_score,
-        COUNT(*) AS exams_completed
-      FROM best_per_exam
-      GROUP BY student_id
-    ),
-    ranked AS (
-      SELECT
-        a.student_id,
-        u."name" AS student_name,
-        a.total_score,
-        a.exams_completed,
-        RANK() OVER (ORDER BY a.total_score DESC) AS rnk,
-        PERCENT_RANK() OVER (ORDER BY a.total_score ASC) AS percentile,
-        COUNT(*) OVER () AS total_count
-      FROM aggregated a
-      JOIN "User" u ON u."id" = a.student_id
-    )
-    SELECT * FROM ranked
-    ORDER BY total_score DESC, exams_completed DESC, student_id ASC
-    LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
-  `)
+    const totalParticipants = rows.length > 0 ? Number(rows[0].total_count) : 0
+    const entries: GlobalLeaderboardEntry[] = rows.map((r) => ({
+      rank: Number(r.rnk),
+      studentId: r.student_id,
+      studentName: r.student_name,
+      totalScore: r.total_score,
+      examsCompleted: Number(r.exams_completed),
+      percentile: r.percentile,
+    }))
 
-  const totalParticipants = rows.length > 0 ? Number(rows[0].total_count) : 0
-  const entries: GlobalLeaderboardEntry[] = rows.map((r) => ({
-    rank: Number(r.rnk),
-    studentId: r.student_id,
-    studentName: r.student_name,
-    totalScore: r.total_score,
-    examsCompleted: Number(r.exams_completed),
-    percentile: r.percentile,
-  }))
-
-  const result: GlobalLeaderboardPage = {
-    entries,
-    totalParticipants,
-    page,
-    pageCount: Math.max(1, Math.ceil(totalParticipants / pageSize)),
-  }
-
-  await setCachedPage(GLOBAL_SCOPE, page, pageSize, JSON.stringify(result))
-  return result
+    const result: GlobalLeaderboardPage = {
+      entries,
+      totalParticipants,
+      page,
+      pageCount: Math.max(1, Math.ceil(totalParticipants / pageSize)),
+    }
+    return result
+  })
 }
 
 export function examLeaderboardScope(examId: string) {
