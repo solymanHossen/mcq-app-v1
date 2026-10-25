@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/authorization';
 import { getLearningSummary } from '@/modules/learning/queries';
 import { getPracticeRecommendations } from '@/modules/learning/recommendations';
@@ -11,6 +12,13 @@ export const instant = false;
 
 export default async function DashboardPage() {
   const user = await requireUser();
+
+  // /dashboard is the generic post-login landing spot (login's callbackUrl,
+  // and the public-route redirect in proxy.ts both send everyone here
+  // regardless of role) — admins and teachers have their own dashboards
+  // with real content, so send them there instead of showing this bare page.
+  if (user.role === 'ADMIN') redirect('/admin');
+  if (user.role === 'TEACHER') redirect('/teacher');
 
   return (
     <div className="flex min-h-svh flex-col gap-4 p-6">
