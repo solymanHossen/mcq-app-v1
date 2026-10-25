@@ -120,7 +120,10 @@ describe("plan management", () => {
     if (plan) planIds.push(plan.id)
     expect(plan?.entitlements).toEqual({ maxActiveExams: 50, aiExplanationsEnabled: true })
 
-    const log = await prisma.adminAuditLog.findFirst({ where: { action: "SUBSCRIPTION_PLAN_CREATED" } })
+    const log = await prisma.adminAuditLog.findFirst({
+      where: { action: "SUBSCRIPTION_PLAN_CREATED" },
+      orderBy: { createdAt: "desc" },
+    })
     expect(log?.actorId).toBe(admin.id)
   })
 

@@ -420,7 +420,11 @@ describe("getExamLeaderboard — ranking correctness", () => {
       submittedSecondsAgo: 50,
     })
 
-    const board = await getGlobalLeaderboard({})
+    // A large pageSize so this test's entry is found regardless of how many
+    // other students already rank ahead of it globally — this test only
+    // cares about this one student's own examsCompleted count, not their
+    // rank or page placement.
+    const board = await getGlobalLeaderboard({ pageSize: 1000 })
     const entry = board.entries.find((e) => e.studentId === student.id)
     expect(entry?.examsCompleted).toBe(1) // only the enabled exam counts
   })
@@ -540,7 +544,9 @@ describe("getGlobalLeaderboard — worked example", () => {
       submittedSecondsAgo: 50,
     })
 
-    const board = await getGlobalLeaderboard({})
+    // See the pageSize comment in the "leaderboardEnabled" test above — this
+    // test only cares about its own student's aggregate, not their rank.
+    const board = await getGlobalLeaderboard({ pageSize: 1000 })
     const entry = board.entries.find((e) => e.studentId === student.id)
     expect(entry?.totalScore).toBe(100) // 100% + 0% = 100
     expect(entry?.examsCompleted).toBe(2)
