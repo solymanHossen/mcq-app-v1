@@ -21,6 +21,12 @@ enum Role {
   STUDENT
 }
 
+enum TeacherVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 model User {
   id              String    @id @default(uuid())
   name            String
@@ -30,6 +36,31 @@ model User {
   isActive        Boolean   @default(true)
   isEmailVerified Boolean   @default(false)
   lastLoginAt     DateTime?
+
+  // Suspension is just a deliberate, audited way of flipping `isActive` —
+  // the field the auth guard already checks (lib/auth/guards.ts) — never a
+  // second, competing "is this account allowed in" flag. Reinstating clears
+  // all three; see actions/admin.actions.ts.
+  suspendedAt     DateTime?
+  suspendedReason String?   @db.Text
+  suspendedById   String?
+  suspendedBy     User?     @relation("SuspendedUsers", fields: [suspendedById], references: [id], onDelete: SetNull)
+  suspendedUsers  User[]    @relation("SuspendedUsers")
+
+  // TEACHER-only in practice (checked at the action layer, not a DB
+  // constraint — a STUDENT/ADMIN simply never has this evaluated). Existing
+  // teacher accounts are grandfathered to VERIFIED by the migration itself
+  // (see its .sql) so this gate only ever applies going forward, never
+  // retroactively locks out an account that was already trusted before this
+  // system existed. Gates publishing only (actions/exam.actions.ts) — an
+  // unverified teacher can still draft, edit, and manage their question
+  // bank freely.
+  teacherVerificationStatus TeacherVerificationStatus @default(PENDING)
+  teacherVerifiedAt         DateTime?
+  teacherVerifiedById       String?
+  teacherVerifiedBy         User?                     @relation("VerifiedTeachers", fields: [teacherVerifiedById], references: [id], onDelete: SetNull)
+  verifiedTeachers          User[]                    @relation("VerifiedTeachers")
+  teacherVerificationNote   String?                   @db.Text
 
   // Bumped to invalidate every existing session at once (forced logout on
   // password reset, admin-triggered revocation). Server-side guards re-check
@@ -61,7 +92,14 @@ model User {
   badges           UserBadge[]             @relation("StudentBadges")
   aiExplanationRequests AIExplanationRequest[] @relation("StudentAIRequests")
 
+  subscriptions        Subscription[]
+  paymentTransactions  PaymentTransaction[]
+  couponRedemptions    CouponRedemption[]
+  adminAuditLogsActed  AdminAuditLog[]      @relation("AdminAuditActor")
+  adminAuditLogsTarget AdminAuditLog[]      @relation("AdminAuditTarget")
+
   @@index([role, isActive])
+  @@index([teacherVerificationStatus])
 }
 
 enum AuthTokenPurpose {
@@ -846,4 +884,255 @@ model AIExplanationRequest {
   createdAt      DateTime @default(now())
 
   @@index([studentId, createdAt])
+}
+
+// ============================================================================
+// Phase 9 — Admin management, subscriptions & payments
+//
+// Hard boundary: nothing in this section is ever imported by the exam-taking,
+// grading, or anti-cheat engines, and nothing in those engines is imported
+// here — lib/payments/ depends on lib/db and lib/auth only. A payment
+// provider outage, a bad webhook, or a billing bug can never block a student
+// from taking or submitting an exam.
+//
+// Idempotency is structural, not a try/catch: WebhookEvent's unique
+// constraint on (provider, providerEventId), inserted via `createMany` +
+// `skipDuplicates` (never create()+catch(P2002) — see lib/learning/xp.ts's
+// awardXP for why a caught unique-violation still poisons a Postgres
+// transaction), is checked and recorded BEFORE any event is processed. A
+// provider redelivering the same event any number of times processes it
+// at most once.
+// ============================================================================
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+// The catalog of what can be subscribed to. `entitlements` is a flat JSON
+// map (e.g. { "maxActiveExams": 20, "aiExplanationsEnabled": true }) rather
+// than a normalized feature/entitlement table: a plan's feature set is
+// always read as a whole (lib/payments/entitlements.ts), never filtered or
+// joined on individual features, so normalizing would add a join for every
+// entitlement check without making any query more correct.
+model SubscriptionPlan {
+  id              String            @id @default(uuid())
+  key             String            @unique
+  name            String
+  description     String?           @db.Text
+  priceCents      Int
+  currency        String            @default("usd")
+  billingInterval BillingInterval
+  entitlements    Json
+  isActive        Boolean           @default(true)
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  subscriptions   Subscription[]
+
+  @@index([isActive])
+}
+
+// One row per billing period a user has ever been on — never overwritten,
+// only superseded, so subscription history survives a plan change or
+// cancellation. "The current plan" is always the single row with the latest
+// currentPeriodStart among a user's subscriptions, not a separate flag.
+model Subscription {
+  id                   String             @id @default(uuid())
+
+  userId               String
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  planId               String
+  plan                 SubscriptionPlan   @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  status               SubscriptionStatus @default(TRIALING)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+
+  // Provider-side identifiers a webhook event uses to find this row — never
+  // trusted as proof of anything by themselves (see PaymentTransaction and
+  // lib/payments/webhook.ts); null until the provider actually creates its
+  // own subscription object, e.g. while still TRIALING on a free plan.
+  provider             String?
+  providerSubscriptionId String?          @unique
+
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  paymentTransactions  PaymentTransaction[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+enum PaymentTransactionStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+// The record of money actually moving — distinct from Subscription (what
+// access a user has) so a failed or refunded payment is never silently
+// erased from history, only reflected in `status`. Never trust a client
+// redirect back from a checkout flow as proof this succeeded — status here
+// is written only by a verified webhook (lib/payments/webhook.ts) or an
+// explicit admin refund action, never by the page the browser lands on
+// after checkout.
+model PaymentTransaction {
+  id                    String                    @id @default(uuid())
+
+  userId                String
+  user                  User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  subscriptionId        String?
+  subscription          Subscription?             @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  provider              String
+  providerTransactionId String                    @unique
+
+  amountCents           Int
+  currency              String                    @default("usd")
+  status                PaymentTransactionStatus  @default(PENDING)
+  failureReason         String?                   @db.Text
+
+  couponId              String?
+  couponRedemption      CouponRedemption?
+
+  // At most one refund event per transaction in this model — a second,
+  // independent partial refund on an already-partially-refunded transaction
+  // isn't supported; see lib/payments/refunds.ts for exactly what is.
+  refundedAmountCents   Int?
+  refundedAt            DateTime?
+  refundReason          String?                   @db.Text
+  refundedById          String?
+
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status])
+  @@index([subscriptionId])
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED_AMOUNT
+}
+
+model Coupon {
+  id              String       @id @default(uuid())
+  code            String       @unique
+  discountType    DiscountType
+  // PERCENT: 0-100. FIXED_AMOUNT: cents, in the same currency as the plan
+  // being purchased — validated at redemption time, not stored here.
+  discountValue   Float
+  maxRedemptions  Int?
+  timesRedeemed   Int          @default(0)
+  expiresAt       DateTime?
+  isActive        Boolean      @default(true)
+
+  createdAt       DateTime     @default(now())
+
+  redemptions     CouponRedemption[]
+
+  @@index([isActive])
+}
+
+// One redemption per user per coupon — the unique constraint IS the
+// enforcement, checked via the same createMany+skipDuplicates pattern as
+// WebhookEvent, not a race-prone read-then-write. timesRedeemed on Coupon is
+// a denormalized counter for fast maxRedemptions checks without a COUNT(*)
+// query on every redemption attempt; lib/payments/coupons.ts keeps the two
+// in sync inside one transaction.
+model CouponRedemption {
+  id            String              @id @default(uuid())
+
+  couponId      String
+  coupon        Coupon              @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  userId        String
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactionId String?             @unique
+  transaction   PaymentTransaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  redeemedAt    DateTime            @default(now())
+
+  @@unique([couponId, userId])
+}
+
+// The entire idempotency mechanism for payment-provider webhooks: every
+// delivery is recorded here via createMany+skipDuplicates BEFORE processing
+// — see the module comment above. `payload` keeps the raw verified event for
+// audit/debugging/reconciliation; `processedAt` stays null if processing
+// itself failed after the event was recorded as received, so a reconciliation
+// pass can find and retry exactly those, never a duplicate of an
+// already-succeeded one.
+model WebhookEvent {
+  id               String    @id @default(uuid())
+  provider         String
+  providerEventId  String
+  type             String
+  payload          Json
+  receivedAt       DateTime  @default(now())
+  processedAt      DateTime?
+  processingError  String?   @db.Text
+
+  @@unique([provider, providerEventId])
+  @@index([processedAt])
+}
+
+enum AdminAuditAction {
+  TEACHER_VERIFIED
+  TEACHER_REJECTED
+  TEACHER_VERIFICATION_RESET
+  ACCOUNT_SUSPENDED
+  ACCOUNT_REINSTATED
+  SUBSCRIPTION_PLAN_CREATED
+  SUBSCRIPTION_PLAN_UPDATED
+  SUBSCRIPTION_CANCELED
+  PAYMENT_REFUNDED
+  PAYMENT_RECONCILED
+  COUPON_CREATED
+  COUPON_DEACTIVATED
+}
+
+// Separate from the Phase 1 AuditLog (auth/security events, also a
+// rate-limit counter source) and the Phase 4 GradingAuditLog (scoring
+// provenance) — this is specifically "what did an admin deliberately do to
+// someone else's account or money," queried and retained on its own terms.
+// Append-only: nothing here is ever updated or deleted by the app itself.
+model AdminAuditLog {
+  id         String           @id @default(uuid())
+
+  action     AdminAuditAction
+
+  actorId    String
+  actor      User             @relation("AdminAuditActor", fields: [actorId], references: [id], onDelete: Restrict)
+
+  targetUserId String?
+  targetUser   User?          @relation("AdminAuditTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+
+  reason     String?          @db.Text
+  metadata   Json?
+
+  createdAt  DateTime         @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([targetUserId, createdAt])
+  @@index([action, createdAt])
 }

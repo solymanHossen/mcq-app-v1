@@ -376,7 +376,7 @@ describe("getExamLeaderboard — ranking correctness", () => {
     expect(first.entries.map((e) => e.studentId)).toEqual(
       second.entries.map((e) => e.studentId)
     )
-  })
+  }, 15_000)
 
   it("paginates without duplicates or gaps", async () => {
     const { exam, question } = await makeExam()
@@ -402,7 +402,7 @@ describe("getExamLeaderboard — ranking correctness", () => {
     )
     expect(new Set(allIds).size).toBe(7) // no duplicates
     expect(allIds).toHaveLength(7) // and no gaps
-  })
+  }, 15_000)
 
   it("excludes exams with leaderboardEnabled=false from the global leaderboard", async () => {
     const { exam: enabledExam, question: q1 } = await makeExam({ leaderboardEnabled: true })

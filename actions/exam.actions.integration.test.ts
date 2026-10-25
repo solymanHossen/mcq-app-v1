@@ -34,6 +34,11 @@ async function makeTeacher(label: string) {
       passwordHash: await hashPassword("irrelevant"),
       role: "TEACHER",
       isEmailVerified: true,
+      // New teacher accounts default to PENDING (Phase 9) and
+      // publishExamAction gates on it — these tests are about exam CRUD,
+      // not the verification feature, so this fixture is an established,
+      // already-trusted teacher persona.
+      teacherVerificationStatus: "VERIFIED",
     },
   })
   userIds.push(user.id)

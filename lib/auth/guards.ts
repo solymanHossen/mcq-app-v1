@@ -2,7 +2,7 @@ import { cache } from "react"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/db"
-import type { Role } from "@/prisma/generated/prisma/client"
+import type { Role, TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
 import { UnauthorizedError, ForbiddenError } from "./errors"
 
 export type CurrentUser = {
@@ -10,6 +10,7 @@ export type CurrentUser = {
   name: string
   email: string
   role: Role
+  teacherVerificationStatus: TeacherVerificationStatus
 }
 
 type SessionIdentity = { id: string; tokenVersion: number }
@@ -39,12 +40,19 @@ export async function resolveCurrentUser(
       role: true,
       isActive: true,
       tokenVersion: true,
+      teacherVerificationStatus: true,
     },
   })
   if (!user || !user.isActive) return null
   if (user.tokenVersion !== identity.tokenVersion) return null // revoked
 
-  return { id: user.id, name: user.name, email: user.email, role: user.role }
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    teacherVerificationStatus: user.teacherVerificationStatus,
+  }
 }
 
 // Memoized per request: a layout and the page it wraps both call this, and

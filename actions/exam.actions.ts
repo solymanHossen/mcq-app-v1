@@ -111,6 +111,18 @@ export async function publishExamAction(examId: string) {
   const user = await assertRole("TEACHER", "ADMIN")
   const exam = await requireExamOwner(examId, user)
 
+  // An unverified teacher can draft, edit, and build their question bank
+  // freely — this is the one gate verification actually applies to: content
+  // only becomes visible/attemptable by students once published. ADMIN is
+  // exempt (e.g. publishing on a teacher's behalf before their review
+  // completes) — see actions/admin.actions.ts for the verification workflow.
+  if (user.role === "TEACHER" && user.teacherVerificationStatus !== "VERIFIED") {
+    return {
+      error:
+        "Your teacher account hasn't been verified yet — an admin needs to approve it before you can publish exams.",
+    }
+  }
+
   if (exam.status !== "DRAFT") {
     return { error: "Only a draft exam can be published" }
   }

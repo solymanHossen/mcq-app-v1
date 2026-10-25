@@ -9,6 +9,7 @@ function user(overrides: Partial<CurrentUser> = {}): CurrentUser {
     name: "Test User",
     email: "test@example.com",
     role: "STUDENT",
+    teacherVerificationStatus: "VERIFIED",
     ...overrides,
   }
 }
