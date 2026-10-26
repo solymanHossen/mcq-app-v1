@@ -113,55 +113,10 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE GLASS UI CARDS ================= */}
-          <div className="relative z-10 min-h-[400px] sm:min-h-[460px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[48%] lg:min-h-0">
-            
-            {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-28 lg:right-8 z-20 transition-transform duration-300 hover:scale-105">
-              <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-3 sm:px-3.5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
-                {/* Specular glass edge line */}
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-
-                {/* Facial Scan Avatar */}
-                <div className="relative flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl border border-chart-4/80 bg-white/50 dark:bg-muted/40 p-0.5 shadow-xs">
-                  <div className="relative size-full overflow-hidden rounded-lg">
-                    <Image
-                      src="/images/avatar-verify.jpg"
-                      alt="Verified candidate"
-                      fill
-                      sizes="44px"
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Corner checkmark badge */}
-                  <span className="absolute -bottom-1 -right-1 flex size-3.5 sm:size-4 items-center justify-center rounded-full bg-chart-4 text-primary-foreground shadow-xs">
-                    <Check className="size-2 sm:size-2.5 stroke-[3]" />
-                  </span>
-                </div>
-
-                {/* Info Text & Status Bars */}
-                <div className="flex flex-col">
-                  <span className="text-xs sm:text-sm font-bold text-card-foreground tracking-tight">
-                    Verification Completed
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">
-                    Progress
-                  </span>
-                  <div className="mt-1.5 flex flex-col gap-1 w-24 sm:w-28">
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/10 dark:bg-muted">
-                      <div className="h-full w-[80%] rounded-full bg-chart-4" />
-                    </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/10 dark:bg-muted">
-                      <div className="h-full w-[45%] rounded-full bg-chart-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS - EXACT SAME TO SAME) ---------------- */}
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-12 z-30 max-w-[calc(100%-1rem)] w-[285px] sm:w-[320px] transition-transform duration-300 hover:scale-102">
+          {/* ================= RIGHT COLUMN: EXAM IN PROGRESS FLOATING UI CARD ================= */}
+          <div className="relative z-10 min-h-[360px] sm:min-h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[48%] lg:min-h-0">
+            {/* ---------------- EXAM IN PROGRESS (EXACT SAME TO SAME) ---------------- */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 sm:bottom-6 sm:left-6 sm:translate-x-0 lg:bottom-12 lg:-left-10 z-30 max-w-[calc(100%-2rem)] w-[290px] sm:w-[320px] transition-transform duration-300 hover:scale-102">
               <div className="relative overflow-hidden flex flex-col rounded-[24px] border border-black/[0.06] dark:border-white/10 bg-white dark:bg-card p-5 sm:p-6 shadow-[0_20px_45px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.03] text-card-foreground">
                 {/* Header: Title + Rounded 3-dots Pill */}
                 <div className="flex items-center justify-between">
@@ -223,116 +178,6 @@ export function HeroSection() {
                   <span className="text-[13px] sm:text-[13.5px] font-semibold text-[#145738] dark:text-emerald-300 tracking-tight">
                     AI proctoring active
                   </span>
-                </div>
-              </div>
-            </div>
-
-            {/* ---------------- CARD 3: BOTTOM RIGHT (INSIGHTS & ANALYTICS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="hidden sm:block absolute bottom-2 right-2 sm:bottom-4 sm:right-4 lg:bottom-8 lg:right-6 z-20 w-[240px] sm:w-[275px] transition-transform duration-300 hover:scale-102">
-              <div className="relative overflow-hidden flex flex-col gap-2.5 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-3.5 sm:p-4 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
-                {/* Specular glass edge line */}
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-
-                {/* Header */}
-                <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                  <span>Insights &amp; Analytics</span>
-                </div>
-
-                {/* Clean Multi-Curve SVG Line Chart */}
-                <div className="relative mt-1">
-                  <svg
-                    viewBox="0 0 240 70"
-                    className="w-full h-16 overflow-visible"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <defs>
-                      <linearGradient id="themeAreaGrad1" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.22" />
-                        <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.0" />
-                      </linearGradient>
-                      <linearGradient id="themeAreaGrad2" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity="0.18" />
-                        <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* Horizontal Faint Guide Lines */}
-                    <line x1="28" y1="12" x2="235" y2="12" stroke="var(--color-border)" strokeDasharray="2 3" opacity="0.6" />
-                    <line x1="28" y1="32" x2="235" y2="32" stroke="var(--color-border)" strokeDasharray="2 3" opacity="0.6" />
-                    <line x1="28" y1="52" x2="235" y2="52" stroke="var(--color-border)" strokeDasharray="2 3" opacity="0.6" />
-
-                    {/* Left Axis Labels */}
-                    <text x="0" y="14" fill="var(--color-muted-foreground)" fontSize="8" fontFamily="monospace">200</text>
-                    <text x="0" y="34" fill="var(--color-muted-foreground)" fontSize="8" fontFamily="monospace">100</text>
-                    <text x="5" y="54" fill="var(--color-muted-foreground)" fontSize="8" fontFamily="monospace">0</text>
-
-                    {/* Area fills */}
-                    <path
-                      d="M 30 52 Q 75 46, 115 22 T 185 44 T 235 32 L 235 56 L 30 56 Z"
-                      fill="url(#themeAreaGrad1)"
-                    />
-                    <path
-                      d="M 30 48 Q 65 18, 100 40 T 170 30 T 235 22 L 235 56 L 30 56 Z"
-                      fill="url(#themeAreaGrad2)"
-                    />
-
-                    {/* Chart-2 Wave Line */}
-                    <path
-                      d="M 30 48 Q 65 18, 100 40 T 170 30 T 235 22"
-                      stroke="var(--color-chart-2)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-
-                    {/* Primary Wave Line */}
-                    <path
-                      d="M 30 52 Q 75 46, 115 22 T 185 44 T 235 32"
-                      stroke="var(--color-primary)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-
-                    {/* Chart-4 Wave Line */}
-                    <path
-                      d="M 30 38 Q 80 54, 125 34 T 195 22 T 235 14"
-                      stroke="var(--color-chart-4)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-
-                    {/* Bottom Months Labels */}
-                    <text x="32" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">Jan</text>
-                    <text x="72" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">Feb</text>
-                    <text x="112" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">Mar</text>
-                    <text x="152" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">Apr</text>
-                    <text x="192" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">May</text>
-                    <text x="222" y="66" fill="var(--color-muted-foreground)" fontSize="7" fontFamily="sans-serif">Jun</text>
-                  </svg>
-                </div>
-
-                {/* Metrics Progress Section */}
-                <div className="flex flex-col gap-1.5 border-t border-black/10 dark:border-border/60 pt-2 text-[11px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Security Level</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
-                      <div className="h-full w-[94%] rounded-full bg-chart-4" />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Integrity Rating</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
-                      <div className="h-full w-[98%] rounded-full bg-chart-2" />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Attendance</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
-                      <div className="h-full w-[99%] rounded-full bg-primary" />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
