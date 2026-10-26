@@ -140,6 +140,7 @@ enum AuditAction {
   PASSWORD_RESET_COMPLETED
   RATE_LIMITED
   SESSION_REVOKED
+  PASSWORD_CHANGED
 }
 
 // Doubles as the security audit trail AND the data source for rate-limit

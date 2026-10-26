@@ -77,6 +77,20 @@ export function LoginForm() {
               </AlertDescription>
             </Alert>
           )}
+          {params.get("passwordChanged") && (
+            <Alert>
+              <AlertDescription>
+                Password updated! Please sign in again.
+              </AlertDescription>
+            </Alert>
+          )}
+          {params.get("sessionsRevoked") && (
+            <Alert>
+              <AlertDescription>
+                Signed out of all devices. Please sign in again.
+              </AlertDescription>
+            </Alert>
+          )}
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>

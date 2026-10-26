@@ -1,4 +1,4 @@
-import { GraduationCap, LayoutDashboard, ClipboardList, BookOpen, CreditCard } from "lucide-react"
+import { GraduationCap, LayoutDashboard, ClipboardList, BookOpen, CreditCard, Settings } from "lucide-react"
 import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
@@ -13,6 +13,7 @@ const NAV_ITEMS: SidebarNavItem[] = [
   { href: "/teacher/exams", label: "Exams", icon: <ClipboardList /> },
   { href: "/teacher/questions", label: "Question bank", icon: <BookOpen /> },
   { href: "/billing", label: "Billing", icon: <CreditCard /> },
+  { href: "/teacher/settings", label: "Settings", icon: <Settings /> },
 ]
 
 export default async function TeacherLayout({
