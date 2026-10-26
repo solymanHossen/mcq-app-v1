@@ -3,13 +3,18 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
+  Building2,
   CheckCircle2,
   ChevronRight,
   Flame,
+  Globe2,
+  Lock,
+  Server,
   ShieldCheck,
   Sparkles,
   Timer,
   Trophy,
+  Users2,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +22,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/config"
+import { Navbar } from "@/components/landing/navbar"
+import { HeroSection } from "@/components/landing/hero-section"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -97,105 +104,53 @@ const STUDENT_POINTS = [
   "Build streaks and earn badges for consistent study",
 ] as const
 
+const ENTERPRISE_FEATURES = [
+  {
+    icon: Building2,
+    title: "Unlimited Concurrent Test Takers",
+    description:
+      "High-throughput architecture engineered to smoothly handle 50,000+ simultaneous candidates without latency spikes.",
+  },
+  {
+    icon: Lock,
+    title: "SOC 2 Type II & FERPA Compliant",
+    description:
+      "End-to-end encrypted test delivery, student data isolation, and comprehensive audit logs built for university compliance.",
+  },
+  {
+    icon: Server,
+    title: "Custom LMS & SSO Integration",
+    description:
+      "Seamless single sign-on via SAML 2.0 / Okta / Azure AD and bidirectional grade sync with Canvas, Blackboard, and Moodle.",
+  },
+  {
+    icon: Globe2,
+    title: "Dedicated Cloud or On-Premise",
+    description:
+      "Flexible deployment choices including regional data residency, sovereign private cloud, or air-gapped on-premise clusters.",
+  },
+] as const
+
 export default function LandingPage() {
   return (
-    <div className="flex min-h-svh flex-col">
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Sparkles className="size-4" />
-            </span>
-            <span className="font-heading text-base font-semibold tracking-tight">
-              {APP_NAME}
-            </span>
-          </Link>
-          <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-            <a href="#features" className="transition-colors hover:text-foreground">
-              Features
-            </a>
-            <a href="#how-it-works" className="transition-colors hover:text-foreground">
-              How it works
-            </a>
-            <a href="#audiences" className="transition-colors hover:text-foreground">
-              Teachers & students
-            </a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">
-                Get started
-                <ArrowRight data-icon="inline-end" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+    <div className="flex min-h-svh flex-col bg-background text-foreground">
+      {/* Floating Frosted Glass Header */}
+      <Navbar />
 
       <main className="flex-1">
-        {/* Hero */}
-        <section className="relative isolate overflow-hidden">
-          <div
-            aria-hidden
-            className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] opacity-60 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black_10%,transparent_70%)]"
-          />
-          <div
-            aria-hidden
-            className="absolute left-1/2 top-[-12rem] -z-10 h-[36rem] w-[64rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"
-          />
-
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-6 pt-24 pb-20 text-center sm:pt-32">
-            <Badge variant="secondary" className="gap-1.5 py-1 pl-1.5">
-              <span className="flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Sparkles className="size-2.5" />
-              </span>
-              AI-powered &bull; Proctored &bull; Gamified
-            </Badge>
-
-            <h1 className="text-balance font-heading text-5xl leading-[1.05] font-semibold tracking-tight sm:text-7xl lg:text-8xl">
-              Exams that grade{" "}
-              <span className="bg-gradient-to-br from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-                themselves
-              </span>
-            </h1>
-
-            <p className="max-w-2xl text-pretty text-lg text-muted-foreground sm:text-xl">
-              {APP_NAME} gives teachers a question bank, timed exams, and
-              proctoring in one place — and gives students instant grading,
-              leaderboards, and AI explanations the moment an exam ends.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Button size="lg" className="h-12 px-6 text-base" asChild>
-                <Link href="/register">
-                  Create your first exam
-                  <ArrowRight data-icon="inline-end" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="h-12 px-6 text-base" asChild>
-                <Link href="/login">Sign in</Link>
-              </Button>
-            </div>
-
-            {/* Product preview */}
-            <div className="mt-8 w-full">
-              <ExamPreviewCard />
-            </div>
-          </div>
-        </section>
+        {/* Hero Section matching design reference */}
+        <HeroSection />
 
         {/* Capability strip */}
-        <section className="border-y border-border/60 bg-muted/30">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-6 text-sm font-medium text-muted-foreground">
+        <section className="border-y border-border/60 bg-muted/40 py-6">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 text-sm font-medium text-muted-foreground">
             {[
               "Timed & proctored",
               "Auto-graded in real time",
               "Live leaderboards",
               "AI explanations",
               "Streaks & XP",
+              "Biometric AI verification",
             ].map((item) => (
               <span key={item} className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-primary" />
@@ -205,41 +160,60 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
-        <section id="features" className="mx-auto max-w-6xl px-6 py-28">
+        {/* Live Exam Runner Preview Showcase */}
+        <section className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <Badge variant="outline">Features</Badge>
-            <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-              Everything an exam needs, nothing it doesn&apos;t
+            <Badge variant="outline" className="mb-3">Live Interactive Experience</Badge>
+            <h2 className="text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
+              Distraction-free exam runner
             </h2>
             <p className="mt-4 text-pretty text-muted-foreground">
-              One platform for building, running, and grading exams — built
-              for classrooms that want speed and fairness.
+              Clean, tamper-resistant interface that lets students focus on solving questions while automatic proctoring works in the background.
             </p>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ icon: Icon, title, description }) => (
-              <Card
-                key={title}
-                className="group gap-3 border-none p-2 shadow-none ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-primary/30"
-              >
-                <CardHeader>
-                  <span className="mb-3 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="size-5" />
-                  </span>
-                  <CardTitle className="text-base">{title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">
-                  {description}
-                </CardContent>
-              </Card>
-            ))}
+          <div className="w-full">
+            <ExamPreviewCard />
+          </div>
+        </section>
+
+        {/* Features */}
+        <section id="features" className="border-t border-border/60 bg-muted/20 py-24 sm:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <Badge variant="outline">Features</Badge>
+              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
+                Everything an exam needs, nothing it doesn&apos;t
+              </h2>
+              <p className="mt-4 text-pretty text-muted-foreground">
+                One platform for building, running, and grading exams — built
+                for classrooms that want speed, integrity, and fairness.
+              </p>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {FEATURES.map(({ icon: Icon, title, description }) => (
+                <Card
+                  key={title}
+                  className="group gap-3 border-none p-2 shadow-none ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-primary/30"
+                >
+                  <CardHeader>
+                    <span className="mb-3 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                      <Icon className="size-5" />
+                    </span>
+                    <CardTitle className="text-base">{title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm text-muted-foreground">
+                    {description}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* How it works */}
-        <section id="how-it-works" className="bg-muted/30 py-28">
+        <section id="how-it-works" className="py-24 sm:py-28">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mx-auto mb-16 max-w-2xl text-center">
               <Badge variant="outline">How it works</Badge>
@@ -270,22 +244,65 @@ export default function LandingPage() {
         </section>
 
         {/* Teachers & students */}
-        <section id="audiences" className="mx-auto max-w-6xl px-6 py-28">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <AudiencePanel
-              badge="For teachers"
-              title="Spend time teaching, not grading"
-              points={TEACHER_POINTS}
-              icon={BookOpen}
-              accent="from-primary/10 via-primary/5"
-            />
-            <AudiencePanel
-              badge="For students"
-              title="Know where you stand, instantly"
-              points={STUDENT_POINTS}
-              icon={BarChart3}
-              accent="from-chart-2/15 via-chart-2/5"
-            />
+        <section id="audiences" className="border-t border-border/60 bg-muted/20 py-24 sm:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <Badge variant="outline">Audiences</Badge>
+              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
+                Designed for both sides of the classroom
+              </h2>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              <AudiencePanel
+                badge="For teachers"
+                title="Spend time teaching, not grading"
+                points={TEACHER_POINTS}
+                icon={BookOpen}
+                accent="from-primary/10 via-primary/5"
+              />
+              <AudiencePanel
+                badge="For students"
+                title="Know where you stand, instantly"
+                points={STUDENT_POINTS}
+                icon={BarChart3}
+                accent="from-chart-2/15 via-chart-2/5"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Enterprise */}
+        <section id="enterprise" className="py-24 sm:py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <Badge variant="outline">Enterprise</Badge>
+              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
+                Built for institution &amp; enterprise scale
+              </h2>
+              <p className="mt-4 text-pretty text-muted-foreground">
+                Robust infrastructure, compliant security, and dedicated SLA support trusted by large universities, certification bodies, and global enterprises.
+              </p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {ENTERPRISE_FEATURES.map(({ icon: Icon, title, description }) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
+                >
+                  <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
+                    <Icon className="size-5" />
+                  </span>
+                  <h3 className="font-heading font-semibold text-base mb-2 text-foreground">
+                    {title}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -492,7 +509,7 @@ function ExamPreviewCard() {
       </div>
       <div className="absolute -right-5 -bottom-5 hidden rotate-[3deg] items-center gap-2 rounded-xl border border-border/60 bg-card px-3 py-2 text-xs font-medium shadow-lg sm:flex">
         <ShieldCheck className="size-4 text-primary" />
-        Tab-switch detected & logged
+        Tab-switch detected &amp; logged
       </div>
     </div>
   )
