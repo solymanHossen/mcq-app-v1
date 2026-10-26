@@ -130,7 +130,7 @@ export default async function TeachersPage() {
         <TeacherDirectoryClient teachers={teachers} stats={stats} />
       </main>
 
-      <footer className="border-t border-border/60 bg-muted/10">
+      <footer className="border-t border-border bg-muted/30">
         <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-8 text-sm text-muted-foreground sm:flex-row">
           <span>&copy; 2026 {APP_NAME}. All rights reserved.</span>
           <div className="flex items-center gap-6">

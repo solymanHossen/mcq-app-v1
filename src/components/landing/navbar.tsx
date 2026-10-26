@@ -69,8 +69,8 @@ export function Navbar({ className }: NavbarProps) {
         <div
           className={cn(
             "relative flex h-16 sm:h-[68px] items-center justify-between rounded-2xl sm:rounded-[22px] border px-4 sm:px-7 transition-all duration-300",
-            "border-white/70 dark:border-white/15 bg-card/65 dark:bg-card/45 text-card-foreground backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_30px_rgb(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.85)]",
-            scrolled && "shadow-md border-border bg-card/85 backdrop-blur-2xl"
+            "border-border/80 bg-card/85 text-card-foreground backdrop-blur-2xl shadow-xs",
+            scrolled && "shadow-md border-border bg-card/95 backdrop-blur-2xl"
           )}
         >
           {/* Left: Brand Logo */}

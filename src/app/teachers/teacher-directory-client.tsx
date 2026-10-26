@@ -72,7 +72,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       {/* ================= CLEAN HEADER WITH REAL INLINE METRICS ================= */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border/60">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border">
         <div>
           <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground">
             Teacher Directory
@@ -82,15 +82,15 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
           </p>
         </div>
 
-        {/* Compact real metric summary pills with larger text */}
+        {/* Compact real metric summary pills using theme palette tokens */}
         <div className="flex flex-wrap items-center gap-3 text-base font-semibold">
-          <span className="rounded-full border border-border/80 bg-card px-5 py-2 text-foreground shadow-2xs">
+          <span className="rounded-full border border-border bg-card px-5 py-2 text-foreground shadow-2xs">
             <strong className="text-foreground font-bold">{stats.totalTeachers}</strong> Teachers
           </span>
-          <span className="rounded-full border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50 dark:bg-emerald-950/40 px-5 py-2 text-emerald-700 dark:text-emerald-300 shadow-2xs font-bold">
+          <span className="rounded-full border border-primary/25 bg-primary/10 px-5 py-2 text-primary shadow-2xs font-bold">
             <strong>{stats.verifiedTeachers}</strong> Verified
           </span>
-          <span className="rounded-full border border-primary/20 bg-primary/10 px-5 py-2 text-primary shadow-2xs font-bold">
+          <span className="rounded-full border border-border bg-secondary px-5 py-2 text-secondary-foreground shadow-2xs font-bold">
             <strong>{stats.totalPublishedExams}</strong> Published Exams
           </span>
         </div>
@@ -107,27 +107,27 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by teacher name, email, subject, or exam title..."
-              className="w-full rounded-2xl border border-border/80 bg-card py-4 pl-13 pr-12 text-base sm:text-lg font-medium text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 shadow-xs transition-all"
+              className="w-full rounded-2xl border border-input bg-card py-4 pl-13 pr-12 text-base sm:text-lg font-medium text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-3 focus:ring-ring/40 shadow-xs transition-colors"
             />
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="absolute right-4.5 top-1/2 -translate-y-1/2 text-base font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-4.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               >
                 Clear
               </button>
             )}
           </div>
 
-          {/* Status Filter Tabs */}
-          <div className="flex items-center gap-2 p-1.5 rounded-2xl border border-border/80 bg-muted/30 shrink-0 self-start sm:self-auto">
+          {/* Status Filter Tabs using Theme Tokens */}
+          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl border border-border bg-muted/40 shrink-0 self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setStatusFilter("ALL")}
-              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all ${
+              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all cursor-pointer ${
                 statusFilter === "ALL"
-                  ? "bg-card text-foreground shadow-xs"
+                  ? "bg-card text-foreground shadow-xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -136,9 +136,9 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
             <button
               type="button"
               onClick={() => setStatusFilter("VERIFIED")}
-              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all ${
+              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all cursor-pointer ${
                 statusFilter === "VERIFIED"
-                  ? "bg-card text-foreground shadow-xs"
+                  ? "bg-card text-foreground shadow-xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -147,9 +147,9 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
             <button
               type="button"
               onClick={() => setStatusFilter("PENDING")}
-              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all ${
+              className={`rounded-xl px-5 py-2.5 text-base font-bold transition-all cursor-pointer ${
                 statusFilter === "PENDING"
-                  ? "bg-card text-foreground shadow-xs"
+                  ? "bg-card text-foreground shadow-xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -162,8 +162,8 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
       {/* ================= TEACHERS LIST GRID ================= */}
       <div>
         {filteredTeachers.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border p-16 text-center bg-card/40">
-            <Users className="mx-auto size-16 text-muted-foreground/50 mb-4" />
+          <div className="rounded-3xl border border-dashed border-border p-16 text-center bg-card">
+            <Users className="mx-auto size-16 text-muted-foreground mb-4" />
             <h3 className="font-heading text-2xl font-bold text-foreground">
               No teachers found
             </h3>
@@ -176,7 +176,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                 setSearchTerm("")
                 setStatusFilter("ALL")
               }}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 text-base font-bold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 text-base font-bold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs cursor-pointer"
             >
               Reset Search &amp; Filters
             </button>
@@ -186,7 +186,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
             {filteredTeachers.map((teacher) => (
               <div
                 key={teacher.id}
-                className="group flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-8 sm:p-9 shadow-xs transition-all duration-300 hover:border-primary/40 hover:shadow-lg text-card-foreground"
+                className="group flex flex-col justify-between rounded-3xl border border-border bg-card p-8 sm:p-9 shadow-xs transition-all duration-300 hover:border-primary/50 hover:shadow-lg text-card-foreground"
               >
                 <div>
                   {/* Card Header: Avatar, Name, Email, Status */}
@@ -205,13 +205,14 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                       </div>
                     </div>
 
+                    {/* Verification Badges strictly styled with Theme Palette */}
                     {teacher.isVerified ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/80 px-3.5 py-1.5 text-sm font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-sm font-bold text-primary shrink-0">
                         <ShieldCheck className="size-4 stroke-[2.5]" />
                         <span>Verified</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/80 px-3.5 py-1.5 text-sm font-bold text-amber-700 dark:text-amber-300 shrink-0">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3.5 py-1.5 text-sm font-bold text-secondary-foreground shrink-0">
                         <Clock className="size-4 stroke-[2.5]" />
                         <span>Pending</span>
                       </span>
@@ -224,7 +225,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                       {teacher.subjects.map((subject) => (
                         <span
                           key={subject}
-                          className="rounded-xl border border-border/70 bg-muted/50 px-3.5 py-1 text-sm font-semibold text-foreground"
+                          className="rounded-xl border border-border bg-muted/50 px-3.5 py-1 text-sm font-semibold text-foreground"
                         >
                           {subject}
                         </span>
@@ -232,8 +233,8 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                     </div>
                   )}
 
-                  {/* Real Stats Metrics Strip with larger text */}
-                  <div className="grid grid-cols-3 gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:p-5 text-center mb-6">
+                  {/* Real Stats Metrics Strip using Theme Tokens */}
+                  <div className="grid grid-cols-3 gap-3 rounded-2xl border border-border bg-muted/30 p-4 sm:p-5 text-center mb-6">
                     <div>
                       <span className="block font-heading text-2xl sm:text-3xl font-black text-foreground">
                         {teacher.publishedExamsCount}
@@ -269,7 +270,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                     </span>
 
                     {teacher.publishedExams.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-border/70 p-4 text-center text-sm font-medium text-muted-foreground">
+                      <div className="rounded-xl border border-dashed border-border p-4 text-center text-sm font-medium text-muted-foreground bg-muted/20">
                         No published exams at this moment.
                       </div>
                     ) : (
@@ -277,7 +278,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                         {teacher.publishedExams.map((exam) => (
                           <div
                             key={exam.id}
-                            className="flex items-center justify-between rounded-xl border border-border/60 bg-card p-3.5 transition-colors hover:border-primary/40"
+                            className="flex items-center justify-between rounded-xl border border-border bg-card p-3.5 transition-colors hover:border-primary/50"
                           >
                             <div className="pr-3">
                               <h4 className="text-base font-bold text-foreground">
@@ -289,7 +290,7 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                             </div>
                             <Link
                               href={`/login?callbackUrl=/exams`}
-                              className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary/10 hover:bg-primary px-3 py-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-foreground transition-all"
+                              className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-primary/20 bg-primary/10 hover:bg-primary px-3 py-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-foreground transition-all"
                             >
                               <span>Enter</span>
                               <ArrowRight className="size-3.5" />
@@ -301,11 +302,11 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
                   </div>
                 </div>
 
-                {/* Footer Action */}
-                <div className="mt-8 pt-6 border-t border-border/60">
+                {/* Footer Action using Theme Primary */}
+                <div className="mt-8 pt-6 border-t border-border">
                   <Link
                     href={`/register?role=student`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-foreground hover:bg-foreground/90 py-3.5 px-6 text-base font-bold text-background transition-all active:scale-95 shadow-2xs"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary hover:bg-primary/90 py-3.5 px-6 text-base font-bold text-primary-foreground transition-all active:scale-95 shadow-xs"
                   >
                     <span>Register to Take Exams</span>
                     <ArrowRight className="size-4 stroke-[2.5]" />
