@@ -50,30 +50,28 @@ export function HeroSection() {
         className="pointer-events-none absolute top-1/3 left-1/4 -z-10 h-[34rem] w-[42rem] rounded-full bg-primary/10 blur-[130px]"
       />
 
-      {/* Full-width background image spanning behind navbar and hero */}
-      <div className="absolute inset-0 -z-10 h-full w-full overflow-hidden">
+      {/* Background image positioned on right half so hero copy rests on a quiet canvas */}
+      <div className="absolute bottom-0 right-0 -z-10 h-[46%] w-full overflow-hidden lg:inset-y-0 lg:h-auto lg:w-[48%]">
         <Image
           src="/images/hero-students-v2.jpg"
           alt="Students taking online exam collaboratively"
           fill
           priority
-          sizes="100vw"
-          className="object-cover object-[72%_center] lg:object-[68%_center]"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className="object-cover object-[68%_center]"
         />
-        {/* Soft mobile readability veil only below lg */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-background/30 lg:hidden" />
+        {/* Soft edge blend for desktop and mobile veil */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-background to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-6 xl:gap-10">
           
-          {/* ================= LEFT COLUMN: FROSTED GLASS HERO PANEL ================= */}
-          <div className="relative z-10 py-4 sm:py-6 lg:col-span-6 lg:py-8 lg:pr-6">
-            <div className="relative max-w-xl rounded-[28px] sm:rounded-[36px] border border-white/70 dark:border-white/20 bg-white/65 dark:bg-card/65 p-7 sm:p-9 lg:p-11 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] text-foreground">
-              {/* Specular glass edge line */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-
-              <h1 className="relative max-w-[560px] font-heading text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[3.85rem] font-extrabold tracking-tight text-foreground leading-[1.08]">
+          {/* ================= LEFT COLUMN: HERO COPY (NO GLASS EFFECT) ================= */}
+          <div className="relative z-10 py-4 sm:py-6 lg:py-8 lg:pr-6">
+            <div className="relative max-w-xl text-foreground">
+              <h1 className="relative max-w-[580px] font-heading text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[3.85rem] font-extrabold tracking-tight text-foreground leading-[1.08]">
                 The Elite Standard
                 <span className="block mt-1 font-extrabold">
                   for <span className="text-primary">Online</span>
@@ -100,7 +98,7 @@ export function HeroSection() {
                 <button
                   type="button"
                   onClick={() => setIsVideoOpen(true)}
-                  className="group inline-flex items-center justify-center rounded-full border border-border/70 bg-white/70 dark:bg-card/70 px-7 py-3.5 text-base font-medium text-foreground backdrop-blur-md shadow-xs transition-all duration-300 hover:bg-white dark:hover:bg-card hover:shadow active:scale-95"
+                  className="group inline-flex items-center justify-center rounded-full border border-border bg-card/80 hover:bg-card px-7 py-3.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow active:scale-95"
                 >
                   <span>Watch Video</span>
                 </button>
