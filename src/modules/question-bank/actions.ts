@@ -4,7 +4,7 @@ import Papa from "papaparse"
 import { redirect } from "next/navigation"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { prisma } from "@/lib/prisma"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { assertRole, assertOwner, TEACHER_ROLES, type CurrentUser } from "@/lib/authorization"
 import { computeQuestionContentHash } from "@/modules/question-bank/content-hash"
 import { findDuplicateQuestion } from "@/modules/question-bank/queries"
 import {
@@ -38,7 +38,7 @@ export async function createQuestionAction(
   _state: QuestionFormState,
   formData: FormData
 ): Promise<QuestionFormState> {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const parsed = questionSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) {
@@ -73,7 +73,7 @@ export async function updateQuestionAction(
   _state: QuestionFormState,
   formData: FormData
 ): Promise<QuestionFormState> {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const existing = await requireQuestionOwner(questionId, user)
 
   const parsed = questionSchema.safeParse(Object.fromEntries(formData))
@@ -120,7 +120,7 @@ export async function setQuestionStatusAction(
   questionId: string,
   nextStatus: "DRAFT" | "ACTIVE" | "ARCHIVED"
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const existing = await requireQuestionOwner(questionId, user)
 
   if (!ALLOWED_TRANSITIONS[existing.status]?.includes(nextStatus)) {
@@ -141,7 +141,7 @@ export async function setQuestionStatusAction(
 
 // ─── Delete ────────────────────────────────────────────
 export async function deleteQuestionAction(questionId: string) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   await requireQuestionOwner(questionId, user)
 
   const usageCount = await prisma.examQuestion.count({
@@ -165,7 +165,7 @@ export async function createQuestionReportAction(
   _state: unknown,
   formData: FormData
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   await requireQuestionOwner(questionId, user)
 
   const parsed = questionReportSchema.safeParse(Object.fromEntries(formData))
@@ -190,7 +190,7 @@ export async function resolveQuestionReportAction(
   _state: unknown,
   formData: FormData
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const report = await prisma.questionReport.findUnique({
     where: { id: reportId },
@@ -233,7 +233,7 @@ export async function bulkImportQuestionsAction(
   _state: ImportSummary | { error: string } | undefined,
   formData: FormData
 ): Promise<ImportSummary | { error: string }> {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const file = formData.get("file")
   if (!(file instanceof File) || file.size === 0) {

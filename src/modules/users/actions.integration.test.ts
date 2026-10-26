@@ -29,7 +29,11 @@ const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`
 const userIds: string[] = []
 const examIds: string[] = []
 
-async function makeUser(role: "ADMIN" | "TEACHER" | "STUDENT", label: string, extra: Record<string, unknown> = {}) {
+async function makeUser(
+  role: "SUPER_ADMIN" | "ADMIN" | "TEACHER" | "STUDENT",
+  label: string,
+  extra: Record<string, unknown> = {}
+) {
   const user = await prisma.user.create({
     data: {
       name: label,
@@ -104,6 +108,19 @@ describe("suspendUserAction", () => {
     expect(unchanged.isActive).toBe(true)
   })
 
+  it("refuses to suspend a super admin account", async () => {
+    const superAdmin = await makeUser("SUPER_ADMIN", `suspend-super-${Math.random()}`)
+    asUser(admin)
+
+    const formData = new FormData()
+    formData.set("reason", "Should never be allowed")
+    const result = await suspendUserAction(superAdmin.id, undefined, formData)
+    expect(result && "error" in result).toBe(true)
+
+    const unchanged = await prisma.user.findUniqueOrThrow({ where: { id: superAdmin.id } })
+    expect(unchanged.isActive).toBe(true)
+  })
+
   it("refuses to suspend an already-suspended account twice", async () => {
     const target = await makeUser("STUDENT", `suspend-twice-${Math.random()}`)
     asUser(admin)
@@ -160,18 +177,85 @@ describe("changeUserRoleAction", () => {
     )
   })
 
-  it("lets an admin change their own role when other admins remain", async () => {
-    const selfDemoter = await makeUser("ADMIN", `role-self-${Math.random()}`)
-    asUser(selfDemoter)
+  it("refuses a plain admin promoting a student into the admin tier", async () => {
+    const target = await makeUser("STUDENT", `role-blocked-promote-${Math.random()}`)
+    asUser(admin)
+
+    const formData = new FormData()
+    formData.set("role", "ADMIN")
+    formData.set("reason", "Should be blocked — admin, not super admin")
+    const result = await changeUserRoleAction(target.id, undefined, formData)
+    expect(result).toEqual({ error: "Only a super admin can assign or change admin-tier roles" })
+
+    const unchanged = await prisma.user.findUniqueOrThrow({ where: { id: target.id } })
+    expect(unchanged.role).toBe("STUDENT")
+  })
+
+  it("refuses a plain admin changing another admin's role at all", async () => {
+    const otherAdmin = await makeUser("ADMIN", `role-blocked-demote-${Math.random()}`)
+    asUser(admin)
+
+    const formData = new FormData()
+    formData.set("role", "STUDENT")
+    formData.set("reason", "Should be blocked — not a super admin")
+    const result = await changeUserRoleAction(otherAdmin.id, undefined, formData)
+    expect(result).toEqual({ error: "Only a super admin can assign or change admin-tier roles" })
+
+    const unchanged = await prisma.user.findUniqueOrThrow({ where: { id: otherAdmin.id } })
+    expect(unchanged.role).toBe("ADMIN")
+  })
+
+  it("lets a super admin promote a student straight into the admin tier", async () => {
+    const superAdmin = await makeUser("SUPER_ADMIN", `role-super-${Math.random()}`)
+    const target = await makeUser("STUDENT", `role-promote-super-${Math.random()}`)
+    asUser(superAdmin)
+
+    const formData = new FormData()
+    formData.set("role", "ADMIN")
+    formData.set("reason", "Promoting a trusted staff member to admin")
+    const result = await changeUserRoleAction(target.id, undefined, formData)
+    expect(result).toEqual({ success: true })
+
+    const updated = await prisma.user.findUniqueOrThrow({ where: { id: target.id } })
+    expect(updated.role).toBe("ADMIN")
+
+    const log = await prisma.adminAuditLog.findFirst({
+      where: { action: "USER_ROLE_CHANGED", targetUserId: target.id },
+    })
+    expect(log?.actorId).toBe(superAdmin.id)
+    expect(log?.metadata).toEqual({ fromRole: "STUDENT", toRole: "ADMIN" })
+  })
+
+  it("lets a super admin demote another admin out of the admin tier", async () => {
+    const superAdmin = await makeUser("SUPER_ADMIN", `role-super2-${Math.random()}`)
+    const targetAdmin = await makeUser("ADMIN", `role-demote-${Math.random()}`)
+    asUser(superAdmin)
 
     const formData = new FormData()
     formData.set("role", "TEACHER")
-    formData.set("reason", "Stepping down from admin duties")
+    formData.set("reason", "No longer needs admin access")
+    const result = await changeUserRoleAction(targetAdmin.id, undefined, formData)
+    expect(result).toEqual({ success: true })
+
+    const updated = await prisma.user.findUniqueOrThrow({ where: { id: targetAdmin.id } })
+    expect(updated.role).toBe("TEACHER")
+  })
+
+  it("lets a super admin change their own role when another super admin remains", async () => {
+    // Fully self-contained: both super admins here are test-created, so this
+    // never touches the real seeded super admin either way.
+    await makeUser("SUPER_ADMIN", `role-anchor-${Math.random()}`)
+    const selfDemoter = await makeUser("SUPER_ADMIN", `role-self-${Math.random()}`)
+    asUser(selfDemoter)
+
+    const formData = new FormData()
+    formData.set("role", "ADMIN")
+    formData.set("reason", "Stepping down to a regular admin")
     const result = await changeUserRoleAction(selfDemoter.id, undefined, formData)
     expect(result).toEqual({ success: true })
 
     const updated = await prisma.user.findUniqueOrThrow({ where: { id: selfDemoter.id } })
-    expect(updated.role).toBe("TEACHER")
+    expect(updated.role).toBe("ADMIN")
   })
 
   it("promotes a student to teacher, resets verification to PENDING, and logs the action", async () => {
@@ -199,12 +283,14 @@ describe("changeUserRoleAction", () => {
     expect(log?.metadata).toEqual({ fromRole: "STUDENT", toRole: "TEACHER" })
   })
 
-  // The "can't remove the last admin" guard (actions.ts) is intentionally
-  // not exercised here: this suite runs against the real shared dev
-  // database (see vitest.config.ts — no isolated test DB), which already
-  // has its own admins. Safely forcing the global admin count to exactly 1
-  // would mean mutating those real accounts, risking leaving them demoted
-  // if the test failed partway through. Verified by code review instead.
+  // The "can't remove the last super admin" guard (actions.ts) is
+  // intentionally not exercised here: this suite runs against the real
+  // shared dev database (see vitest.config.ts — no isolated test DB), which
+  // already has its own super admin (grandfathered from the pre-tier ADMIN
+  // by the add_super_admin_role migration). Safely forcing the global
+  // super-admin count to exactly 1 would mean mutating that real account,
+  // risking leaving it demoted if the test failed partway through. Verified
+  // by code review instead.
 
   it("rejects an invalid role value", async () => {
     const target = await makeUser("STUDENT", `role-invalid-${Math.random()}`)

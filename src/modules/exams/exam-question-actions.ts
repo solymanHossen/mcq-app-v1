@@ -2,7 +2,7 @@
 
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { prisma } from "@/lib/prisma"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { assertRole, assertOwner, TEACHER_ROLES, type CurrentUser } from "@/lib/authorization"
 import { addQuestionsToExamSchema } from "@/modules/exams/validators"
 
 async function requireDraftExamOwner(examId: string, user: CurrentUser) {
@@ -20,7 +20,7 @@ export async function addQuestionsToExamAction(
   examId: string,
   questionIds: string[]
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const check = await requireDraftExamOwner(examId, user)
   if ("error" in check) return { error: check.error }
   const { exam } = check
@@ -84,7 +84,7 @@ export async function removeQuestionFromExamAction(
   examId: string,
   examQuestionId: string
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const check = await requireDraftExamOwner(examId, user)
   if ("error" in check) return { error: check.error }
 
@@ -112,7 +112,7 @@ export async function reorderExamQuestionsAction(
   examId: string,
   orderedExamQuestionIds: string[]
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const check = await requireDraftExamOwner(examId, user)
   if ("error" in check) return { error: check.error }
 

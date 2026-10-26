@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { connection } from "next/server"
 import { BookOpen, FileCheck2, ClipboardList, AlertTriangle, Clock } from "lucide-react"
-import { requireRole } from "@/lib/authorization"
+import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { prisma } from "@/lib/prisma"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -12,7 +12,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 export const instant = false
 
 export default async function TeacherDashboardPage() {
-  const teacher = await requireRole("TEACHER", "ADMIN")
+  const teacher = await requireRole(...TEACHER_ROLES)
 
   // Live counts for a signed-in teacher, never a prerendered shell — same
   // reasoning as the admin dashboard (see its connection() call).

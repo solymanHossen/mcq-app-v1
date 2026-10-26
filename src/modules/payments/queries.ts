@@ -80,7 +80,7 @@ export function listPendingTeacherVerifications() {
 export function listUsers(opts: {
   page: number
   pageSize: number
-  role?: "ADMIN" | "TEACHER" | "STUDENT"
+  role?: "SUPER_ADMIN" | "ADMIN" | "TEACHER" | "STUDENT"
   search?: string
 }) {
   const skip = (opts.page - 1) * opts.pageSize

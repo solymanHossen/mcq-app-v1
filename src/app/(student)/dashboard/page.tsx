@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { Trophy, Zap, Flame, RotateCcw } from "lucide-react"
-import { requireUser } from "@/lib/authorization"
+import { requireUser, isAdminTier } from "@/lib/authorization"
 import { getLearningSummary } from "@/modules/learning/queries"
 import { getPracticeRecommendations } from "@/modules/learning/recommendations"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   // and the public-route redirect in proxy.ts both send everyone here
   // regardless of role) — admins and teachers have their own dashboards
   // with real content, so send them there instead of showing this bare page.
-  if (user.role === "ADMIN") redirect("/admin")
+  if (isAdminTier(user.role)) redirect("/admin")
   if (user.role === "TEACHER") redirect("/teacher")
 
   return (

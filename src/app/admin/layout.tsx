@@ -1,5 +1,6 @@
 import {
   ShieldCheck,
+  Crown,
   LayoutDashboard,
   Users,
   GraduationCap,
@@ -8,7 +9,7 @@ import {
   Receipt,
   ScrollText,
 } from 'lucide-react';
-import { requireRole } from '@/lib/authorization';
+import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
 import type { SidebarNavItem } from '@/components/shared/sidebar-nav';
 
@@ -30,13 +31,14 @@ const NAV_ITEMS: SidebarNavItem[] = [
 export default async function AdminLayout({
   children,
 }: { children: React.ReactNode }) {
-  const admin = await requireRole('ADMIN');
+  const admin = await requireRole(...ADMIN_ROLES);
+  const isSuperAdmin = admin.role === 'SUPER_ADMIN';
 
   return (
     <DashboardShell
-      icon={ShieldCheck}
-      badgeLabel="Admin"
-      mobileLabel="ExamHub Admin"
+      icon={isSuperAdmin ? Crown : ShieldCheck}
+      badgeLabel={isSuperAdmin ? 'Super Admin' : 'Admin'}
+      mobileLabel={isSuperAdmin ? 'ExamHub Super Admin' : 'ExamHub Admin'}
       navItems={NAV_ITEMS}
       user={admin}
     >

@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { assertRole } from "@/lib/authorization"
+import { assertRole, ADMIN_ROLES } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { recordAdminAction } from "@/lib/admin-audit"
 import { getPaymentProvider } from "@/modules/payments/provider"
@@ -10,7 +10,7 @@ import { planSchema, couponSchema, refundSchema, reconcileSchema } from "@/modul
 // ─── Subscription plans ─────────────────────────────────────────────────
 
 export async function createPlanAction(_state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const parsed = planSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid plan" }
@@ -42,7 +42,7 @@ export async function createPlanAction(_state: unknown, formData: FormData) {
 }
 
 export async function updatePlanAction(planId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const plan = await prisma.subscriptionPlan.findUnique({ where: { id: planId } })
   if (!plan) return { error: "Plan not found" }
@@ -74,7 +74,7 @@ export async function updatePlanAction(planId: string, _state: unknown, formData
 }
 
 export async function setPlanActiveAction(planId: string, isActive: boolean) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const plan = await prisma.subscriptionPlan.findUnique({ where: { id: planId } })
   if (!plan) return { error: "Plan not found" }
@@ -95,7 +95,7 @@ export async function setPlanActiveAction(planId: string, isActive: boolean) {
 // ─── Coupons ─────────────────────────────────────────────────────────────
 
 export async function createCouponAction(_state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const parsed = couponSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid coupon" }
@@ -125,7 +125,7 @@ export async function createCouponAction(_state: unknown, formData: FormData) {
 }
 
 export async function deactivateCouponAction(couponId: string) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const coupon = await prisma.coupon.findUnique({ where: { id: couponId } })
   if (!coupon) return { error: "Coupon not found" }
@@ -147,7 +147,7 @@ export async function deactivateCouponAction(couponId: string) {
 // ─── Refunds & reconciliation ──────────────────────────────────────────
 
 export async function issueRefundAction(transactionId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const transaction = await prisma.paymentTransaction.findUnique({ where: { id: transactionId } })
   if (!transaction) return { error: "Transaction not found" }
@@ -194,7 +194,7 @@ export async function issueRefundAction(transactionId: string, _state: unknown, 
 }
 
 export async function reconcileTransactionAction(transactionId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const transaction = await prisma.paymentTransaction.findUnique({ where: { id: transactionId } })
   if (!transaction) return { error: "Transaction not found" }

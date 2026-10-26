@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { prisma } from "@/lib/prisma"
-import { assertRole, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { assertRole, assertOwner, TEACHER_ROLES, type CurrentUser } from "@/lib/authorization"
 import { examSchema } from "@/modules/exams/validators"
 
 async function requireExamOwner(examId: string, user: CurrentUser) {
@@ -32,7 +32,7 @@ export async function createExamAction(
   _state: ExamFormState,
   formData: FormData
 ): Promise<ExamFormState> {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const parsed = parseExamFormData(formData)
   if (!parsed.success) {
@@ -66,7 +66,7 @@ export async function updateExamAction(
   _state: ExamFormState,
   formData: FormData
 ): Promise<ExamFormState> {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const exam = await requireExamOwner(examId, user)
 
   if (exam.status !== "DRAFT") {
@@ -108,7 +108,7 @@ export async function updateExamAction(
 // ARCHIVED. There's no "unpublish": once students may have seen it, its
 // content must stay exactly as it was.
 export async function publishExamAction(examId: string) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const exam = await requireExamOwner(examId, user)
 
   // An unverified teacher can draft, edit, and build their question bank
@@ -143,7 +143,7 @@ export async function publishExamAction(examId: string) {
 }
 
 export async function archiveExamAction(examId: string) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const exam = await requireExamOwner(examId, user)
 
   if (exam.status === "ARCHIVED") {
@@ -162,7 +162,7 @@ export async function archiveExamAction(examId: string) {
 
 // ─── Delete (DRAFT only — a published/archived exam is kept forever) ──
 export async function deleteExamAction(examId: string) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const exam = await requireExamOwner(examId, user)
 
   if (exam.status !== "DRAFT") {

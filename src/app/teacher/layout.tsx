@@ -1,5 +1,5 @@
 import { GraduationCap, LayoutDashboard, ClipboardList, BookOpen, CreditCard } from "lucide-react"
-import { requireRole } from "@/lib/authorization"
+import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
 
@@ -20,7 +20,7 @@ export default async function TeacherLayout({
 }: {
   children: React.ReactNode
 }) {
-  const teacher = await requireRole("TEACHER", "ADMIN")
+  const teacher = await requireRole(...TEACHER_ROLES)
 
   return (
     <DashboardShell

@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { assertRole, assertOwner } from "@/lib/authorization"
+import { assertRole, assertOwner, TEACHER_ROLES } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import {
   CLIENT_REPORTABLE_TYPES,
@@ -77,7 +77,7 @@ export async function reviewViolationEventAction(
   _state: unknown,
   formData: FormData
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const event = await prisma.violationEvent.findUnique({
     where: { id: eventId },
@@ -156,7 +156,7 @@ export async function resolveAppealAction(
   _state: unknown,
   formData: FormData
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const appeal = await prisma.violationAppeal.findUnique({
     where: { id: appealId },

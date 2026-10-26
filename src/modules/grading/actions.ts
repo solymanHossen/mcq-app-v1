@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { assertRole, assertOwner } from "@/lib/authorization"
+import { assertRole, assertOwner, TEACHER_ROLES } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { applyCorrectionAndRegrade } from "@/modules/grading/regrade"
 import { invalidateScope } from "@/modules/leaderboard/cache"
@@ -15,7 +15,7 @@ import {
 } from "@/modules/grading/validators"
 
 async function requireExamOwner(examId: string) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
   const exam = await prisma.exam.findUnique({ where: { id: examId } })
   if (!exam) throw new Error("Exam not found")
   assertOwner(user, exam.teacherId)
@@ -147,7 +147,7 @@ export async function disqualifyAttemptAction(
   _state: unknown,
   formData: FormData
 ) {
-  const user = await assertRole("TEACHER", "ADMIN")
+  const user = await assertRole(...TEACHER_ROLES)
 
   const attempt = await prisma.examAttempt.findUnique({
     where: { id: attemptId },

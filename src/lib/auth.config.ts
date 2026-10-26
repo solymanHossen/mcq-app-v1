@@ -5,6 +5,19 @@ export const authConfig = {
   },
 } as const;
 
+// Both admin tiers reach every /admin route — SUPER_ADMIN-only restrictions
+// (managing admin-tier roles) are enforced deeper in, in the server actions
+// themselves, not by route. Kept here (not lib/authorization.ts) because
+// this file is imported by proxy.ts, which runs on the Edge runtime and
+// can't pull in anything Node/Prisma-specific — authorization.ts re-exports
+// this same array (and an isAdminTier helper) for server-side use so
+// there's one source of truth.
+export const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN'] as const;
+
+export function isAdminRole(role: string | undefined): boolean {
+  return role !== undefined && (ADMIN_ROLES as readonly string[]).includes(role);
+}
+
 export const publicRoutes = [
   '/',
   '/login',

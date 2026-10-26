@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,16 +26,21 @@ import {
 import { changeUserRoleAction } from "@/modules/users/actions"
 import type { Role } from "@/prisma/generated/prisma/client"
 
-const ROLES: Role[] = ["ADMIN", "TEACHER", "STUDENT"]
+const ALL_ROLES: Role[] = ["SUPER_ADMIN", "ADMIN", "TEACHER", "STUDENT"]
+const NON_ADMIN_ROLES: Role[] = ["TEACHER", "STUDENT"]
+const ADMIN_TIER: Role[] = ["SUPER_ADMIN", "ADMIN"]
 
 export function ChangeRoleDialog({
   userId,
   userName,
   currentRole,
+  canManageAdminTier,
 }: {
   userId: string
   userName: string
   currentRole: Role
+  /** Only a SUPER_ADMIN can assign/revoke admin-tier roles — see changeUserRoleAction. */
+  canManageAdminTier: boolean
 }) {
   const [open, setOpen] = useState(false)
   const [role, setRole] = useState<Role>(currentRole)
@@ -47,6 +52,19 @@ export function ChangeRoleDialog({
     if ("success" in result) setOpen(false)
     return result
   }, undefined)
+
+  // A plain ADMIN can't touch an admin-tier account at all (promoting or
+  // demoting one both require SUPER_ADMIN) — don't offer a dialog whose
+  // only possible outcome is a server-side rejection.
+  if (!canManageAdminTier && ADMIN_TIER.includes(currentRole)) {
+    return (
+      <span className="text-xs text-muted-foreground" title="Only a super admin can change this role">
+        —
+      </span>
+    )
+  }
+
+  const roleOptions = canManageAdminTier ? ALL_ROLES : NON_ADMIN_ROLES
 
   return (
     <Dialog
@@ -80,13 +98,25 @@ export function ChangeRoleDialog({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {ROLES.map((r) => (
+                {roleOptions.map((r) => (
                   <SelectItem key={r} value={r}>
-                    {r}
+                    {r === "SUPER_ADMIN" ? (
+                      <span className="flex items-center gap-1.5">
+                        <Crown className="size-3.5 text-amber-500" />
+                        {r}
+                      </span>
+                    ) : (
+                      r
+                    )}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {canManageAdminTier && (role === "SUPER_ADMIN" || role === "ADMIN") && (
+              <p className="text-xs text-muted-foreground">
+                Admin-tier roles can only be assigned or changed by a super admin.
+              </p>
+            )}
           </Field>
 
           <Field>

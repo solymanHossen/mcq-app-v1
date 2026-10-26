@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { Search, Crown } from "lucide-react"
+import { requireRole, ADMIN_ROLES, isAdminTier } from "@/lib/authorization"
 import { listUsers } from "@/modules/payments/queries"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -26,6 +27,7 @@ const PAGE_SIZE = 20
 
 const ROLE_FILTERS: { label: string; value: Role | undefined }[] = [
   { label: "All", value: undefined },
+  { label: "Super admins", value: "SUPER_ADMIN" },
   { label: "Admins", value: "ADMIN" },
   { label: "Teachers", value: "TEACHER" },
   { label: "Students", value: "STUDENT" },
@@ -45,6 +47,9 @@ export default async function AdminUsersPage({
 }: {
   searchParams: Promise<Record<string, string | undefined>>
 }) {
+  const viewer = await requireRole(...ADMIN_ROLES)
+  const canManageAdminTier = viewer.role === "SUPER_ADMIN"
+
   const sp = await searchParams
   const page = sp.page ? Math.max(1, Number(sp.page)) : 1
   const role = sp.role as Role | undefined
@@ -133,7 +138,10 @@ export default async function AdminUsersPage({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{u.role}</Badge>
+                  <Badge variant={u.role === "SUPER_ADMIN" ? "default" : "outline"} className="gap-1">
+                    {u.role === "SUPER_ADMIN" && <Crown className="size-3" />}
+                    {u.role}
+                  </Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
@@ -157,8 +165,13 @@ export default async function AdminUsersPage({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-wrap items-center justify-end gap-2">
-                    <ChangeRoleDialog userId={u.id} userName={u.name} currentRole={u.role} />
-                    <UserRowActions userId={u.id} isActive={u.isActive} isAdmin={u.role === "ADMIN"} />
+                    <ChangeRoleDialog
+                      userId={u.id}
+                      userName={u.name}
+                      currentRole={u.role}
+                      canManageAdminTier={canManageAdminTier}
+                    />
+                    <UserRowActions userId={u.id} isActive={u.isActive} isAdmin={isAdminTier(u.role)} />
                   </div>
                 </TableCell>
               </TableRow>

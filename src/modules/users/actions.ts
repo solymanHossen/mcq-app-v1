@@ -2,15 +2,16 @@
 
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { assertRole, revokeAllSessions } from "@/lib/authorization"
+import { assertRole, ADMIN_ROLES, isAdminTier, revokeAllSessions } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { recordAdminAction } from "@/lib/admin-audit"
 
 /**
- * Every action here is ADMIN-only and leaves an AdminAuditLog row — see
- * lib/admin/audit.ts. None of this ever touches exam/grading/payment logic
- * directly; it only changes a User row's own fields (isActive,
- * teacherVerificationStatus) that those other systems already read.
+ * Every action here is admin-tier-only (ADMIN or SUPER_ADMIN) and leaves an
+ * AdminAuditLog row — see lib/admin/audit.ts. None of this ever touches
+ * exam/grading/payment logic directly; it only changes a User row's own
+ * fields (isActive, role, teacherVerificationStatus) that those other
+ * systems already read.
  */
 
 const reasonSchema = z.object({
@@ -18,16 +19,16 @@ const reasonSchema = z.object({
 })
 
 const roleChangeSchema = z.object({
-  role: z.enum(["ADMIN", "TEACHER", "STUDENT"]),
+  role: z.enum(["SUPER_ADMIN", "ADMIN", "TEACHER", "STUDENT"]),
   reason: z.string().trim().min(5, "Explain the reason for this change").max(1000),
 })
 
 export async function suspendUserAction(userId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role === "ADMIN") return { error: "Admin accounts can't be suspended from here" }
+  if (isAdminTier(target.role)) return { error: "Admin accounts can't be suspended from here" }
   if (!target.isActive) return { error: "This account is already suspended" }
 
   const parsed = reasonSchema.safeParse(Object.fromEntries(formData))
@@ -60,7 +61,7 @@ export async function suspendUserAction(userId: string, _state: unknown, formDat
 }
 
 export async function reinstateUserAction(userId: string) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
@@ -83,7 +84,7 @@ export async function reinstateUserAction(userId: string) {
 }
 
 export async function changeUserRoleAction(userId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
@@ -94,14 +95,22 @@ export async function changeUserRoleAction(userId: string, _state: unknown, form
   const { role: newRole, reason } = parsed.data
   if (newRole === target.role) return { error: "User already has this role" }
 
-  // The only invariant this guards: never end up with zero admins. An admin
-  // stepping down (even out of their own account) is fine as long as
-  // another admin remains to take over — this also covers "can I change my
-  // own role" without a separate self-check, since the sole remaining admin
-  // changing their own role is exactly the adminCount <= 1 case.
-  if (target.role === "ADMIN" && newRole !== "ADMIN") {
-    const adminCount = await prisma.user.count({ where: { role: "ADMIN" } })
-    if (adminCount <= 1) return { error: "Can't remove the last remaining admin" }
+  // Assigning or removing an admin-tier role is reserved for SUPER_ADMIN —
+  // a plain ADMIN can promote/demote between TEACHER and STUDENT freely, but
+  // can't grant (or take away) the tier they're both members of.
+  if (admin.role !== "SUPER_ADMIN" && (isAdminTier(target.role) || isAdminTier(newRole))) {
+    return { error: "Only a super admin can assign or change admin-tier roles" }
+  }
+
+  // The only invariant this guards: never end up with zero super admins —
+  // the role that alone can create or restore one. A super admin stepping
+  // down (even out of their own account) is fine as long as another one
+  // remains to take over; this also covers "can I change my own role"
+  // without a separate self-check, since the sole remaining super admin
+  // changing their own role is exactly the superAdminCount <= 1 case.
+  if (target.role === "SUPER_ADMIN" && newRole !== "SUPER_ADMIN") {
+    const superAdminCount = await prisma.user.count({ where: { role: "SUPER_ADMIN" } })
+    if (superAdminCount <= 1) return { error: "Can't remove the last remaining super admin" }
   }
 
   await prisma.$transaction(async (tx) => {
@@ -136,7 +145,7 @@ export async function changeUserRoleAction(userId: string, _state: unknown, form
 }
 
 export async function verifyTeacherAction(userId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
@@ -167,7 +176,7 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
 }
 
 export async function rejectTeacherAction(userId: string, _state: unknown, formData: FormData) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
@@ -199,7 +208,7 @@ export async function rejectTeacherAction(userId: string, _state: unknown, formD
 }
 
 export async function resetTeacherVerificationAction(userId: string) {
-  const admin = await assertRole("ADMIN")
+  const admin = await assertRole(...ADMIN_ROLES)
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }

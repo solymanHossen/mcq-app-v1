@@ -34,7 +34,7 @@ function otherOption(correct: OptionLetter): OptionLetter {
 async function upsertUser(opts: {
   email: string
   name: string
-  role: "ADMIN" | "TEACHER" | "STUDENT"
+  role: "SUPER_ADMIN" | "ADMIN" | "TEACHER" | "STUDENT"
 }) {
   const passwordHash = await hashPassword(DEMO_PASSWORD)
   return prisma.user.upsert({
@@ -51,7 +51,7 @@ async function upsertUser(opts: {
 }
 
 async function seedUsers() {
-  const admin = await upsertUser({ email: "admin@example.com", name: "Admin User", role: "ADMIN" })
+  const admin = await upsertUser({ email: "admin@example.com", name: "Admin User", role: "SUPER_ADMIN" })
   const teacherA = await upsertUser({ email: "teacher@example.com", name: "Teacher User", role: "TEACHER" })
   const teacherB = await upsertUser({ email: "teacher2@example.com", name: "Priya Sharma", role: "TEACHER" })
   const teacherPending = await upsertUser({ email: "teacher-pending@example.com", name: "Sam Carter", role: "TEACHER" })
@@ -985,7 +985,7 @@ async function main() {
   await seedBilling(admin.id, teacherA.id, teacherB.id, plans, coupons)
 
   console.log(`\nSeeded accounts (all passwords: ${DEMO_PASSWORD}):`)
-  console.log(`  ADMIN:   ${admin.email}`)
+  console.log(`  SUPER_ADMIN: ${admin.email}`)
   console.log(`  TEACHER: ${teacherA.email} (verified)`)
   console.log(`  TEACHER: ${teacherB.email} (verified)`)
   console.log(`  TEACHER: ${teacherPending.email} (pending verification)`)

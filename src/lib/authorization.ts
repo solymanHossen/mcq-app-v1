@@ -3,7 +3,21 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import type { Role, TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
+import { ADMIN_ROLES } from "@/lib/auth.config"
 import { UnauthorizedError, ForbiddenError } from "./errors"
+
+// Re-exported from auth.config (Edge-safe, used by proxy.ts too) so every
+// "admin or super admin" check in this file and its callers shares one
+// source of truth. TEACHER_ROLES covers the other common pattern — a
+// TEACHER acting on their own content, with either admin tier allowed in to
+// manage it too.
+export { ADMIN_ROLES }
+export const TEACHER_ROLES: Role[] = ["TEACHER", ...ADMIN_ROLES]
+
+/** True for ADMIN and SUPER_ADMIN — the two roles every /admin route admits. */
+export function isAdminTier(role: Role): boolean {
+  return (ADMIN_ROLES as readonly Role[]).includes(role)
+}
 
 export type CurrentUser = {
   id: string
@@ -94,9 +108,9 @@ export async function assertRole(...roles: Role[]): Promise<CurrentUser> {
   return user
 }
 
-/** ADMIN always passes; otherwise the resource's owner must match the caller. */
+/** Either admin tier always passes; otherwise the resource's owner must match the caller. */
 export function assertOwner(user: CurrentUser, resourceOwnerId: string) {
-  if (user.role === "ADMIN") return
+  if (isAdminTier(user.role)) return
   if (user.id !== resourceOwnerId) throw new ForbiddenError()
 }
 
