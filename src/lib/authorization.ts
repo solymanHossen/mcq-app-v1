@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import type { Role, TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
-import { ADMIN_ROLES } from "@/lib/auth.config"
+import { ADMIN_ROLES, roleHomePath } from "@/lib/auth.config"
 import { UnauthorizedError, ForbiddenError } from "./errors"
 
 // Re-exported from auth.config (Edge-safe, used by proxy.ts too) so every
@@ -90,7 +90,13 @@ export async function requireUser(): Promise<CurrentUser> {
 
 export async function requireRole(...roles: Role[]): Promise<CurrentUser> {
   const user = await requireUser()
-  if (!roles.includes(user.role)) redirect("/dashboard")
+  // Straight to this user's own home, not a blanket /dashboard — proxy.ts
+  // already blocks most cross-role access to /admin and /teacher before a
+  // page ever renders, but routes outside those two namespaces (e.g. a
+  // STUDENT-only page under /exams) rely on this check instead, and a
+  // mismatched admin/teacher landing on /dashboard would otherwise just
+  // bounce through a second redirect to get to their real home.
+  if (!roles.includes(user.role)) redirect(roleHomePath(user.role))
   return user
 }
 

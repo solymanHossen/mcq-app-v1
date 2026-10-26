@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { signIn } from "next-auth/react"
+import { signIn, getSession } from "next-auth/react"
+import { roleHomePath } from "@/lib/auth.config"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -35,7 +36,6 @@ export function LoginForm() {
         email,
         password,
         redirect: false,
-        callbackUrl: "/dashboard",
       })
 
       if (result?.error) {
@@ -43,7 +43,11 @@ export function LoginForm() {
         return
       }
 
-      window.location.href = result?.url ?? "/dashboard"
+      // result.url is just the resolved callbackUrl, not role-aware — fetch
+      // the fresh session so each role lands directly on its own home
+      // instead of bouncing through /dashboard first.
+      const session = await getSession()
+      window.location.href = roleHomePath(session?.user?.role)
     })
   }
 
