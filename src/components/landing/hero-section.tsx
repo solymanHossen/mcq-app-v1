@@ -63,11 +63,11 @@ export function HeroSection() {
           className="object-cover object-[center_right] lg:object-[68%_center]"
         />
 
-        {/* Left-side ambient gradient so left frosted glass card has supreme contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent pointer-events-none" />
+        {/* Left-side subtle ambient gradient to preserve background visibility while maintaining contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/10 to-transparent pointer-events-none" />
 
         {/* Top subtle fade under header */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/30 to-transparent pointer-events-none" />
 
         {/* Bottom subtle edge blend to next section */}
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none" />
@@ -76,13 +76,18 @@ export function HeroSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-8 xl:gap-12">
           
-          {/* ================= LEFT COLUMN: MARKED SECTION WITH GLASS SYSTEM ================= */}
+          {/* ================= LEFT COLUMN: MARKED SECTION WITH AUTHENTIC GLASS SYSTEM ================= */}
           <div className="lg:col-span-6 relative z-10 py-4 sm:py-6 lg:py-8">
-            <div className="relative rounded-3xl border border-border/80 bg-card/70 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.05)] ring-1 ring-border/30">
-              {/* Subtle top glass edge glow */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-3xl bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="relative overflow-hidden rounded-[2.25rem] border border-white/70 dark:border-white/15 bg-white/45 dark:bg-card/35 backdrop-blur-2xl backdrop-saturate-150 p-6 sm:p-10 lg:p-12 shadow-[0_8px_32px_0_rgba(15,23,42,0.08),inset_0_1px_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.04]">
+              {/* Glass specular sheen - top diagonal light reflection */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-x-20 -top-20 h-48 -rotate-12 bg-gradient-to-b from-white/40 via-white/10 to-transparent blur-sm"
+              />
+              {/* Top glass edge glow */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
 
-              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] leading-[1.14]">
+              <h1 className="relative font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] leading-[1.14]">
                 The Elite Standard
                 <span className="block mt-1 font-extrabold">
                   for <span className="text-primary">Online</span>
@@ -92,16 +97,16 @@ export function HeroSection() {
                 </span>
               </h1>
 
-              <p className="mt-5 text-base text-muted-foreground sm:text-lg sm:leading-relaxed max-w-lg">
+              <p className="relative mt-5 text-base text-muted-foreground sm:text-lg sm:leading-relaxed max-w-lg font-medium">
                 Empower your institution with a secure, intuitive, and frictionless
                 testing platform built for the modern era.
               </p>
 
               {/* Action Buttons */}
-              <div className="mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
+              <div className="relative mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
                 <Link
                   href="/register"
-                  className="group relative inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 px-7 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md active:scale-95"
+                  className="group relative inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 px-7 py-3 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:shadow-lg active:scale-95"
                 >
                   <span>Get Started Free</span>
                 </Link>
@@ -109,14 +114,14 @@ export function HeroSection() {
                 <button
                   type="button"
                   onClick={() => setIsVideoOpen(true)}
-                  className="group inline-flex items-center justify-center rounded-full border border-border/90 bg-card/90 hover:bg-card px-7 py-3 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:border-foreground/20 active:scale-95"
+                  className="group inline-flex items-center justify-center rounded-full border border-white/70 dark:border-border/90 bg-white/50 dark:bg-card/60 hover:bg-white/80 dark:hover:bg-card px-7 py-3 text-base font-medium text-foreground backdrop-blur-md shadow-xs transition-all duration-300 hover:shadow active:scale-95"
                 >
                   <span>Watch Video</span>
                 </button>
               </div>
 
               {/* Social Proof Text */}
-              <p className="mt-10 sm:mt-12 text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
+              <p className="relative mt-10 sm:mt-12 text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
                 Trusted by 500+ global universities and institutions
               </p>
             </div>
