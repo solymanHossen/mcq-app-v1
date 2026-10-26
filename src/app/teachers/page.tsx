@@ -126,7 +126,7 @@ export default async function TeachersPage() {
     <div className="flex min-h-svh flex-col bg-background text-foreground">
       <Navbar />
 
-      <main className="flex-1 pt-28 sm:pt-36 pb-24">
+      <main className="flex-1 pt-24 sm:pt-28 pb-20">
         <TeacherDirectoryClient teachers={teachers} stats={stats} />
       </main>
 
