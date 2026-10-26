@@ -9,13 +9,18 @@ import {
   GraduationCap,
   MoreHorizontal,
   Play,
-  ShieldCheck,
-  Sparkles,
-  X,
 } from "lucide-react"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 export function HeroSection() {
-  const [isVideoOpen, setIsVideoOpen] = React.useState(false)
   const [timerText, setTimerText] = React.useState("01:42:15")
 
   // Live timer tick simulation
@@ -102,16 +107,40 @@ export function HeroSection() {
                   <ArrowRight className="size-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
 
-                <button
-                  type="button"
-                  onClick={() => setIsVideoOpen(true)}
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-border bg-card/80 hover:bg-card pl-3.5 pr-6 py-2.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow hover:border-foreground/20 active:scale-95"
-                >
-                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Play className="size-3.5 fill-current ml-0.5" />
-                  </span>
-                  <span>Watch Video</span>
-                </button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      type="button"
+                      className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-border bg-card/80 hover:bg-card pl-3.5 pr-6 py-2.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow hover:border-foreground/20 active:scale-95"
+                    >
+                      <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
+                        <Play className="size-3.5 fill-current ml-0.5" />
+                      </span>
+                      <span>Tour Our Work Process</span>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="h-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-none overflow-hidden border-border/60 bg-background p-2 shadow-2xl duration-300 sm:w-[50vw] sm:p-3">
+                    <DialogHeader className="sr-only">
+                      <DialogTitle>ExamHub work process</DialogTitle>
+                      <DialogDescription>
+                        Watch a short video showing how ExamHub works.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="aspect-video overflow-hidden rounded-lg bg-black">
+                      <video
+                        className="block size-full object-contain"
+                        controls
+                        autoPlay
+                        muted
+                        playsInline
+                        preload="metadata"
+                        src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+                      >
+                        Your browser does not support video playback.
+                      </video>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
@@ -188,62 +217,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Video Modal Preview Dialog */}
-      {isVideoOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-md"
-        >
-          <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-2xl text-card-foreground">
-            <div className="flex items-center justify-between pb-4 border-b border-border/60">
-              <div className="flex items-center gap-2">
-                <Sparkles className="size-5 text-primary" />
-                <h3 className="text-lg font-bold text-foreground">
-                  ExamHub Platform Tour &amp; Proctoring Demo
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsVideoOpen(false)}
-                className="rounded-full border border-border bg-muted/40 p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                aria-label="Close dialog"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-
-            {/* Interactive video preview canvas */}
-            <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-2xl border border-border/60 bg-muted/20 flex flex-col items-center justify-center text-center p-8">
-              <div className="size-20 rounded-full border border-primary/20 bg-primary/10 flex items-center justify-center text-primary shadow-xs mb-4">
-                <ShieldCheck className="size-10 text-primary" />
-              </div>
-              <h4 className="text-xl font-bold text-foreground">
-                Secure &amp; Intuitive Examination Environment
-              </h4>
-              <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                Experience high-precision facial biometric verification, continuous tab-switch detection, and real-time auto-grading.
-              </p>
-              <div className="mt-6 flex gap-3">
-                <Link
-                  href="/register"
-                  onClick={() => setIsVideoOpen(false)}
-                  className="rounded-full bg-primary hover:bg-primary/90 px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm"
-                >
-                  Start Free Trial
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setIsVideoOpen(false)}
-                  className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   )
 }
