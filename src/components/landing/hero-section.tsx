@@ -63,14 +63,8 @@ export function HeroSection() {
           className="object-cover object-[center_right] lg:object-[68%_center]"
         />
 
-        {/* Left-side subtle ambient gradient to preserve background visibility while maintaining contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/10 to-transparent pointer-events-none" />
-
-        {/* Top subtle fade under header */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/30 to-transparent pointer-events-none" />
-
-        {/* Bottom subtle edge blend to next section */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+        {/* Subtle ambient gradient restricted ONLY to the left side so the right photo remains 100% clear with zero glass effect */}
+        <div className="absolute inset-y-0 left-0 w-full lg:w-[46%] bg-gradient-to-r from-background/25 via-background/10 to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,14 +121,17 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE UI CARDS ================= */}
+          {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE GLASS UI CARDS ================= */}
           <div className="lg:col-span-6 relative min-h-[380px] sm:min-h-[440px] lg:min-h-[540px]">
             
-            {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) ---------------- */}
+            {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
             <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 z-20 transition-transform duration-300 hover:scale-105">
-              <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 p-3 sm:px-3.5 backdrop-blur-md shadow-xl text-card-foreground">
+              <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/55 dark:bg-card/45 p-3 sm:px-3.5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
+                {/* Specular glass edge line */}
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+
                 {/* Facial Scan Avatar */}
-                <div className="relative flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl border border-chart-4/80 bg-muted/40 p-0.5 shadow-xs">
+                <div className="relative flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl border border-chart-4/80 bg-white/50 dark:bg-muted/40 p-0.5 shadow-xs">
                   <div className="relative size-full overflow-hidden rounded-lg">
                     <Image
                       src="/images/avatar-verify.jpg"
@@ -159,10 +156,10 @@ export function HeroSection() {
                     Progress
                   </span>
                   <div className="mt-1.5 flex flex-col gap-1 w-24 sm:w-28">
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/10 dark:bg-muted">
                       <div className="h-full w-[80%] rounded-full bg-chart-4" />
                     </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/10 dark:bg-muted">
                       <div className="h-full w-[45%] rounded-full bg-chart-2" />
                     </div>
                   </div>
@@ -170,9 +167,12 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) ---------------- */}
+            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
             <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-10 z-30 max-w-[calc(100%-1rem)] w-[265px] sm:w-[310px] transition-transform duration-300 hover:scale-102">
-              <div className="flex flex-col gap-3 rounded-2xl border border-border/80 bg-card/95 p-4 sm:p-5 backdrop-blur-md shadow-2xl text-card-foreground">
+              <div className="relative overflow-hidden flex flex-col gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-4 sm:p-5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_12px_40px_0_rgba(15,23,42,0.14),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
+                {/* Specular glass edge line */}
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+
                 {/* Header */}
                 <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
                   <span>Exam in Progress</span>
@@ -193,7 +193,7 @@ export function HeroSection() {
                 </div>
 
                 {/* Live Question Check Items */}
-                <div className="flex flex-col gap-2 border-t border-border/60 pt-2.5">
+                <div className="flex flex-col gap-2 border-t border-black/10 dark:border-border/60 pt-2.5">
                   <div className="flex items-center justify-between text-xs text-card-foreground font-medium">
                     <span className="flex items-center gap-2">
                       <span className="flex size-3.5 items-center justify-center rounded-full bg-chart-4/15 text-chart-4">
@@ -216,7 +216,7 @@ export function HeroSection() {
                 </div>
 
                 {/* Bottom AI Proctoring Active Pill */}
-                <div className="mt-1 flex items-center justify-center gap-2 rounded-full bg-chart-4/15 border border-chart-4/30 py-1.5 px-3">
+                <div className="mt-1 flex items-center justify-center gap-2 rounded-full bg-chart-4/15 border border-chart-4/30 py-1.5 px-3 backdrop-blur-md">
                   <span className="size-2 rounded-full bg-chart-4" />
                   <span className="text-xs font-semibold text-chart-4">
                     AI proctoring active
@@ -225,9 +225,12 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* ---------------- CARD 3: BOTTOM RIGHT (INSIGHTS & ANALYTICS) ---------------- */}
+            {/* ---------------- CARD 3: BOTTOM RIGHT (INSIGHTS & ANALYTICS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
             <div className="hidden sm:block absolute bottom-2 right-2 sm:bottom-4 sm:right-4 lg:bottom-8 lg:right-6 z-20 w-[240px] sm:w-[275px] transition-transform duration-300 hover:scale-102">
-              <div className="flex flex-col gap-2.5 rounded-2xl border border-border/80 bg-card/95 p-3.5 sm:p-4 backdrop-blur-md shadow-xl text-card-foreground">
+              <div className="relative overflow-hidden flex flex-col gap-2.5 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-3.5 sm:p-4 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
+                {/* Specular glass edge line */}
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+
                 {/* Header */}
                 <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
                   <span>Insights &amp; Analytics</span>
@@ -307,24 +310,24 @@ export function HeroSection() {
                 </div>
 
                 {/* Metrics Progress Section */}
-                <div className="flex flex-col gap-1.5 border-t border-border/60 pt-2 text-[11px]">
+                <div className="flex flex-col gap-1.5 border-t border-black/10 dark:border-border/60 pt-2 text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Security Level</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
                       <div className="h-full w-[94%] rounded-full bg-chart-4" />
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Integrity Rating</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
                       <div className="h-full w-[98%] rounded-full bg-chart-2" />
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Attendance</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10 dark:bg-muted">
                       <div className="h-full w-[99%] rounded-full bg-primary" />
                     </div>
                   </div>
