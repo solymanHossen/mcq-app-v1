@@ -1,7 +1,10 @@
+import { Sparkles } from "lucide-react"
 import { requireUser } from "@/lib/authorization"
 import { getCurrentSubscription } from "@/modules/payments/entitlements"
 import { getPaymentHistoryForUser, listActivePlans } from "@/modules/payments/queries"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { Badge } from "@/components/ui/badge"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import {
   Table,
@@ -26,15 +29,27 @@ function formatPrice(cents: number, currency: string) {
 export default async function BillingPage() {
   const user = await requireUser()
 
-  const [subscription, history, plans] = await Promise.all([
+  const [subscription, history, plans, { billingEnabled }] = await Promise.all([
     getCurrentSubscription(user.id),
     getPaymentHistoryForUser(user.id),
     listActivePlans(),
+    getSystemSettings(),
   ])
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-6">
       <h1 className="text-2xl font-semibold">Billing</h1>
+
+      {!billingEnabled && (
+        <Alert>
+          <Sparkles />
+          <AlertTitle>ExamHub is currently free to use</AlertTitle>
+          <AlertDescription>
+            An admin has turned off billing platform-wide — every feature is available at no
+            cost, and new subscriptions aren&apos;t open right now.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <section className="space-y-2">
         <h2 className="font-medium">Current plan</h2>
@@ -62,27 +77,32 @@ export default async function BillingPage() {
           </Card>
         ) : (
           <p className="text-sm text-muted-foreground">
-            You&apos;re on the free tier. Subscribe to a plan below for more features.
+            {billingEnabled
+              ? "You're on the free tier. Subscribe to a plan below for more features."
+              : "You're all set — every feature is free while billing is turned off."}
           </p>
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="font-medium">Available plans</h2>
-        {plans.map((plan) => (
-          <Card key={plan.id}>
-            <CardHeader>
-              <CardTitle>{plan.name}</CardTitle>
-              <CardDescription>
-                {formatPrice(plan.priceCents, plan.currency)} / {plan.billingInterval.toLowerCase()}
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <SubscribeButton planKey={plan.key} />
-            </CardFooter>
-          </Card>
-        ))}
-      </section>
+      {billingEnabled && (
+        <section className="space-y-3">
+          <h2 className="font-medium">Available plans</h2>
+          {plans.map((plan) => (
+            <Card key={plan.id}>
+              <CardHeader>
+                <CardTitle>{plan.name}</CardTitle>
+                <CardDescription>
+                  {formatPrice(plan.priceCents, plan.currency)} /{" "}
+                  {plan.billingInterval.toLowerCase()}
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <SubscribeButton planKey={plan.key} />
+              </CardFooter>
+            </Card>
+          ))}
+        </section>
+      )}
 
       <section className="space-y-2">
         <h2 className="font-medium">Payment history</h2>

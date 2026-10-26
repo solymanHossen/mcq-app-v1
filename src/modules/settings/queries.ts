@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 export type SystemSettings = {
   requireEmailVerification: boolean
   requireTeacherVerification: boolean
+  billingEnabled: boolean
 }
 
 // Mirrors the SystemSettings model's own column defaults — what the
@@ -12,6 +13,7 @@ export type SystemSettings = {
 const DEFAULT_SETTINGS: SystemSettings = {
   requireEmailVerification: true,
   requireTeacherVerification: true,
+  billingEnabled: true,
 }
 
 // Memoized per request: a layout, a page, and a server action can all ask
@@ -24,5 +26,6 @@ export const getSystemSettings = cache(async (): Promise<SystemSettings> => {
   return {
     requireEmailVerification: row.requireEmailVerification,
     requireTeacherVerification: row.requireTeacherVerification,
+    billingEnabled: row.billingEnabled,
   }
 })

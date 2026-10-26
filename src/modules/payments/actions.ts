@@ -7,6 +7,7 @@ import { ForbiddenError } from "@/lib/errors"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { getPaymentProvider } from "@/modules/payments/provider"
 import { validateCoupon } from "@/modules/payments/coupons"
+import { getSystemSettings } from "@/modules/settings/queries"
 
 /**
  * User-facing billing — any authenticated user, not role-restricted (a
@@ -24,6 +25,12 @@ const checkoutSchema = z.object({
 
 export async function createCheckoutSessionAction(input: unknown) {
   const user = await assertUser()
+
+  // The UI hides plans/subscribe buttons in free mode, but a checkout can
+  // also be started by calling this action directly — enforce it here too,
+  // not just by omission in the page.
+  const { billingEnabled } = await getSystemSettings()
+  if (!billingEnabled) return { error: "This platform is currently free — no subscription needed" }
 
   const parsed = checkoutSchema.safeParse(input)
   if (!parsed.success) return { error: "Invalid request" }

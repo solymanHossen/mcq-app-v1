@@ -1159,6 +1159,14 @@ model SystemSettings {
   // being tracked and reviewable even while this is off.
   requireTeacherVerification Boolean @default(true)
 
+  // The platform-wide paid/free switch. On: the billing system behaves as
+  // built (nav link, plan list, subscribe/cancel). Off: ExamHub is free for
+  // everyone — modules/payments/actions.ts refuses new checkouts, and the
+  // billing nav link/page hide the plan catalog. Admin billing tooling
+  // (/admin/subscriptions, /admin/payments, /admin/coupons) and canceling an
+  // existing subscription are never gated by this — only *new* subscribing.
+  billingEnabled Boolean @default(true)
+
   updatedAt   DateTime @updatedAt
   updatedById String?
   updatedBy   User?    @relation("SystemSettingsUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)

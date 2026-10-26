@@ -60,3 +60,32 @@ export async function setRequireTeacherVerificationAction(enabled: boolean) {
   safeRevalidatePath("/admin/settings")
   return { success: true as const }
 }
+
+// Independent of the two toggles above — this is "is the platform paid or
+// free for everyone", not a verification policy. assertRole("SUPER_ADMIN")
+// for the same reason as the verification toggles: platform-wide monetary
+// policy, not an action on one user's own account.
+export async function setBillingEnabledAction(enabled: boolean) {
+  const admin = await assertRole("SUPER_ADMIN")
+
+  const current = await prisma.systemSettings.findUnique({ where: { id: "global" } })
+  const previousValue = current?.billingEnabled ?? true
+  if (previousValue === enabled) return { success: true as const }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.systemSettings.upsert({
+      where: { id: "global" },
+      update: { billingEnabled: enabled, updatedById: admin.id },
+      create: { id: "global", billingEnabled: enabled, updatedById: admin.id },
+    })
+    await recordAdminAction(tx, {
+      action: "SYSTEM_SETTINGS_UPDATED",
+      actorId: admin.id,
+      metadata: { field: "billingEnabled", from: previousValue, to: enabled },
+    })
+  })
+
+  safeRevalidatePath("/admin/settings")
+  safeRevalidatePath("/billing")
+  return { success: true as const }
+}
