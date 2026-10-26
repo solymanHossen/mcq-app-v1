@@ -51,7 +51,7 @@ export function HeroSection() {
       />
 
       {/* The reference keeps the copy on a quiet canvas and gives the image its own half of the hero. */}
-      <div className="absolute bottom-0 right-0 -z-10 h-[46%] w-full overflow-hidden lg:inset-y-0 lg:h-auto lg:w-1/2">
+      <div className="absolute bottom-0 right-0 -z-10 h-[46%] w-full overflow-hidden lg:inset-y-0 lg:h-auto lg:w-[45%]">
         <Image
           src="/images/hero-students-v2.jpg"
           alt="Students taking online exam collaboratively"
@@ -64,12 +64,12 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-8 xl:gap-12">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6 xl:gap-10">
           
           {/* ================= LEFT COLUMN: HERO COPY ================= */}
           <div className="relative z-10 py-4 sm:py-6 lg:col-span-6 lg:py-8 lg:pr-10">
             <div className="relative max-w-xl">
-              <h1 className="relative font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] leading-[1.14]">
+              <h1 className="relative max-w-[620px] font-heading text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-[3.8rem] xl:text-[4.25rem] leading-[1.08]">
                 The Elite Standard
                 <span className="block mt-1 font-extrabold">
                   for <span className="text-primary">Online</span>
@@ -102,18 +102,14 @@ export function HeroSection() {
                 </button>
               </div>
 
-              {/* Social Proof Text */}
-              <p className="relative mt-10 sm:mt-12 text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
-                Trusted by 500+ global universities and institutions
-              </p>
             </div>
           </div>
 
           {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE GLASS UI CARDS ================= */}
-          <div className="relative min-h-[380px] sm:min-h-[440px] lg:col-span-6 lg:min-h-[540px]">
+          <div className="relative z-10 min-h-[380px] sm:min-h-[440px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[45%] lg:min-h-0">
             
             {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 z-20 transition-transform duration-300 hover:scale-105">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-32 lg:right-6 z-20 transition-transform duration-300 hover:scale-105">
               <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/55 dark:bg-card/45 p-3 sm:px-3.5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
                 {/* Specular glass edge line */}
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
@@ -156,7 +152,7 @@ export function HeroSection() {
             </div>
 
             {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-10 z-30 max-w-[calc(100%-1rem)] w-[265px] sm:w-[310px] transition-transform duration-300 hover:scale-102">
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-20 z-30 max-w-[calc(100%-1rem)] w-[265px] sm:w-[310px] transition-transform duration-300 hover:scale-102">
               <div className="relative overflow-hidden flex flex-col gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-4 sm:p-5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_12px_40px_0_rgba(15,23,42,0.14),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
                 {/* Specular glass edge line */}
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
