@@ -6,13 +6,18 @@ import Link from "next/link"
 import {
   ArrowRight,
   Check,
+  CheckCircle2,
   GraduationCap,
   MoreHorizontal,
   Play,
+  ShieldCheck,
+  X,
+  Zap,
 } from "lucide-react"
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -111,33 +116,120 @@ export function HeroSection() {
                   <DialogTrigger asChild>
                     <button
                       type="button"
-                      className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-border bg-card/80 hover:bg-card pl-3.5 pr-6 py-2.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow hover:border-foreground/20 active:scale-95"
+                      className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-border/80 bg-card/80 hover:bg-card pl-3.5 pr-6 py-2.5 sm:py-3 text-base font-semibold text-foreground shadow-xs transition-all duration-300 hover:shadow-md hover:border-primary/40 active:scale-95 cursor-pointer"
                     >
-                      <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
+                      <span className="flex size-7.5 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
                         <Play className="size-3.5 fill-current ml-0.5" />
                       </span>
                       <span>Tour Our Work Process</span>
                     </button>
                   </DialogTrigger>
-                  <DialogContent className="h-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-none overflow-hidden border-border/60 bg-background p-2 shadow-2xl duration-300 sm:w-[85vw] sm:p-3 lg:w-[min(85vw,75rem)]">
+
+                  <DialogContent
+                    showCloseButton={false}
+                    className="w-[calc(100%-1.5rem)] sm:w-[94vw] md:w-[90vw] lg:w-[86vw] sm:max-w-4xl md:max-w-5xl lg:max-w-5xl xl:max-w-6xl p-0 gap-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15 bg-slate-950 text-white shadow-[0_25px_80px_-15px_rgba(0,0,0,0.9),0_0_80px_rgba(59,130,246,0.18)] backdrop-blur-2xl ring-1 ring-white/10"
+                  >
+                    {/* Radiant Top Edge Accent */}
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent z-20 pointer-events-none" />
+
                     <DialogHeader className="sr-only">
-                      <DialogTitle>ExamHub work process</DialogTitle>
+                      <DialogTitle>ExamHub Platform Walkthrough</DialogTitle>
                       <DialogDescription>
-                        Watch a short video showing how ExamHub works.
+                        Watch how ExamHub works with instant auto-grading, proctored examinations, and real-time student analytics.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="aspect-video overflow-hidden rounded-lg bg-black">
+
+                    {/* macOS / SaaS Cinematic Header Bar */}
+                    <div className="flex h-14 sm:h-16 items-center justify-between border-b border-white/10 bg-slate-900/90 px-4 sm:px-6 backdrop-blur-md">
+                      {/* Left: Window Dots + Live Badge + Title */}
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <DialogClose asChild>
+                            <button
+                              type="button"
+                              className="group/dot relative size-3.5 rounded-full bg-[#ff5f57] hover:brightness-110 transition-transform active:scale-90 flex items-center justify-center cursor-pointer"
+                              aria-label="Close modal"
+                            >
+                              <X className="size-2 text-black/80 opacity-0 group-hover/dot:opacity-100 transition-opacity stroke-[3]" />
+                            </button>
+                          </DialogClose>
+                          <span className="size-3.5 rounded-full bg-[#febc2e]" />
+                          <span className="size-3.5 rounded-full bg-[#28c840]" />
+                        </div>
+
+                        <div className="h-4 w-px bg-white/15 hidden sm:block" />
+
+                        <div className="flex items-center gap-2.5 truncate">
+                          <span className="relative flex size-2 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full size-2 bg-emerald-500"></span>
+                          </span>
+                          <span className="text-xs sm:text-sm font-semibold tracking-tight text-white/95 truncate">
+                            ExamHub Platform Tour
+                          </span>
+                          <span className="hidden md:inline-flex items-center rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/80 border border-white/10">
+                            Interactive Walkthrough
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Right: ESC Hint + Modern Close Button */}
+                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <span className="hidden sm:inline-flex items-center gap-1 rounded-md bg-white/5 px-2 py-1 text-[11px] font-mono text-white/50 border border-white/10">
+                          ESC to exit
+                        </span>
+                        <DialogClose asChild>
+                          <button
+                            type="button"
+                            className="flex size-8 sm:size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all active:scale-95 border border-white/10 cursor-pointer"
+                            aria-label="Close modal"
+                          >
+                            <X className="size-4 stroke-[2.2]" />
+                          </button>
+                        </DialogClose>
+                      </div>
+                    </div>
+
+                    {/* 16:9 Video Player Frame */}
+                    <div className="relative aspect-video w-full bg-black overflow-hidden flex items-center justify-center">
                       <video
                         className="block size-full object-contain"
                         controls
                         autoPlay
-                        muted
                         playsInline
                         preload="metadata"
                         src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
                       >
                         Your browser does not support video playback.
                       </video>
+                    </div>
+
+                    {/* Cinematic Footer Bar */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 bg-slate-900/90 px-4 py-3 sm:px-6 sm:py-3.5 backdrop-blur-md">
+                      <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-[13px] text-white/70">
+                        <span className="flex items-center gap-1.5">
+                          <ShieldCheck className="size-4 text-emerald-400" />
+                          <span>Anti-cheat Proctoring</span>
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Zap className="size-4 text-amber-400" />
+                          <span>Instant Auto-Grading</span>
+                        </span>
+                        <span className="hidden sm:flex items-center gap-1.5">
+                          <CheckCircle2 className="size-4 text-sky-400" />
+                          <span>Live Leaderboard</span>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2.5">
+                        <Link
+                          href="/teachers"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs sm:text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-95"
+                        >
+                          <span>Explore Teachers</span>
+                          <ArrowRight className="size-3.5 stroke-[2.5]" />
+                        </Link>
+                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>
