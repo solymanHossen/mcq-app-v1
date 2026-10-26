@@ -50,26 +50,30 @@ export function HeroSection() {
         className="pointer-events-none absolute top-1/3 left-1/4 -z-10 h-[34rem] w-[42rem] rounded-full bg-primary/10 blur-[130px]"
       />
 
-      {/* The reference keeps the copy on a quiet canvas and gives the image its own half of the hero. */}
-      <div className="absolute bottom-0 right-0 -z-10 h-[46%] w-full overflow-hidden lg:inset-y-0 lg:h-auto lg:w-[45%]">
+      {/* Full-width background image spanning behind navbar and hero */}
+      <div className="absolute inset-0 -z-10 h-full w-full overflow-hidden">
         <Image
           src="/images/hero-students-v2.jpg"
           alt="Students taking online exam collaboratively"
           fill
           priority
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          className="object-cover object-[62%_center]"
+          sizes="100vw"
+          className="object-cover object-[72%_center] lg:object-[68%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-background/45 to-background lg:hidden" />
+        {/* Soft mobile readability veil only below lg */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-background/30 lg:hidden" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6 xl:gap-10">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:gap-6 xl:gap-10">
           
-          {/* ================= LEFT COLUMN: HERO COPY ================= */}
-          <div className="relative z-10 py-4 sm:py-6 lg:col-span-6 lg:py-8 lg:pr-10">
-            <div className="relative max-w-xl">
-              <h1 className="relative max-w-[620px] font-heading text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-[3.8rem] xl:text-[4.25rem] leading-[1.08]">
+          {/* ================= LEFT COLUMN: FROSTED GLASS HERO PANEL ================= */}
+          <div className="relative z-10 py-4 sm:py-6 lg:col-span-6 lg:py-8 lg:pr-6">
+            <div className="relative max-w-xl rounded-[28px] sm:rounded-[36px] border border-white/70 dark:border-white/20 bg-white/65 dark:bg-card/65 p-7 sm:p-9 lg:p-11 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_20px_50px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] text-foreground">
+              {/* Specular glass edge line */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+
+              <h1 className="relative max-w-[560px] font-heading text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[3.85rem] font-extrabold tracking-tight text-foreground leading-[1.08]">
                 The Elite Standard
                 <span className="block mt-1 font-extrabold">
                   for <span className="text-primary">Online</span>
@@ -88,7 +92,7 @@ export function HeroSection() {
               <div className="relative mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
                 <Link
                   href="/register"
-                  className="group relative inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:bg-primary/90 hover:shadow-lg active:scale-95"
+                  className="group relative inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:bg-primary/90 hover:shadow-lg active:scale-95"
                 >
                   <span>Get Started Free</span>
                 </Link>
@@ -96,21 +100,25 @@ export function HeroSection() {
                 <button
                   type="button"
                   onClick={() => setIsVideoOpen(true)}
-                  className="group inline-flex items-center justify-center rounded-full border border-border bg-card/60 px-7 py-3 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:bg-card hover:shadow active:scale-95"
+                  className="group inline-flex items-center justify-center rounded-full border border-border/70 bg-white/70 dark:bg-card/70 px-7 py-3.5 text-base font-medium text-foreground backdrop-blur-md shadow-xs transition-all duration-300 hover:bg-white dark:hover:bg-card hover:shadow active:scale-95"
                 >
                   <span>Watch Video</span>
                 </button>
               </div>
 
+              {/* Social Proof / Trust Footnote */}
+              <p className="relative mt-8 text-xs sm:text-sm font-medium text-muted-foreground/90">
+                Trusted by 500+ global universities and institutions
+              </p>
             </div>
           </div>
 
           {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE GLASS UI CARDS ================= */}
-          <div className="relative z-10 min-h-[380px] sm:min-h-[440px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[45%] lg:min-h-0">
+          <div className="relative z-10 min-h-[400px] sm:min-h-[460px] lg:absolute lg:inset-y-0 lg:right-0 lg:w-[48%] lg:min-h-0">
             
             {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-32 lg:right-6 z-20 transition-transform duration-300 hover:scale-105">
-              <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/55 dark:bg-card/45 p-3 sm:px-3.5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-28 lg:right-8 z-20 transition-transform duration-300 hover:scale-105">
+              <div className="relative overflow-hidden flex items-center gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-3 sm:px-3.5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_35px_0_rgba(15,23,42,0.12),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
                 {/* Specular glass edge line */}
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
 
@@ -121,6 +129,7 @@ export function HeroSection() {
                       src="/images/avatar-verify.jpg"
                       alt="Verified candidate"
                       fill
+                      sizes="44px"
                       className="object-cover"
                     />
                   </div>
@@ -151,58 +160,67 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-20 z-30 max-w-[calc(100%-1rem)] w-[290px] sm:w-[340px] transition-transform duration-300 hover:scale-102">
-              <div className="relative overflow-hidden flex flex-col gap-4 rounded-[1.15rem] border border-border/70 bg-card p-5 text-card-foreground shadow-xl shadow-foreground/10 ring-1 ring-foreground/5 sm:p-6">
-                {/* Specular glass edge line */}
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-
-                {/* Header */}
-                <div className="flex items-center justify-between text-sm font-semibold text-card-foreground">
-                  <span>Exam in Progress</span>
-                  <button
-                    type="button"
-                    className="flex size-6 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                    aria-label="Options"
+            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS - EXACT SAME TO SAME) ---------------- */}
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-12 z-30 max-w-[calc(100%-1rem)] w-[285px] sm:w-[320px] transition-transform duration-300 hover:scale-102">
+              <div className="relative overflow-hidden flex flex-col rounded-[24px] border border-black/[0.06] dark:border-white/10 bg-white dark:bg-card p-5 sm:p-6 shadow-[0_20px_45px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.03] text-card-foreground">
+                {/* Header: Title + Rounded 3-dots Pill */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[16px] sm:text-[17px] font-bold text-slate-900 dark:text-foreground tracking-tight">
+                    Exam in Progress
+                  </span>
+                  <div
+                    className="flex h-6 w-9 items-center justify-center rounded-lg bg-slate-100 dark:bg-muted/80 text-slate-500 hover:bg-slate-200/80 transition-colors cursor-pointer"
+                    aria-label="Card options"
                   >
-                    <MoreHorizontal className="size-4" strokeWidth={2.5} />
-                  </button>
+                    <MoreHorizontal className="w-4 h-3.5 stroke-[2.5]" />
+                  </div>
                 </div>
 
-                {/* Timer Clock */}
-                <div className="py-0.5">
-                  <span className="font-mono text-3xl font-bold tracking-wider text-card-foreground">
+                {/* Big Bold Clock Timer (Proportional Sans-serif) */}
+                <div className="mt-2.5 mb-1.5">
+                  <span className="font-heading text-[36px] sm:text-[40px] font-extrabold tracking-tight leading-none text-slate-950 dark:text-white">
                     {timerText}
                   </span>
                 </div>
 
+                {/* Faint Divider Line */}
+                <div className="h-px w-full bg-slate-100 dark:bg-border/60 my-3.5" />
+
                 {/* Live Question Check Items */}
-                <div className="flex flex-col gap-2.5 border-t border-border pt-3">
-                  <div className="flex items-center justify-between text-sm font-medium text-card-foreground">
-                    <span className="flex items-center gap-2">
-                      <span className="flex size-3.5 items-center justify-center rounded-full bg-chart-4/15 text-chart-4">
-                        <Check className="size-2.5 stroke-[3]" />
+                <div className="flex flex-col gap-3">
+                  {/* Question 1 */}
+                  <div className="flex items-center justify-between text-[14.5px] sm:text-[15px] font-medium text-slate-800 dark:text-slate-200">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#e8f7ee] dark:bg-emerald-950/50 text-[#1e8e5a] dark:text-emerald-400">
+                        <Check className="size-3.5 stroke-[2.4]" />
                       </span>
-                      Live question 1
+                      <span>Live question 1</span>
+                    </div>
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#2da46f] text-white shadow-2xs">
+                      <Check className="size-3.5 stroke-[2.8]" />
                     </span>
-                    <span className="size-2 rounded-full bg-chart-4" />
                   </div>
 
-                  <div className="flex items-center justify-between text-sm font-medium text-card-foreground">
-                    <span className="flex items-center gap-2">
-                      <span className="flex size-3.5 items-center justify-center rounded-full bg-chart-4/15 text-chart-4">
-                        <Check className="size-2.5 stroke-[3]" />
+                  {/* Question 2 */}
+                  <div className="flex items-center justify-between text-[14.5px] sm:text-[15px] font-medium text-slate-800 dark:text-slate-200">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#e8f7ee] dark:bg-emerald-950/50 text-[#1e8e5a] dark:text-emerald-400">
+                        <Check className="size-3.5 stroke-[2.4]" />
                       </span>
-                      Live question 2
+                      <span>Live question 2</span>
+                    </div>
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#2da46f] text-white shadow-2xs">
+                      <Check className="size-3.5 stroke-[2.8]" />
                     </span>
-                    <span className="size-2 rounded-full bg-chart-4" />
                   </div>
                 </div>
 
-                {/* Bottom AI Proctoring Active Pill */}
-                <div className="mt-1 flex items-center justify-center gap-2 rounded-full border border-chart-4/25 bg-chart-4/15 px-3 py-1.5">
-                  <span className="size-2 rounded-full bg-chart-4" />
-                  <span className="text-sm font-semibold text-chart-4">
+                {/* Bottom AI Proctoring Active Pill (Left aligned, pill capsule) */}
+                <div className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-[#daf0e3] dark:bg-emerald-950/60 py-1.5 px-3 sm:py-2 sm:px-3.5 self-start">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[#2da46f] text-white shadow-2xs">
+                    <Check className="size-3 stroke-[2.8]" />
+                  </span>
+                  <span className="text-[13px] sm:text-[13.5px] font-semibold text-[#145738] dark:text-emerald-300 tracking-tight">
                     AI proctoring active
                   </span>
                 </div>
