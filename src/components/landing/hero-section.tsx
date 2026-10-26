@@ -41,8 +41,8 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="relative isolate min-h-[94vh] overflow-hidden bg-background text-foreground pt-28 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 flex items-center">
-      {/* Dynamic Ambient Background Glows using Theme Tokens */}
+    <section className="relative isolate min-h-[92vh] lg:min-h-[96vh] overflow-hidden bg-background text-foreground pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24 flex items-center">
+      {/* Dynamic Ambient Background Glows on Left Side */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-28 -left-20 -z-10 h-[38rem] w-[48rem] rounded-full bg-chart-2/15 blur-[120px]"
@@ -51,79 +51,78 @@ export function HeroSection() {
         aria-hidden="true"
         className="pointer-events-none absolute top-1/3 left-1/4 -z-10 h-[34rem] w-[42rem] rounded-full bg-primary/10 blur-[130px]"
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 right-1/4 -z-10 h-[32rem] w-[46rem] rounded-full bg-accent/30 blur-[130px]"
-      />
+
+      {/* ================= FULL-HEIGHT RIGHT-SIDE IMAGE (UNDER HEADER & WHOLE SECTION) ================= */}
+      <div className="absolute inset-y-0 right-0 w-full lg:w-1/2 -z-10 overflow-hidden">
+        <Image
+          src="/images/hero-students-v2.jpg"
+          alt="Students taking online exam collaboratively"
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="object-cover object-center lg:object-left"
+        />
+
+        {/* Subtle soft edge blend into left section */}
+        <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-background to-transparent pointer-events-none hidden lg:block" />
+        {/* Soft mobile overlay for optimal text contrast */}
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px] lg:hidden pointer-events-none" />
+      </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8 xl:gap-12">
+        <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-8 xl:gap-12">
           
-          {/* ================= LEFT COLUMN ================= */}
-          <div className="flex flex-col items-start lg:col-span-6 xl:col-span-6">
-            <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-[3.4rem] xl:text-[3.75rem] leading-[1.14]">
-              The Elite Standard
-              <span className="block mt-1 font-extrabold">
-                for{" "}
-                <span className="text-primary">Online</span>
-              </span>
-              <span className="block mt-1 text-primary">
-                Examinations
-              </span>
-            </h1>
+          {/* ================= LEFT COLUMN: MARKED SECTION WITH GLASS SYSTEM ================= */}
+          <div className="lg:col-span-6 relative z-10 py-4 sm:py-6 lg:py-8">
+            <div className="relative rounded-3xl border border-border/80 bg-card/70 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.05)] ring-1 ring-border/30">
+              {/* Subtle top glass edge glow */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-3xl bg-gradient-to-r from-transparent via-border to-transparent" />
 
-            <p className="mt-5 text-base text-muted-foreground sm:text-lg sm:leading-relaxed max-w-lg">
-              Empower your institution with a secure, intuitive, and frictionless
-              testing platform built for the modern era.
-            </p>
+              <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] xl:text-[3.6rem] leading-[1.14]">
+                The Elite Standard
+                <span className="block mt-1 font-extrabold">
+                  for <span className="text-primary">Online</span>
+                </span>
+                <span className="block mt-1 text-primary">
+                  Examinations
+                </span>
+              </h1>
 
-            {/* Action Buttons */}
-            <div className="mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
-              <Link
-                href="/register"
-                className="group relative inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 px-7 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md active:scale-95"
-              >
-                <span>Get Started Free</span>
-              </Link>
+              <p className="mt-5 text-base text-muted-foreground sm:text-lg sm:leading-relaxed max-w-lg">
+                Empower your institution with a secure, intuitive, and frictionless
+                testing platform built for the modern era.
+              </p>
 
-              <button
-                type="button"
-                onClick={() => setIsVideoOpen(true)}
-                className="group inline-flex items-center justify-center rounded-full border border-border bg-card/80 hover:bg-card px-7 py-3 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:border-foreground/20 active:scale-95"
-              >
-                <span>Watch Video</span>
-              </button>
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
+                <Link
+                  href="/register"
+                  className="group relative inline-flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 px-7 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md active:scale-95"
+                >
+                  <span>Get Started Free</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setIsVideoOpen(true)}
+                  className="group inline-flex items-center justify-center rounded-full border border-border/90 bg-card/90 hover:bg-card px-7 py-3 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:border-foreground/20 active:scale-95"
+                >
+                  <span>Watch Video</span>
+                </button>
+              </div>
+
+              {/* Social Proof Text */}
+              <p className="mt-10 sm:mt-12 text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
+                Trusted by 500+ global universities and institutions
+              </p>
             </div>
-
-            {/* Social Proof Text */}
-            <p className="mt-10 sm:mt-12 text-xs sm:text-sm font-medium text-muted-foreground tracking-wide">
-              Trusted by 500+ global universities and institutions
-            </p>
           </div>
 
-          {/* ================= RIGHT COLUMN (MOCKUP & CARDS) ================= */}
-          <div className="relative lg:col-span-6 xl:col-span-6 mt-6 lg:mt-0">
+          {/* ================= RIGHT COLUMN: FLOATING INTERACTIVE UI CARDS ================= */}
+          <div className="lg:col-span-6 relative min-h-[380px] sm:min-h-[440px] lg:min-h-[540px]">
             
-            {/* Subtle glow behind mockup using theme primary token */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -inset-4 rounded-3xl bg-primary/10 blur-2xl -z-10"
-            />
-
-            {/* Main Photography Frame */}
-            <div className="relative aspect-[16/11] sm:aspect-[16/10.5] min-h-[380px] sm:min-h-[440px] lg:min-h-[480px] w-full overflow-hidden rounded-3xl border border-border/80 bg-card shadow-lg">
-              <Image
-                src="/images/hero-students-v2.jpg"
-                alt="Students taking online exam collaboratively"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-center"
-              />
-            </div>
-
             {/* ---------------- CARD 1: TOP RIGHT (VERIFICATION COMPLETED) ---------------- */}
-            <div className="absolute top-2 right-2 sm:top-5 sm:-right-4 md:top-7 md:-right-6 z-20 transition-transform duration-300 hover:scale-105">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 lg:top-6 lg:right-6 z-20 transition-transform duration-300 hover:scale-105">
               <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 p-3 sm:px-3.5 backdrop-blur-md shadow-xl text-card-foreground">
                 {/* Facial Scan Avatar */}
                 <div className="relative flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl border border-chart-4/80 bg-muted/40 p-0.5 shadow-xs">
@@ -162,9 +161,9 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* ---------------- CARD 2: BOTTOM LEFT (EXAM IN PROGRESS) ---------------- */}
-            <div className="absolute bottom-2 left-2 sm:bottom-6 sm:-left-6 md:bottom-8 md:-left-8 z-30 max-w-[calc(100%-1rem)] w-[260px] sm:w-[305px] transition-transform duration-300 hover:scale-102">
-              <div className="flex flex-col gap-3 rounded-2xl border border-border/80 bg-card/95 p-4 sm:p-5 backdrop-blur-md shadow-xl text-card-foreground">
+            {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) ---------------- */}
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-10 z-30 max-w-[calc(100%-1rem)] w-[265px] sm:w-[310px] transition-transform duration-300 hover:scale-102">
+              <div className="flex flex-col gap-3 rounded-2xl border border-border/80 bg-card/95 p-4 sm:p-5 backdrop-blur-md shadow-2xl text-card-foreground">
                 {/* Header */}
                 <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
                   <span>Exam in Progress</span>
@@ -218,14 +217,14 @@ export function HeroSection() {
             </div>
 
             {/* ---------------- CARD 3: BOTTOM RIGHT (INSIGHTS & ANALYTICS) ---------------- */}
-            <div className="hidden sm:block absolute -bottom-8 -right-2 sm:-bottom-10 sm:-right-4 md:-bottom-10 md:-right-6 z-20 w-[240px] sm:w-[275px] transition-transform duration-300 hover:scale-102">
+            <div className="hidden sm:block absolute bottom-2 right-2 sm:bottom-4 sm:right-4 lg:bottom-8 lg:right-6 z-20 w-[240px] sm:w-[275px] transition-transform duration-300 hover:scale-102">
               <div className="flex flex-col gap-2.5 rounded-2xl border border-border/80 bg-card/95 p-3.5 sm:p-4 backdrop-blur-md shadow-xl text-card-foreground">
                 {/* Header */}
                 <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
                   <span>Insights &amp; Analytics</span>
                 </div>
 
-                {/* Clean Multi-Curve SVG Line Chart Using Theme Variables */}
+                {/* Clean Multi-Curve SVG Line Chart */}
                 <div className="relative mt-1">
                   <svg
                     viewBox="0 0 240 70"
