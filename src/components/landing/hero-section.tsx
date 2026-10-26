@@ -119,7 +119,7 @@ export function HeroSection() {
                       <span>Tour Our Work Process</span>
                     </button>
                   </DialogTrigger>
-                  <DialogContent className="h-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-none overflow-hidden border-border/60 bg-background p-2 shadow-2xl duration-300 sm:w-[50vw] sm:p-3">
+                  <DialogContent className="h-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-none overflow-hidden border-border/60 bg-background p-2 shadow-2xl duration-300 sm:w-[85vw] sm:p-3 lg:w-[min(85vw,75rem)]">
                     <DialogHeader className="sr-only">
                       <DialogTitle>ExamHub work process</DialogTitle>
                       <DialogDescription>
