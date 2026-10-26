@@ -90,10 +90,10 @@ export function HeroSection() {
               {/* Action Buttons */}
               <div className="relative mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
                 <Link
-                  href="/register"
+                  href="/teachers"
                   className="group relative inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:bg-primary/90 hover:shadow-lg active:scale-95"
                 >
-                  <span>Get Started Free</span>
+                  <span>Teacher List</span>
                 </Link>
 
                 <button

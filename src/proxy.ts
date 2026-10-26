@@ -4,6 +4,7 @@ import {
   authConfig,
   isAdminRole,
   isAdminRoute,
+  isOpenRoute,
   isPublicRoute,
   isTeacherRoute,
   roleHomePath,
@@ -16,6 +17,11 @@ export async function proxy(request: NextRequest) {
   });
 
   const { pathname } = request.nextUrl;
+
+  // Open routes accessible by both unauthenticated and authenticated visitors
+  if (isOpenRoute(pathname)) {
+    return NextResponse.next();
+  }
 
   if (!isPublicRoute(pathname) && !token) {
     const signInUrl = new URL(authConfig.pages.signIn, request.url);

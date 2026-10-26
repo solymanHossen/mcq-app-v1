@@ -44,10 +44,19 @@ export function isPublicRoute(pathname: string) {
   );
 }
 
+// Routes accessible to both guests and authenticated users
+export const openRoutes = ['/teachers'] as const;
+
+export function isOpenRoute(pathname: string) {
+  return openRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+}
+
 export function isAdminRoute(pathname: string) {
-  return pathname.startsWith('/admin');
+  return pathname === '/admin' || pathname.startsWith('/admin/');
 }
 
 export function isTeacherRoute(pathname: string) {
-  return pathname.startsWith('/teacher');
+  return pathname === '/teacher' || pathname.startsWith('/teacher/');
 }
