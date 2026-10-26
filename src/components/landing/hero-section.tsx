@@ -4,7 +4,9 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
+  ArrowRight,
   Check,
+  GraduationCap,
   MoreHorizontal,
   Play,
   ShieldCheck,
@@ -91,9 +93,13 @@ export function HeroSection() {
               <div className="relative mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
                 <Link
                   href="/teachers"
-                  className="group relative inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:bg-primary/90 hover:shadow-lg active:scale-95"
+                  className="group relative inline-flex items-center justify-center gap-2.5 rounded-full bg-primary pl-4 pr-6 py-2.5 sm:py-3 text-base font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:bg-primary/90 hover:shadow-lg active:scale-95"
                 >
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary-foreground/20 text-primary-foreground transition-all duration-300 group-hover:scale-105 group-hover:bg-primary-foreground/30">
+                    <GraduationCap className="size-4" />
+                  </span>
                   <span>Teacher List</span>
+                  <ArrowRight className="size-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
 
                 <button

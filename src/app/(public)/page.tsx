@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/config"
-import { Navbar } from "@/components/landing/navbar"
 import { HeroSection } from "@/components/landing/hero-section"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -133,13 +132,9 @@ const ENTERPRISE_FEATURES = [
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-svh flex-col bg-background text-foreground">
-      {/* Floating Frosted Glass Header */}
-      <Navbar />
-
-      <main className="flex-1">
-        {/* Hero Section matching design reference */}
-        <HeroSection />
+    <>
+      {/* Hero Section matching design reference */}
+      <HeroSection />
 
         {/* Capability strip */}
         <section className="border-y border-border/60 bg-muted/40 py-6">
@@ -334,23 +329,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-      </main>
-
-      <footer className="border-t border-border/60">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row">
-          <span>&copy; 2026 {APP_NAME}</span>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="transition-colors hover:text-foreground">
-              Sign in
-            </Link>
-            <Link href="/register" className="transition-colors hover:text-foreground">
-              Create account
-            </Link>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
+      </>
+    )
 }
 
 function AudiencePanel({

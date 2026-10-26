@@ -1,6 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { Navbar } from "@/components/landing/navbar"
 import { TeacherDirectoryClient, type TeacherData, type DirectoryStats } from "./teacher-directory-client"
 import { prisma } from "@/lib/prisma"
 import { APP_NAME } from "@/lib/config"
@@ -123,32 +121,8 @@ export default async function TeachersPage() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-background text-foreground">
-      <Navbar />
-
-      <main className="flex-1 pt-24 sm:pt-28 pb-16 sm:pb-20">
-        <TeacherDirectoryClient teachers={teachers} stats={stats} />
-      </main>
-
-      <footer className="border-t border-border bg-muted/30">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-xs sm:text-sm text-muted-foreground sm:flex-row text-center sm:text-left">
-          <span>&copy; 2026 {APP_NAME}. All rights reserved.</span>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-medium">
-            <Link href="/" className="hover:text-foreground transition-colors">
-              Home
-            </Link>
-            <Link href="/teachers" className="text-primary font-semibold hover:underline">
-              Teacher List
-            </Link>
-            <Link href="/login" className="hover:text-foreground transition-colors">
-              Sign In
-            </Link>
-            <Link href="/register" className="hover:text-foreground transition-colors">
-              Create Account
-            </Link>
-          </div>
-        </div>
-      </footer>
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20">
+      <TeacherDirectoryClient teachers={teachers} stats={stats} />
     </div>
   )
 }
