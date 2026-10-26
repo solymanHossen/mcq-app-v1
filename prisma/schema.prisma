@@ -98,6 +98,7 @@ model User {
   couponRedemptions    CouponRedemption[]
   adminAuditLogsActed  AdminAuditLog[]      @relation("AdminAuditActor")
   adminAuditLogsTarget AdminAuditLog[]      @relation("AdminAuditTarget")
+  systemSettingsUpdates SystemSettings[]    @relation("SystemSettingsUpdatedBy")
 
   @@index([role, isActive])
   @@index([teacherVerificationStatus])
@@ -1111,6 +1112,7 @@ enum AdminAuditAction {
   PAYMENT_RECONCILED
   COUPON_CREATED
   COUPON_DEACTIVATED
+  SYSTEM_SETTINGS_UPDATED
 }
 
 // Separate from the Phase 1 AuditLog (auth/security events, also a
@@ -1137,4 +1139,26 @@ model AdminAuditLog {
   @@index([actorId, createdAt])
   @@index([targetUserId, createdAt])
   @@index([action, createdAt])
+}
+
+// Singleton row (fixed id "global") a SUPER_ADMIN toggles to turn Phase 1's
+// otherwise hardcoded verification gates into runtime config. Read through
+// modules/settings/queries.ts's cached getSystemSettings(), which falls back
+// to these same column defaults (verification required) if the row doesn't
+// exist yet — nothing but modules/settings/actions.ts is ever allowed to
+// create or modify it.
+model SystemSettings {
+  id String @id @default("global")
+
+  // Gates src/lib/auth.ts's login check and whether registerAction issues an
+  // OTP at all. Independent of teacherVerificationStatus below.
+  requireEmailVerification Boolean @default(true)
+
+  // Gates publishExamAction only — teacherVerificationStatus itself keeps
+  // being tracked and reviewable even while this is off.
+  requireTeacherVerification Boolean @default(true)
+
+  updatedAt   DateTime @updatedAt
+  updatedById String?
+  updatedBy   User?    @relation("SystemSettingsUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
 }

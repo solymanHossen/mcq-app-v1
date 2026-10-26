@@ -8,6 +8,7 @@ import {
   Ticket,
   Receipt,
   ScrollText,
+  Settings,
 } from 'lucide-react';
 import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
@@ -18,7 +19,7 @@ import type { SidebarNavItem } from '@/components/shared/sidebar-nav';
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
-const NAV_ITEMS: SidebarNavItem[] = [
+const BASE_NAV_ITEMS: SidebarNavItem[] = [
   { href: '/admin', label: 'Dashboard', icon: <LayoutDashboard />, exact: true },
   { href: '/admin/users', label: 'Users', icon: <Users /> },
   { href: '/admin/teachers', label: 'Teacher verification', icon: <GraduationCap /> },
@@ -28,18 +29,26 @@ const NAV_ITEMS: SidebarNavItem[] = [
   { href: '/admin/audit-log', label: 'Audit log', icon: <ScrollText /> },
 ];
 
+// Only a SUPER_ADMIN can see or reach /admin/settings — the page itself
+// re-asserts this (see app/admin/settings/page.tsx), this just keeps a plain
+// ADMIN from being shown a link that would reject them.
+const SUPER_ADMIN_NAV_ITEMS: SidebarNavItem[] = [
+  { href: '/admin/settings', label: 'Settings', icon: <Settings /> },
+];
+
 export default async function AdminLayout({
   children,
 }: { children: React.ReactNode }) {
   const admin = await requireRole(...ADMIN_ROLES);
   const isSuperAdmin = admin.role === 'SUPER_ADMIN';
+  const navItems = isSuperAdmin ? [...BASE_NAV_ITEMS, ...SUPER_ADMIN_NAV_ITEMS] : BASE_NAV_ITEMS;
 
   return (
     <DashboardShell
       icon={isSuperAdmin ? Crown : ShieldCheck}
       badgeLabel={isSuperAdmin ? 'Super Admin' : 'Admin'}
       mobileLabel={isSuperAdmin ? 'ExamHub Super Admin' : 'ExamHub Admin'}
-      navItems={NAV_ITEMS}
+      navItems={navItems}
       user={admin}
     >
       {children}

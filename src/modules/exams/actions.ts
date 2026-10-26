@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { prisma } from "@/lib/prisma"
 import { assertRole, assertOwner, TEACHER_ROLES, type CurrentUser } from "@/lib/authorization"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { examSchema } from "@/modules/exams/validators"
 
 async function requireExamOwner(examId: string, user: CurrentUser) {
@@ -116,7 +117,16 @@ export async function publishExamAction(examId: string) {
   // only becomes visible/attemptable by students once published. ADMIN is
   // exempt (e.g. publishing on a teacher's behalf before their review
   // completes) — see actions/admin.actions.ts for the verification workflow.
-  if (user.role === "TEACHER" && user.teacherVerificationStatus !== "VERIFIED") {
+  // Whether this gate applies at all is itself a super-admin-controlled
+  // policy (see modules/settings) — teacherVerificationStatus keeps being
+  // tracked and reviewable either way, this only decides whether publishing
+  // is blocked on it.
+  const { requireTeacherVerification } = await getSystemSettings()
+  if (
+    requireTeacherVerification &&
+    user.role === "TEACHER" &&
+    user.teacherVerificationStatus !== "VERIFIED"
+  ) {
     return {
       error:
         "Your teacher account hasn't been verified yet — an admin needs to approve it before you can publish exams.",

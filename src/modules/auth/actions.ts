@@ -24,6 +24,7 @@ import {
   isResendOtpRateLimited,
 } from "@/modules/auth/rate-limit"
 import { revokeAllSessions } from "@/lib/authorization"
+import { getSystemSettings } from "@/modules/settings/queries"
 import {
   registerSchema,
   verifyEmailSchema,
@@ -61,6 +62,12 @@ export async function registerAction(_state: unknown, formData: FormData) {
     return { error: "Too many attempts, please try again later" }
   }
 
+  // A super-admin-controlled policy (see modules/settings) — when it's off,
+  // every path below skips the OTP step entirely instead of just relaxing
+  // the login gate, so there's no dangling unverified account waiting on a
+  // code nothing requires it to redeem.
+  const { requireEmailVerification } = await getSystemSettings()
+
   const existing = await prisma.user.findUnique({ where: { email } })
 
   if (!existing) {
@@ -69,9 +76,9 @@ export async function registerAction(_state: unknown, formData: FormData) {
     const passwordHash = await hashPassword(password)
     try {
       const user = await prisma.user.create({
-        data: { name, email, passwordHash },
+        data: { name, email, passwordHash, isEmailVerified: !requireEmailVerification },
       })
-      await issueEmailVerificationOtp(user.id, email)
+      if (requireEmailVerification) await issueEmailVerificationOtp(user.id, email)
     } catch (e) {
       if (
         !(e instanceof Prisma.PrismaClientKnownRequestError) ||
@@ -80,12 +87,22 @@ export async function registerAction(_state: unknown, formData: FormData) {
         throw e
       }
       // Lost a create race to a concurrent registration for the same email;
-      // the winning request already sent a verification OTP.
+      // the winning request already handled it.
     }
   } else if (!existing.isEmailVerified) {
-    // Account exists but was never verified — treat this like a resend
-    // rather than silently failing. Never touches password/name here.
-    await issueEmailVerificationOtp(existing.id, email)
+    if (requireEmailVerification) {
+      // Account exists but was never verified — treat this like a resend
+      // rather than silently failing. Never touches password/name here.
+      await issueEmailVerificationOtp(existing.id, email)
+    } else {
+      // Verification was required when this account registered but isn't
+      // anymore — let it in rather than leaving it stuck behind a check that
+      // no longer applies to anyone else.
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: { isEmailVerified: true },
+      })
+    }
   }
   // else: already registered and verified — silent no-op. Never overwrite an
   // existing account's password just because the register form was resubmitted.
@@ -94,7 +111,11 @@ export async function registerAction(_state: unknown, formData: FormData) {
 
   // Identical response whether or not the email was already taken — the
   // register form must not reveal which emails already have an account.
-  redirect(`/verify-email?email=${encodeURIComponent(email)}`)
+  redirect(
+    requireEmailVerification
+      ? `/verify-email?email=${encodeURIComponent(email)}`
+      : "/login?registered=true"
+  )
 }
 
 async function issueEmailVerificationOtp(userId: string, email: string) {

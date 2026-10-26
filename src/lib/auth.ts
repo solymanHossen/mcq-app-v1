@@ -7,6 +7,7 @@ import { verifyPassword } from "@/modules/auth/password"
 import { getClientIp } from "@/modules/auth/ip"
 import { recordAuditEvent } from "@/modules/auth/audit"
 import { isLoginRateLimited } from "@/modules/auth/rate-limit"
+import { getSystemSettings } from "@/modules/settings/queries"
 import type { Role } from "@/prisma/generated/prisma/client"
 
 // Absolute session lifetime. Re-authentication is required after this even
@@ -48,10 +49,18 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await prisma.user.findUnique({ where: { email } })
+        const { requireEmailVerification } = await getSystemSettings()
 
         // Same generic failure for "no such user", "wrong password", and
-        // "not verified yet" — don't let a login attempt reveal which.
-        if (!user || !user.isActive || !user.isEmailVerified) {
+        // "not verified yet" — don't let a login attempt reveal which. The
+        // verification check itself is a super-admin-controlled policy (see
+        // modules/settings) — when it's off, an unverified account logs in
+        // like any other.
+        if (
+          !user ||
+          !user.isActive ||
+          (requireEmailVerification && !user.isEmailVerified)
+        ) {
           await recordAuditEvent({
             action: "LOGIN_FAILURE",
             success: false,

@@ -63,6 +63,13 @@ export function LoginForm() {
               </AlertDescription>
             </Alert>
           )}
+          {params.get("registered") && (
+            <Alert>
+              <AlertDescription>
+                Account created! Please sign in.
+              </AlertDescription>
+            </Alert>
+          )}
           {params.get("reset") && (
             <Alert>
               <AlertDescription>
