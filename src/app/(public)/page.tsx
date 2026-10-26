@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { HeroSection } from "@/components/landing/hero-section"
+import { CapabilityStrip } from "@/components/landing/capability-strip"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -134,24 +135,8 @@ export default function LandingPage() {
       {/* Hero Section matching design reference */}
       <HeroSection />
 
-        {/* Capability strip */}
-        <section className="border-y border-border/60 bg-muted/40 py-6">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 text-sm font-medium text-muted-foreground">
-            {[
-              "Timed & proctored",
-              "Auto-graded in real time",
-              "Live leaderboards",
-              "AI explanations",
-              "Streaks & XP",
-              "Biometric AI verification",
-            ].map((item) => (
-              <span key={item} className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-primary" />
-                {item}
-              </span>
-            ))}
-          </div>
-        </section>
+      {/* World-Class Modern Capability Proof Strip */}
+      <CapabilityStrip />
 
         {/* Live Exam Runner Preview Showcase */}
         <section className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
