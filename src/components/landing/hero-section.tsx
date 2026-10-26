@@ -52,21 +52,25 @@ export function HeroSection() {
         className="pointer-events-none absolute top-1/3 left-1/4 -z-10 h-[34rem] w-[42rem] rounded-full bg-primary/10 blur-[130px]"
       />
 
-      {/* ================= FULL-HEIGHT RIGHT-SIDE IMAGE (UNDER HEADER & WHOLE SECTION) ================= */}
-      <div className="absolute inset-y-0 right-0 w-full lg:w-1/2 -z-10 overflow-hidden">
+      {/* ================= FULL-PAGE BACKGROUND IMAGE (EXTENDS ACROSS ENTIRE HERO & UNDER HEADER) ================= */}
+      <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
         <Image
           src="/images/hero-students-v2.jpg"
           alt="Students taking online exam collaboratively"
           fill
           priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover object-center lg:object-left"
+          sizes="100vw"
+          className="object-cover object-[center_right] lg:object-[68%_center]"
         />
 
-        {/* Subtle soft edge blend into left section */}
-        <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-background to-transparent pointer-events-none hidden lg:block" />
-        {/* Soft mobile overlay for optimal text contrast */}
-        <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px] lg:hidden pointer-events-none" />
+        {/* Left-side ambient gradient so left frosted glass card has supreme contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent pointer-events-none" />
+
+        {/* Top subtle fade under header */}
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/40 to-transparent pointer-events-none" />
+
+        {/* Bottom subtle edge blend to next section */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
