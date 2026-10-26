@@ -103,11 +103,6 @@ export function HeroSection() {
                   <span>Watch Video</span>
                 </button>
               </div>
-
-              {/* Social Proof / Trust Footnote */}
-              <p className="relative mt-8 text-xs sm:text-sm font-medium text-muted-foreground/90">
-                Trusted by 500+ global universities and institutions
-              </p>
             </div>
           </div>
 
