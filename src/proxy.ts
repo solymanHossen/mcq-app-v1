@@ -43,5 +43,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|favicon\\.ico|.*\\.(?:png|jpg|svg|webp)).*)'],
+  // api-docs excluded for the same reason /api/v1/* itself is: it's the
+  // REST API's own reference, viewable with or without a web session —
+  // unlike publicRoutes (login/register/...), which is "logged-out only"
+  // and would otherwise bounce an already-authenticated visitor away.
+  matcher: ['/((?!_next|api|api-docs|favicon\\.ico|.*\\.(?:png|jpg|svg|webp)).*)'],
 };

@@ -73,6 +73,7 @@ model User {
   updatedAt       DateTime  @updatedAt
 
   authTokens      AuthToken[]
+  refreshTokens   RefreshToken[]
   auditLogs       AuditLog[]
 
   questions       Question[]       @relation("TeacherQuestions")
@@ -102,6 +103,28 @@ model User {
 
   @@index([role, isActive])
   @@index([teacherVerificationStatus])
+}
+
+// The REST API's (mobile) equivalent of the browser's httpOnly session
+// cookie — issued by modules/mobile/auth-actions.ts, never anywhere else.
+// Only a SHA-256 hash is ever stored, same reasoning as AuthToken. Rotated
+// on every use: redeeming one revokes it and issues a replacement in the
+// same transaction, so a stolen-and-reused refresh token is detectable (the
+// legitimate client's next refresh finds its own token already revoked).
+// revokeAllSessions (lib/authorization.ts) revokes every row for a user
+// alongside bumping tokenVersion — a password change must kill mobile
+// refresh tokens too, not just make the next access-token mint fail.
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, revokedAt])
 }
 
 enum AuthTokenPurpose {

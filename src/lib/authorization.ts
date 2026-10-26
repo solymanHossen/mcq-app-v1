@@ -120,10 +120,23 @@ export function assertOwner(user: CurrentUser, resourceOwnerId: string) {
   if (user.id !== resourceOwnerId) throw new ForbiddenError()
 }
 
-/** Forces every existing session for this user to fail revalidation. */
+/**
+ * Forces every existing session for this user to fail revalidation —
+ * both the web cookie session (tokenVersion bump) and every mobile API
+ * refresh token (explicitly revoked, not just left to expire): a refresh
+ * mints its new access token with whatever tokenVersion is current at that
+ * moment, so bumping tokenVersion alone would never actually stop a still-
+ * valid refresh token from minting its way back in.
+ */
 export async function revokeAllSessions(userId: string) {
-  await prisma.user.update({
-    where: { id: userId },
-    data: { tokenVersion: { increment: 1 } },
-  })
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { tokenVersion: { increment: 1 } },
+    }),
+    prisma.refreshToken.updateMany({
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    }),
+  ])
 }

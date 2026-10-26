@@ -118,7 +118,7 @@ export async function registerAction(_state: unknown, formData: FormData) {
   )
 }
 
-async function issueEmailVerificationOtp(userId: string, email: string) {
+export async function issueEmailVerificationOtp(userId: string, email: string) {
   const otp = generateOtp()
   await prisma.authToken.create({
     data: {
