@@ -14,14 +14,12 @@ import {
   Sparkles,
   Timer,
   Trophy,
-  Users2,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { APP_NAME } from "@/lib/config"
 import { HeroSection } from "@/components/landing/hero-section"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
