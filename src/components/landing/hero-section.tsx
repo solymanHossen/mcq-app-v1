@@ -6,6 +6,7 @@ import Link from "next/link"
 import {
   Check,
   MoreHorizontal,
+  Play,
   ShieldCheck,
   Sparkles,
   X,
@@ -98,8 +99,11 @@ export function HeroSection() {
                 <button
                   type="button"
                   onClick={() => setIsVideoOpen(true)}
-                  className="group inline-flex items-center justify-center rounded-full border border-border bg-card/80 hover:bg-card px-7 py-3.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow active:scale-95"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-border bg-card/80 hover:bg-card pl-3.5 pr-6 py-2.5 text-base font-medium text-foreground shadow-xs transition-all duration-300 hover:shadow hover:border-foreground/20 active:scale-95"
                 >
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Play className="size-3.5 fill-current ml-0.5" />
+                  </span>
                   <span>Watch Video</span>
                 </button>
               </div>
