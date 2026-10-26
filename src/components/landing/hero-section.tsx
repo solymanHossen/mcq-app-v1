@@ -152,33 +152,33 @@ export function HeroSection() {
             </div>
 
             {/* ---------------- CARD 2: BOTTOM LEFT / CENTER OVERLAP (EXAM IN PROGRESS) WITH WORLD-CLASS GLASS EFFECT ---------------- */}
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-20 z-30 max-w-[calc(100%-1rem)] w-[265px] sm:w-[310px] transition-transform duration-300 hover:scale-102">
-              <div className="relative overflow-hidden flex flex-col gap-3 rounded-2xl border border-white/70 dark:border-white/20 bg-white/60 dark:bg-card/50 p-4 sm:p-5 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_12px_40px_0_rgba(15,23,42,0.14),inset_0_1px_1px_0_rgba(255,255,255,0.95)] ring-1 ring-black/[0.03] text-card-foreground">
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 lg:bottom-10 lg:-left-20 z-30 max-w-[calc(100%-1rem)] w-[290px] sm:w-[340px] transition-transform duration-300 hover:scale-102">
+              <div className="relative overflow-hidden flex flex-col gap-4 rounded-[1.15rem] border border-border/70 bg-card p-5 text-card-foreground shadow-xl shadow-foreground/10 ring-1 ring-foreground/5 sm:p-6">
                 {/* Specular glass edge line */}
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
 
                 {/* Header */}
-                <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                <div className="flex items-center justify-between text-sm font-semibold text-card-foreground">
                   <span>Exam in Progress</span>
                   <button
                     type="button"
-                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    className="flex size-6 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     aria-label="Options"
                   >
-                    <MoreHorizontal className="size-4" />
+                    <MoreHorizontal className="size-4" strokeWidth={2.5} />
                   </button>
                 </div>
 
                 {/* Timer Clock */}
                 <div className="py-0.5">
-                  <span className="font-mono text-2xl font-bold tracking-wider text-card-foreground">
+                  <span className="font-mono text-3xl font-bold tracking-wider text-card-foreground">
                     {timerText}
                   </span>
                 </div>
 
                 {/* Live Question Check Items */}
-                <div className="flex flex-col gap-2 border-t border-black/10 dark:border-border/60 pt-2.5">
-                  <div className="flex items-center justify-between text-xs text-card-foreground font-medium">
+                <div className="flex flex-col gap-2.5 border-t border-border pt-3">
+                  <div className="flex items-center justify-between text-sm font-medium text-card-foreground">
                     <span className="flex items-center gap-2">
                       <span className="flex size-3.5 items-center justify-center rounded-full bg-chart-4/15 text-chart-4">
                         <Check className="size-2.5 stroke-[3]" />
@@ -188,7 +188,7 @@ export function HeroSection() {
                     <span className="size-2 rounded-full bg-chart-4" />
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-card-foreground font-medium">
+                  <div className="flex items-center justify-between text-sm font-medium text-card-foreground">
                     <span className="flex items-center gap-2">
                       <span className="flex size-3.5 items-center justify-center rounded-full bg-chart-4/15 text-chart-4">
                         <Check className="size-2.5 stroke-[3]" />
@@ -200,9 +200,9 @@ export function HeroSection() {
                 </div>
 
                 {/* Bottom AI Proctoring Active Pill */}
-                <div className="mt-1 flex items-center justify-center gap-2 rounded-full bg-chart-4/15 border border-chart-4/30 py-1.5 px-3 backdrop-blur-md">
+                <div className="mt-1 flex items-center justify-center gap-2 rounded-full border border-chart-4/25 bg-chart-4/15 px-3 py-1.5">
                   <span className="size-2 rounded-full bg-chart-4" />
-                  <span className="text-xs font-semibold text-chart-4">
+                  <span className="text-sm font-semibold text-chart-4">
                     AI proctoring active
                   </span>
                 </div>
