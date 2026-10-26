@@ -21,10 +21,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { href: "#features", label: "Features", icon: Sparkles },
-  { href: "#how-it-works", label: "How it works", icon: Zap },
-  { href: "#audiences", label: "Teachers & students", icon: Users },
-  { href: "#enterprise", label: "Enterprise", icon: Building2 },
+  { href: "/#features", label: "Features", icon: Sparkles },
+  { href: "/#how-it-works", label: "How it works", icon: Zap },
+  { href: "/teachers", label: "Teachers", icon: Users },
+  { href: "/#enterprise", label: "Enterprise", icon: Building2 },
 ] as const
 
 export function Navbar({ className }: NavbarProps) {

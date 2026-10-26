@@ -126,14 +126,14 @@ export default async function TeachersPage() {
     <div className="flex min-h-svh flex-col bg-background text-foreground">
       <Navbar />
 
-      <main className="flex-1 pt-24 sm:pt-28 pb-20">
+      <main className="flex-1 pt-24 sm:pt-28 pb-16 sm:pb-20">
         <TeacherDirectoryClient teachers={teachers} stats={stats} />
       </main>
 
       <footer className="border-t border-border bg-muted/30">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-8 text-sm text-muted-foreground sm:flex-row">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-xs sm:text-sm text-muted-foreground sm:flex-row text-center sm:text-left">
           <span>&copy; 2026 {APP_NAME}. All rights reserved.</span>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-medium">
             <Link href="/" className="hover:text-foreground transition-colors">
               Home
             </Link>
