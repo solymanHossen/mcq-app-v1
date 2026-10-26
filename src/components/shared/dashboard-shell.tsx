@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { LogoutButton } from "@/components/shared/logout-button"
 import { SidebarNav, type SidebarNavItem } from "@/components/shared/sidebar-nav"
+import { APP_NAME } from "@/lib/config"
 
 function initials(name: string) {
   return name
@@ -41,7 +42,7 @@ export function DashboardShell({
           <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Icon className="size-4" />
           </span>
-          <span className="font-heading text-sm font-semibold tracking-tight">ExamHub</span>
+          <span className="font-heading text-sm font-semibold tracking-tight">{APP_NAME}</span>
           <Badge variant="secondary" className="ml-auto">
             {badgeLabel}
           </Badge>

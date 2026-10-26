@@ -1,8 +1,9 @@
 import Link from "next/link"
 import { Sparkles } from "lucide-react"
 import { SwaggerUIClient } from "./swagger-ui-client"
+import { APP_NAME } from "@/lib/config"
 
-export const metadata = { title: "API docs — ExamHub" }
+export const metadata = { title: `API docs — ${APP_NAME}` }
 
 export default function ApiDocsPage() {
   return (
@@ -14,7 +15,7 @@ export default function ApiDocsPage() {
               <Sparkles className="size-4" />
             </span>
             <span className="font-heading text-base font-semibold tracking-tight text-foreground">
-              ExamHub API
+              {APP_NAME} API
             </span>
           </Link>
           <span className="text-sm text-muted-foreground">v1</span>

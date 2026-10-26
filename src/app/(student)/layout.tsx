@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
+import { APP_NAME } from "@/lib/config"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -39,7 +40,7 @@ export default async function StudentLayout({
     <DashboardShell
       icon={GraduationCap}
       badgeLabel="Student"
-      mobileLabel="ExamHub"
+      mobileLabel={APP_NAME}
       navItems={navItems}
       user={user}
     >

@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils";
+import { APP_NAME, APP_DESCRIPTION } from "@/lib/config";
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -12,9 +13,11 @@ import { cn } from "@/lib/utils";
 export const instant = false;
 
 export const metadata: Metadata = {
-  title: "ExamHub",
-  description:
-    "Build question banks, run timed exams, and auto-grade results with proctoring, leaderboards, and AI explanations.",
+  title: {
+    default: APP_NAME,
+    template: `%s — ${APP_NAME}`,
+  },
+  description: APP_DESCRIPTION,
 }
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'})

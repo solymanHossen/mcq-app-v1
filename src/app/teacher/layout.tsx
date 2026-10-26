@@ -3,6 +3,7 @@ import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
+import { APP_NAME } from "@/lib/config"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -31,7 +32,7 @@ export default async function TeacherLayout({
     <DashboardShell
       icon={GraduationCap}
       badgeLabel="Teacher"
-      mobileLabel="ExamHub Teacher"
+      mobileLabel={`${APP_NAME} Teacher`}
       navItems={navItems}
       user={teacher}
     >

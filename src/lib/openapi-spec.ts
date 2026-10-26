@@ -5,6 +5,8 @@
  * inferred. Keep it in sync by hand when a route's contract changes.
  */
 
+import { APP_NAME } from "@/lib/config"
+
 const errorResponse = {
   description: "Error",
   content: {
@@ -19,10 +21,10 @@ const bearerAuth = [{ bearerAuth: [] as string[] }]
 export const openApiSpec = {
   openapi: "3.1.0",
   info: {
-    title: "ExamHub API",
+    title: `${APP_NAME} API`,
     version: "1.0.0",
     description:
-      "REST API for the ExamHub mobile apps (students and teachers). Every endpoint under /api/v1 " +
+      `REST API for the ${APP_NAME} mobile apps (students and teachers). Every endpoint under /api/v1 ` +
       "is public to the internet (not protected by the web app's cookie session or its login proxy) " +
       "and authenticates purely via the `Authorization: Bearer <accessToken>` header — see **Authentication** below.\n\n" +
       "## Authentication\n" +

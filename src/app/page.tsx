@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { APP_NAME } from "@/lib/config"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -106,7 +107,7 @@ export default function LandingPage() {
               <Sparkles className="size-4" />
             </span>
             <span className="font-heading text-base font-semibold tracking-tight">
-              ExamHub
+              {APP_NAME}
             </span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
@@ -162,7 +163,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="max-w-2xl text-pretty text-lg text-muted-foreground sm:text-xl">
-              ExamHub gives teachers a question bank, timed exams, and
+              {APP_NAME} gives teachers a question bank, timed exams, and
               proctoring in one place — and gives students instant grading,
               leaderboards, and AI explanations the moment an exam ends.
             </p>
@@ -320,7 +321,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row">
-          <span>&copy; 2026 ExamHub</span>
+          <span>&copy; {new Date().getFullYear()} {APP_NAME}</span>
           <div className="flex items-center gap-4">
             <Link href="/login" className="transition-colors hover:text-foreground">
               Sign in

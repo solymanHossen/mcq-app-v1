@@ -5,6 +5,7 @@ import { getPaymentHistoryForUser, listActivePlans } from "@/modules/payments/qu
 import { getSystemSettings } from "@/modules/settings/queries"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { APP_NAME } from "@/lib/config"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import {
   Table,
@@ -43,7 +44,7 @@ export default async function BillingPage() {
       {!billingEnabled && (
         <Alert>
           <Sparkles />
-          <AlertTitle>ExamHub is currently free to use</AlertTitle>
+          <AlertTitle>{APP_NAME} is currently free to use</AlertTitle>
           <AlertDescription>
             An admin has turned off billing platform-wide — every feature is available at no
             cost, and new subscriptions aren&apos;t open right now.

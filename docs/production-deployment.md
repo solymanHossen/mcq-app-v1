@@ -22,6 +22,7 @@ At minimum, production needs:
   degrades to "unavailable," never to broken or insecure, when unset (see
   each module's own comments: `lib/redis.ts`, `lib/ai/explain.ts`,
   `lib/payments/provider.ts`)
+- `NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_DESCRIPTION` (optional branding overrides, defaults to "ExamHub")
 
 **Known gap** (see the report, Finding 1): `lib/auth/mail.ts` is still a
 Phase 1 stub that logs OTP/reset codes to the console instead of emailing
@@ -32,11 +33,11 @@ registration or password reset in production.
 ## 2. Building and running the container
 
 ```bash
-docker build -t mcq-platform .
-docker run -d --name mcq-platform \
+docker build -t examhub .
+docker run -d --name examhub \
   -p 3000:3000 \
   --env-file .env.production \
-  mcq-platform
+  examhub
 ```
 
 The `Dockerfile` is a multi-stage build on `output: 'standalone'`

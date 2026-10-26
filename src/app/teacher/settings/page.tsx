@@ -6,6 +6,7 @@ import { ChangePasswordCard } from "@/modules/account/components/change-password
 import { SessionsCard } from "@/modules/account/components/sessions-card"
 import { AppearanceCard } from "@/modules/account/components/appearance-card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { APP_NAME } from "@/lib/config"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -21,7 +22,7 @@ export default async function TeacherSettingsPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground">
-          Manage your profile, security, and how ExamHub looks.
+          Manage your profile, security, and how {APP_NAME} looks.
         </p>
       </div>
 

@@ -1,6 +1,7 @@
 {
-  "name": "next-starter-kit",
+  "name": "examhub",
   "version": "0.0.1",
+  "description": "ExamHub - Online examination, MCQ question bank, and assessment platform",
   "type": "module",
   "private": true,
   "scripts": {

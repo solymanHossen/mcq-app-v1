@@ -13,6 +13,7 @@ import {
 import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
 import type { SidebarNavItem } from '@/components/shared/sidebar-nav';
+import { APP_NAME } from '@/lib/config';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -47,7 +48,7 @@ export default async function AdminLayout({
     <DashboardShell
       icon={isSuperAdmin ? Crown : ShieldCheck}
       badgeLabel={isSuperAdmin ? 'Super Admin' : 'Admin'}
-      mobileLabel={isSuperAdmin ? 'ExamHub Super Admin' : 'ExamHub Admin'}
+      mobileLabel={isSuperAdmin ? `${APP_NAME} Super Admin` : `${APP_NAME} Admin`}
       navItems={navItems}
       user={admin}
     >

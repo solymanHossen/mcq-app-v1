@@ -6,6 +6,7 @@ import { Sun, Moon, Monitor } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
+import { APP_NAME } from "@/lib/config"
 
 const OPTIONS = [
   { value: "light", label: "Light", icon: Sun },
@@ -30,7 +31,7 @@ export function AppearanceCard() {
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
         <CardDescription>
-          Choose how ExamHub looks on this device. Tip: press <kbd className="rounded border px-1 py-0.5 text-xs">D</kbd> anywhere to toggle light/dark.
+          Choose how {APP_NAME} looks on this device. Tip: press <kbd className="rounded border px-1 py-0.5 text-xs">D</kbd> anywhere to toggle light/dark.
         </CardDescription>
       </CardHeader>
       <CardContent>

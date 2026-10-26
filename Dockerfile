@@ -3,8 +3,8 @@
 # dependencies it actually traces as used ship in the final image, not the
 # full node_modules tree.
 #
-# Build:  docker build -t mcq-platform .
-# Run:    docker run -p 3000:3000 --env-file .env mcq-platform
+# Build:  docker build -t examhub .
+# Run:    docker run -p 3000:3000 --env-file .env examhub
 #
 # Requires DATABASE_URL (and the other vars in .env.example) at runtime.
 # Does NOT run migrations itself — see docs/production-deployment.md for why
