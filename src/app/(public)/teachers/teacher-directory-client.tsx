@@ -4,10 +4,13 @@ import * as React from "react"
 import Link from "next/link"
 import {
   ArrowRight,
-  BookOpen,
+  BookOpenCheck,
   CheckCircle2,
   Clock,
+  FileSpreadsheet,
   GraduationCap,
+  HelpCircle,
+  Layers,
   Search,
   ShieldCheck,
   Sparkles,
@@ -84,58 +87,91 @@ export function TeacherDirectoryClient({
 
   return (
     <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      {/* ================= AMBIENT GLOW BACKDROP ================= */}
+      {/* ================= AMBIENT RADIANT GLOW ================= */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-12 left-1/2 -z-10 h-96 w-full -translate-x-1/2 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(15,118,110,0.12),transparent_70%)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(15,118,110,0.22),transparent_70%)]"
+        className="pointer-events-none absolute -top-16 left-1/2 -z-10 h-[440px] w-full -translate-x-1/2 bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(15,118,110,0.15),transparent_70%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(15,118,110,0.25),transparent_70%)]"
       />
 
-      {/* ================= HERO HEADER: AIRY, BORDERLESS, ELEVATED ================= */}
-      <div className="flex flex-col justify-between gap-6 pb-8 md:flex-row md:items-end">
-        <div className="max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary shadow-xs">
+      {/* ================= HERO HEADER: EXECUTIVE FACULTY SUITE ================= */}
+      <div className="flex flex-col justify-between gap-8 pb-10 lg:flex-row lg:items-end">
+        {/* Left: Headline & Narrative */}
+        <div className="max-w-2xl space-y-3.5">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary shadow-xs ring-1 ring-primary/20">
             <GraduationCap className="size-4" />
             <span>Academic Faculty & Examination Board</span>
           </div>
+
           <h1 className="font-heading text-4xl font-black tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Teacher Directory
           </h1>
+
           <p className="text-base leading-relaxed font-medium text-muted-foreground sm:text-lg">
-            Browse verified academic examiners, inspect accredited credentials,
-            and explore official examination tracks.
+            Browse verified academic examiners, inspect question bank
+            repositories, and explore official timed examination tracks.
           </p>
         </div>
 
-        {/* Floating Real Metric Capsules with Soft Diffused Shadows */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2.5 rounded-2xl bg-card/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-            <Users className="size-4.5 text-primary" />
-            <span className="text-sm font-semibold text-muted-foreground">
-              <strong className="text-base font-black text-foreground">
+        {/* Right: 3 Rich Executive Metric Tiles */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:w-auto">
+          {/* Metric 1 */}
+          <div className="group flex flex-col justify-between rounded-2xl bg-card/95 p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)] sm:p-5 dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                Faculty
+              </span>
+              <span className="flex size-7 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110 sm:size-8">
+                <Users className="size-3.5 sm:size-4" />
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                 {stats.totalTeachers}
-              </strong>{" "}
-              Teachers
-            </span>
+              </p>
+              <p className="mt-0.5 text-[11px] font-semibold text-muted-foreground">
+                Registered
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-2xl bg-card/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-            <ShieldCheck className="size-4.5 text-primary" />
-            <span className="text-sm font-semibold text-muted-foreground">
-              <strong className="text-base font-black text-foreground">
+          {/* Metric 2 */}
+          <div className="group flex flex-col justify-between rounded-2xl bg-card/95 p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)] sm:p-5 dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                Verified
+              </span>
+              <span className="flex size-7 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110 sm:size-8">
+                <ShieldCheck className="size-3.5 sm:size-4" />
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                 {stats.verifiedTeachers}
-              </strong>{" "}
-              Verified
-            </span>
+              </p>
+              <p className="mt-0.5 text-[11px] font-semibold text-primary">
+                Accredited
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-2xl bg-card/90 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-            <Sparkles className="size-4.5 text-primary" />
-            <span className="text-sm font-semibold text-muted-foreground">
-              <strong className="text-base font-black text-foreground">
+          {/* Metric 3 */}
+          <div className="group flex flex-col justify-between rounded-2xl bg-card/95 p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)] sm:p-5 dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                Exams
+              </span>
+              <span className="flex size-7 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110 sm:size-8">
+                <Sparkles className="size-3.5 sm:size-4" />
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                 {stats.totalPublishedExams}
-              </strong>{" "}
-              Published Exams
-            </span>
+              </p>
+              <p className="mt-0.5 text-[11px] font-semibold text-muted-foreground">
+                Published
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -143,7 +179,7 @@ export function TeacherDirectoryClient({
       {/* ================= FLOATING LUXURY TOOLBAR: SMOOTH SHADOW ISLAND ================= */}
       <div className="my-8">
         <div className="flex flex-col items-stretch justify-between gap-4 rounded-3xl bg-card/90 p-2.5 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl sm:p-3 md:flex-row md:items-center dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.3)]">
-          {/* Large Seamless Search Input */}
+          {/* Seamless Search Input */}
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-4.5 size-5 -translate-y-1/2 text-muted-foreground" />
             <input
@@ -157,7 +193,7 @@ export function TeacherDirectoryClient({
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="absolute top-1/2 right-4 -translate-y-1/2 rounded-lg px-2 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="absolute top-1/2 right-4 -translate-y-1/2 rounded-lg px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 Clear
               </button>
@@ -230,151 +266,214 @@ export function TeacherDirectoryClient({
           </div>
         ) : (
           <div className="grid gap-7 lg:grid-cols-2 lg:gap-8">
-            {filteredTeachers.map((teacher) => (
-              <div
-                key={teacher.id}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-[32px] bg-card p-7 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.05)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] sm:p-9 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
-              >
-                {/* Subtle radiant ambient highlight */}
+            {filteredTeachers.map((teacher) => {
+              const joinedFormatted = new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                year: "numeric",
+              }).format(new Date(teacher.createdAt))
+
+              return (
                 <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                />
+                  key={teacher.id}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-[32px] bg-card p-6 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.06)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] sm:p-8 lg:p-9 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]"
+                >
+                  {/* Subtle radiant ambient top highlight */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  />
 
-                <div className="space-y-6">
-                  {/* Card Header: Large Avatar, Name, Email, Status */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-4 sm:gap-5">
-                      <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-heading text-xl font-black text-primary shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] ring-4 ring-primary/10 sm:size-20 sm:rounded-3xl sm:text-2xl">
-                        {teacher.initials}
-                      </div>
-                      <div className="min-w-0 space-y-1">
-                        <h2 className="truncate font-heading text-2xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-3xl">
-                          {teacher.name}
-                        </h2>
-                        <p className="truncate text-sm font-medium text-muted-foreground sm:text-base">
-                          {teacher.email}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Verification Badges styled with Soft Glow */}
-                    {teacher.isVerified ? (
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-bold text-primary shadow-xs sm:text-sm">
-                        <ShieldCheck className="size-4 stroke-[2.5]" />
-                        <span>Verified</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-muted px-3.5 py-1.5 text-xs font-bold text-muted-foreground sm:text-sm">
-                        <Clock className="size-4 stroke-[2.5]" />
-                        <span>Pending</span>
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Authored Subjects — Soft Floating Chips */}
-                  {teacher.subjects.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {teacher.subjects.map((subject) => (
-                        <span
-                          key={subject}
-                          className="rounded-xl bg-muted/40 px-3.5 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted/70 sm:text-sm"
-                        >
-                          {subject}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Large Metrics Showcase (Borderless, Smooth Elevated Surface) */}
-                  <div className="grid grid-cols-3 gap-3 rounded-2xl bg-muted/20 p-5 text-center sm:rounded-3xl sm:p-6 dark:bg-muted/10">
-                    <div>
-                      <span className="block font-heading text-3xl leading-none font-black text-foreground sm:text-4xl lg:text-5xl">
-                        {teacher.publishedExamsCount}
-                      </span>
-                      <span className="mt-2 block text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
-                        Published Exams
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="block font-heading text-3xl leading-none font-black text-foreground sm:text-4xl lg:text-5xl">
-                        {teacher.totalQuestions}
-                      </span>
-                      <span className="mt-2 block text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
-                        Questions Authored
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="block font-heading text-3xl leading-none font-black text-foreground sm:text-4xl lg:text-5xl">
-                        {teacher.totalAttempts}
-                      </span>
-                      <span className="mt-2 block text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
-                        Test Takers
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Real Published Exams List */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs font-extrabold tracking-wider text-muted-foreground uppercase sm:text-sm">
-                      <span className="flex items-center gap-2">
-                        <BookOpen className="size-4 text-primary" />
-                        <span>Published Exams</span>
-                      </span>
-                      <span className="rounded-full bg-muted/60 px-2.5 py-0.5 text-xs font-bold text-foreground">
-                        {teacher.publishedExams.length}
-                      </span>
-                    </div>
-
-                    {teacher.publishedExams.length === 0 ? (
-                      <div className="flex items-center justify-center gap-2 rounded-2xl bg-muted/15 p-5 text-center text-sm font-medium text-muted-foreground">
-                        <span>No public exams authored at this moment.</span>
-                      </div>
-                    ) : (
-                      <div className="max-h-56 scrollbar-none space-y-2.5 overflow-y-auto pr-1">
-                        {teacher.publishedExams.map((exam) => (
-                          <div
-                            key={exam.id}
-                            className="group/item flex items-center justify-between rounded-2xl bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/40 hover:shadow-sm"
-                          >
-                            <div className="min-w-0 flex-1 pr-3">
-                              <h4 className="truncate text-base font-bold text-foreground transition-colors group-hover/item:text-primary">
-                                {exam.title}
-                              </h4>
-                              <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
-                                {exam.durationMinutes} min ·{" "}
-                                {exam.questionsCount} questions ·{" "}
-                                {exam.attemptsCount} attempts
-                              </p>
-                            </div>
-                            <Link
-                              href={`/login?callbackUrl=/exams`}
-                              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-primary/10 px-3.5 py-1.5 text-xs font-bold text-primary shadow-xs transition-all hover:bg-primary hover:text-primary-foreground sm:text-sm"
-                            >
-                              <span>Enter</span>
-                              <ArrowRight className="size-3.5" />
-                            </Link>
+                  <div className="space-y-6">
+                    {/* ================= 1. CARD HEADER: AVATAR, NAME, CREDENTIALS & STATUS ================= */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+                        {/* High-End Avatar with Glow & Status Indicator */}
+                        <div className="relative shrink-0">
+                          <div className="flex size-18 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 font-heading text-2xl font-black text-primary shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] ring-4 ring-primary/10 sm:size-20 sm:rounded-3xl sm:text-3xl">
+                            {teacher.initials}
                           </div>
+                          <span
+                            className="absolute right-0.5 bottom-0.5 size-3.5 rounded-full border-2 border-card bg-primary shadow-xs"
+                            title="Faculty Member"
+                          />
+                        </div>
+
+                        {/* Name, Designation & Tenure */}
+                        <div className="min-w-0 space-y-1">
+                          <h2 className="truncate font-heading text-2xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-3xl">
+                            {teacher.name}
+                          </h2>
+                          <p className="truncate text-sm font-medium text-muted-foreground sm:text-base">
+                            {teacher.email}
+                          </p>
+                          <p className="text-xs font-semibold text-muted-foreground/80">
+                            Faculty Member · Joined {joinedFormatted}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Verification Status Pill */}
+                      {teacher.isVerified ? (
+                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-bold text-primary shadow-xs ring-1 ring-primary/20 sm:text-sm">
+                          <ShieldCheck className="size-4 stroke-[2.5]" />
+                          <span>Verified</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-muted/80 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground sm:text-sm">
+                          <Clock className="size-4 stroke-[2.5]" />
+                          <span>Pending</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* ================= 2. ACADEMIC SPECIALIZATION SUBJECTS ================= */}
+                    {teacher.subjects.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-2">
+                        {teacher.subjects.map((subject) => (
+                          <span
+                            key={subject}
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-muted/35 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted/70 sm:text-sm"
+                          >
+                            <span className="size-1.5 rounded-full bg-primary/60" />
+                            <span>{subject}</span>
+                          </span>
                         ))}
                       </div>
                     )}
+
+                    {/* ================= 3. SCULPTED 3-TILE KPI METRICS SYSTEM (DEEP & MODERN) ================= */}
+                    <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                      {/* Tile 1: Published Exams */}
+                      <div className="group/tile flex flex-col justify-between rounded-2xl bg-muted/30 p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-xs sm:p-5 dark:bg-muted/15">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                            Exams
+                          </span>
+                          <span className="flex size-7 items-center justify-center rounded-xl bg-card text-primary shadow-2xs transition-transform duration-300 group-hover/tile:scale-110 sm:size-8">
+                            <FileSpreadsheet className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-3">
+                          <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                            {teacher.publishedExamsCount}
+                          </p>
+                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground sm:text-xs">
+                            Active &amp; Scheduled
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tile 2: Questions Authored */}
+                      <div className="group/tile flex flex-col justify-between rounded-2xl bg-muted/30 p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-xs sm:p-5 dark:bg-muted/15">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                            Questions
+                          </span>
+                          <span className="flex size-7 items-center justify-center rounded-xl bg-card text-primary shadow-2xs transition-transform duration-300 group-hover/tile:scale-110 sm:size-8">
+                            <HelpCircle className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-3">
+                          <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                            {teacher.totalQuestions}
+                          </p>
+                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground sm:text-xs">
+                            Authoring Vault
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tile 3: Test Takers */}
+                      <div className="group/tile flex flex-col justify-between rounded-2xl bg-muted/30 p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-xs sm:p-5 dark:bg-muted/15">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                            Takers
+                          </span>
+                          <span className="flex size-7 items-center justify-center rounded-xl bg-card text-primary shadow-2xs transition-transform duration-300 group-hover/tile:scale-110 sm:size-8">
+                            <Users className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-3">
+                          <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                            {teacher.totalAttempts}
+                          </p>
+                          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground sm:text-xs">
+                            Submissions
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ================= 4. PUBLISHED EXAMS ACCREDITED TRACKS ================= */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs font-extrabold tracking-wider text-muted-foreground uppercase sm:text-sm">
+                        <span className="flex items-center gap-2">
+                          <BookOpenCheck className="size-4 text-primary" />
+                          <span>Published Assessment Tracks</span>
+                        </span>
+                        <span className="rounded-full bg-muted/60 px-2.5 py-0.5 text-xs font-bold text-foreground">
+                          {teacher.publishedExams.length}
+                        </span>
+                      </div>
+
+                      {teacher.publishedExams.length === 0 ? (
+                        <div className="flex items-center justify-center gap-2 rounded-2xl bg-muted/15 p-5 text-center text-sm font-medium text-muted-foreground">
+                          <span>
+                            No public examination tracks scheduled at this
+                            moment.
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="max-h-56 scrollbar-none space-y-2.5 overflow-y-auto pr-1">
+                          {teacher.publishedExams.map((exam) => (
+                            <div
+                              key={exam.id}
+                              className="group/item flex items-center justify-between rounded-2xl bg-muted/20 p-4 transition-all duration-200 hover:bg-muted/40 hover:shadow-sm"
+                            >
+                              <div className="min-w-0 flex-1 pr-3">
+                                <h4 className="truncate text-base font-bold text-foreground transition-colors group-hover/item:text-primary">
+                                  {exam.title}
+                                </h4>
+                                <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
+                                  <span className="inline-flex items-center gap-1">
+                                    <Clock className="size-3.5 text-muted-foreground" />
+                                    <span>{exam.durationMinutes} min</span>
+                                  </span>
+                                  <span>•</span>
+                                  <span>{exam.questionsCount} questions</span>
+                                  <span>•</span>
+                                  <span className="font-medium text-foreground">
+                                    {exam.attemptsCount} test takers
+                                  </span>
+                                </div>
+                              </div>
+                              <Link
+                                href={`/login?callbackUrl=/exams`}
+                                className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-primary/10 px-3.5 py-1.5 text-xs font-bold text-primary shadow-xs transition-all hover:bg-primary hover:text-primary-foreground sm:text-sm"
+                              >
+                                <span>Enter</span>
+                                <ArrowRight className="size-3.5" />
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ================= 5. FOOTER ACTION: LARGE PROMINENT BUTTON ================= */}
+                  <div className="mt-8 pt-2">
+                    <Link
+                      href={`/register?role=student`}
+                      className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 text-base font-bold text-primary-foreground shadow-[0_8px_25px_-5px_rgba(15,118,110,0.35)] transition-all hover:bg-primary/95 hover:shadow-[0_12px_30px_-5px_rgba(15,118,110,0.45)] active:scale-[0.99] sm:h-14 sm:text-lg"
+                    >
+                      <span>Register to Take Exams</span>
+                      <ArrowRight className="size-5 stroke-[2.5]" />
+                    </Link>
                   </div>
                 </div>
-
-                {/* Footer Action: Large, Prominent, Elevated Button */}
-                <div className="mt-8 pt-2">
-                  <Link
-                    href={`/register?role=student`}
-                    className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 text-base font-bold text-primary-foreground shadow-[0_8px_25px_-5px_rgba(15,118,110,0.35)] transition-all hover:bg-primary/95 hover:shadow-[0_12px_30px_-5px_rgba(15,118,110,0.45)] active:scale-[0.99] sm:h-14 sm:text-lg"
-                  >
-                    <span>Register to Take Exams</span>
-                    <ArrowRight className="size-5 stroke-[2.5]" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
