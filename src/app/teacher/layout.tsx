@@ -35,6 +35,11 @@ export default async function TeacherLayout({
       mobileLabel={`${APP_NAME} Teacher`}
       navItems={navItems}
       user={teacher}
+      quickAction={{
+        label: "Quick Create",
+        href: "/teacher/exams/new",
+      }}
+      breadcrumb="Teacher Portal"
     >
       {children}
     </DashboardShell>

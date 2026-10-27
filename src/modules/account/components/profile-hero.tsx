@@ -104,38 +104,38 @@ export function ProfileHero({ user }: ProfileHeroProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-4 shadow-xs backdrop-blur-xl transition-all sm:p-5.5">
       {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent"
       />
 
-      <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         {/* ================= LEFT: CRISP IDENTITY ================= */}
-        <div className="flex items-center gap-4 sm:gap-5">
+        <div className="flex items-center gap-3.5 sm:gap-4.5">
           {/* Avatar with Online Beacon */}
           <div className="relative shrink-0">
-            <Avatar className="size-16 ring-2 ring-primary/15 sm:size-18">
-              <AvatarFallback className="bg-primary/10 font-heading text-xl font-extrabold tracking-tight text-primary sm:text-2xl">
+            <Avatar className="size-13 ring-2 ring-primary/15 sm:size-15">
+              <AvatarFallback className="bg-primary/10 font-heading text-lg font-bold tracking-tight text-primary sm:text-xl">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
             <span
-              className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-card bg-emerald-500 shadow-xs"
+              className="absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-card bg-emerald-500 shadow-xs"
               title="Active session"
             />
           </div>
 
-          <div className="min-w-0 space-y-1.5">
+          <div className="min-w-0 space-y-1">
             {/* Name + Single Role Badge */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="font-heading text-xl font-extrabold tracking-tight text-foreground sm:text-2xl md:text-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="font-heading text-lg font-extrabold tracking-tight text-foreground sm:text-xl md:text-2xl">
                 {user.name}
               </h1>
               <Badge
                 variant="secondary"
-                className="gap-1.5 rounded-lg px-2.5 py-0.5 text-xs font-semibold"
+                className="gap-1 rounded-md px-2 py-0.5 text-xs font-semibold"
               >
                 <RoleIcon className="size-3 text-primary" />
                 <span>{roleInfo.label}</span>

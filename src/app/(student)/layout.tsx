@@ -43,6 +43,11 @@ export default async function StudentLayout({
       mobileLabel={APP_NAME}
       navItems={navItems}
       user={user}
+      quickAction={{
+        label: "Start Practice",
+        href: "/exams",
+      }}
+      breadcrumb="Student Workspace"
     >
       {children}
     </DashboardShell>
