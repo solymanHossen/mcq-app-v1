@@ -31,9 +31,9 @@ export default async function ProfileLayout({
         className="pointer-events-none absolute top-1/3 -right-20 -z-10 size-[32rem] rounded-full bg-chart-2/10 blur-[140px]"
       />
 
-      {/* Main Content Area — Elegantly spaced below the floating header (same as the Hero section) */}
+      {/* Main Content Area — Standard container matching navbar, footer, and teacher page */}
       <main className="flex-1 pt-24 pb-16 sm:pt-28 sm:pb-20">
-        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 xl:max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {children}
         </div>
       </main>
