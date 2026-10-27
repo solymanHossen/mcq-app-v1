@@ -4,8 +4,10 @@ import * as React from "react"
 import Link from "next/link"
 import {
   Calendar,
+  Check,
   CheckCircle2,
   Clock,
+  Copy,
   Crown,
   Flame,
   GraduationCap,
@@ -17,6 +19,7 @@ import {
   User as UserIcon,
   Zap,
 } from "lucide-react"
+import { toast } from "sonner"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -75,6 +78,7 @@ function getRoleLabel(role: Role) {
 }
 
 export function ProfileHero({ user }: ProfileHeroProps) {
+  const [copiedEmail, setCopiedEmail] = React.useState(false)
   const roleInfo = getRoleLabel(user.role)
   const RoleIcon = roleInfo.icon
   const homePath = roleHomePath(user.role)
@@ -93,218 +97,365 @@ export function ProfileHero({ user }: ProfileHeroProps) {
       }).format(new Date(user.lastLoginAt))
     : null
 
+  function handleCopyEmail() {
+    navigator.clipboard.writeText(user.email)
+    setCopiedEmail(true)
+    toast.success("Email copied to clipboard")
+    setTimeout(() => setCopiedEmail(false), 2000)
+  }
+
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-xs transition-all duration-300">
-      {/* Decorative clean banner adhering strictly to system theme tokens */}
-      <div className="relative h-28 w-full border-b border-border/60 bg-muted/40 sm:h-36">
-        <div className="absolute top-4 right-4 flex items-center gap-2">
+    <div className="relative overflow-hidden rounded-[28px] border border-border/80 bg-card/85 p-6 shadow-xs backdrop-blur-xl transition-all duration-300 sm:p-8 lg:p-10">
+      {/* Subtle Radiant Top Edge Accent */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+      />
+
+      {/* ================= TOP ROW: USER IDENTITY & ACTIONS ================= */}
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+        {/* Left: Avatar & Identity Details */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+          {/* Large Avatar with Online Indicator */}
+          <div className="relative w-fit shrink-0">
+            <Avatar className="size-20 border-2 border-border/80 shadow-md ring-4 ring-primary/10 sm:size-24">
+              <AvatarFallback className="bg-primary/10 font-heading text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar>
+            <span
+              className="absolute right-0.5 bottom-0.5 size-3.5 rounded-full border-2 border-card bg-primary shadow-xs"
+              title="Online & Authenticated"
+            />
+          </div>
+
+          {/* User Name, Role, Email, and Timestamps */}
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                {user.name}
+              </h1>
+              <Badge
+                variant="secondary"
+                className="gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold tracking-wide"
+              >
+                <RoleIcon className="size-3.5 text-primary" />
+                <span>{roleInfo.label}</span>
+              </Badge>
+            </div>
+
+            {/* Email & Verification status */}
+            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="group inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 px-2.5 py-1 font-medium transition-colors hover:border-border hover:bg-muted/60 hover:text-foreground"
+                title="Click to copy email"
+              >
+                <Mail className="size-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
+                <span>{user.email}</span>
+                {copiedEmail ? (
+                  <Check className="size-3 text-primary" />
+                ) : (
+                  <Copy className="size-3 opacity-0 transition-opacity group-hover:opacity-70" />
+                )}
+              </button>
+
+              <span className="hidden text-muted-foreground/30 sm:inline">
+                •
+              </span>
+
+              {user.isEmailVerified ? (
+                <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  <span>Verified Account</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 font-medium text-muted-foreground">
+                  Unverified
+                </span>
+              )}
+            </div>
+
+            {/* Account Longevity Timestamps */}
+            <div className="flex flex-wrap items-center gap-3 pt-0.5 text-xs text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <Calendar className="size-3.5 text-muted-foreground" />
+                <span>Joined {joinedFormatted}</span>
+              </span>
+
+              {lastLoginFormatted && (
+                <>
+                  <span className="text-muted-foreground/30">•</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="size-3.5 text-muted-foreground" />
+                    <span>Last active {lastLoginFormatted}</span>
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Quick Role Dashboard Action */}
+        <div className="flex items-center gap-3 self-start md:self-center">
           <Link
             href={homePath}
-            className="inline-flex h-8.5 items-center gap-2 rounded-xl border border-border/80 bg-background px-3 text-xs font-semibold text-foreground shadow-2xs transition-all hover:bg-muted active:scale-95"
+            className="inline-flex h-11 items-center gap-2 rounded-xl border border-border/80 bg-card px-5 text-sm font-semibold text-foreground shadow-2xs transition-all hover:border-primary/40 hover:bg-muted active:scale-95"
           >
-            <LayoutDashboard className="size-3.5 text-muted-foreground" />
+            <LayoutDashboard className="size-4 text-primary" />
             <span>Dashboard</span>
           </Link>
         </div>
       </div>
 
-      {/* Main Profile Info Section */}
-      <div className="relative px-5 pt-0 pb-6 sm:px-8">
-        <div className="-mt-12 flex flex-col justify-between gap-4 sm:-mt-14 sm:flex-row sm:items-end">
-          {/* Avatar & Identifiers */}
-          <div className="flex items-end gap-4">
-            <Avatar className="size-22 border-4 border-card shadow-md ring-1 ring-border/60 sm:size-24">
-              <AvatarFallback className="bg-primary/10 text-xl font-bold text-primary sm:text-2xl">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="mb-1 space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                  {user.name}
-                </h1>
-                <Badge
-                  variant="secondary"
-                  className="h-5.5 gap-1 px-2 text-xs font-medium text-muted-foreground"
-                >
-                  <RoleIcon className="size-3" />
-                  {roleInfo.label}
-                </Badge>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Mail className="size-3" />
-                  {user.email}
+      {/* ================= BOTTOM ROW: BIG SIZE MINIMAL KPI CARDS ================= */}
+      <div className="mt-8 grid grid-cols-2 gap-4 border-t border-border/60 pt-7 sm:grid-cols-4 sm:gap-5">
+        {/* STUDENT METRICS */}
+        {user.role === "STUDENT" && (
+          <>
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Streak
                 </span>
-
-                {user.isEmailVerified ? (
-                  <span className="flex items-center gap-1 font-medium text-foreground">
-                    <CheckCircle2 className="size-3 text-primary" />
-                    Verified
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 font-medium text-muted-foreground">
-                    Unverified
-                  </span>
-                )}
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Flame className="size-4.5" />
+                </span>
               </div>
-            </div>
-          </div>
-
-          {/* Timestamp metadata */}
-          <div className="mt-1 flex flex-wrap items-center gap-3 self-start text-xs text-muted-foreground sm:mt-0 sm:self-end">
-            <span className="flex items-center gap-1">
-              <Calendar className="size-3.5" />
-              Joined {joinedFormatted}
-            </span>
-            {lastLoginFormatted && (
-              <span className="flex items-center gap-1">
-                <Clock className="size-3.5" />
-                Active {lastLoginFormatted}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Dynamic Metric Badges Ribbon using strictly theme palette */}
-        <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border/60 pt-5 sm:grid-cols-4">
-          {user.role === "STUDENT" && (
-            <>
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Flame className="size-3.5 text-primary" />
-                  <span className="font-medium">Streak</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user.streak?.currentStreak ?? 0}{" "}
-                  <span className="text-xs font-normal text-muted-foreground">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     days
                   </span>
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Continuous study rhythm
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Zap className="size-3.5 text-primary" />
-                  <span className="font-medium">XP Points</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  XP Points
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Zap className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user.xpTotal ?? 0}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Total accumulated score
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Sparkles className="size-3.5 text-primary" />
-                  <span className="font-medium">Exams Taken</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Exams Taken
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Sparkles className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user._count?.examAttempts ?? 0}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Completed assessments
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Trophy className="size-3.5 text-primary" />
-                  <span className="font-medium">Badges</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Badges
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Trophy className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user._count?.badges ?? 0}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Achievements unlocked
+                </p>
               </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
 
-          {user.role === "TEACHER" && (
-            <>
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <GraduationCap className="size-3.5 text-primary" />
-                  <span className="font-medium">Status</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground capitalize">
+        {/* TEACHER METRICS */}
+        {user.role === "TEACHER" && (
+          <>
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Verification
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <GraduationCap className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground capitalize sm:text-3xl">
                   {user.teacherVerificationStatus?.toLowerCase() ?? "Pending"}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Faculty status credential
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Sparkles className="size-3.5 text-primary" />
-                  <span className="font-medium">Exams Created</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Exams Created
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Sparkles className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user._count?.exams ?? 0}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Active & scheduled tests
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Zap className="size-3.5 text-primary" />
-                  <span className="font-medium">Questions</span>
-                </div>
-                <p className="mt-1 text-lg font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Question Bank
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Zap className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user._count?.questions ?? 0}
                 </p>
-              </div>
-
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <CheckCircle2 className="size-3.5 text-primary" />
-                  <span className="font-medium">Account</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground">
-                  Active
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Authored question pool
                 </p>
               </div>
-            </>
-          )}
+            </div>
 
-          {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
-            <>
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <ShieldCheck className="size-3.5 text-primary" />
-                  <span className="font-medium">Role</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Permissions
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <CheckCircle2 className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                  Active
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Educator authoring unlocked
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ADMIN & SUPER ADMIN METRICS */}
+        {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
+          <>
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Role Authority
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <ShieldCheck className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   {user.role === "SUPER_ADMIN" ? "Super Admin" : "Admin"}
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Master platform governance
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <CheckCircle2 className="size-3.5 text-primary" />
-                  <span className="font-medium">Clearance</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Clearance Tier
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <CheckCircle2 className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   Full Access
                 </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Unrestricted root scopes
+                </p>
               </div>
+            </div>
 
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Zap className="size-3.5 text-primary" />
-                  <span className="font-medium">Security</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground">
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Security Level
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Zap className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
                   Audited
                 </p>
-              </div>
-
-              <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Crown className="size-3.5 text-primary" />
-                  <span className="font-medium">Permissions</span>
-                </div>
-                <p className="mt-1 text-base font-bold text-foreground">
-                  Active
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Multi-factor & session verified
                 </p>
               </div>
-            </>
-          )}
-        </div>
+            </div>
+
+            <div className="group flex flex-col justify-between rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Permissions
+                </span>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-primary transition-transform group-hover:scale-105">
+                  <Crown className="size-4.5" />
+                </span>
+              </div>
+              <div className="mt-3">
+                <p className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                  Active
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Platform services accessible
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

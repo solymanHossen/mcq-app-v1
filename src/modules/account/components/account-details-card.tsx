@@ -2,11 +2,13 @@
 
 import * as React from "react"
 import {
+  Calendar,
   Check,
   Copy,
   Fingerprint,
   KeyRound,
   Shield,
+  ShieldCheck,
   UserCheck,
 } from "lucide-react"
 import { toast } from "sonner"
@@ -43,6 +45,40 @@ function getRoleDescription(role: Role) {
   }
 }
 
+function getRoleCapabilities(role: Role): string[] {
+  switch (role) {
+    case "SUPER_ADMIN":
+      return [
+        "System Governance",
+        "User Delegation",
+        "Security Auditing",
+        "Revenue Oversight",
+      ]
+    case "ADMIN":
+      return [
+        "User Management",
+        "Teacher Verification",
+        "Exam Monitoring",
+        "Platform Reports",
+      ]
+    case "TEACHER":
+      return [
+        "Exam Authoring",
+        "Question Bank Vault",
+        "Auto-grading",
+        "Cohort Insights",
+      ]
+    case "STUDENT":
+    default:
+      return [
+        "Timed Exam Attempts",
+        "Mistake Notebook",
+        "Leaderboards",
+        "Streak & XP",
+      ]
+  }
+}
+
 export function AccountDetailsCard({
   id,
   role,
@@ -54,36 +90,38 @@ export function AccountDetailsCard({
   function handleCopyId() {
     navigator.clipboard.writeText(id)
     setCopied(true)
-    toast.success("Account ID copied to clipboard")
+    toast.success("Account UUID copied to clipboard")
     setTimeout(() => setCopied(false), 2000)
   }
 
   const roleDesc = getRoleDescription(role)
+  const capabilities = getRoleCapabilities(role)
   const createdDate = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "long",
+    dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(createdAt))
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+    <Card className="rounded-[24px] border border-border/80 shadow-xs transition-all duration-300 hover:shadow-md">
+      <CardHeader className="space-y-1.5 pb-6">
+        <CardTitle className="font-heading text-lg font-bold text-foreground sm:text-xl">
           Account Identity & Permissions
         </CardTitle>
-        <CardDescription>
-          Detailed account identifier, role specifications, and access scopes.
+        <CardDescription className="text-xs text-muted-foreground sm:text-[13px]">
+          Detailed cryptographic identifier, role privileges, and authorization
+          scopes.
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {/* Unique User ID */}
-        <div className="flex flex-col justify-between gap-2 rounded-xl border border-border/70 bg-muted/30 p-3.5 sm:flex-row sm:items-center">
-          <div className="space-y-0.5">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <Fingerprint className="size-3.5" />
+      <CardContent className="space-y-5">
+        {/* Unique User ID Cryptographic Station */}
+        <div className="flex flex-col justify-between gap-3 rounded-2xl border border-border/80 bg-muted/30 p-4 transition-colors hover:bg-muted/40 sm:flex-row sm:items-center">
+          <div className="min-w-0 space-y-1">
+            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              <Fingerprint className="size-3.5 text-primary" />
               Unique Identifier (UUID)
             </span>
-            <code className="font-mono text-xs font-medium break-all text-foreground">
+            <code className="block font-mono text-xs font-semibold tracking-tight break-all text-foreground sm:text-[13px]">
               {id}
             </code>
           </div>
@@ -92,16 +130,16 @@ export function AccountDetailsCard({
             variant="outline"
             size="sm"
             onClick={handleCopyId}
-            className="h-8 shrink-0 gap-1.5 self-start text-xs sm:self-auto"
+            className="h-9 shrink-0 gap-1.5 self-start rounded-xl border-border/80 bg-background text-xs font-semibold shadow-2xs hover:border-primary/40 hover:bg-muted active:scale-95 sm:self-auto"
           >
             {copied ? (
               <>
-                <Check className="size-3.5 text-emerald-500" />
+                <Check className="size-3.5 text-primary" />
                 <span>Copied</span>
               </>
             ) : (
               <>
-                <Copy className="size-3.5" />
+                <Copy className="size-3.5 text-muted-foreground" />
                 <span>Copy ID</span>
               </>
             )}
@@ -109,40 +147,58 @@ export function AccountDetailsCard({
         </div>
 
         {/* Role Permissions Information */}
-        <div className="space-y-2 rounded-xl border border-border/70 bg-card p-4">
+        <div className="space-y-3 rounded-2xl border border-border/80 bg-card p-4.5 sm:p-5">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-xs font-semibold text-foreground">
-              <Shield className="size-3.5 text-primary" />
-              Role Scope
+            <span className="flex items-center gap-2 text-sm font-bold text-foreground">
+              <Shield className="size-4 text-primary" />
+              Role Authority Scope
             </span>
-            <Badge variant="secondary" className="text-[11px] capitalize">
+            <Badge
+              variant="secondary"
+              className="rounded-lg text-xs font-semibold capitalize"
+            >
               {role.replace("_", " ").toLowerCase()}
             </Badge>
           </div>
-          <p className="text-xs leading-relaxed text-muted-foreground">
+          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
             {roleDesc}
           </p>
+
+          {/* Capability Tags */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {capabilities.map((cap) => (
+              <span
+                key={cap}
+                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-muted/40 px-2 py-0.5 text-[11px] font-medium text-foreground"
+              >
+                <Check className="size-2.5 text-primary" />
+                {cap}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Account Integrity Metadata */}
-        <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
-          <div className="space-y-1 rounded-xl border border-border/60 bg-muted/20 p-3">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <UserCheck className="size-3.5 text-emerald-500" />
+        {/* Account Integrity Metadata (Strict Token Colors) */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="space-y-1.5 rounded-2xl border border-border/70 bg-muted/20 p-4">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <UserCheck className="size-3.5 text-primary" />
               Registration Timestamp
             </span>
-            <p className="text-xs font-medium text-foreground">{createdDate}</p>
+            <p className="text-xs font-semibold text-foreground sm:text-sm">
+              {createdDate}
+            </p>
           </div>
 
-          <div className="space-y-1 rounded-xl border border-border/60 bg-muted/20 p-3">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <KeyRound className="size-3.5 text-amber-500" />
+          <div className="space-y-1.5 rounded-2xl border border-border/70 bg-muted/20 p-4">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <ShieldCheck className="size-3.5 text-primary" />
               Security Status
             </span>
-            <p className="text-xs font-medium text-foreground">
+            <p className="text-xs font-semibold text-foreground sm:text-sm">
               {isEmailVerified
-                ? "Verified credentials"
-                : "Verification pending"}
+                ? "Verified Credentials & Protected"
+                : "Verification Pending"}
             </p>
           </div>
         </div>

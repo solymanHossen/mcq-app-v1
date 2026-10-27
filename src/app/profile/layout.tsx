@@ -1,11 +1,8 @@
 import * as React from "react"
-import Link from "next/link"
-import { ArrowLeft, Sparkles, LayoutDashboard } from "lucide-react"
 
+import { Navbar } from "@/components/landing/navbar"
+import { Footer } from "@/components/landing/footer"
 import { requireUser } from "@/lib/authorization"
-import { APP_NAME } from "@/lib/config"
-import { UserNav } from "@/components/shared/user-nav"
-import { roleHomePath } from "@/lib/auth.config"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -18,58 +15,31 @@ export default async function ProfileLayout({
   children: React.ReactNode
 }) {
   const user = await requireUser()
-  const homePath = roleHomePath(user.role)
 
   return (
-    <div className="flex min-h-svh flex-col bg-background text-foreground">
-      {/* Top Header Navigation */}
-      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur-xl">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-4 sm:gap-6">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
-            >
-              <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs">
-                <Sparkles className="size-4" />
-              </span>
-              <span className="font-heading text-lg font-bold tracking-tight">
-                {APP_NAME}
-              </span>
-            </Link>
+    <div className="relative flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground">
+      {/* Exact Same Public Route Header Navbar (Floating Pill on Desktop, Flush Edge-to-Edge on Mobile) */}
+      <Navbar user={user} />
 
-            <span className="hidden h-5 w-px bg-border sm:block" />
+      {/* Dynamic Ambient Background Glows matching the Landing Hero Section */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 -left-20 -z-10 size-[36rem] rounded-full bg-primary/10 blur-[130px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/3 -right-20 -z-10 size-[32rem] rounded-full bg-chart-2/10 blur-[140px]"
+      />
 
-            <Link
-              href={homePath}
-              className="group inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
-              <span>Back to Dashboard</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <UserNav user={user} showDashboardButton={false} />
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 py-8 sm:py-10">
-        <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+      {/* Main Content Area — Elegantly spaced below the floating header (same as the Hero section) */}
+      <main className="flex-1 pt-24 pb-16 sm:pt-28 sm:pb-20">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 xl:max-w-7xl">
           {children}
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
-        <div className="container mx-auto px-4">
-          <p>
-            © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* Unified World-Class Footer */}
+      <Footer />
     </div>
   )
 }
