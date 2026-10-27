@@ -50,112 +50,114 @@ export function StudentActivityCard({
 }: StudentActivityCardProps) {
   return (
     <div className="space-y-8">
-      {/* Quick Action Shortcuts Grid — Large, Premium Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {/* Quick Action Shortcuts Grid — Large, Modern, Ultra-Smooth */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
         <Link
           href="/exams"
-          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-primary/50 hover:shadow-md active:scale-98"
+          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
         >
-          <div className="flex items-center gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105">
-              <BookOpen className="size-6" />
+          <div className="flex items-center gap-4 sm:gap-5">
+            <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
+              <BookOpen className="size-7 sm:size-8" />
             </span>
             <div>
-              <p className="text-base font-bold text-foreground">
+              <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
                 Exams Catalog
               </p>
-              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-                Practice & take exams
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                Practice & take live exams
               </p>
             </div>
           </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
         </Link>
 
         <Link
           href="/mistakes"
-          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-amber-500/50 hover:shadow-md active:scale-98"
+          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
         >
-          <div className="flex items-center gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 transition-transform duration-200 group-hover:scale-105">
-              <RotateCcw className="size-6" />
+          <div className="flex items-center gap-4 sm:gap-5">
+            <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
+              <RotateCcw className="size-7 sm:size-8" />
             </span>
             <div>
-              <p className="text-base font-bold text-foreground">
+              <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
                 Mistake Notebook
               </p>
-              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
                 Review wrong answers
               </p>
             </div>
           </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
         </Link>
 
         <Link
           href="/leaderboard"
-          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-yellow-500/50 hover:shadow-md active:scale-98"
+          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
         >
-          <div className="flex items-center gap-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-500/10 text-yellow-500 transition-transform duration-200 group-hover:scale-105">
-              <Trophy className="size-6" />
+          <div className="flex items-center gap-4 sm:gap-5">
+            <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
+              <Trophy className="size-7 sm:size-8" />
             </span>
             <div>
-              <p className="text-base font-bold text-foreground">Leaderboard</p>
-              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+              <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
+                Leaderboard
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
                 Rankings & top scores
               </p>
             </div>
           </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
         </Link>
       </div>
 
-      {/* Recent Exam Attempts Card — Larger, Spacious, Modern Design */}
-      <Card className="overflow-hidden rounded-3xl border-border/80 shadow-sm">
-        <CardHeader className="border-b border-border/60 p-6 sm:p-7">
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+      {/* Recent Exam Attempts Card — Large, Modern, Spacious */}
+      <Card className="overflow-hidden rounded-3xl border-border/80 shadow-xs">
+        <CardHeader className="border-b border-border/60 p-6 sm:p-8">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <CardTitle className="text-lg font-bold tracking-tight sm:text-xl">
+              <CardTitle className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                 Recent Exam Activity
               </CardTitle>
-              <CardDescription className="mt-1 text-xs sm:text-sm">
+              <CardDescription className="mt-1 text-sm text-muted-foreground sm:text-base">
                 Your latest tests, score breakdowns, accuracy rates, and
                 performance outcomes.
               </CardDescription>
             </div>
             <Link
               href="/exams"
-              className="inline-flex h-9 items-center gap-1.5 self-start rounded-xl bg-secondary px-3.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 sm:self-auto sm:text-sm"
+              className="inline-flex h-10 items-center gap-2 self-start rounded-xl bg-secondary px-4 text-xs font-semibold text-secondary-foreground shadow-2xs transition-colors hover:bg-secondary/80 active:scale-95 sm:self-auto sm:text-sm"
             >
               <span>View all exams</span>
-              <ChevronRight className="size-3.5" />
+              <ChevronRight className="size-4" />
             </Link>
           </div>
         </CardHeader>
 
-        <CardContent className="p-6 sm:p-7">
+        <CardContent className="p-6 sm:p-8">
           {recentAttempts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-                <Sparkles className="size-7" />
+            <div className="flex flex-col items-center justify-center py-14 text-center">
+              <div className="mb-4 flex size-16 items-center justify-center rounded-3xl bg-muted text-muted-foreground">
+                <Sparkles className="size-8" />
               </div>
-              <p className="text-base font-bold text-foreground">
+              <p className="text-lg font-bold text-foreground">
                 No exam attempts yet
               </p>
-              <p className="mt-1 max-w-sm text-xs text-muted-foreground sm:text-sm">
+              <p className="mt-1 max-w-sm text-sm text-muted-foreground">
                 Start practicing with available question banks and mock exams to
-                track your progress and stats here.
+                track your progress and performance here.
               </p>
               <Link
                 href="/exams"
-                className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 active:scale-95 sm:text-sm"
+                className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 active:scale-95"
               >
                 <span>Explore Exams Catalog</span>
               </Link>
             </div>
           ) : (
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               {recentAttempts.map((attempt) => {
                 const dateFormatted = new Intl.DateTimeFormat("en-US", {
                   month: "short",
@@ -175,21 +177,17 @@ export function StudentActivityCard({
                 return (
                   <div
                     key={attempt.id}
-                    className="flex flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-muted/20 p-4 transition-all duration-200 hover:border-border hover:bg-muted/50 hover:shadow-xs sm:flex-row sm:items-center sm:p-5"
+                    className="flex flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-card p-5 transition-all duration-300 hover:border-border hover:bg-muted/30 hover:shadow-md sm:flex-row sm:items-center sm:p-6"
                   >
                     {/* Left: Title, Status, and Date */}
                     <div className="min-w-0 space-y-1.5">
-                      <div className="flex flex-wrap items-center gap-2.5">
+                      <div className="flex flex-wrap items-center gap-3">
                         <p className="text-base font-bold tracking-tight text-foreground sm:text-lg">
                           {attempt.exam.title}
                         </p>
                         <Badge
-                          variant="outline"
-                          className={
-                            isCompleted
-                              ? "border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"
-                              : "bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
-                          }
+                          variant={isCompleted ? "default" : "secondary"}
+                          className="rounded-lg px-2.5 py-0.5 text-xs font-semibold"
                         >
                           {isCompleted ? "Completed" : "In Progress"}
                         </Badge>
@@ -208,13 +206,13 @@ export function StudentActivityCard({
                     </div>
 
                     {/* Right: Scores & Outcomes */}
-                    <div className="flex shrink-0 items-center gap-4 self-end sm:self-center">
+                    <div className="flex shrink-0 items-center gap-5 self-end sm:self-center">
                       {attempt.result && (
                         <div className="text-right">
-                          <p className="text-base font-extrabold text-foreground sm:text-lg">
+                          <p className="text-lg font-extrabold text-foreground sm:text-xl">
                             {score}
                           </p>
-                          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
+                          <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
                             Accuracy:{" "}
                             <span className="font-semibold text-foreground">
                               {accuracy}
@@ -226,18 +224,15 @@ export function StudentActivityCard({
                       {attempt.result?.isPassed !== undefined &&
                         attempt.result?.isPassed !== null && (
                           <Badge
-                            variant="outline"
-                            className={cn(
-                              "h-7 gap-1.5 rounded-xl px-3 text-xs font-semibold sm:h-8 sm:text-sm",
-                              attempt.result.isPassed
-                                ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                : "border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400"
-                            )}
+                            variant={
+                              attempt.result.isPassed ? "default" : "outline"
+                            }
+                            className="h-8 gap-1.5 rounded-xl px-3.5 text-xs font-semibold sm:text-sm"
                           >
                             {attempt.result.isPassed ? (
                               <CheckCircle2 className="size-4" />
                             ) : (
-                              <XCircle className="size-4" />
+                              <XCircle className="size-4 text-destructive" />
                             )}
                             <span>
                               {attempt.result.isPassed

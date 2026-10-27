@@ -11,64 +11,21 @@ import {
   GraduationCap,
   LayoutDashboard,
   Mail,
-  Palette,
-  ShieldAlert,
   ShieldCheck,
   Sparkles,
   Trophy,
+  User as UserIcon,
   Zap,
 } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { roleHomePath } from "@/lib/auth.config"
 import { cn } from "@/lib/utils"
 import type {
   Role,
   TeacherVerificationStatus,
 } from "@/prisma/generated/prisma/client"
-
-export const AVATAR_COLOR_KEY = "examhub_avatar_color"
-
-export const AVATAR_THEMES = [
-  {
-    id: "indigo",
-    label: "Indigo",
-    bg: "bg-indigo-600 text-white",
-    ring: "ring-indigo-500/30",
-  },
-  {
-    id: "emerald",
-    label: "Emerald",
-    bg: "bg-emerald-600 text-white",
-    ring: "ring-emerald-500/30",
-  },
-  {
-    id: "amber",
-    label: "Amber",
-    bg: "bg-amber-600 text-white",
-    ring: "ring-amber-500/30",
-  },
-  {
-    id: "rose",
-    label: "Rose",
-    bg: "bg-rose-600 text-white",
-    ring: "ring-rose-500/30",
-  },
-  {
-    id: "cyan",
-    label: "Cyan",
-    bg: "bg-cyan-600 text-white",
-    ring: "ring-cyan-500/30",
-  },
-  {
-    id: "purple",
-    label: "Purple",
-    bg: "bg-purple-600 text-white",
-    ring: "ring-purple-500/30",
-  },
-] as const
 
 interface ProfileHeroProps {
   user: {
@@ -103,68 +60,23 @@ function getInitials(name: string) {
     .join("")
 }
 
-function getRoleMeta(role: Role) {
+function getRoleLabel(role: Role) {
   switch (role) {
     case "SUPER_ADMIN":
-      return {
-        label: "Super Admin",
-        badgeClass:
-          "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30",
-        icon: Crown,
-      }
+      return { label: "Super Admin", icon: Crown }
     case "ADMIN":
-      return {
-        label: "Admin",
-        badgeClass:
-          "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
-        icon: ShieldCheck,
-      }
+      return { label: "Admin", icon: ShieldCheck }
     case "TEACHER":
-      return {
-        label: "Teacher",
-        badgeClass:
-          "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
-        icon: GraduationCap,
-      }
+      return { label: "Teacher", icon: GraduationCap }
     case "STUDENT":
     default:
-      return {
-        label: "Student",
-        badgeClass: "bg-primary/15 text-primary border-primary/30",
-        icon: Sparkles,
-      }
+      return { label: "Student", icon: UserIcon }
   }
 }
 
 export function ProfileHero({ user }: ProfileHeroProps) {
-  const [selectedTheme, setSelectedTheme] = React.useState<string>("indigo")
-  const [showColorPicker, setShowColorPicker] = React.useState(false)
-
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem(AVATAR_COLOR_KEY)
-      if (saved && AVATAR_THEMES.some((t) => t.id === saved)) {
-        setSelectedTheme(saved)
-      }
-    } catch {
-      // Ignore local storage error
-    }
-  }, [])
-
-  function handleThemeChange(themeId: string) {
-    setSelectedTheme(themeId)
-    try {
-      localStorage.setItem(AVATAR_COLOR_KEY, themeId)
-    } catch {
-      // Ignore
-    }
-    setShowColorPicker(false)
-  }
-
-  const roleMeta = getRoleMeta(user.role)
-  const RoleIcon = roleMeta.icon
-  const activeColor =
-    AVATAR_THEMES.find((t) => t.id === selectedTheme) ?? AVATAR_THEMES[0]
+  const roleInfo = getRoleLabel(user.role)
+  const RoleIcon = roleInfo.icon
   const homePath = roleHomePath(user.role)
 
   const joinedFormatted = new Intl.DateTimeFormat("en-US", {
@@ -182,112 +94,58 @@ export function ProfileHero({ user }: ProfileHeroProps) {
     : null
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm transition-all duration-300 hover:shadow-md">
-      {/* Decorative gradient cover banner */}
-      <div className="relative h-32 w-full overflow-hidden bg-gradient-to-r from-primary/20 via-primary/10 to-accent/30 sm:h-44">
-        {/* Subtle geometric pattern overlay */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_currentColor_1px,_transparent_0)] bg-[length:24px_24px] opacity-20"
-        />
+    <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-xs transition-all duration-300">
+      {/* Decorative clean banner adhering strictly to system theme tokens */}
+      <div className="relative h-28 w-full border-b border-border/60 bg-muted/40 sm:h-36">
         <div className="absolute top-4 right-4 flex items-center gap-2">
           <Link
             href={homePath}
-            className="inline-flex h-9 items-center gap-2 rounded-xl border border-border/60 bg-background/80 px-3.5 text-xs font-semibold text-foreground backdrop-blur-md transition-all hover:bg-background hover:shadow-sm active:scale-95"
+            className="inline-flex h-8.5 items-center gap-2 rounded-xl border border-border/80 bg-background px-3 text-xs font-semibold text-foreground shadow-2xs transition-all hover:bg-muted active:scale-95"
           >
-            <LayoutDashboard className="size-3.5 text-primary" />
-            <span>Go to Dashboard</span>
+            <LayoutDashboard className="size-3.5 text-muted-foreground" />
+            <span>Dashboard</span>
           </Link>
         </div>
       </div>
 
       {/* Main Profile Info Section */}
       <div className="relative px-5 pt-0 pb-6 sm:px-8">
-        <div className="-mt-14 flex flex-col justify-between gap-4 sm:-mt-16 sm:flex-row sm:items-end">
-          {/* Avatar with status and color badge */}
-          <div className="relative flex items-end gap-4">
-            <div className="group relative">
-              <Avatar
-                className={cn(
-                  "size-24 border-4 border-card shadow-lg ring-4 ring-background transition-transform duration-300 group-hover:scale-105 sm:size-28",
-                  activeColor.ring
-                )}
-              >
-                <AvatarFallback
-                  className={cn(
-                    "size-full text-2xl font-extrabold tracking-wider transition-colors sm:text-3xl",
-                    activeColor.bg
-                  )}
-                >
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
+        <div className="-mt-12 flex flex-col justify-between gap-4 sm:-mt-14 sm:flex-row sm:items-end">
+          {/* Avatar & Identifiers */}
+          <div className="flex items-end gap-4">
+            <Avatar className="size-22 border-4 border-card shadow-md ring-1 ring-border/60 sm:size-24">
+              <AvatarFallback className="bg-primary/10 text-xl font-bold text-primary sm:text-2xl">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar>
 
-              {/* Color Theme Selector Trigger */}
-              <button
-                type="button"
-                onClick={() => setShowColorPicker(!showColorPicker)}
-                className="absolute right-0 bottom-0 flex size-7 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground shadow-sm transition-all hover:scale-110 hover:text-foreground"
-                title="Change avatar color preset"
-                aria-label="Change avatar color"
-              >
-                <Palette className="size-3.5" />
-              </button>
-
-              {/* Color Preset Popover */}
-              {showColorPicker && (
-                <div className="absolute bottom-9 left-0 z-30 flex animate-in items-center gap-1.5 rounded-2xl border border-border/80 bg-popover p-2 shadow-xl backdrop-blur-md fade-in-0 zoom-in-95">
-                  {AVATAR_THEMES.map((theme) => (
-                    <button
-                      key={theme.id}
-                      type="button"
-                      onClick={() => handleThemeChange(theme.id)}
-                      className={cn(
-                        "size-6 rounded-full transition-transform hover:scale-125 focus:outline-hidden",
-                        theme.bg,
-                        selectedTheme === theme.id &&
-                          "ring-2 ring-foreground ring-offset-2 ring-offset-popover"
-                      )}
-                      title={theme.label}
-                      aria-label={`Select ${theme.label} avatar color`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Name, Role & Verification */}
             <div className="mb-1 space-y-1">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                   {user.name}
                 </h1>
                 <Badge
-                  variant="outline"
-                  className={cn(
-                    "h-6 gap-1 px-2 text-xs font-semibold",
-                    roleMeta.badgeClass
-                  )}
+                  variant="secondary"
+                  className="h-5.5 gap-1 px-2 text-xs font-medium text-muted-foreground"
                 >
                   <RoleIcon className="size-3" />
-                  {roleMeta.label}
+                  {roleInfo.label}
                 </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <Mail className="size-3 text-muted-foreground/70" />
+                  <Mail className="size-3" />
                   {user.email}
                 </span>
 
                 {user.isEmailVerified ? (
-                  <span className="flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 className="size-3" />
+                  <span className="flex items-center gap-1 font-medium text-foreground">
+                    <CheckCircle2 className="size-3 text-primary" />
                     Verified
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
-                    <ShieldAlert className="size-3" />
+                  <span className="flex items-center gap-1 font-medium text-muted-foreground">
                     Unverified
                   </span>
                 )}
@@ -296,10 +154,10 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           </div>
 
           {/* Timestamp metadata */}
-          <div className="mt-2 flex flex-wrap items-center gap-4 self-start text-xs text-muted-foreground sm:mt-0 sm:self-end">
+          <div className="mt-1 flex flex-wrap items-center gap-3 self-start text-xs text-muted-foreground sm:mt-0 sm:self-end">
             <span className="flex items-center gap-1">
               <Calendar className="size-3.5" />
-              Member since {joinedFormatted}
+              Joined {joinedFormatted}
             </span>
             {lastLoginFormatted && (
               <span className="flex items-center gap-1">
@@ -310,13 +168,13 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           </div>
         </div>
 
-        {/* Dynamic Metric Badges / Stats Ribbon */}
+        {/* Dynamic Metric Badges Ribbon using strictly theme palette */}
         <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border/60 pt-5 sm:grid-cols-4">
           {user.role === "STUDENT" && (
             <>
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Flame className="size-4 text-orange-500" />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Flame className="size-3.5 text-primary" />
                   <span className="font-medium">Streak</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
@@ -328,8 +186,8 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Zap className="size-4 text-amber-500" />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Zap className="size-3.5 text-primary" />
                   <span className="font-medium">XP Points</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
@@ -338,8 +196,8 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Sparkles className="size-4 text-primary" />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Sparkles className="size-3.5 text-primary" />
                   <span className="font-medium">Exams Taken</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
@@ -348,8 +206,8 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Trophy className="size-4 text-yellow-500" />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Trophy className="size-3.5 text-primary" />
                   <span className="font-medium">Badges</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
@@ -362,9 +220,9 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           {user.role === "TEACHER" && (
             <>
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <GraduationCap className="size-4 text-emerald-500" />
-                  <span className="font-medium">Verification</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <GraduationCap className="size-3.5 text-primary" />
+                  <span className="font-medium">Status</span>
                 </div>
                 <p className="mt-1 text-base font-bold text-foreground capitalize">
                   {user.teacherVerificationStatus?.toLowerCase() ?? "Pending"}
@@ -372,9 +230,9 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Sparkles className="size-4 text-primary" />
-                  <span className="font-medium">Created Exams</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Sparkles className="size-3.5 text-primary" />
+                  <span className="font-medium">Exams Created</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
                   {user._count?.exams ?? 0}
@@ -382,9 +240,9 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Zap className="size-4 text-amber-500" />
-                  <span className="font-medium">Question Bank</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Zap className="size-3.5 text-primary" />
+                  <span className="font-medium">Questions</span>
                 </div>
                 <p className="mt-1 text-lg font-bold text-foreground">
                   {user._count?.questions ?? 0}
@@ -392,11 +250,11 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <CheckCircle2 className="size-4 text-primary" />
-                  <span className="font-medium">Account Status</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  <span className="font-medium">Account</span>
                 </div>
-                <p className="mt-1 text-base font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="mt-1 text-base font-bold text-foreground">
                   Active
                 </p>
               </div>
@@ -406,44 +264,42 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
             <>
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <ShieldCheck className="size-4 text-amber-500" />
-                  <span className="font-medium">Role Level</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <ShieldCheck className="size-3.5 text-primary" />
+                  <span className="font-medium">Role</span>
                 </div>
                 <p className="mt-1 text-base font-bold text-foreground">
-                  {user.role === "SUPER_ADMIN"
-                    ? "Super Admin"
-                    : "Platform Admin"}
+                  {user.role === "SUPER_ADMIN" ? "Super Admin" : "Admin"}
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <CheckCircle2 className="size-4 text-emerald-500" />
-                  <span className="font-medium">Security Clearance</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <CheckCircle2 className="size-3.5 text-primary" />
+                  <span className="font-medium">Clearance</span>
                 </div>
-                <p className="mt-1 text-base font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="mt-1 text-base font-bold text-foreground">
                   Full Access
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Zap className="size-4 text-primary" />
-                  <span className="font-medium">Session Status</span>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Zap className="size-3.5 text-primary" />
+                  <span className="font-medium">Security</span>
                 </div>
                 <p className="mt-1 text-base font-bold text-foreground">
-                  Secured
+                  Audited
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Crown className="size-4 text-purple-500" />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Crown className="size-3.5 text-primary" />
                   <span className="font-medium">Permissions</span>
                 </div>
                 <p className="mt-1 text-base font-bold text-foreground">
-                  Administrative
+                  Active
                 </p>
               </div>
             </>

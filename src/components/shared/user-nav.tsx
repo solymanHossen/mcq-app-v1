@@ -18,13 +18,10 @@ import {
   Sun,
   Moon,
   Laptop,
-  ChevronDown,
-  Sparkles,
   GraduationCap,
   Settings,
-  CreditCard,
-  Check,
   ScrollText,
+  ChevronRight,
 } from "lucide-react"
 
 import {
@@ -32,11 +29,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -65,36 +58,17 @@ function getInitials(name: string) {
     .join("")
 }
 
-function getRoleMeta(role: Role) {
+function formatRole(role: Role) {
   switch (role) {
     case "SUPER_ADMIN":
-      return {
-        label: "Super Admin",
-        badgeClass:
-          "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30",
-        icon: Crown,
-      }
+      return { label: "Super Admin", icon: Crown }
     case "ADMIN":
-      return {
-        label: "Admin",
-        badgeClass:
-          "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
-        icon: ShieldCheck,
-      }
+      return { label: "Admin", icon: ShieldCheck }
     case "TEACHER":
-      return {
-        label: "Teacher",
-        badgeClass:
-          "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
-        icon: GraduationCap,
-      }
+      return { label: "Teacher", icon: GraduationCap }
     case "STUDENT":
     default:
-      return {
-        label: "Student",
-        badgeClass: "bg-primary/15 text-primary border-primary/30",
-        icon: Sparkles,
-      }
+      return { label: "Student", icon: UserIcon }
   }
 }
 
@@ -104,9 +78,15 @@ export function UserNav({
   className,
 }: UserNavProps) {
   const { theme, setTheme } = useTheme()
-  const roleMeta = getRoleMeta(user.role)
+  const roleInfo = formatRole(user.role)
   const homePath = roleHomePath(user.role)
-  const RoleIcon = roleMeta.icon
+  const RoleIcon = roleInfo.icon
+
+  // Safe mounted check for theme switch to avoid SSR mismatch
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
@@ -114,7 +94,7 @@ export function UserNav({
       {showDashboardButton && (
         <Link
           href={homePath}
-          className="hidden h-10 items-center gap-2 rounded-xl border border-border/80 bg-secondary/60 px-4 text-sm font-semibold text-secondary-foreground shadow-xs transition-all duration-200 hover:bg-secondary hover:text-foreground hover:shadow active:scale-95 lg:inline-flex"
+          className="hidden h-10 items-center gap-2 rounded-xl border border-border/80 bg-secondary/50 px-4 text-xs font-semibold text-secondary-foreground shadow-2xs transition-all duration-200 hover:bg-secondary hover:text-foreground active:scale-95 sm:text-sm lg:inline-flex"
         >
           <LayoutDashboard className="size-4 text-primary" />
           <span>Dashboard</span>
@@ -129,35 +109,30 @@ export function UserNav({
             className="group relative flex items-center gap-2 rounded-full p-1 ring-offset-background outline-hidden transition-all duration-200 hover:ring-3 hover:ring-primary/40 focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95"
             aria-label="User account menu"
           >
-            <div className="relative">
-              <Avatar className="size-10 border-2 border-background shadow-md transition-transform duration-200 group-hover:scale-105 sm:size-11">
-                <AvatarFallback className="bg-primary/10 text-sm font-bold text-primary">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-              {/* Online Pulse Indicator */}
-              <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-background bg-emerald-500 shadow-xs" />
-            </div>
-
-            <ChevronDown className="hidden size-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180 sm:block" />
+            <Avatar className="size-10 border-2 border-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-11">
+              <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary sm:text-sm">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-background bg-emerald-500 shadow-xs" />
           </button>
         </DropdownMenuTrigger>
 
-        {/* Large, Spacious, Luxurious Dropdown Content */}
+        {/* Large, Smooth, Modern, World-Class Dropdown Container */}
         <DropdownMenuContent
           align="end"
           sideOffset={10}
-          className="w-76 animate-in rounded-3xl border border-border/80 bg-popover/98 p-2.5 text-popover-foreground shadow-2xl backdrop-blur-2xl duration-200 fade-in-0 zoom-in-95 sm:w-84"
+          className="w-76 animate-in rounded-3xl border border-border/80 bg-popover/98 p-2.5 text-popover-foreground shadow-2xl backdrop-blur-2xl duration-200 fade-in-0 zoom-in-95 sm:w-82"
         >
-          {/* Enhanced User Profile Header */}
-          <div className="mb-1.5 flex items-center gap-3.5 rounded-2xl border border-border/40 bg-muted/40 p-3.5 transition-colors">
-            <Avatar className="size-13 shrink-0 border-2 border-primary/20 shadow-sm">
-              <AvatarFallback className="bg-primary/15 text-base font-extrabold text-primary">
+          {/* Enhanced Spacious User Profile Header */}
+          <div className="mb-2 flex items-center gap-3.5 rounded-2xl border border-border/50 bg-muted/40 p-3.5 transition-colors">
+            <Avatar className="size-12 shrink-0 border-2 border-primary/20 shadow-xs">
+              <AvatarFallback className="bg-primary/15 text-sm font-extrabold text-primary sm:text-base">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-base font-bold tracking-tight text-foreground">
+              <span className="truncate text-base leading-snug font-bold tracking-tight text-foreground">
                 {user.name}
               </span>
               <span className="mt-0.5 truncate text-xs text-muted-foreground sm:text-[13px]">
@@ -165,14 +140,11 @@ export function UserNav({
               </span>
               <div className="mt-1.5 flex items-center">
                 <Badge
-                  variant="outline"
-                  className={cn(
-                    "h-5.5 gap-1 rounded-md px-2 text-[11px] font-semibold",
-                    roleMeta.badgeClass
-                  )}
+                  variant="secondary"
+                  className="h-5 gap-1 rounded-md px-2 text-[11px] font-semibold text-muted-foreground"
                 >
                   <RoleIcon className="size-3" />
-                  {roleMeta.label}
+                  {roleInfo.label}
                 </Badge>
               </div>
             </div>
@@ -180,74 +152,77 @@ export function UserNav({
 
           <DropdownMenuSeparator className="my-1.5" />
 
-          {/* Primary Navigation Items */}
+          {/* Primary Navigation — Large, Smooth Items */}
           <DropdownMenuGroup className="space-y-1">
             <DropdownMenuItem asChild>
               <Link
                 href={homePath}
-                className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-semibold transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
               >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <LayoutDashboard className="size-4.5" />
-                </span>
-                <span className="font-semibold text-foreground">Dashboard</span>
+                <div className="flex items-center gap-3">
+                  <LayoutDashboard className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                  <span className="text-foreground">Dashboard</span>
+                </div>
+                <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link
                 href="/profile"
-                className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-semibold transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
               >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-600 group-hover:text-white dark:text-emerald-400">
-                  <UserIcon className="size-4.5" />
-                </span>
-                <span className="font-semibold text-foreground">
-                  Profile & Account
-                </span>
+                <div className="flex items-center gap-3">
+                  <UserIcon className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                  <span className="text-foreground">Profile & Account</span>
+                </div>
+                <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator className="my-1.5" />
 
-          {/* Dynamic Role-Specific Navigation Items */}
+          {/* Role-Specific Quick Links — Large, Smooth Items */}
           <DropdownMenuGroup className="space-y-1">
             {user.role === "STUDENT" && (
               <>
                 <DropdownMenuItem asChild>
                   <Link
                     href="/exams"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:text-blue-400">
-                      <BookOpen className="size-4.5" />
-                    </span>
-                    <span>My Exams</span>
+                    <div className="flex items-center gap-3">
+                      <BookOpen className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>My Exams</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/mistakes"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">
-                      <RotateCcw className="size-4.5" />
-                    </span>
-                    <span>Mistake Notebook</span>
+                    <div className="flex items-center gap-3">
+                      <RotateCcw className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Mistake Notebook</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/leaderboard"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-yellow-500/10 text-yellow-600 transition-colors group-hover:bg-yellow-600 group-hover:text-white dark:text-yellow-400">
-                      <Trophy className="size-4.5" />
-                    </span>
-                    <span>Leaderboard</span>
+                    <div className="flex items-center gap-3">
+                      <Trophy className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Leaderboard</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
               </>
@@ -258,36 +233,39 @@ export function UserNav({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/teacher/exams"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:text-blue-400">
-                      <ClipboardList className="size-4.5" />
-                    </span>
-                    <span>Manage Exams</span>
+                    <div className="flex items-center gap-3">
+                      <ClipboardList className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Manage Exams</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/teacher/questions"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">
-                      <BookOpen className="size-4.5" />
-                    </span>
-                    <span>Question Bank</span>
+                    <div className="flex items-center gap-3">
+                      <BookOpen className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Question Bank</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/teacher/settings"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white dark:text-purple-400">
-                      <Settings className="size-4.5" />
-                    </span>
-                    <span>Teacher Settings</span>
+                    <div className="flex items-center gap-3">
+                      <Settings className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Teacher Settings</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
               </>
@@ -298,36 +276,39 @@ export function UserNav({
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin/users"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:text-blue-400">
-                      <Users className="size-4.5" />
-                    </span>
-                    <span>User Management</span>
+                    <div className="flex items-center gap-3">
+                      <Users className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>User Directory</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin/teachers"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 transition-colors group-hover:bg-emerald-600 group-hover:text-white dark:text-emerald-400">
-                      <GraduationCap className="size-4.5" />
-                    </span>
-                    <span>Teacher Verification</span>
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Teacher Approvals</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link
                     href="/admin/audit-log"
-                    className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white dark:text-purple-400">
-                      <ScrollText className="size-4.5" />
-                    </span>
-                    <span>System Audit Log</span>
+                    <div className="flex items-center gap-3">
+                      <ScrollText className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>Security Audit</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
 
@@ -335,12 +316,13 @@ export function UserNav({
                   <DropdownMenuItem asChild>
                     <Link
                       href="/admin/settings"
-                      className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]"
+                      className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
                     >
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600 transition-colors group-hover:bg-amber-600 group-hover:text-white dark:text-amber-400">
-                        <Settings className="size-4.5" />
-                      </span>
-                      <span>System Settings</span>
+                      <div className="flex items-center gap-3">
+                        <Settings className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                        <span>System Settings</span>
+                      </div>
+                      <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -350,62 +332,72 @@ export function UserNav({
 
           <DropdownMenuSeparator className="my-1.5" />
 
-          {/* Theme Selector Submenu */}
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 hover:bg-muted/80 sm:text-[15px]">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 transition-colors group-hover:bg-amber-500 group-hover:text-white">
-                <Sun className="size-4.5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <Moon className="absolute size-4.5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-              </span>
+          {/* Minimal 1-Click Segmented Theme Toggle — Spacious & Smooth */}
+          <div className="flex items-center justify-between rounded-xl px-3.5 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted/40 sm:text-sm">
+            <span className="flex items-center gap-2.5 font-medium text-foreground">
+              <Sun className="size-4 text-muted-foreground" />
               <span>Theme Appearance</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-48 rounded-2xl border border-border/80 bg-popover/98 p-1.5 shadow-xl backdrop-blur-xl">
-              <DropdownMenuItem
-                onClick={() => setTheme("light")}
-                className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Sun className="size-4 text-amber-500" />
-                  Light
-                </span>
-                {theme === "light" && <Check className="size-4 text-primary" />}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme("dark")}
-                className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Moon className="size-4 text-sky-400" />
-                  Dark
-                </span>
-                {theme === "dark" && <Check className="size-4 text-primary" />}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setTheme("system")}
-                className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm font-medium"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Laptop className="size-4 text-muted-foreground" />
-                  System
-                </span>
-                {theme === "system" && (
-                  <Check className="size-4 text-primary" />
-                )}
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
+            </span>
+
+            {mounted ? (
+              <div className="flex items-center gap-1 rounded-xl border border-border/50 bg-muted/70 p-1 shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => setTheme("light")}
+                  className={cn(
+                    "flex size-7 items-center justify-center rounded-lg transition-all duration-200",
+                    theme === "light"
+                      ? "scale-105 bg-background font-semibold text-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  title="Light mode"
+                  aria-label="Switch to light mode"
+                >
+                  <Sun className="size-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("dark")}
+                  className={cn(
+                    "flex size-7 items-center justify-center rounded-lg transition-all duration-200",
+                    theme === "dark"
+                      ? "scale-105 bg-background font-semibold text-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  title="Dark mode"
+                  aria-label="Switch to dark mode"
+                >
+                  <Moon className="size-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("system")}
+                  className={cn(
+                    "flex size-7 items-center justify-center rounded-lg transition-all duration-200",
+                    theme === "system"
+                      ? "scale-105 bg-background font-semibold text-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  title="System mode"
+                  aria-label="Switch to system mode"
+                >
+                  <Laptop className="size-3.5" />
+                </button>
+              </div>
+            ) : (
+              <div className="h-7 w-24 animate-pulse rounded-lg bg-muted/60" />
+            )}
+          </div>
 
           <DropdownMenuSeparator className="my-1.5" />
 
-          {/* Log Out Action Button */}
+          {/* Clean Destructive Log Out — Large, Smooth */}
           <DropdownMenuItem
             variant="destructive"
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-destructive transition-all duration-150 focus:bg-destructive/15 sm:text-[15px]"
+            className="group flex cursor-pointer items-center gap-3 rounded-xl px-3.5 py-2.5 text-[14.5px] font-semibold text-destructive transition-all duration-200 focus:bg-destructive/10 focus:text-destructive active:scale-[0.99] sm:text-[15px]"
           >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive transition-colors group-hover:bg-destructive group-hover:text-white">
-              <LogOut className="size-4.5" />
-            </span>
+            <LogOut className="size-4.5 transition-transform duration-200 group-hover:-translate-x-1" />
             <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
