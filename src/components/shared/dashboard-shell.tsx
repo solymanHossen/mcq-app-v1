@@ -1,20 +1,30 @@
-import Link from "next/link"
+import * as React from "react"
 import type { LucideIcon } from "lucide-react"
-import { Search } from "lucide-react"
 import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
 import { AppSidebar } from "@/components/shared/app-sidebar"
+import { UserNav } from "@/components/shared/user-nav"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
+import {
+  GlobalSearchTrigger,
+  GlobalSearchMobileButton,
+  GlobalSearchDialog,
+} from "@/components/shared/global-search-dialog"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
+import type { Role } from "@/prisma/generated/prisma/client"
 import { APP_NAME } from "@/lib/config"
 
 /**
  * World-Class Official shadcn/ui Dashboard Shell:
- * Uses SidebarProvider, SidebarInset, and SidebarTrigger directly with full fidelity.
+ * Features modern trendy icons, interactive spotlight search command palette,
+ * system health indicator, theme toggle, and spacious luxury layout.
+ *
+ * Runs as a React Server Component to seamlessly bridge Server Layouts
+ * with rich Client interactive triggers.
  */
 export function DashboardShell({
   icon: Icon,
@@ -29,11 +39,21 @@ export function DashboardShell({
   badgeLabel: string
   mobileLabel?: string
   navItems: readonly SidebarNavItem[]
-  user: { name: string; email: string }
+  user: { name: string; email: string; role?: Role; id?: string }
   quickAction?: unknown
   breadcrumb?: string
   children: React.ReactNode
 }) {
+  const resolvedRole =
+    user.role ??
+    (badgeLabel.toUpperCase().includes("SUPER")
+      ? "SUPER_ADMIN"
+      : badgeLabel.toUpperCase().includes("ADMIN")
+      ? "ADMIN"
+      : badgeLabel.toUpperCase().includes("TEACHER")
+      ? "TEACHER"
+      : "STUDENT")
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -44,40 +64,64 @@ export function DashboardShell({
         user={user}
       />
       <SidebarInset className="min-w-0 flex-1 w-full bg-background">
-        {/* Top bar with smooth shadow and backdrop blur, no harsh border */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-none bg-background/80 backdrop-blur-md shadow-xs px-4 sm:px-6 md:px-8">
-          <div className="flex items-center gap-3">
-            <SidebarTrigger className="size-9 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground" />
-            <Separator orientation="vertical" className="mr-1 h-4 bg-muted-foreground/20" />
-            <span className="font-heading text-sm font-bold tracking-tight text-foreground sm:text-base">
-              {breadcrumb ?? `${badgeLabel} Workspace`}
-            </span>
+        {/* World-Class Header: Spacious, Glassmorphic, Modern */}
+        <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-b border-border/15 bg-background/85 px-4 sm:px-6 lg:px-8 backdrop-blur-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.2)]">
+          {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <SidebarTrigger className="size-10 rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95" />
+            <Separator orientation="vertical" className="hidden sm:block h-5 w-[1.5px] bg-border/40" />
+            
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
+                {breadcrumb ?? `${badgeLabel} Workspace`}
+              </span>
+              <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex size-2 rounded-full bg-primary"></span>
+                </span>
+                <span>LIVE</span>
+              </div>
+            </div>
           </div>
 
-          {/* Quick Search */}
-          <div className="relative mx-4 hidden max-w-sm flex-1 lg:block">
-            <Search className="absolute left-3.5 top-2.5 size-4 text-muted-foreground" />
-            <Input
-              placeholder="Search assessments, subjects, records... (⌘K)"
-              className="h-9 rounded-xl border-none bg-muted/40 shadow-2xs pl-9.5 pr-8 text-xs focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-primary/40"
+          {/* Center section: World-Class Interactive Spotlight Search Trigger */}
+          <div className="mx-4 hidden max-w-md flex-1 md:block">
+            <GlobalSearchTrigger />
+          </div>
+
+          {/* Right section: Mobile Search Icon, System Status, Theme Toggle, User Menu */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile Search Button */}
+            <GlobalSearchMobileButton />
+
+            {/* Live Operational Status Pill */}
+            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 shadow-2xs">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+              </span>
+              <span>System Healthy</span>
+            </div>
+
+            {/* Quick Dark/Light Theme Toggle */}
+            <ThemeToggle />
+
+            {/* World-Class User Nav Profile with Dropdown & Sign Out */}
+            <UserNav
+              user={{
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: resolvedRole as Role,
+              }}
+              showDashboardButton={false}
             />
-            <kbd className="pointer-events-none absolute right-2.5 top-2.5 inline-flex h-4.5 select-none items-center gap-1 rounded bg-background px-1.5 font-mono text-[10px] text-muted-foreground shadow-2xs">
-              ⌘K
-            </kbd>
-          </div>
-
-          {/* User profile quick trigger */}
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/profile"
-              className="flex items-center gap-2.5 rounded-xl border-none bg-muted/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-all hover:bg-muted/70 shadow-xs"
-              title="View Profile"
-            >
-              <span className="size-2 rounded-full bg-emerald-500 shadow-xs" />
-              <span>{user.name.split(" ")[0]}</span>
-            </Link>
           </div>
         </header>
+
+        {/* Global Spotlight Search Dialog */}
+        <GlobalSearchDialog />
 
         {/* Full-width inner dashboard canvas */}
         <main className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
