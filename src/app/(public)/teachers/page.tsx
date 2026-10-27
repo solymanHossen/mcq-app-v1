@@ -1,11 +1,16 @@
 import type { Metadata } from "next"
-import { TeacherDirectoryClient, type TeacherData, type DirectoryStats } from "./teacher-directory-client"
+import {
+  TeacherDirectoryClient,
+  type TeacherData,
+  type DirectoryStats,
+} from "./teacher-directory-client"
 import { prisma } from "@/lib/prisma"
 import { APP_NAME } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: `Teacher Directory — ${APP_NAME}`,
-  description: "Browse registered teachers and examiners, explore active published exams, and practice with verified academic question banks.",
+  description:
+    "Browse registered teachers and examiners, explore active published exams, and practice with verified academic question banks.",
 }
 
 // @next-codemod-ignore Cache Components adoption
@@ -62,7 +67,9 @@ export default async function TeachersPage() {
       orderBy: { createdAt: "desc" },
     }),
     prisma.user.count({ where: { role: "TEACHER" } }),
-    prisma.user.count({ where: { role: "TEACHER", teacherVerificationStatus: "VERIFIED" } }),
+    prisma.user.count({
+      where: { role: "TEACHER", teacherVerificationStatus: "VERIFIED" },
+    }),
     prisma.exam.count({ where: { status: "PUBLISHED" } }),
     prisma.question.count(),
     prisma.examAttempt.count(),
@@ -81,12 +88,13 @@ export default async function TeachersPage() {
       .map((q) => q.subject.trim())
       .filter((s, idx, arr) => s.length > 0 && arr.indexOf(s) === idx)
 
-    const initials = t.name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("") || "T"
+    const initials =
+      t.name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .join("") || "T"
 
     return {
       id: t.id,
@@ -121,7 +129,7 @@ export default async function TeachersPage() {
   }
 
   return (
-    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20">
+    <div className="pt-24 pb-16 sm:pt-28 sm:pb-20">
       <TeacherDirectoryClient teachers={teachers} stats={stats} />
     </div>
   )
