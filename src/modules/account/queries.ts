@@ -87,6 +87,26 @@ export const getFullProfileData = cache(async (userId: string) => {
 
   let xpTotal = 0
 
+  // For teachers, fetch authored exams, total student attempts, and subjects
+  let teacherExams: Array<{
+    id: string
+    title: string
+    description: string | null
+    status: string
+    durationMinutes: number
+    attemptsCount: number
+    questionsCount: number
+  }> = []
+  let teacherTotalAttempts = 0
+  let teacherSubjects: string[] = []
+
+  // For admins, fetch system overview metrics
+  let adminStats: {
+    totalUsers: number
+    totalPlatformExams: number
+    pendingVerifications: number
+  } | null = null
+
   if (user.role === "STUDENT") {
     const [attempts, xpAggregate] = await Promise.all([
       prisma.examAttempt.findMany({
@@ -122,12 +142,75 @@ export const getFullProfileData = cache(async (userId: string) => {
 
     recentAttempts = attempts
     xpTotal = xpAggregate._sum.amount ?? 0
+  } else if (user.role === "TEACHER") {
+    const [rawExams, totalAttempts, rawQuestions] = await Promise.all([
+      prisma.exam.findMany({
+        where: { teacherId: userId },
+        take: 6,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          durationMinutes: true,
+          _count: {
+            select: {
+              attempts: true,
+              examQuestions: true,
+            },
+          },
+        },
+      }),
+      prisma.examAttempt.count({
+        where: { exam: { teacherId: userId } },
+      }),
+      prisma.question.findMany({
+        where: { teacherId: userId },
+        select: { subject: true },
+        distinct: ["subject"],
+        take: 12,
+      }),
+    ])
+
+    teacherExams = rawExams.map((e) => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      status: e.status,
+      durationMinutes: e.durationMinutes,
+      attemptsCount: e._count.attempts,
+      questionsCount: e._count.examQuestions,
+    }))
+    teacherTotalAttempts = totalAttempts
+    teacherSubjects = rawQuestions
+      .map((q) => q.subject.trim())
+      .filter((s, idx, arr) => s.length > 0 && arr.indexOf(s) === idx)
+  } else if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+    const [totalUsers, totalPlatformExams, pendingVerifications] =
+      await Promise.all([
+        prisma.user.count(),
+        prisma.exam.count({ where: { status: "PUBLISHED" } }),
+        prisma.user.count({
+          where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
+        }),
+      ])
+
+    adminStats = {
+      totalUsers,
+      totalPlatformExams,
+      pendingVerifications,
+    }
   }
 
   return {
     ...user,
     recentAttempts,
     xpTotal,
+    teacherExams,
+    teacherTotalAttempts,
+    teacherSubjects,
+    adminStats,
   }
 })
 

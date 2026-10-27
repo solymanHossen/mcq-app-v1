@@ -4,13 +4,24 @@ import * as React from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import {
+  ArrowRight,
+  Award,
   BookOpen,
+  BookOpenCheck,
+  CheckCircle2,
+  ChevronRight,
   ClipboardList,
+  Clock,
   CreditCard,
+  FileSpreadsheet,
+  GraduationCap,
+  HelpCircle,
   KeyRound,
   Palette,
+  Plus,
   ScrollText,
   ShieldCheck,
+  Sparkles,
   Trophy,
   User as UserIcon,
   Users,
@@ -111,7 +122,12 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
     { key: "security", label: "Security", icon: KeyRound },
     {
       key: "activity",
-      label: "Activity",
+      label:
+        profile.role === "TEACHER"
+          ? "Faculty Portfolio"
+          : profile.role === "STUDENT"
+            ? "Academic Activity"
+            : "Platform Governance",
       icon:
         profile.role === "STUDENT"
           ? Trophy
@@ -142,13 +158,13 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
   return (
     <div className="w-full space-y-8">
-      {/* ================= ULTRA-SMOOTH, LARGE-SIZE SEGMENTED TABS NAV ================= */}
+      {/* ================= FLOATING LUXURY SEGMENTED CONTROL ISLAND ================= */}
       <div className="relative">
         <div className="flex scrollbar-none items-center overflow-x-auto pb-1">
           <nav
             role="tablist"
             aria-label="Profile navigation sections"
-            className="flex min-w-full items-center gap-1.5 rounded-2xl border border-border/80 bg-card/90 p-1.5 shadow-xs backdrop-blur-md sm:w-auto sm:min-w-0 sm:rounded-3xl sm:p-2"
+            className="flex min-w-full items-center gap-1.5 rounded-2xl bg-card/90 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl sm:w-auto sm:min-w-0 sm:rounded-3xl sm:p-2.5 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.3)]"
           >
             {tabsConfig.map((tab) => {
               const Icon = tab.icon
@@ -164,9 +180,9 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                   id={`tab-${tab.key}`}
                   onClick={() => handleSelectTab(tab.key)}
                   className={cn(
-                    "group relative flex h-12 shrink-0 cursor-pointer items-center gap-2.5 rounded-xl px-5 text-sm font-semibold transition-all duration-200 select-none sm:h-13 sm:rounded-2xl sm:px-6 sm:text-base",
+                    "group relative flex h-12 shrink-0 cursor-pointer items-center gap-2.5 rounded-xl px-4.5 text-sm font-semibold transition-all duration-200 select-none sm:h-13 sm:rounded-2xl sm:px-6 sm:text-base",
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-sm"
+                      ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                   )}
                 >
@@ -256,82 +272,331 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-activity"
             aria-labelledby="tab-activity"
-            className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="animate-in space-y-8 duration-300 fade-in-50 slide-in-from-bottom-2"
           >
+            {/* 1. STUDENT VIEW */}
             {profile.role === "STUDENT" && (
-              <StudentActivityCard
-                recentAttempts={profile.recentAttempts}
-                bookmarksCount={profile._count.bookmarks}
-              />
-            )}
+              <div className="space-y-8">
+                <StudentActivityCard
+                  recentAttempts={profile.recentAttempts}
+                  bookmarksCount={profile._count.bookmarks}
+                />
 
-            {profile.role === "TEACHER" && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
-                  <Card className="rounded-[28px] border border-border/80 p-2 shadow-xs transition-all hover:shadow-md">
-                    <CardHeader className="space-y-2 p-6 sm:p-7">
-                      <div className="flex size-13 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                        <ClipboardList className="size-6" />
-                      </div>
-                      <CardTitle className="font-heading text-xl font-bold text-foreground sm:text-2xl">
-                        Created Exams
-                      </CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground sm:text-base">
-                        Total exams authored, published, and scheduled for
-                        student cohorts.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6 p-6 pt-0 sm:p-7 sm:pt-0">
-                      <p className="font-heading text-4xl font-black text-foreground sm:text-5xl">
-                        {profile._count.exams}
-                      </p>
-                      <div>
-                        <Button
-                          asChild
-                          size="lg"
-                          className="h-12 rounded-xl px-6 text-sm font-semibold shadow-xs"
+                {/* Badges showcase if student has earned achievements */}
+                {profile.badges.length > 0 && (
+                  <Card className="rounded-[28px] border border-border/80 shadow-xs">
+                    <CardHeader className="p-6 sm:p-8">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="font-heading text-xl font-bold text-foreground sm:text-2xl">
+                            Earned Achievements &amp; Badges
+                          </CardTitle>
+                          <CardDescription className="mt-1 text-sm text-muted-foreground sm:text-base">
+                            Milestones unlocked through continuous study and
+                            examination excellence.
+                          </CardDescription>
+                        </div>
+                        <Badge
+                          variant="secondary"
+                          className="gap-1.5 rounded-xl px-3 py-1 text-xs font-semibold"
                         >
-                          <Link href="/teacher/exams">Manage Exams Pool →</Link>
-                        </Button>
+                          <Trophy className="size-3.5 text-primary" />
+                          <span>{profile.badges.length} Unlocked</span>
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6 pt-0 sm:p-8 sm:pt-0">
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {profile.badges.map((badge) => (
+                          <div
+                            key={badge.id}
+                            className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 p-4 transition-colors hover:border-primary/40 hover:bg-muted/40"
+                          >
+                            <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                              <Award className="size-5" />
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-heading text-sm font-bold text-foreground capitalize truncate">
+                                {badge.badgeKey
+                                  .replace(/_/g, " ")
+                                  .toLowerCase()}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                Earned{" "}
+                                {new Intl.DateTimeFormat("en-US", {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }).format(new Date(badge.earnedAt))}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
-
-                  <Card className="rounded-[28px] border border-border/80 p-2 shadow-xs transition-all hover:shadow-md">
-                    <CardHeader className="space-y-2 p-6 sm:p-7">
-                      <div className="flex size-13 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                        <BookOpen className="size-6" />
-                      </div>
-                      <CardTitle className="font-heading text-xl font-bold text-foreground sm:text-2xl">
-                        Question Bank
-                      </CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground sm:text-base">
-                        MCQs and assessment questions authored in your private
-                        repository.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6 p-6 pt-0 sm:p-7 sm:pt-0">
-                      <p className="font-heading text-4xl font-black text-foreground sm:text-5xl">
-                        {profile._count.questions}
-                      </p>
-                      <div>
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="lg"
-                          className="h-12 rounded-xl px-6 text-sm font-semibold shadow-xs hover:border-primary/40"
-                        >
-                          <Link href="/teacher/questions">
-                            Explore Questions Vault →
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                )}
               </div>
             )}
 
+            {/* 2. TEACHER VIEW — MATCHING TEACHER DIRECTORY SYSTEM */}
+            {profile.role === "TEACHER" && (
+              <div className="space-y-8">
+                {/* Quick Educator Action Hub */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+                  <Link
+                    href="/teacher/exams/new"
+                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                  >
+                    <div className="flex items-center gap-4 sm:gap-5">
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
+                        <Plus className="size-7 sm:size-8" />
+                      </span>
+                      <div>
+                        <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
+                          Create Exam
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                          Author new timed assessment
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+                  </Link>
+
+                  <Link
+                    href="/teacher/questions/new"
+                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                  >
+                    <div className="flex items-center gap-4 sm:gap-5">
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-indigo-500/15 dark:text-indigo-400">
+                        <BookOpen className="size-7 sm:size-8" />
+                      </span>
+                      <div>
+                        <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
+                          Add Questions
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                          Expand question bank vault
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+                  </Link>
+
+                  <Link
+                    href="/teacher/exams"
+                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                  >
+                    <div className="flex items-center gap-4 sm:gap-5">
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-emerald-500/15 dark:text-emerald-400">
+                        <Users className="size-7 sm:size-8" />
+                      </span>
+                      <div>
+                        <p className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
+                          Cohorts &amp; Results
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                          Review student submissions
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+                  </Link>
+                </div>
+
+                {/* Academic Specialization Subjects (Clean Tags matching Teacher Directory) */}
+                {profile.teacherSubjects.length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
+                      Authored Academic Subjects
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                      {profile.teacherSubjects.map((subject) => (
+                        <span
+                          key={subject}
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-muted/60 px-3.5 py-1.5 text-xs font-semibold text-foreground/90 transition-colors hover:bg-muted/90 sm:px-4 sm:py-2 sm:text-sm"
+                        >
+                          <BookOpen className="size-3.5 text-primary" />
+                          <span>{subject}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Sculpted 3-Tile KPI Metrics System */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+                  {/* Tile 1: Created Exams */}
+                  <div className="group flex flex-col justify-between rounded-2xl bg-card p-5 shadow-xs transition-all duration-300 hover:shadow-md sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                        Created Exams
+                      </span>
+                      <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                        <FileSpreadsheet className="size-4.5" />
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <p className="font-heading text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+                        {profile._count.exams}
+                      </p>
+                      <p className="mt-0.5 text-xs font-medium text-muted-foreground sm:text-sm">
+                        Total authored exams
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Tile 2: Question Vault */}
+                  <div className="group flex flex-col justify-between rounded-2xl bg-card p-5 shadow-xs transition-all duration-300 hover:shadow-md sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                        Question Bank
+                      </span>
+                      <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 transition-transform group-hover:scale-110 dark:bg-indigo-500/15 dark:text-indigo-400">
+                        <HelpCircle className="size-4.5" />
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <p className="font-heading text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+                        {profile._count.questions}
+                      </p>
+                      <p className="mt-0.5 text-xs font-medium text-muted-foreground sm:text-sm">
+                        Items in question vault
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Tile 3: Student Submissions */}
+                  <div className="group flex flex-col justify-between rounded-2xl bg-card p-5 shadow-xs transition-all duration-300 hover:shadow-md sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase sm:text-xs">
+                        Student Takers
+                      </span>
+                      <span className="flex size-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 transition-transform group-hover:scale-110 dark:bg-emerald-500/15 dark:text-emerald-400">
+                        <Users className="size-4.5" />
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <p className="font-heading text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+                        {profile.teacherTotalAttempts}
+                      </p>
+                      <p className="mt-0.5 text-xs font-medium text-muted-foreground sm:text-sm">
+                        Submissions recorded
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Published & Draft Assessment Tracks Showcase */}
+                <Card className="rounded-[28px] border border-border/80 shadow-xs">
+                  <CardHeader className="border-b border-border/60 p-6 sm:p-8">
+                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                      <div>
+                        <CardTitle className="font-heading text-xl font-bold text-foreground sm:text-2xl">
+                          Recent Authored Exams
+                        </CardTitle>
+                        <CardDescription className="mt-1 text-sm text-muted-foreground sm:text-base">
+                          Your examination tracks, scheduled durations, question
+                          counts, and student cohort participation.
+                        </CardDescription>
+                      </div>
+                      <Button
+                        asChild
+                        variant="secondary"
+                        className="self-start rounded-xl text-xs font-semibold sm:self-auto sm:text-sm"
+                      >
+                        <Link href="/teacher/exams">
+                          <span>Manage all exams</span>
+                          <ChevronRight className="ml-1 size-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 sm:p-8">
+                    {profile.teacherExams.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                          <BookOpenCheck className="size-7" />
+                        </div>
+                        <p className="text-lg font-bold text-foreground">
+                          No exams created yet
+                        </p>
+                        <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+                          Start authoring assessments to publish tests to
+                          students and review their performance here.
+                        </p>
+                        <Button
+                          asChild
+                          className="mt-6 rounded-xl px-6 text-sm font-semibold shadow-xs"
+                        >
+                          <Link href="/teacher/exams/new">
+                            Create First Exam
+                          </Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {profile.teacherExams.map((exam) => (
+                          <div
+                            key={exam.id}
+                            className="group flex flex-col justify-between gap-3.5 rounded-2xl border border-border/70 bg-card p-4 transition-all duration-200 hover:border-border hover:bg-muted/30 hover:shadow-xs min-[540px]:flex-row min-[540px]:items-center sm:p-5"
+                          >
+                            <div className="min-w-0 space-y-1">
+                              <div className="flex flex-wrap items-center gap-2.5">
+                                <h4 className="font-heading text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                                  {exam.title}
+                                </h4>
+                                <Badge
+                                  variant={
+                                    exam.status === "PUBLISHED"
+                                      ? "default"
+                                      : "secondary"
+                                  }
+                                  className="rounded-lg text-[11px] font-semibold"
+                                >
+                                  {exam.status === "PUBLISHED"
+                                    ? "Published"
+                                    : "Draft"}
+                                </Badge>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
+                                <span className="inline-flex items-center gap-1.5 font-medium">
+                                  <Clock className="size-3.5 text-muted-foreground" />
+                                  <span>{exam.durationMinutes} min</span>
+                                </span>
+                                <span>•</span>
+                                <span className="font-medium">
+                                  {exam.questionsCount} questions
+                                </span>
+                                <span>•</span>
+                                <span className="font-semibold text-foreground">
+                                  {exam.attemptsCount} student takers
+                                </span>
+                              </div>
+                            </div>
+
+                            <Button
+                              asChild
+                              variant="outline"
+                              size="sm"
+                              className="self-start rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40 min-[540px]:self-center"
+                            >
+                              <Link href={`/teacher/exams/${exam.id}`}>
+                                <span>Manage Exam</span>
+                                <ArrowRight className="ml-1 size-3.5" />
+                              </Link>
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* 3. ADMIN VIEW */}
             {(profile.role === "ADMIN" || profile.role === "SUPER_ADMIN") && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
@@ -344,7 +609,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                         <Users className="size-7" />
                       </span>
                       <h3 className="font-heading text-xl font-bold text-foreground">
-                        User Management
+                        User Directory &amp; Roles
                       </h3>
                       <p className="text-sm leading-relaxed text-muted-foreground">
                         Inspect active students, teachers, role elevations, and
@@ -365,7 +630,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                         <ShieldCheck className="size-7" />
                       </span>
                       <h3 className="font-heading text-xl font-bold text-foreground">
-                        Teacher Verification
+                        Teacher Verification Queue
                       </h3>
                       <p className="text-sm leading-relaxed text-muted-foreground">
                         Review pending teacher applications and grant publishing
@@ -493,3 +758,4 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
     </div>
   )
 }
+
