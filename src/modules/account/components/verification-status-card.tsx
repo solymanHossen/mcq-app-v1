@@ -1,15 +1,26 @@
 import { ShieldCheck, ShieldAlert, ShieldQuestion } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
 
 const STATUS_COPY: Record<
   TeacherVerificationStatus,
-  { label: string; description: string; icon: typeof ShieldCheck; badgeVariant: "default" | "secondary" | "destructive" }
+  {
+    label: string
+    description: string
+    icon: typeof ShieldCheck
+    badgeVariant: "default" | "secondary" | "destructive"
+  }
 > = {
   VERIFIED: {
     label: "Verified",
-    description: "Your account is verified — you can publish exams to students.",
+    description:
+      "Your account is verified — you can publish exams to students.",
     icon: ShieldCheck,
     badgeVariant: "default",
   },
@@ -60,7 +71,8 @@ export function VerificationStatusCard({
           <CardDescription>{description}</CardDescription>
           {note && status !== "VERIFIED" && (
             <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">Admin note:</span> {note}
+              <span className="font-medium text-foreground">Admin note:</span>{" "}
+              {note}
             </p>
           )}
         </div>

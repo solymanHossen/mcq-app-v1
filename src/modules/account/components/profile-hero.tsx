@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import {
   Calendar,
   Check,
@@ -11,7 +10,6 @@ import {
   Crown,
   Flame,
   GraduationCap,
-  LayoutDashboard,
   Mail,
   ShieldCheck,
   Sparkles,
@@ -23,7 +21,6 @@ import { toast } from "sonner"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { roleHomePath } from "@/lib/auth.config"
 import { cn } from "@/lib/utils"
 import type {
   Role,
@@ -81,7 +78,6 @@ export function ProfileHero({ user }: ProfileHeroProps) {
   const [copiedEmail, setCopiedEmail] = React.useState(false)
   const roleInfo = getRoleLabel(user.role)
   const RoleIcon = roleInfo.icon
-  const homePath = roleHomePath(user.role)
 
   const joinedFormatted = new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -195,17 +191,6 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               )}
             </div>
           </div>
-        </div>
-
-        {/* Right: Quick Role Dashboard Action */}
-        <div className="flex items-center gap-3 self-start md:self-center">
-          <Link
-            href={homePath}
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-border/80 bg-card px-5 text-sm font-semibold text-foreground shadow-2xs transition-all hover:border-primary/40 hover:bg-muted active:scale-95"
-          >
-            <LayoutDashboard className="size-4 text-primary" />
-            <span>Dashboard</span>
-          </Link>
         </div>
       </div>
 

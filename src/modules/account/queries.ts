@@ -130,3 +130,6 @@ export const getFullProfileData = cache(async (userId: string) => {
     xpTotal,
   }
 })
+
+export type FullProfileData = Awaited<ReturnType<typeof getFullProfileData>>
+
