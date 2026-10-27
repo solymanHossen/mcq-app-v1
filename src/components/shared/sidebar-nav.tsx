@@ -38,20 +38,23 @@ export function SidebarNav({
             title={collapsed ? label : undefined}
             className={cn(
               variant === "sidebar"
-                ? "flex items-center rounded-xl text-sm font-medium text-muted-foreground transition-all duration-200 [&_svg]:size-4 hover:bg-muted hover:text-foreground active:scale-[0.98]"
-                : "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap text-muted-foreground transition-colors [&_svg]:size-3.5 hover:text-foreground",
+                ? "flex items-center rounded-2xl text-[15px] font-medium transition-all duration-200 [&_svg]:size-5 active:scale-[0.98]"
+                : "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors [&_svg]:size-4",
               variant === "sidebar" &&
                 (collapsed
-                  ? "justify-center p-2.5"
-                  : "gap-2.5 px-3 py-2"),
-              active &&
-                (variant === "sidebar"
-                  ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-semibold"
-                  : "border-primary/40 bg-primary/10 text-primary hover:text-primary")
+                  ? "size-12 justify-center p-0 mx-auto"
+                  : "h-11.5 gap-3.5 px-4 py-3"),
+              active
+                ? variant === "sidebar"
+                  ? "bg-primary text-primary-foreground font-bold shadow-sm [&_svg]:text-primary-foreground hover:bg-primary/95 hover:text-primary-foreground"
+                  : "border-primary bg-primary text-primary-foreground font-bold shadow-xs [&_svg]:text-primary-foreground"
+                : variant === "sidebar"
+                  ? "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                  : "border-border/80 text-muted-foreground hover:text-foreground hover:bg-muted/50"
             )}
           >
             {icon}
-            {!collapsed && <span>{label}</span>}
+            {!collapsed && <span className="tracking-tight">{label}</span>}
             {collapsed && <span className="sr-only">{label}</span>}
           </Link>
         )

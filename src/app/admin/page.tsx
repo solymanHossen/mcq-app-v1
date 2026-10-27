@@ -123,12 +123,12 @@ export default async function AdminDashboardPage() {
   )
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8">
+    <div className="w-full min-w-0 flex flex-col gap-6 sm:gap-8">
       {/* ================= GRAND PROFILE HERO ================= */}
       <ProfileHero user={heroUser} />
 
       {/* ================= QUICK EXECUTIVE ACTION HUB ================= */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+      <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
         <Link
           href="/admin/users"
           className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
@@ -191,7 +191,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* ================= 4-TILE GRAND KPI METRICS ROW ================= */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+      <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
         {/* KPI 1: Total Users */}
         <DashboardKpiCard
           title="Total Users"

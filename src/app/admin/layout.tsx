@@ -51,10 +51,6 @@ export default async function AdminLayout({
       mobileLabel={isSuperAdmin ? `${APP_NAME} Super Admin` : `${APP_NAME} Admin`}
       navItems={navItems}
       user={admin}
-      quickAction={{
-        label: "Manage Users",
-        href: "/admin/users",
-      }}
       breadcrumb="Admin Console"
     >
       {children}
