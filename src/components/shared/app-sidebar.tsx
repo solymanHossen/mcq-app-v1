@@ -52,7 +52,11 @@ export function AppSidebar({
   const isCollapsed = state === "collapsed"
 
   return (
-    <Sidebar collapsible="icon" className="border-none shadow-[2px_0_20px_rgba(0,0,0,0.03)] dark:shadow-[2px_0_20px_rgba(0,0,0,0.3)] bg-sidebar" {...props}>
+    <Sidebar
+      collapsible="icon"
+      className="border-none bg-sidebar z-30 shadow-[1px_0_3px_rgba(0,0,0,0.02),_6px_0_20px_-4px_rgba(0,0,0,0.06),_16px_0_40px_-6px_rgba(0,0,0,0.04)] dark:shadow-[1px_0_4px_rgba(0,0,0,0.3),_8px_0_30px_-4px_rgba(0,0,0,0.6),_18px_0_50px_-6px_rgba(0,0,0,0.4)]"
+      {...props}
+    >
       {/* Brand Header */}
       <SidebarHeader className="h-16 border-b-0 p-0">
         <div className="flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">

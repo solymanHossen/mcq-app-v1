@@ -65,7 +65,7 @@ export function DashboardShell({
       />
       <SidebarInset className="min-w-0 flex-1 w-full bg-background">
         {/* World-Class Header: Spacious, Glassmorphic, Modern */}
-        <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-b border-border/15 bg-background/85 px-4 sm:px-6 lg:px-8 backdrop-blur-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.2)]">
+        <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-none bg-background/90 px-4 sm:px-6 lg:px-8 backdrop-blur-2xl shadow-[0_1px_3px_rgba(0,0,0,0.02),_0_6px_20px_-4px_rgba(0,0,0,0.06),_0_16px_40px_-6px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_4px_rgba(0,0,0,0.3),_0_8px_30px_-4px_rgba(0,0,0,0.6),_0_18px_50px_-6px_rgba(0,0,0,0.4)]">
           {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <SidebarTrigger className="size-10 rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95" />
