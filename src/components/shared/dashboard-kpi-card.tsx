@@ -39,14 +39,14 @@ export function DashboardKpiCard({
   const cardElement = (
     <Card
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition-all duration-200 sm:p-6",
-        href && "hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        href && "hover:border-primary/40",
         highlight && "ring-1 ring-destructive/40 border-destructive/30",
         className
       )}
     >
       <CardHeader className="flex flex-row items-center justify-between gap-2 p-0">
-        <CardDescription className="text-xs font-medium tracking-wide text-muted-foreground uppercase sm:text-sm sm:normal-case">
+        <CardDescription className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
           {title}
         </CardDescription>
 
@@ -60,9 +60,9 @@ export function DashboardKpiCard({
                   : "outline"
             }
             className={cn(
-              "flex items-center gap-1 font-mono text-[11px] font-medium tracking-tight rounded-full px-2 py-0.5",
-              trend === "up" && "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5",
-              trend === "down" && "border-destructive/30 text-destructive bg-destructive/5"
+              "flex items-center gap-1 font-mono text-xs font-semibold tracking-tight rounded-full px-2.5 py-0.5 shadow-2xs",
+              trend === "up" && "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+              trend === "down" && "border-destructive/30 text-destructive bg-destructive/10"
             )}
           >
             <TrendIcon className="size-3" />
@@ -71,18 +71,18 @@ export function DashboardKpiCard({
         )}
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-3 p-0 pt-3">
-        <CardTitle className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+      <CardContent className="flex flex-col gap-3 p-0 pt-4">
+        <CardTitle className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           {value}
         </CardTitle>
 
         {(trendLabel || subtext) && (
-          <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
+          <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:text-sm">
             {trendLabel && (
-              <span className="flex items-center gap-1.5 font-medium text-foreground">
+              <span className="flex items-center gap-1.5 font-semibold text-foreground">
                 <TrendIcon
                   className={cn(
-                    "size-3.5",
+                    "size-4",
                     trend === "up" && "text-emerald-600 dark:text-emerald-400",
                     trend === "down" && "text-destructive",
                     trend === "neutral" && "text-muted-foreground"
@@ -91,7 +91,7 @@ export function DashboardKpiCard({
                 <span>{trendLabel}</span>
               </span>
             )}
-            {subtext && <span>{subtext}</span>}
+            {subtext && <span className="text-muted-foreground">{subtext}</span>}
           </div>
         )}
       </CardContent>

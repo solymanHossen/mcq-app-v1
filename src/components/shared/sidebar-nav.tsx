@@ -7,13 +7,6 @@ import { cn } from "@/lib/utils"
 export type SidebarNavItem = {
   href: string
   label: string
-  // A rendered element (e.g. `<Users />`), not the icon's component type —
-  // this is a Client Component, and a Server Component layout can hand it
-  // an already-rendered element to display, but not a bare function to call
-  // (React Flight can't serialize an arbitrary component reference across
-  // the server/client boundary, only resolved output). Left unsized here
-  // (no `size-*` class) so the sidebar/mobile variants below can size it
-  // via `[&_svg]:size-*` on the ancestor link.
   icon: React.ReactNode
   exact?: boolean
 }
@@ -21,10 +14,12 @@ export type SidebarNavItem = {
 export function SidebarNav({
   items,
   variant = "sidebar",
+  collapsed = false,
   className,
 }: {
   items: readonly SidebarNavItem[]
   variant?: "sidebar" | "mobile"
+  collapsed?: boolean
   className?: string
 }) {
   const pathname = usePathname()
@@ -40,18 +35,24 @@ export function SidebarNav({
           <Link
             key={href}
             href={href}
+            title={collapsed ? label : undefined}
             className={cn(
               variant === "sidebar"
-                ? "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors [&_svg]:size-4 hover:bg-muted hover:text-foreground"
+                ? "flex items-center rounded-xl text-sm font-medium text-muted-foreground transition-all duration-200 [&_svg]:size-4 hover:bg-muted hover:text-foreground active:scale-[0.98]"
                 : "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap text-muted-foreground transition-colors [&_svg]:size-3.5 hover:text-foreground",
+              variant === "sidebar" &&
+                (collapsed
+                  ? "justify-center p-2.5"
+                  : "gap-2.5 px-3 py-2"),
               active &&
                 (variant === "sidebar"
-                  ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                  ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-semibold"
                   : "border-primary/40 bg-primary/10 text-primary hover:text-primary")
             )}
           >
             {icon}
-            {label}
+            {!collapsed && <span>{label}</span>}
+            {collapsed && <span className="sr-only">{label}</span>}
           </Link>
         )
       })}
