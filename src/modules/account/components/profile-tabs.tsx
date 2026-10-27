@@ -159,11 +159,11 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
   return (
     <div className="w-full space-y-8">
       {/* ================= GORGEOUS MODERN SEGMENTED PILL DOCK ================= */}
-      <div className="flex items-center overflow-x-auto pb-1 scrollbar-none">
+      <div className="w-full overflow-x-auto pb-1 scrollbar-none">
         <nav
           role="tablist"
           aria-label="Profile navigation sections"
-          className="inline-flex items-center gap-1.5 rounded-2xl bg-muted/40 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
+          className="flex w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
         >
           {tabsConfig.map((tab) => {
             const Icon = tab.icon
@@ -179,7 +179,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                 id={`tab-${tab.key}`}
                 onClick={() => handleSelectTab(tab.key)}
                 className={cn(
-                  "group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[14px]",
+                  "group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-4 sm:py-2.5 sm:text-[14px]",
                   isActive
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
@@ -193,7 +193,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                       : "text-muted-foreground group-hover:text-primary"
                   )}
                 />
-                <span>{tab.label}</span>
+                <span className="whitespace-nowrap">{tab.label}</span>
 
                 {tab.badge !== undefined && (
                   <span

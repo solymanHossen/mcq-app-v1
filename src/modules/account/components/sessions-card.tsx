@@ -34,7 +34,7 @@ export function SessionsCard() {
 
         <div className="space-y-4">
           {/* Current Active Session Card */}
-          <div className="flex items-center justify-between rounded-2xl bg-muted/30 p-4.5 transition-all duration-200 hover:bg-muted/50">
+          <div className="flex items-center justify-between rounded-2xl bg-muted/50 p-4.5 transition-all duration-200 hover:bg-muted/70">
             <div className="flex items-center gap-3.5">
               <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Laptop className="size-5" />

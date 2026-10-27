@@ -62,7 +62,7 @@ export function ProfileCard({
                 maxLength={100}
                 required
                 placeholder="Your full name"
-                className="h-13.5 w-full rounded-2xl bg-muted/30 px-5 text-base font-medium text-foreground transition-all placeholder:text-muted-foreground/50 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14"
+                className="h-13.5 w-full rounded-2xl bg-muted/60 px-5 text-base font-medium text-foreground transition-all placeholder:text-muted-foreground/50 hover:bg-muted/80 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14"
               />
             </div>
 
@@ -85,7 +85,7 @@ export function ProfileCard({
                 value={email}
                 disabled
                 readOnly
-                className="h-13.5 w-full cursor-not-allowed rounded-2xl bg-muted/20 px-5 font-medium text-muted-foreground select-all sm:h-14"
+                className="h-13.5 w-full cursor-not-allowed rounded-2xl bg-muted/40 px-5 font-medium text-muted-foreground select-all sm:h-14"
               />
             </div>
           </div>

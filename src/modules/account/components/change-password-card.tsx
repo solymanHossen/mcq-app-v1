@@ -83,7 +83,7 @@ export function ChangePasswordCard() {
                   value={currentPassword}
                   onChange={(event) => setCurrentPassword(event.target.value)}
                   required
-                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/60 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/50 hover:bg-muted/80 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                   placeholder="Enter existing password"
                 />
                 <button
@@ -119,7 +119,7 @@ export function ChangePasswordCard() {
                   onChange={(event) => setNewPassword(event.target.value)}
                   minLength={8}
                   required
-                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/60 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/50 hover:bg-muted/80 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                 />
                 <button
                   type="button"
@@ -153,7 +153,7 @@ export function ChangePasswordCard() {
                   onChange={(event) => setConfirmPassword(event.target.value)}
                   minLength={8}
                   required
-                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/60 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/50 hover:bg-muted/80 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                   placeholder="Repeat new password"
                 />
                 <button
@@ -172,7 +172,7 @@ export function ChangePasswordCard() {
             </div>
 
             {/* Realtime Password Integrity Meter */}
-            <div className="space-y-1.5 rounded-2xl bg-muted/30 p-3.5 text-xs">
+            <div className="space-y-1.5 rounded-2xl bg-muted/60 p-3.5 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   className={

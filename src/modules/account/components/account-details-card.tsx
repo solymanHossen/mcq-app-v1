@@ -75,7 +75,7 @@ export function AccountDetailsCard({
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Account ID (UUID)
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between gap-3 rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
+            <div className="flex h-13.5 w-full items-center justify-between gap-3 rounded-2xl bg-muted/50 px-5 transition-all hover:bg-muted/70 sm:h-14">
               <code className="truncate font-mono text-xs font-semibold text-foreground sm:text-sm select-all">
                 {id}
               </code>
@@ -106,7 +106,7 @@ export function AccountDetailsCard({
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Authority Level
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/50 px-5 transition-all hover:bg-muted/70 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {getRoleTitle(role)}
               </span>
@@ -125,7 +125,7 @@ export function AccountDetailsCard({
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Security & Verification
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/50 px-5 transition-all hover:bg-muted/70 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {isEmailVerified ? "Email Address Verified" : "Verification Required"}
               </span>
@@ -157,7 +157,7 @@ export function AccountDetailsCard({
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Member Since
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/50 px-5 transition-all hover:bg-muted/70 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {createdDate}
               </span>

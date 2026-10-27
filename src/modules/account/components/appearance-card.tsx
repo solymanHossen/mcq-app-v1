@@ -64,7 +64,7 @@ export function AppearanceCard() {
                     "group flex items-center justify-between rounded-2xl p-4 text-left transition-all duration-200 cursor-pointer sm:p-5",
                     active
                       ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-xs"
-                      : "bg-muted/30 text-foreground hover:bg-muted/60"
+                      : "bg-muted/50 text-foreground hover:bg-muted/70"
                   )}
                   aria-pressed={active}
                 >
