@@ -49,111 +49,113 @@ export function StudentActivityCard({
   bookmarksCount,
 }: StudentActivityCardProps) {
   return (
-    <div className="space-y-6">
-      {/* Quick Action Shortcuts Grid */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="space-y-8">
+      {/* Quick Action Shortcuts Grid — Large, Premium Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Link
           href="/exams"
-          className="group flex items-center justify-between rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-sm active:scale-98"
+          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-primary/50 hover:shadow-md active:scale-98"
         >
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-105">
-              <BookOpen className="size-5" />
+          <div className="flex items-center gap-4">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-105">
+              <BookOpen className="size-6" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-base font-bold text-foreground">
                 Exams Catalog
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
                 Practice & take exams
               </p>
             </div>
           </div>
-          <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
 
         <Link
           href="/mistakes"
-          className="group flex items-center justify-between rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-sm active:scale-98"
+          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-amber-500/50 hover:shadow-md active:scale-98"
         >
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 transition-transform group-hover:scale-105">
-              <RotateCcw className="size-5" />
+          <div className="flex items-center gap-4">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 transition-transform duration-200 group-hover:scale-105">
+              <RotateCcw className="size-6" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-base font-bold text-foreground">
                 Mistake Notebook
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
                 Review wrong answers
               </p>
             </div>
           </div>
-          <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
 
         <Link
           href="/leaderboard"
-          className="group flex items-center justify-between rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-sm active:scale-98"
+          className="group flex items-center justify-between rounded-2xl border border-border/80 bg-card p-5 transition-all duration-200 hover:border-yellow-500/50 hover:shadow-md active:scale-98"
         >
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-500 transition-transform group-hover:scale-105">
-              <Trophy className="size-5" />
+          <div className="flex items-center gap-4">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-500/10 text-yellow-500 transition-transform duration-200 group-hover:scale-105">
+              <Trophy className="size-6" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-foreground">
-                Leaderboard
-              </p>
-              <p className="text-xs text-muted-foreground">
-                See ranking & scores
+              <p className="text-base font-bold text-foreground">Leaderboard</p>
+              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+                Rankings & top scores
               </p>
             </div>
           </div>
-          <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+          <ChevronRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
       </div>
 
-      {/* Recent Exam Attempts Card */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
+      {/* Recent Exam Attempts Card — Larger, Spacious, Modern Design */}
+      <Card className="overflow-hidden rounded-3xl border-border/80 shadow-sm">
+        <CardHeader className="border-b border-border/60 p-6 sm:p-7">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
             <div>
-              <CardTitle>Recent Exam Activity</CardTitle>
-              <CardDescription>
-                Your latest tests, score breakdowns, and performance outcomes.
+              <CardTitle className="text-lg font-bold tracking-tight sm:text-xl">
+                Recent Exam Activity
+              </CardTitle>
+              <CardDescription className="mt-1 text-xs sm:text-sm">
+                Your latest tests, score breakdowns, accuracy rates, and
+                performance outcomes.
               </CardDescription>
             </div>
             <Link
               href="/exams"
-              className="text-xs font-semibold text-primary hover:underline"
+              className="inline-flex h-9 items-center gap-1.5 self-start rounded-xl bg-secondary px-3.5 text-xs font-semibold text-secondary-foreground transition-colors hover:bg-secondary/80 sm:self-auto sm:text-sm"
             >
-              View all
+              <span>View all exams</span>
+              <ChevronRight className="size-3.5" />
             </Link>
           </div>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="p-6 sm:p-7">
           {recentAttempts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-center">
-              <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-                <Sparkles className="size-6" />
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                <Sparkles className="size-7" />
               </div>
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-base font-bold text-foreground">
                 No exam attempts yet
               </p>
-              <p className="mt-1 max-w-xs text-xs text-muted-foreground">
+              <p className="mt-1 max-w-sm text-xs text-muted-foreground sm:text-sm">
                 Start practicing with available question banks and mock exams to
-                track your progress here.
+                track your progress and stats here.
               </p>
               <Link
                 href="/exams"
-                className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 active:scale-95"
+                className="mt-5 inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-5 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90 active:scale-95 sm:text-sm"
               >
-                Explore Exams
+                <span>Explore Exams Catalog</span>
               </Link>
             </div>
           ) : (
-            <div className="divide-y divide-border/60">
+            <div className="space-y-3.5">
               {recentAttempts.map((attempt) => {
                 const dateFormatted = new Intl.DateTimeFormat("en-US", {
                   month: "short",
@@ -173,38 +175,50 @@ export function StudentActivityCard({
                 return (
                   <div
                     key={attempt.id}
-                    className="flex flex-col justify-between gap-3 py-3.5 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
+                    className="flex flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-muted/20 p-4 transition-all duration-200 hover:border-border hover:bg-muted/50 hover:shadow-xs sm:flex-row sm:items-center sm:p-5"
                   >
-                    <div className="min-w-0 space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="truncate text-sm font-semibold text-foreground">
+                    {/* Left: Title, Status, and Date */}
+                    <div className="min-w-0 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <p className="text-base font-bold tracking-tight text-foreground sm:text-lg">
                           {attempt.exam.title}
                         </p>
                         <Badge
                           variant="outline"
-                          className="text-[10px] font-medium"
+                          className={
+                            isCompleted
+                              ? "border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"
+                              : "bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+                          }
                         >
                           {isCompleted ? "Completed" : "In Progress"}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Clock className="size-3" />
-                        <span>{dateFormatted}</span>
+
+                      <div className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
+                        <span className="flex items-center gap-1.5">
+                          <Clock className="size-3.5" />
+                          {dateFormatted}
+                        </span>
                         <span>•</span>
-                        <span className="capitalize">
+                        <span className="font-medium capitalize">
                           {attempt.status.toLowerCase().replace("_", " ")}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 self-end sm:self-center">
+                    {/* Right: Scores & Outcomes */}
+                    <div className="flex shrink-0 items-center gap-4 self-end sm:self-center">
                       {attempt.result && (
                         <div className="text-right">
-                          <p className="text-sm font-bold text-foreground">
+                          <p className="text-base font-extrabold text-foreground sm:text-lg">
                             {score}
                           </p>
-                          <p className="text-[11px] text-muted-foreground">
-                            Accuracy: {accuracy}
+                          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
+                            Accuracy:{" "}
+                            <span className="font-semibold text-foreground">
+                              {accuracy}
+                            </span>
                           </p>
                         </div>
                       )}
@@ -213,20 +227,23 @@ export function StudentActivityCard({
                         attempt.result?.isPassed !== null && (
                           <Badge
                             variant="outline"
-                            className={
+                            className={cn(
+                              "h-7 gap-1.5 rounded-xl px-3 text-xs font-semibold sm:h-8 sm:text-sm",
                               attempt.result.isPassed
-                                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                : "border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400"
-                            }
+                                ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                : "border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                            )}
                           >
                             {attempt.result.isPassed ? (
-                              <CheckCircle2 className="mr-1 size-3" />
+                              <CheckCircle2 className="size-4" />
                             ) : (
-                              <XCircle className="mr-1 size-3" />
+                              <XCircle className="size-4" />
                             )}
-                            {attempt.result.isPassed
-                              ? "Passed"
-                              : "Needs Review"}
+                            <span>
+                              {attempt.result.isPassed
+                                ? "Passed"
+                                : "Needs Review"}
+                            </span>
                           </Badge>
                         )}
                     </div>
