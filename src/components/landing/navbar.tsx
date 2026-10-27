@@ -3,14 +3,18 @@
 import * as React from "react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
+import { useTheme } from "next-themes"
 import {
   ArrowRight,
   Building2,
   ChevronRight,
+  Laptop,
   LayoutDashboard,
   LogOut,
   Menu,
+  Moon,
   Sparkles,
+  Sun,
   User as UserIcon,
   Users,
   X,
@@ -56,6 +60,12 @@ function getInitials(name: string) {
 export function Navbar({ user, className }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Track scroll state for enhanced elevation
   React.useEffect(() => {
@@ -92,13 +102,18 @@ export function Navbar({ user, className }: NavbarProps) {
         className
       )}
     >
-      {/* Standard Container Wrapper */}
-      <div className="container mx-auto px-4 pt-3 sm:px-6 sm:pt-5">
+      {/* Mobile: 100% full-width flush to top. Desktop/Tablet: floating container */}
+      <div className="w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5">
         <div
           className={cn(
-            "relative flex h-16 items-center justify-between rounded-2xl border px-4 transition-all duration-300 sm:h-[68px] sm:rounded-[22px] sm:px-7",
-            "border-border/80 bg-card/85 text-card-foreground shadow-xs backdrop-blur-2xl",
-            scrolled && "border-border bg-card/95 shadow-md backdrop-blur-2xl"
+            "relative flex h-16 w-full items-center justify-between px-4 transition-all duration-300 sm:h-[68px] sm:px-7",
+            // Mobile: Full-width, flush to top, edge-to-edge, NO rounded corners, bottom border only
+            "rounded-none border-0 border-b border-border/80 bg-card/95 text-card-foreground shadow-none backdrop-blur-2xl",
+            // Tablet/Desktop (sm+): Floating rounded pill with full border and subtle shadow
+            "sm:rounded-[22px] sm:border sm:border-border/80 sm:bg-card/85 sm:shadow-xs",
+            // Scrolled states
+            scrolled &&
+              "border-border bg-card/98 shadow-sm sm:border-border sm:bg-card/95 sm:shadow-md"
           )}
         >
           {/* Left: Brand Logo */}
@@ -106,7 +121,7 @@ export function Navbar({ user, className }: NavbarProps) {
             href="/"
             className="group flex items-center gap-3 transition-opacity hover:opacity-95"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105">
+            <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
               <Sparkles className="size-5" />
             </span>
             <span className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-[22px]">
@@ -114,7 +129,7 @@ export function Navbar({ user, className }: NavbarProps) {
             </span>
           </Link>
 
-          {/* Center: Bigger, Cleaner Navigation Links */}
+          {/* Center: Desktop Navigation Links */}
           <nav className="hidden items-center gap-8 md:flex lg:gap-10">
             {NAV_LINKS.map(({ href, label }) => (
               <a
@@ -127,7 +142,7 @@ export function Navbar({ user, className }: NavbarProps) {
             ))}
           </nav>
 
-          {/* Right: Actions (Dynamic when Logged In vs Logged Out) */}
+          {/* Right: Desktop Actions */}
           <div className="hidden items-center gap-4 md:flex">
             {user ? (
               <UserNav user={user} showDashboardButton={true} />
@@ -150,44 +165,48 @@ export function Navbar({ user, className }: NavbarProps) {
             )}
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex size-11 items-center justify-center rounded-xl border border-border/90 bg-muted/40 text-foreground transition-colors hover:bg-muted active:scale-95 md:hidden"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
-          </button>
+          {/* Mobile Right Actions: Avatar (if logged in) + Mobile Menu Toggle */}
+          <div className="flex items-center gap-2 md:hidden">
+            {user && <UserNav user={user} showDashboardButton={false} />}
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex size-10 items-center justify-center rounded-xl border border-border/80 bg-muted/40 text-foreground transition-colors hover:bg-muted active:scale-95"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* ================= WORLD-CLASS MOBILE MENU DRAWER ================= */}
+        {/* ================= FULL-WIDTH MOBILE MENU DRAWER ================= */}
         {mobileMenuOpen && (
           <>
-            {/* Backdrop Blur Overlay */}
+            {/* Backdrop Blur Overlay below header */}
             <div
               aria-hidden="true"
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 top-0 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden"
+              className="fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden"
             />
 
-            {/* Mobile Sheet Drawer */}
+            {/* Edge-to-edge flush drawer directly beneath the header */}
             <div
               role="dialog"
               aria-modal="true"
-              className="relative z-50 mt-2 max-h-[85vh] animate-in overflow-y-auto rounded-3xl border border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 fade-in-0 zoom-in-95 sm:p-6 md:hidden"
+              className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden"
             >
               {/* If Logged In: Prominent User Header Card */}
               {user && (
                 <div className="mb-4 rounded-2xl border border-border/80 bg-muted/40 p-4">
                   <div className="flex items-center gap-3">
-                    <Avatar className="size-12 border-2 border-primary/20 shadow-xs">
-                      <AvatarFallback className="bg-primary/10 text-base font-bold text-primary">
+                    <Avatar className="size-11 border-2 border-primary/20 shadow-xs">
+                      <AvatarFallback className="bg-primary/10 text-sm font-bold text-primary">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -223,7 +242,7 @@ export function Navbar({ user, className }: NavbarProps) {
                       onClick={() => setMobileMenuOpen(false)}
                       className="flex h-10 items-center justify-center gap-2 rounded-xl border border-border bg-card text-xs font-semibold text-foreground transition-colors hover:bg-muted active:scale-95"
                     >
-                      <UserIcon className="size-3.5 text-emerald-500" />
+                      <UserIcon className="size-3.5 text-primary" />
                       <span>Profile</span>
                     </Link>
                   </div>
@@ -248,8 +267,58 @@ export function Navbar({ user, className }: NavbarProps) {
                   </a>
                 ))}
 
+                {/* Mobile Theme Switcher Segment */}
+                {mounted && (
+                  <div className="mt-2 flex items-center justify-between rounded-xl border border-border/60 bg-muted/30 px-3.5 py-2.5">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Appearance
+                    </span>
+                    <div className="inline-flex items-center gap-1 rounded-lg border border-border/70 bg-card p-1 shadow-2xs">
+                      <button
+                        type="button"
+                        onClick={() => setTheme("light")}
+                        className={cn(
+                          "flex size-7 items-center justify-center rounded-md text-xs transition-all",
+                          theme === "light"
+                            ? "bg-primary font-semibold text-primary-foreground shadow-xs"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                        aria-label="Light mode"
+                      >
+                        <Sun className="size-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTheme("dark")}
+                        className={cn(
+                          "flex size-7 items-center justify-center rounded-md text-xs transition-all",
+                          theme === "dark"
+                            ? "bg-primary font-semibold text-primary-foreground shadow-xs"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                        aria-label="Dark mode"
+                      >
+                        <Moon className="size-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTheme("system")}
+                        className={cn(
+                          "flex size-7 items-center justify-center rounded-md text-xs transition-all",
+                          theme === "system"
+                            ? "bg-primary font-semibold text-primary-foreground shadow-xs"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                        aria-label="System mode"
+                      >
+                        <Laptop className="size-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Mobile Auth Actions or Sign Out */}
-                <div className="mt-4 flex flex-col gap-2.5 border-t border-border/70 pt-4">
+                <div className="mt-3 flex flex-col gap-2.5 border-t border-border/70 pt-3.5">
                   {user ? (
                     <button
                       type="button"
