@@ -17,47 +17,89 @@ export default async function TeacherSettingsPage() {
   const teacher = await requireRole(...TEACHER_ROLES)
   const overview = await getAccountOverview(teacher.id)
 
+  const joinedFormatted = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(overview.createdAt))
+
+  const lastLoginFormatted = overview.lastLoginAt
+    ? new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      }).format(new Date(overview.lastLoginAt))
+    : null
+
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your profile, security, and how {APP_NAME} looks.
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+          Teacher Settings
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground sm:text-base">
+          Manage your faculty credentials, account security, and {APP_NAME} preferences.
         </p>
       </div>
 
-      <Tabs defaultValue="profile">
-        <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <div className="w-full overflow-x-auto pb-1 scrollbar-none">
+          <TabsList className="flex h-auto w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2">
+            <TabsTrigger
+              value="profile"
+              className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+            >
+              Faculty Profile
+            </TabsTrigger>
+            <TabsTrigger
+              value="security"
+              className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+            >
+              Security
+            </TabsTrigger>
+            <TabsTrigger
+              value="appearance"
+              className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+            >
+              Appearance
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
-        <TabsContent value="profile" className="space-y-4 pt-4">
+        <TabsContent value="profile" className="space-y-6">
           {teacher.role === "TEACHER" && (
             <VerificationStatusCard
               status={teacher.teacherVerificationStatus}
               note={overview.teacherVerificationNote}
             />
           )}
-          <ProfileCard
-            name={teacher.name}
-            email={teacher.email}
-            role={teacher.role}
-            joinedAt={overview.createdAt.toLocaleDateString()}
-            lastLoginAt={overview.lastLoginAt?.toLocaleDateString() ?? null}
-          />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <ProfileCard
+              name={teacher.name}
+              email={teacher.email}
+              role={teacher.role}
+              joinedAt={joinedFormatted}
+              lastLoginAt={lastLoginFormatted}
+            />
+          </div>
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-4 pt-4">
-          <ChangePasswordCard />
-          <SessionsCard />
+        <TabsContent value="security" className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <ChangePasswordCard />
+            <SessionsCard />
+          </div>
         </TabsContent>
 
-        <TabsContent value="appearance" className="pt-4">
-          <AppearanceCard />
+        <TabsContent value="appearance" className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <AppearanceCard />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
   )
 }
+

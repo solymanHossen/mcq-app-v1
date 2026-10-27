@@ -123,7 +123,7 @@ export function DashboardShell({
             className="flex gap-1.5 overflow-x-auto p-2.5"
           />
         </div>
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6 sm:p-8 lg:p-10">{children}</main>
       </div>
     </div>
   )

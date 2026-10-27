@@ -69,15 +69,31 @@ export default async function QuestionBankPage({
   const hasAnyQuestions = total > 0 || Object.values(filters).some(Boolean)
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Question bank</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <Link href="/teacher/questions/import">Bulk import</Link>
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+            Question Bank Vault
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">
+            Author, categorize, filter, and review your full repository of exam questions.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="lg"
+            asChild
+            className="h-11 rounded-xl px-5 text-sm font-semibold shadow-2xs hover:border-primary/40"
+          >
+            <Link href="/teacher/questions/import">Bulk Import</Link>
           </Button>
-          <Button asChild>
-            <Link href="/teacher/questions/new">New question</Link>
+          <Button
+            asChild
+            size="lg"
+            className="h-11 rounded-xl px-5 text-sm font-semibold shadow-xs"
+          >
+            <Link href="/teacher/questions/new">New Question</Link>
           </Button>
         </div>
       </div>
@@ -85,75 +101,98 @@ export default async function QuestionBankPage({
       <QuestionFilters subjects={subjects} topics={topics} />
 
       {!hasAnyQuestions ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FileQuestionIcon />
-            </EmptyMedia>
-            <EmptyTitle>No questions yet</EmptyTitle>
-            <EmptyDescription>
-              Build a reusable question bank you can pull from when creating
-              exams.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Button asChild>
-              <Link href="/teacher/questions/new">Create your first question</Link>
-            </Button>
-          </EmptyContent>
-        </Empty>
+        <div className="rounded-[28px] bg-card p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <FileQuestionIcon className="size-8 text-primary" />
+              </EmptyMedia>
+              <EmptyTitle className="font-heading text-xl font-bold">
+                No questions yet
+              </EmptyTitle>
+              <EmptyDescription className="text-sm text-muted-foreground sm:text-base">
+                Build a reusable question bank you can pull from when creating exams.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Button
+                asChild
+                size="lg"
+                className="h-11 rounded-xl px-6 text-sm font-semibold shadow-xs"
+              >
+                <Link href="/teacher/questions/new">Create Your First Question</Link>
+              </Button>
+            </EmptyContent>
+          </Empty>
+        </div>
       ) : items.length === 0 ? (
-        <p className="py-8 text-center text-sm text-muted-foreground">
-          No questions match these filters.
-        </p>
+        <div className="rounded-[28px] bg-card p-12 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <p className="text-base font-semibold text-foreground">
+            No matching questions found
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Try adjusting your search filters, difficulty levels, or subjects.
+          </p>
+        </div>
       ) : (
-        <>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Question</TableHead>
-                <TableHead>Subject / Topic</TableHead>
-                <TableHead>Difficulty</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Used in</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((q) => (
-                <TableRow key={q.id}>
-                  <TableCell className="max-w-sm">
-                    <Link
-                      href={`/teacher/questions/${q.id}`}
-                      className="line-clamp-2 hover:underline"
-                    >
-                      {q.questionText}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {q.subject} / {q.topic}
-                  </TableCell>
-                  <TableCell>{q.difficulty}</TableCell>
-                  <TableCell>
-                    <Badge variant={STATUS_VARIANT[q.status]}>
-                      {q.status}
-                    </Badge>
-                    {q._count.reports > 0 && (
-                      <Badge variant="destructive" className="ml-1">
-                        {q._count.reports} report
-                        {q._count.reports === 1 ? "" : "s"}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {q._count.examQuestions} exam
-                    {q._count.examQuestions === 1 ? "" : "s"}
-                  </TableCell>
+        <div className="space-y-6">
+          <div className="overflow-hidden rounded-[28px] border-0 bg-card p-2 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-4 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+            <Table>
+              <TableHeader className="bg-muted/30">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="font-bold text-foreground py-3.5">Question</TableHead>
+                  <TableHead className="font-bold text-foreground py-3.5">Subject / Topic</TableHead>
+                  <TableHead className="font-bold text-foreground py-3.5">Difficulty</TableHead>
+                  <TableHead className="font-bold text-foreground py-3.5">Status</TableHead>
+                  <TableHead className="font-bold text-foreground py-3.5">Used in</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {items.map((q) => (
+                  <TableRow key={q.id} className="transition-colors hover:bg-muted/40">
+                    <TableCell className="max-w-md py-4">
+                      <Link
+                        href={`/teacher/questions/${q.id}`}
+                        className="font-medium text-foreground transition-colors line-clamp-2 hover:text-primary hover:underline"
+                      >
+                        {q.questionText}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="py-4 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">{q.subject}</span>
+                      <span className="mx-1 text-muted-foreground/50">/</span>
+                      <span>{q.topic}</span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span className="inline-flex items-center rounded-lg bg-muted/60 px-2.5 py-1 text-xs font-semibold capitalize">
+                        {q.difficulty.toLowerCase()}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <Badge
+                        variant={STATUS_VARIANT[q.status]}
+                        className="rounded-lg text-xs font-semibold"
+                      >
+                        {q.status}
+                      </Badge>
+                      {q._count.reports > 0 && (
+                        <Badge variant="destructive" className="ml-1.5 rounded-lg text-xs font-semibold">
+                          {q._count.reports} report
+                          {q._count.reports === 1 ? "" : "s"}
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-4 text-sm font-medium text-muted-foreground">
+                      {q._count.examQuestions} exam
+                      {q._count.examQuestions === 1 ? "" : "s"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
           <PagePagination page={page} pageCount={pageCount} searchParams={params} />
-        </>
+        </div>
       )}
     </div>
   )
