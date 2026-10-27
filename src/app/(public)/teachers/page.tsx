@@ -129,8 +129,10 @@ export default async function TeachersPage() {
   }
 
   return (
-    <div className="pt-24 pb-16 sm:pt-28 sm:pb-20">
-      <TeacherDirectoryClient teachers={teachers} stats={stats} />
+    <div className="pt-20 pb-16 sm:pt-28 sm:pb-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <TeacherDirectoryClient teachers={teachers} stats={stats} />
+      </div>
     </div>
   )
 }
