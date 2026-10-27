@@ -44,11 +44,11 @@ export function DashboardShell({
         user={user}
       />
       <SidebarInset className="min-w-0 flex-1 w-full bg-background">
-        {/* Top bar with official shadcn SidebarTrigger */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border/60 px-4 sm:px-6 md:px-8">
+        {/* Top bar with smooth shadow and backdrop blur, no harsh border */}
+        <header className="flex h-16 shrink-0 items-center justify-between border-none bg-background/80 backdrop-blur-md shadow-xs px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="size-9 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground" />
-            <Separator orientation="vertical" className="mr-1 h-4" />
+            <Separator orientation="vertical" className="mr-1 h-4 bg-muted-foreground/20" />
             <span className="font-heading text-sm font-bold tracking-tight text-foreground sm:text-base">
               {breadcrumb ?? `${badgeLabel} Workspace`}
             </span>
@@ -59,9 +59,9 @@ export function DashboardShell({
             <Search className="absolute left-3.5 top-2.5 size-4 text-muted-foreground" />
             <Input
               placeholder="Search assessments, subjects, records... (⌘K)"
-              className="h-9 rounded-xl border-border/60 bg-muted/30 pl-9.5 pr-8 text-xs focus-visible:bg-background focus-visible:ring-1"
+              className="h-9 rounded-xl border-none bg-muted/40 shadow-2xs pl-9.5 pr-8 text-xs focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-primary/40"
             />
-            <kbd className="pointer-events-none absolute right-2.5 top-2.5 inline-flex h-4.5 select-none items-center gap-1 rounded border border-border/80 bg-background px-1.5 font-mono text-[10px] text-muted-foreground">
+            <kbd className="pointer-events-none absolute right-2.5 top-2.5 inline-flex h-4.5 select-none items-center gap-1 rounded bg-background px-1.5 font-mono text-[10px] text-muted-foreground shadow-2xs">
               ⌘K
             </kbd>
           </div>
@@ -70,7 +70,7 @@ export function DashboardShell({
           <div className="flex items-center gap-2.5">
             <Link
               href="/profile"
-              className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted/70 shadow-2xs"
+              className="flex items-center gap-2.5 rounded-xl border-none bg-muted/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-all hover:bg-muted/70 shadow-xs"
               title="View Profile"
             >
               <span className="size-2 rounded-full bg-emerald-500 shadow-xs" />
@@ -80,7 +80,7 @@ export function DashboardShell({
         </header>
 
         {/* Full-width inner dashboard canvas */}
-        <main className="flex-1 w-full min-w-0 p-6 sm:p-8 lg:p-10">{children}</main>
+        <main className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -39,9 +39,8 @@ export function DashboardKpiCard({
   const cardElement = (
     <Card
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
-        href && "hover:border-primary/40",
-        highlight && "ring-1 ring-destructive/40 border-destructive/30",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        highlight && "ring-2 ring-destructive/30 shadow-destructive/10",
         className
       )}
     >
@@ -60,9 +59,9 @@ export function DashboardKpiCard({
                   : "outline"
             }
             className={cn(
-              "flex items-center gap-1 font-mono text-xs font-semibold tracking-tight rounded-full px-2.5 py-0.5 shadow-2xs",
-              trend === "up" && "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
-              trend === "down" && "border-destructive/30 text-destructive bg-destructive/10"
+              "flex items-center gap-1 font-mono text-xs font-semibold tracking-tight rounded-full px-2.5 py-0.5 shadow-2xs border-none",
+              trend === "up" && "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+              trend === "down" && "text-destructive bg-destructive/10"
             )}
           >
             <TrendIcon className="size-3" />

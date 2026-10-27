@@ -28,17 +28,17 @@ export function SettingToggle({
   }
 
   return (
-    <Card>
-      <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
+    <div className="rounded-2xl sm:rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)] transition-all hover:shadow-lg">
+      <div className="flex flex-row items-start justify-between gap-4">
         <div className="space-y-1">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <h3 className="font-heading text-base font-bold text-foreground">{title}</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
         </div>
-        <div className="flex items-center gap-2 pt-0.5">
+        <div className="flex items-center gap-2 pt-0.5 shrink-0">
           {isPending && <Spinner className="size-4 text-muted-foreground" />}
           <Switch checked={enabled} onCheckedChange={handleChange} disabled={isPending} />
         </div>
-      </CardHeader>
-    </Card>
+      </div>
+    </div>
   )
 }

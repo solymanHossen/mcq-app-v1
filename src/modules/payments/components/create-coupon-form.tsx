@@ -14,8 +14,11 @@ export function CreateCouponForm() {
   const [state, formAction, isPending] = useActionState(createCouponAction, undefined)
 
   return (
-    <form action={formAction} className="space-y-3 rounded-md border p-4">
-      <h2 className="font-medium">New coupon</h2>
+    <form action={formAction} className="space-y-5 rounded-2xl sm:rounded-3xl bg-card p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)] border-none">
+      <div>
+        <h2 className="font-heading text-lg font-bold text-foreground">Create New Coupon</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Issue promotional discounts with optional redemption limits.</p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="code">Code</FieldLabel>

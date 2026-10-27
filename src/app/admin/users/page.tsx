@@ -67,85 +67,116 @@ export default async function AdminUsersPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="w-full min-w-0 space-y-6 sm:space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            Users
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             {totalCount} account{totalCount === 1 ? "" : "s"}
             {role ? ` · ${role.toLowerCase()}` : ""}
             {search ? ` matching "${search}"` : ""}
+            {" · Platform-wide access controls & accounts"}
           </p>
         </div>
 
-        <form action="/admin/users" className="relative w-full max-w-xs">
+        <form action="/admin/users" className="relative w-full max-w-sm">
           {role && <input type="hidden" name="role" value={role} />}
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             name="q"
             defaultValue={search ?? ""}
             placeholder="Search name or email…"
-            className="pl-8"
+            className="h-10 w-full rounded-xl border-none bg-card pl-9.5 pr-4 text-xs sm:text-sm shadow-xs focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-primary/40"
           />
         </form>
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
-        {ROLE_FILTERS.map(({ label, value }) => (
-          <Link
-            key={label}
-            href={filterHref(value)}
-            className={cn(
-              "rounded-full border px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground",
-              role === value && "border-primary/40 bg-primary/10 text-primary hover:text-primary"
-            )}
-          >
-            {label}
-          </Link>
-        ))}
+      {/* Role Filter Pills */}
+      <div className="flex flex-wrap items-center gap-2">
+        {ROLE_FILTERS.map(({ label, value }) => {
+          const isSelected = role === value
+          return (
+            <Link
+              key={label}
+              href={filterHref(value)}
+              className={cn(
+                "rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200 shadow-2xs",
+                isSelected
+                  ? "bg-primary text-primary-foreground font-bold shadow-sm shadow-primary/25"
+                  : "bg-card text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+              )}
+            >
+              {label}
+            </Link>
+          )
+        })}
       </div>
 
-      <div className="overflow-hidden rounded-xl ring-1 ring-foreground/10">
+      {/* Full-width Smooth Table Card */}
+      <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+          <TableHeader className="bg-muted/25">
+            <TableRow className="border-b border-border/25 hover:bg-transparent">
+              <TableHead className="py-4 pl-6 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                User
+              </TableHead>
+              <TableHead className="py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Role
+              </TableHead>
+              <TableHead className="py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Status
+              </TableHead>
+              <TableHead className="py-4 pr-6 text-right font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={4} className="py-10 text-center text-sm text-muted-foreground">
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={4} className="py-16 text-center text-sm text-muted-foreground">
                   No users match these filters.
                 </TableCell>
               </TableRow>
             )}
             {users.map((u) => (
-              <TableRow key={u.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+              <TableRow
+                key={u.id}
+                className="border-b border-border/15 last:border-b-0 hover:bg-muted/30 transition-colors"
+              >
+                <TableCell className="py-4 pl-6">
+                  <div className="flex items-center gap-3.5">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-xs font-extrabold text-primary shadow-2xs">
                       {initials(u.name)}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate font-medium">{u.name}</p>
+                      <p className="truncate font-semibold text-foreground text-sm">{u.name}</p>
                       <p className="truncate text-xs text-muted-foreground">{u.email}</p>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Badge variant={u.role === "SUPER_ADMIN" ? "default" : "outline"} className="gap-1">
+                <TableCell className="py-4">
+                  <Badge
+                    variant={u.role === "SUPER_ADMIN" ? "default" : "secondary"}
+                    className={cn(
+                      "gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold shadow-2xs",
+                      u.role === "SUPER_ADMIN" && "bg-amber-500 text-white hover:bg-amber-600"
+                    )}
+                  >
                     {u.role === "SUPER_ADMIN" && <Crown className="size-3" />}
                     {u.role}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    <Badge variant={u.isActive ? "secondary" : "destructive"}>
+                <TableCell className="py-4">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Badge
+                      variant={u.isActive ? "secondary" : "destructive"}
+                      className="rounded-lg px-2.5 py-0.5 text-xs font-semibold shadow-2xs"
+                    >
                       {u.isActive ? "Active" : "Suspended"}
                     </Badge>
                     {u.role === "TEACHER" && (
@@ -155,15 +186,19 @@ export default async function AdminUsersPage({
                             ? "default"
                             : u.teacherVerificationStatus === "REJECTED"
                               ? "destructive"
-                              : "outline"
+                              : "secondary"
                         }
+                        className={cn(
+                          "rounded-lg px-2.5 py-0.5 text-xs font-semibold shadow-2xs",
+                          u.teacherVerificationStatus === "VERIFIED" && "bg-emerald-600 text-white"
+                        )}
                       >
                         {u.teacherVerificationStatus}
                       </Badge>
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="py-4 pr-6 text-right">
                   <div className="flex flex-wrap items-center justify-end gap-2">
                     <ChangeRoleDialog
                       userId={u.id}

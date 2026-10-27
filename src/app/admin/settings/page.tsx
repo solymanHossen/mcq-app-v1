@@ -15,23 +15,26 @@ export default async function AdminSettingsPage() {
   const settings = await getSystemSettings()
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
+    <div className="w-full min-w-0 space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">System settings</h1>
-        <p className="text-sm text-muted-foreground">
-          Platform-wide policy. Changes take effect immediately and are recorded in the
-          audit log.
+        <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+          Platform Settings
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Platform-wide security policies, instructor gates, and billing configuration. Changes take effect immediately and are logged.
         </p>
       </div>
 
-      <div className="space-y-4">
-        <h2 className="text-sm font-medium text-muted-foreground">Verification</h2>
-        <VerificationSettings settings={settings} />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <div className="space-y-4">
+          <h2 className="font-heading text-base font-bold text-foreground">Verification Policies</h2>
+          <VerificationSettings settings={settings} />
+        </div>
 
-      <div className="space-y-4">
-        <h2 className="text-sm font-medium text-muted-foreground">Billing</h2>
-        <BillingModeSettings settings={settings} />
+        <div className="space-y-4">
+          <h2 className="font-heading text-base font-bold text-foreground">Billing & Monetization</h2>
+          <BillingModeSettings settings={settings} />
+        </div>
       </div>
     </div>
   )

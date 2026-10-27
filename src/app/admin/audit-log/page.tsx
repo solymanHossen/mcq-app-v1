@@ -29,41 +29,75 @@ export default async function AdminAuditLogPage({
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4">
-      <h1 className="text-2xl font-semibold">Admin audit log</h1>
-      <p className="text-sm text-muted-foreground">
-        Every sensitive admin action — account suspension, teacher verification, refunds,
-        plan and coupon changes — append-only, never edited or deleted.
-      </p>
+    <div className="w-full min-w-0 space-y-6 sm:space-y-8">
+      <div>
+        <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+          System Audit Log
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Append-only, immutable record of administrative operations, policy changes, and account actions.
+        </p>
+      </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Action</TableHead>
-            <TableHead>Actor</TableHead>
-            <TableHead>Target</TableHead>
-            <TableHead>Reason</TableHead>
-            <TableHead>When</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {entries.map((entry) => (
-            <TableRow key={entry.id}>
-              <TableCell>
-                <Badge variant="outline">{entry.action}</Badge>
-              </TableCell>
-              <TableCell>{entry.actor.name}</TableCell>
-              <TableCell>{entry.targetUser?.name ?? "—"}</TableCell>
-              <TableCell className="max-w-xs truncate text-sm text-muted-foreground">
-                {entry.reason ?? "—"}
-              </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
-                {entry.createdAt.toLocaleString()}
-              </TableCell>
+      <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+        <Table>
+          <TableHeader className="bg-muted/25">
+            <TableRow className="border-b border-border/25 hover:bg-transparent">
+              <TableHead className="py-4 pl-6 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Action
+              </TableHead>
+              <TableHead className="py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Actor
+              </TableHead>
+              <TableHead className="py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Target User
+              </TableHead>
+              <TableHead className="py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Reason
+              </TableHead>
+              <TableHead className="py-4 pr-6 text-right font-bold text-xs uppercase tracking-wider text-muted-foreground">
+                Timestamp
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {entries.length === 0 && (
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={5} className="py-16 text-center text-sm text-muted-foreground">
+                  No audit log entries recorded.
+                </TableCell>
+              </TableRow>
+            )}
+            {entries.map((entry) => (
+              <TableRow
+                key={entry.id}
+                className="border-b border-border/15 last:border-b-0 hover:bg-muted/30 transition-colors"
+              >
+                <TableCell className="py-4 pl-6">
+                  <Badge
+                    variant="secondary"
+                    className="font-mono text-xs font-semibold rounded-lg px-2.5 py-0.5 shadow-2xs"
+                  >
+                    {entry.action}
+                  </Badge>
+                </TableCell>
+                <TableCell className="py-4 font-semibold text-foreground text-sm">
+                  {entry.actor.name}
+                </TableCell>
+                <TableCell className="py-4 text-sm text-foreground">
+                  {entry.targetUser?.name ?? <span className="text-muted-foreground">—</span>}
+                </TableCell>
+                <TableCell className="py-4 max-w-xs truncate text-xs text-muted-foreground">
+                  {entry.reason ?? "—"}
+                </TableCell>
+                <TableCell className="py-4 pr-6 text-right text-xs text-muted-foreground font-mono">
+                  {entry.createdAt.toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <PagePagination page={page} pageCount={pageCount} searchParams={sp} />
     </div>

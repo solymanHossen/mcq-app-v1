@@ -75,7 +75,7 @@ export function DashboardAreaChart({
   return (
     <Card
       className={cn(
-        "rounded-3xl border border-border/80 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all sm:p-2 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        "rounded-3xl border-none bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all sm:p-2 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
         className
       )}
     >
@@ -93,8 +93,8 @@ export function DashboardAreaChart({
           </CardDescription>
         </div>
 
-        {/* Time range selector pills matching reference image */}
-        <div className="flex items-center gap-1 rounded-2xl bg-muted/60 p-1.5 self-start sm:self-auto border border-border/40">
+        {/* Time range selector pills */}
+        <div className="flex items-center gap-1 rounded-2xl bg-muted/60 p-1.5 self-start sm:self-auto border-none shadow-2xs">
           <Button
             type="button"
             variant="ghost"

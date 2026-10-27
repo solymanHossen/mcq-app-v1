@@ -52,16 +52,16 @@ export function AppSidebar({
   const isCollapsed = state === "collapsed"
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/70" {...props}>
+    <Sidebar collapsible="icon" className="border-none shadow-[2px_0_20px_rgba(0,0,0,0.03)] dark:shadow-[2px_0_20px_rgba(0,0,0,0.3)] bg-sidebar" {...props}>
       {/* Brand Header */}
-      <SidebarHeader className="h-16 border-b border-border/60 p-0">
+      <SidebarHeader className="h-16 border-b-0 p-0">
         <div className="flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
           <Link
             href="/"
             className="flex items-center gap-3 transition-opacity hover:opacity-90"
             title={brandName}
           >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
               {brandIcon}
             </span>
             <span className="font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
@@ -70,7 +70,7 @@ export function AppSidebar({
           </Link>
           <Badge
             variant="secondary"
-            className="ml-auto rounded-lg px-2.5 py-0.5 text-xs font-semibold group-data-[collapsible=icon]:hidden"
+            className="ml-auto rounded-lg px-2.5 py-0.5 text-xs font-semibold shadow-2xs group-data-[collapsible=icon]:hidden"
           >
             {badgeLabel}
           </Badge>
@@ -97,8 +97,8 @@ export function AppSidebar({
                       className={cn(
                         "h-12 rounded-2xl px-4 text-[15px] font-medium gap-3.5 transition-all duration-200 active:scale-[0.98]",
                         active
-                          ? "bg-primary text-primary-foreground font-bold shadow-sm hover:bg-primary/95 hover:text-primary-foreground [&_svg]:text-primary-foreground"
-                          : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                          ? "bg-primary text-primary-foreground font-semibold shadow-md shadow-primary/25 data-[active=true]:bg-primary! data-[active=true]:text-primary-foreground! data-[active=true]:shadow-md data-[active=true]:shadow-primary/25 hover:bg-primary/95! hover:text-primary-foreground! [&_svg]:text-primary-foreground! data-[active=true]:[&_svg]:text-primary-foreground!"
+                          : "text-muted-foreground hover:bg-muted/70 hover:text-foreground [&_svg]:text-muted-foreground/80 hover:[&_svg]:text-foreground",
                         "[&_svg]:size-5 shrink-0"
                       )}
                     >
@@ -118,16 +118,16 @@ export function AppSidebar({
       </SidebarContent>
 
       {/* Footer Profile */}
-      <SidebarFooter className="border-t border-border/60 p-3">
+      <SidebarFooter className="border-t-0 p-3 pb-8">
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex flex-col gap-1.5">
               <Link
                 href="/profile"
-                className="group flex items-center gap-3 rounded-2xl p-2 transition-all hover:bg-muted/80 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
+                className="group flex items-center gap-3 rounded-2xl p-2 transition-all hover:bg-muted/80 shadow-2xs group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
                 title={`${user.name} (${user.email})`}
               >
-                <Avatar className="size-9 ring-1 ring-border/80">
+                <Avatar className="size-9 shadow-xs ring-0">
                   <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                     {getInitials(user.name)}
                   </AvatarFallback>

@@ -15,8 +15,11 @@ export function CreatePlanForm() {
   const [state, formAction, isPending] = useActionState(createPlanAction, undefined)
 
   return (
-    <form action={formAction} className="space-y-3 rounded-md border p-4">
-      <h2 className="font-medium">New plan</h2>
+    <form action={formAction} className="space-y-5 rounded-2xl sm:rounded-3xl bg-card p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)] border-none">
+      <div>
+        <h2 className="font-heading text-lg font-bold text-foreground">Create New Plan</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Define a new subscription tier and its feature entitlements.</p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="key">Key</FieldLabel>

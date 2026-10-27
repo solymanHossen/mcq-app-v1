@@ -131,7 +131,7 @@ export default async function AdminDashboardPage() {
       <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
         <Link
           href="/admin/users"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+          className="group flex items-center justify-between rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
@@ -151,7 +151,7 @@ export default async function AdminDashboardPage() {
 
         <Link
           href="/admin/teachers"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+          className="group flex items-center justify-between rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-amber-500/15 dark:text-amber-400">
@@ -171,7 +171,7 @@ export default async function AdminDashboardPage() {
 
         <Link
           href="/admin/audit-log"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+          className="group flex items-center justify-between rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-emerald-500/15 dark:text-emerald-400">
@@ -269,7 +269,7 @@ export default async function AdminDashboardPage() {
       {/* ================= SUB-NAVIGATION TABS & SEARCH DATA SECTIONS ================= */}
       <Tabs defaultValue="teachers" className="flex flex-col gap-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <TabsList className="h-11 rounded-2xl bg-muted/60 p-1.5 border border-border/40">
+          <TabsList className="h-11 rounded-2xl bg-muted/60 p-1.5 border-none shadow-2xs">
             <TabsTrigger value="teachers" className="rounded-xl px-4 text-xs font-bold sm:text-sm">
               Teacher Queue ({pendingTeachers})
             </TabsTrigger>
@@ -287,10 +287,10 @@ export default async function AdminDashboardPage() {
               <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
               <Input
                 placeholder="Filter platform records..."
-                className="h-10 rounded-xl border-border/80 bg-card pl-9 text-xs shadow-2xs focus-visible:ring-1"
+                className="h-10 rounded-xl border-none bg-card pl-9 text-xs shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/40"
               />
             </div>
-            <Button asChild variant="outline" size="sm" className="h-10 rounded-xl px-4 text-xs font-semibold shadow-2xs">
+            <Button asChild variant="ghost" size="sm" className="h-10 rounded-xl bg-card px-4 text-xs font-semibold shadow-2xs hover:bg-muted/70">
               <Link href="/admin/users">
                 <span>Manage Users</span>
                 <ChevronRight className="ml-1 size-3.5" />
@@ -307,7 +307,7 @@ export default async function AdminDashboardPage() {
 
         {/* Tab 1: Pending Teachers */}
         <TabsContent value="teachers" className="mt-0">
-          <Card className="rounded-3xl border border-border/80 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <Card className="rounded-3xl border-none bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
             <CardHeader className="p-6 sm:p-7">
               <div className="flex flex-col gap-1">
                 <CardTitle className="font-heading text-xl font-extrabold text-foreground">
@@ -320,7 +320,7 @@ export default async function AdminDashboardPage() {
             </CardHeader>
             <CardContent className="p-6 pt-0 sm:p-7 sm:pt-0">
               {pendingTeacherList.length === 0 ? (
-                <div className="flex items-center gap-3.5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-emerald-700 dark:text-emerald-400">
+                <div className="flex items-center gap-3.5 rounded-2xl border-none bg-emerald-500/10 p-5 text-emerald-700 dark:text-emerald-400 shadow-2xs">
                   <CheckCircle2 className="size-6 text-emerald-600 dark:text-emerald-400" />
                   <div>
                     <p className="text-sm font-bold sm:text-base">Verification Queue Empty</p>
@@ -330,7 +330,7 @@ export default async function AdminDashboardPage() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col divide-y divide-border/50 rounded-2xl border border-border/60">
+                <div className="flex flex-col divide-y divide-border/15 rounded-2xl border-none bg-muted/20 shadow-2xs">
                   {pendingTeacherList.map((teacherItem) => (
                     <div
                       key={teacherItem.id}
@@ -341,7 +341,7 @@ export default async function AdminDashboardPage() {
                           <p className="font-heading text-sm font-bold text-foreground">
                             {teacherItem.name}
                           </p>
-                          <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-500/30">
+                          <Badge variant="secondary" className="text-[10px] text-amber-600 bg-amber-500/10">
                             Pending
                           </Badge>
                         </div>
@@ -354,7 +354,7 @@ export default async function AdminDashboardPage() {
                         </p>
                       </div>
 
-                      <Button asChild size="sm" variant="outline" className="h-8 rounded-xl text-xs font-semibold">
+                      <Button asChild size="sm" variant="ghost" className="h-8 rounded-xl bg-card text-xs font-semibold shadow-2xs hover:bg-muted/70">
                         <Link href="/admin/teachers">
                           <span>Review Accreditation</span>
                           <ArrowRight className="ml-1 size-3.5" />
@@ -370,7 +370,7 @@ export default async function AdminDashboardPage() {
 
         {/* Tab 2: Recent Users */}
         <TabsContent value="users" className="mt-0">
-          <Card className="rounded-3xl border border-border/80 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <Card className="rounded-3xl border-none bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
             <CardHeader className="p-6 sm:p-7">
               <div className="flex flex-col gap-1">
                 <CardTitle className="font-heading text-xl font-extrabold text-foreground">
@@ -386,20 +386,20 @@ export default async function AdminDashboardPage() {
                 {recentUsers.map((u) => (
                   <div
                     key={u.id}
-                    className="flex flex-col justify-between gap-3 rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-muted/40 hover:shadow-md sm:p-6"
+                    className="flex flex-col justify-between gap-3 rounded-2xl border-none bg-muted/30 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-md sm:p-6"
                   >
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <p className="font-heading text-sm font-bold text-foreground truncate">
                           {u.name}
                         </p>
-                        <Badge variant="secondary" className="text-[10px]">
+                        <Badge variant="secondary" className="text-[10px] shadow-2xs">
                           {u.role}
                         </Badge>
                       </div>
                       <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                     </div>
-                    <div className="flex items-center justify-between border-t border-border/40 pt-3 text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between border-t border-border/20 pt-3 text-xs text-muted-foreground">
                       <span>
                         Joined{" "}
                         {new Intl.DateTimeFormat("en-US", {
@@ -420,7 +420,7 @@ export default async function AdminDashboardPage() {
 
         {/* Tab 3: Payments */}
         <TabsContent value="payments" className="mt-0">
-          <Card className="rounded-3xl border border-border/80 bg-card p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <Card className="rounded-3xl border-none bg-card p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
             <CardHeader className="p-0 pb-4">
               <CardTitle className="font-heading text-xl font-bold text-foreground">
                 Payment Reconciliation &amp; Gateway Health
@@ -431,7 +431,7 @@ export default async function AdminDashboardPage() {
             </CardHeader>
             <CardContent className="p-0">
               {stalePending.length === 0 ? (
-                <div className="flex items-center gap-3.5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-emerald-700 dark:text-emerald-400">
+                <div className="flex items-center gap-3.5 rounded-2xl border-none bg-emerald-500/10 p-5 text-emerald-700 dark:text-emerald-400 shadow-2xs">
                   <CheckCircle2 className="size-6 text-emerald-600 dark:text-emerald-400" />
                   <div>
                     <p className="text-sm font-bold sm:text-base">Billing Gateways Reconciled</p>
@@ -445,7 +445,7 @@ export default async function AdminDashboardPage() {
                   <p className="text-xs text-muted-foreground sm:text-sm">
                     There are <span className="font-bold text-destructive">{stalePending.length} transactions</span> pending reconciliation.
                   </p>
-                  <Button asChild variant="destructive" size="sm" className="self-start rounded-xl px-5 text-xs font-semibold">
+                  <Button asChild variant="destructive" size="sm" className="self-start rounded-xl px-5 text-xs font-semibold shadow-xs">
                     <Link href="/admin/payments">Open Payment Reconciliation</Link>
                   </Button>
                 </div>
