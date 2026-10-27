@@ -157,7 +157,7 @@ export function StudentActivityCard({
               </Link>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {recentAttempts.map((attempt) => {
                 const dateFormatted = new Intl.DateTimeFormat("en-US", {
                   month: "short",
@@ -177,23 +177,23 @@ export function StudentActivityCard({
                 return (
                   <div
                     key={attempt.id}
-                    className="flex flex-col justify-between gap-4 rounded-2xl bg-muted/30 p-5 transition-all duration-200 hover:bg-muted/50 sm:flex-row sm:items-center sm:p-6"
+                    className="flex flex-col justify-between gap-4 rounded-2xl bg-muted/50 p-5 transition-all duration-200 hover:bg-muted/70"
                   >
-                    {/* Left: Title, Status, and Date */}
-                    <div className="min-w-0 space-y-1.5">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <p className="text-base font-bold tracking-tight text-foreground sm:text-lg">
+                    {/* Top: Title, Status, and Date */}
+                    <div className="min-w-0 space-y-2">
+                      <div className="flex items-start justify-between gap-2.5">
+                        <p className="font-heading text-base font-bold tracking-tight text-foreground line-clamp-2">
                           {attempt.exam.title}
                         </p>
                         <Badge
                           variant={isCompleted ? "default" : "secondary"}
-                          className="rounded-lg px-2.5 py-0.5 text-xs font-semibold"
+                          className="shrink-0 rounded-lg px-2.5 py-0.5 text-xs font-semibold"
                         >
                           {isCompleted ? "Completed" : "In Progress"}
                         </Badge>
                       </div>
 
-                      <div className="flex items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1.5">
                           <Clock className="size-3.5" />
                           {dateFormatted}
@@ -205,20 +205,19 @@ export function StudentActivityCard({
                       </div>
                     </div>
 
-                    {/* Right: Scores & Outcomes */}
-                    <div className="flex shrink-0 items-center gap-5 self-end sm:self-center">
-                      {attempt.result && (
-                        <div className="text-right">
-                          <p className="text-lg font-extrabold text-foreground sm:text-xl">
+                    {/* Bottom: Scores & Outcomes */}
+                    <div className="flex items-center justify-between border-t border-border/40 pt-3 text-xs">
+                      {attempt.result ? (
+                        <div>
+                          <span className="font-heading text-base font-extrabold text-foreground">
                             {score}
-                          </p>
-                          <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-                            Accuracy:{" "}
-                            <span className="font-semibold text-foreground">
-                              {accuracy}
-                            </span>
-                          </p>
+                          </span>
+                          <span className="ml-2 text-muted-foreground">
+                            ({accuracy})
+                          </span>
                         </div>
+                      ) : (
+                        <span className="text-muted-foreground">No score yet</span>
                       )}
 
                       {attempt.result?.isPassed !== undefined &&
@@ -227,17 +226,17 @@ export function StudentActivityCard({
                             variant={
                               attempt.result.isPassed ? "default" : "outline"
                             }
-                            className="h-8 gap-1.5 rounded-xl px-3.5 text-xs font-semibold sm:text-sm"
+                            className="h-7 gap-1 rounded-lg px-2.5 text-xs font-semibold"
                           >
                             {attempt.result.isPassed ? (
-                              <CheckCircle2 className="size-4" />
+                              <CheckCircle2 className="size-3.5" />
                             ) : (
-                              <XCircle className="size-4 text-destructive" />
+                              <XCircle className="size-3.5 text-destructive" />
                             )}
                             <span>
                               {attempt.result.isPassed
                                 ? "Passed"
-                                : "Needs Review"}
+                                : "Review"}
                             </span>
                           </Badge>
                         )}

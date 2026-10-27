@@ -221,7 +221,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-profile"
             aria-labelledby="tab-profile"
-            className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="space-y-6"
           >
             {profile.role === "TEACHER" && (
               <VerificationStatusCard
@@ -255,7 +255,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-security"
             aria-labelledby="tab-security"
-            className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="space-y-6"
           >
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
               <ChangePasswordCard />
@@ -270,7 +270,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-activity"
             aria-labelledby="tab-activity"
-            className="animate-in space-y-8 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="space-y-8"
           >
             {/* 1. STUDENT VIEW */}
             {profile.role === "STUDENT" && (
@@ -534,15 +534,15 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                         </Button>
                       </div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         {profile.teacherExams.map((exam) => (
                           <div
                             key={exam.id}
-                            className="group flex flex-col justify-between gap-3.5 rounded-2xl bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50 min-[540px]:flex-row min-[540px]:items-center sm:p-5"
+                            className="group flex flex-col justify-between gap-4 rounded-2xl bg-muted/50 p-5 transition-all duration-200 hover:bg-muted/70"
                           >
-                            <div className="min-w-0 space-y-1">
-                              <div className="flex flex-wrap items-center gap-2.5">
-                                <h4 className="font-heading text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                            <div className="min-w-0 space-y-2">
+                              <div className="flex items-start justify-between gap-2.5">
+                                <h4 className="font-heading text-base font-bold text-foreground transition-colors group-hover:text-primary line-clamp-2">
                                   {exam.title}
                                 </h4>
                                 <Badge
@@ -551,16 +551,17 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                                       ? "default"
                                       : "secondary"
                                   }
-                                  className="rounded-lg text-[11px] font-semibold"
+                                  className="shrink-0 rounded-lg text-[11px] font-semibold"
                                 >
                                   {exam.status === "PUBLISHED"
                                     ? "Published"
                                     : "Draft"}
                                 </Badge>
                               </div>
-                              <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
+
+                              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                 <span className="inline-flex items-center gap-1.5 font-medium">
-                                  <Clock className="size-3.5 text-muted-foreground" />
+                                  <Clock className="size-3.5" />
                                   <span>{exam.durationMinutes} min</span>
                                 </span>
                                 <span>•</span>
@@ -569,22 +570,24 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                                 </span>
                                 <span>•</span>
                                 <span className="font-semibold text-foreground">
-                                  {exam.attemptsCount} student takers
+                                  {exam.attemptsCount} takers
                                 </span>
                               </div>
                             </div>
 
-                            <Button
-                              asChild
-                              variant="outline"
-                              size="sm"
-                              className="self-start rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40 min-[540px]:self-center"
-                            >
-                              <Link href={`/teacher/exams/${exam.id}`}>
-                                <span>Manage Exam</span>
-                                <ArrowRight className="ml-1 size-3.5" />
-                              </Link>
-                            </Button>
+                            <div className="flex items-center justify-end border-t border-border/40 pt-3">
+                              <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                className="h-8 rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40"
+                              >
+                                <Link href={`/teacher/exams/${exam.id}`}>
+                                  <span>Manage Exam</span>
+                                  <ArrowRight className="ml-1 size-3.5" />
+                                </Link>
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -672,7 +675,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-appearance"
             aria-labelledby="tab-appearance"
-            className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="space-y-6"
           >
             <AppearanceCard />
           </div>
@@ -684,7 +687,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             role="tabpanel"
             id="panel-billing"
             aria-labelledby="tab-billing"
-            className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
+            className="space-y-6"
           >
             <Card className="rounded-[28px] border-0 bg-card p-2 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-4 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
               <CardHeader className="p-6 sm:p-7">
