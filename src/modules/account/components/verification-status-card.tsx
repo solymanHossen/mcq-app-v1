@@ -15,7 +15,7 @@ export function VerificationStatusCard({
   note: string | null
 }) {
   return (
-    <Card className="rounded-[24px] border border-border/80 shadow-[0_8px_30px_rgba(0,0,0,0.03)] backdrop-blur-md transition-all duration-300 hover:shadow-md dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <Card className="rounded-3xl border border-border/70 bg-card/80 shadow-none backdrop-blur-xl transition-all">
       <CardHeader className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex items-start gap-4">
           <span

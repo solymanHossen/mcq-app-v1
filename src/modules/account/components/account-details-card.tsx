@@ -6,22 +6,16 @@ import {
   Check,
   Copy,
   Fingerprint,
-  KeyRound,
+  MailCheck,
   Shield,
-  ShieldCheck,
-  UserCheck,
+  ShieldAlert,
 } from "lucide-react"
 import { toast } from "sonner"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 import type { Role } from "@/prisma/generated/prisma/client"
 
 interface AccountDetailsCardProps {
@@ -31,51 +25,17 @@ interface AccountDetailsCardProps {
   isEmailVerified: boolean
 }
 
-function getRoleDescription(role: Role) {
+function getRoleTitle(role: Role): string {
   switch (role) {
     case "SUPER_ADMIN":
-      return "Full platform governance: role delegation, system configuration, revenue oversight, and security audits."
+      return "Super Administrator"
     case "ADMIN":
-      return "Operational administration: user management, teacher verification, subscriptions, and exam monitoring."
+      return "Administrator"
     case "TEACHER":
-      return "Educator permissions: create questions, author exams, grade subjective papers, and analyze student cohort performance."
+      return "Educator & Instructor"
     case "STUDENT":
     default:
-      return "Student permissions: enroll in exams, practice question banks, earn streak & badges, and review mistake notebooks."
-  }
-}
-
-function getRoleCapabilities(role: Role): string[] {
-  switch (role) {
-    case "SUPER_ADMIN":
-      return [
-        "System Governance",
-        "User Delegation",
-        "Security Auditing",
-        "Revenue Oversight",
-      ]
-    case "ADMIN":
-      return [
-        "User Management",
-        "Teacher Verification",
-        "Exam Monitoring",
-        "Platform Reports",
-      ]
-    case "TEACHER":
-      return [
-        "Exam Authoring",
-        "Question Bank Vault",
-        "Auto-grading",
-        "Cohort Insights",
-      ]
-    case "STUDENT":
-    default:
-      return [
-        "Timed Exam Attempts",
-        "Mistake Notebook",
-        "Leaderboards",
-        "Streak & XP",
-      ]
+      return "Student Scholar"
   }
 }
 
@@ -90,119 +50,122 @@ export function AccountDetailsCard({
   function handleCopyId() {
     navigator.clipboard.writeText(id)
     setCopied(true)
-    toast.success("Account UUID copied to clipboard")
+    toast.success("Account ID copied to clipboard")
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const roleDesc = getRoleDescription(role)
-  const capabilities = getRoleCapabilities(role)
   const createdDate = new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
   }).format(new Date(createdAt))
 
   return (
-    <Card className="rounded-[24px] border border-border/80 shadow-xs transition-all duration-300 hover:shadow-md">
-      <CardHeader className="space-y-1.5 pb-6">
-        <CardTitle className="font-heading text-lg font-bold text-foreground sm:text-xl">
-          Account Identity & Permissions
-        </CardTitle>
-        <CardDescription className="text-xs text-muted-foreground sm:text-[13px]">
-          Detailed cryptographic identifier, role privileges, and authorization
-          scopes.
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-5">
-        {/* Unique User ID Cryptographic Station */}
-        <div className="flex flex-col justify-between gap-3 rounded-2xl border border-border/80 bg-muted/30 p-4 transition-colors hover:bg-muted/40 sm:flex-row sm:items-center">
-          <div className="min-w-0 space-y-1">
-            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              <Fingerprint className="size-3.5 text-primary" />
-              Unique Identifier (UUID)
-            </span>
-            <code className="block font-mono text-xs font-semibold tracking-tight break-all text-foreground sm:text-[13px]">
-              {id}
-            </code>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleCopyId}
-            className="h-9 shrink-0 gap-1.5 self-start rounded-xl border-border/80 bg-background text-xs font-semibold shadow-2xs hover:border-primary/40 hover:bg-muted active:scale-95 sm:self-auto"
-          >
-            {copied ? (
-              <>
-                <Check className="size-3.5 text-primary" />
-                <span>Copied</span>
-              </>
-            ) : (
-              <>
-                <Copy className="size-3.5 text-muted-foreground" />
-                <span>Copy ID</span>
-              </>
-            )}
-          </Button>
+    <div className="relative flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+      <div>
+        <div className="pb-6">
+          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+            Account Credentials
+          </h3>
         </div>
 
-        {/* Role Permissions Information */}
-        <div className="space-y-3 rounded-2xl border border-border/80 bg-card p-4.5 sm:p-5">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-sm font-bold text-foreground">
-              <Shield className="size-4 text-primary" />
-              Role Authority Scope
-            </span>
-            <Badge
-              variant="secondary"
-              className="rounded-lg text-xs font-semibold capitalize"
-            >
-              {role.replace("_", " ").toLowerCase()}
-            </Badge>
-          </div>
-          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-            {roleDesc}
-          </p>
-
-          {/* Capability Tags */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            {capabilities.map((cap) => (
-              <span
-                key={cap}
-                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-muted/40 px-2 py-0.5 text-[11px] font-medium text-foreground"
+        <div className="space-y-5">
+          {/* User ID Field (Google-style large box) */}
+          <div className="space-y-2">
+            <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
+              Account ID (UUID)
+            </Label>
+            <div className="flex h-13.5 w-full items-center justify-between gap-3 rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+              <code className="truncate font-mono text-xs font-semibold text-foreground sm:text-sm select-all">
+                {id}
+              </code>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleCopyId}
+                className="h-9 shrink-0 gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground active:scale-95"
               >
-                <Check className="size-2.5 text-primary" />
-                {cap}
+                {copied ? (
+                  <>
+                    <Check className="size-3.5 text-primary" />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="size-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {/* Role Field (Google-style large box) */}
+          <div className="space-y-2">
+            <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
+              Authority Level
+            </Label>
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+              <span className="text-sm font-semibold text-foreground sm:text-base">
+                {getRoleTitle(role)}
               </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Account Integrity Metadata (Strict Token Colors) */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="space-y-1.5 rounded-2xl border border-border/70 bg-muted/20 p-4">
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-              <UserCheck className="size-3.5 text-primary" />
-              Registration Timestamp
-            </span>
-            <p className="text-xs font-semibold text-foreground sm:text-sm">
-              {createdDate}
-            </p>
+              <Badge
+                variant="secondary"
+                className="rounded-lg px-2.5 py-1 text-xs font-semibold capitalize"
+              >
+                <Shield className="mr-1 size-3 text-primary" />
+                {role.replace("_", " ").toLowerCase()}
+              </Badge>
+            </div>
           </div>
 
-          <div className="space-y-1.5 rounded-2xl border border-border/70 bg-muted/20 p-4">
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-              <ShieldCheck className="size-3.5 text-primary" />
-              Security Status
-            </span>
-            <p className="text-xs font-semibold text-foreground sm:text-sm">
-              {isEmailVerified
-                ? "Verified Credentials & Protected"
-                : "Verification Pending"}
-            </p>
+          {/* Email Verification Status Field (Google-style large box) */}
+          <div className="space-y-2">
+            <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
+              Security & Verification
+            </Label>
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+              <span className="text-sm font-semibold text-foreground sm:text-base">
+                {isEmailVerified ? "Email Address Verified" : "Verification Required"}
+              </span>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold",
+                  isEmailVerified
+                    ? "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
+                    : "bg-amber-500/10 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400"
+                )}
+              >
+                {isEmailVerified ? (
+                  <>
+                    <MailCheck className="size-3.5" />
+                    Verified
+                  </>
+                ) : (
+                  <>
+                    <ShieldAlert className="size-3.5" />
+                    Pending
+                  </>
+                )}
+              </span>
+            </div>
+          </div>
+
+          {/* Member Since Field (Google-style large box) */}
+          <div className="space-y-2">
+            <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
+              Member Since
+            </Label>
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+              <span className="text-sm font-semibold text-foreground sm:text-base">
+                {createdDate}
+              </span>
+              <Calendar className="size-4 text-muted-foreground" />
+            </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

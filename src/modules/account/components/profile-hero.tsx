@@ -104,7 +104,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-card/80 p-5 shadow-xs backdrop-blur-xl transition-all sm:p-7">
+    <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-card/80 p-5 shadow-none backdrop-blur-xl transition-all sm:p-7">
       {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"

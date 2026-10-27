@@ -158,61 +158,59 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
   return (
     <div className="w-full space-y-8">
-      {/* ================= FLOATING LUXURY SEGMENTED CONTROL ISLAND ================= */}
-      <div className="relative">
-        <div className="flex scrollbar-none items-center overflow-x-auto pb-1">
-          <nav
-            role="tablist"
-            aria-label="Profile navigation sections"
-            className="flex min-w-full items-center gap-1.5 rounded-2xl bg-card/90 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.06)] backdrop-blur-xl sm:w-auto sm:min-w-0 sm:rounded-3xl sm:p-2.5 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.3)]"
-          >
-            {tabsConfig.map((tab) => {
-              const Icon = tab.icon
-              const isActive = activeTab === tab.key
+      {/* ================= GORGEOUS MODERN SEGMENTED PILL DOCK ================= */}
+      <div className="flex items-center overflow-x-auto pb-1 scrollbar-none">
+        <nav
+          role="tablist"
+          aria-label="Profile navigation sections"
+          className="inline-flex items-center gap-1.5 rounded-2xl border border-border/80 bg-muted/40 p-1.5 backdrop-blur-xl sm:gap-2"
+        >
+          {tabsConfig.map((tab) => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.key
 
-              return (
-                <button
-                  key={tab.key}
-                  role="tab"
-                  type="button"
-                  aria-selected={isActive}
-                  aria-controls={`panel-${tab.key}`}
-                  id={`tab-${tab.key}`}
-                  onClick={() => handleSelectTab(tab.key)}
+            return (
+              <button
+                key={tab.key}
+                role="tab"
+                type="button"
+                aria-selected={isActive}
+                aria-controls={`panel-${tab.key}`}
+                id={`tab-${tab.key}`}
+                onClick={() => handleSelectTab(tab.key)}
+                className={cn(
+                  "group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[14px]",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
+                )}
+              >
+                <Icon
                   className={cn(
-                    "group relative flex h-12 shrink-0 cursor-pointer items-center gap-2.5 rounded-xl px-4.5 text-sm font-semibold transition-all duration-200 select-none sm:h-13 sm:rounded-2xl sm:px-6 sm:text-base",
+                    "size-4 transition-transform duration-200 group-hover:scale-105 sm:size-4.5",
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                      ? "text-primary-foreground"
+                      : "text-muted-foreground group-hover:text-primary"
                   )}
-                >
-                  <Icon
-                    className={cn(
-                      "size-4.5 transition-transform duration-200 group-hover:scale-110 sm:size-5",
-                      isActive
-                        ? "text-primary-foreground"
-                        : "text-muted-foreground group-hover:text-primary"
-                    )}
-                  />
-                  <span>{tab.label}</span>
+                />
+                <span>{tab.label}</span>
 
-                  {tab.badge !== undefined && (
-                    <span
-                      className={cn(
-                        "ml-1 inline-flex size-5 items-center justify-center rounded-full text-[11px] font-bold",
-                        isActive
-                          ? "bg-primary-foreground/20 text-primary-foreground"
-                          : "bg-muted text-foreground"
-                      )}
-                    >
-                      {tab.badge}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-          </nav>
-        </div>
+                {tab.badge !== undefined && (
+                  <span
+                    className={cn(
+                      "ml-0.5 inline-flex size-5 items-center justify-center rounded-full text-[11px] font-bold transition-colors",
+                      isActive
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-background text-foreground shadow-2xs"
+                    )}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </nav>
       </div>
 
       {/* ================= TAB PANELS WITH SMOOTH TRANSITIONS ================= */}

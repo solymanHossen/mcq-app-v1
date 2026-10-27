@@ -10,13 +10,6 @@ import {
   Command,
   Sparkles,
 } from "lucide-react"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/config"
@@ -60,25 +53,19 @@ export function AppearanceCard() {
   )
 
   return (
-    <Card className="rounded-[24px] border border-border/80 shadow-xs transition-all duration-300 hover:shadow-md">
-      <CardHeader className="space-y-1.5 pb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="font-heading text-lg font-bold text-foreground sm:text-xl">
-              Interface Appearance & Theme
-            </CardTitle>
-            <CardDescription className="text-xs text-muted-foreground sm:text-[13px]">
-              Customize the visual palette and lighting theme of {APP_NAME} on
-              this device.
-            </CardDescription>
-          </div>
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Sparkles className="size-4.5" />
-          </span>
+    <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+      <div className="flex items-center justify-between pb-6">
+        <div>
+          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+            Interface Appearance & Theme
+          </h3>
         </div>
-      </CardHeader>
+        <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Sparkles className="size-4.5" />
+        </span>
+      </div>
 
-      <CardContent className="space-y-6">
+      <div className="space-y-6">
         {mounted ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {THEME_OPTIONS.map(({ value, label, description, icon: Icon }) => {
@@ -214,7 +201,7 @@ export function AppearanceCard() {
             <span className="text-xs text-muted-foreground">on keyboard</span>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
