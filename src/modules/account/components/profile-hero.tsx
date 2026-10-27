@@ -183,136 +183,198 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           </div>
         </div>
 
-        {/* ================= RIGHT: UNIFIED MINIMAL STATS STRIP ================= */}
+        {/* ================= RIGHT: EXECUTIVE STATS CHIPS ================= */}
         <div className="shrink-0 self-stretch sm:self-auto">
-          {/* STUDENT STATS STRIP */}
+          {/* STUDENT STATS CHIPS */}
           {user.role === "STUDENT" && (
-            <div className="grid grid-cols-4 divide-x divide-border/60 rounded-2xl border border-border/70 bg-muted/25 p-2 backdrop-blur-md">
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600 sm:text-xs dark:text-amber-400">
-                  <Flame className="size-3.5" />
-                  Streak
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              {/* Streak */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-amber-500/30 hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Flame className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.streak?.currentStreak ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.streak?.currentStreak ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Streak
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-primary sm:text-xs">
-                  <Zap className="size-3.5" />
-                  XP
+              {/* XP */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Zap className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.xpTotal ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.xpTotal ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    XP
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground sm:text-xs">
-                  <Sparkles className="size-3.5" />
-                  Exams
+              {/* Exams */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
+                  <Sparkles className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user._count?.examAttempts ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user._count?.examAttempts ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Exams
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground sm:text-xs">
-                  <Trophy className="size-3.5" />
-                  Badges
+              {/* Badges */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Trophy className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user._count?.badges ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user._count?.badges ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Badges
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
-          {/* TEACHER STATS STRIP */}
+          {/* TEACHER STATS CHIPS */}
           {user.role === "TEACHER" && (
-            <div className="grid grid-cols-4 divide-x divide-border/60 rounded-2xl border border-border/70 bg-muted/25 p-2 backdrop-blur-md">
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              {/* Status */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:bg-muted/40">
                 <span
                   className={cn(
-                    "flex items-center gap-1 text-[11px] font-bold sm:text-xs",
+                    "flex size-8 shrink-0 items-center justify-center rounded-xl",
                     user.teacherVerificationStatus === "VERIFIED"
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-amber-600 dark:text-amber-400"
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
                   )}
                 >
-                  <ShieldCheck className="size-3.5" />
-                  Status
+                  <ShieldCheck className="size-4" />
                 </span>
-                <span className="font-heading text-sm font-black capitalize sm:text-base">
-                  {user.teacherVerificationStatus?.toLowerCase() ?? "Pending"}
-                </span>
+                <div className="leading-tight">
+                  <span
+                    className={cn(
+                      "block font-heading text-sm font-black capitalize sm:text-base",
+                      user.teacherVerificationStatus === "VERIFIED"
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-amber-600 dark:text-amber-400"
+                    )}
+                  >
+                    {user.teacherVerificationStatus?.toLowerCase() ?? "Pending"}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Faculty
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-primary sm:text-xs">
-                  <ClipboardList className="size-3.5" />
-                  Exams
+              {/* Exams */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <ClipboardList className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user._count?.exams ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user._count?.exams ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Exams
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground sm:text-xs">
-                  <BookOpen className="size-3.5" />
-                  Questions
+              {/* Questions */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
+                  <BookOpen className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user._count?.questions ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user._count?.questions ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Bank
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground sm:text-xs">
-                  <Users className="size-3.5" />
-                  Takers
+              {/* Takers */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  <Users className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.teacherTotalAttempts ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.teacherTotalAttempts ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Takers
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
-          {/* ADMIN STATS STRIP */}
+          {/* ADMIN STATS CHIPS */}
           {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
-            <div className="grid grid-cols-3 divide-x divide-border/60 rounded-2xl border border-border/70 bg-muted/25 p-2 backdrop-blur-md">
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-primary sm:text-xs">
-                  <Users className="size-3.5" />
-                  Users
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              {/* Users */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Users className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.adminStats?.totalUsers ?? "—"}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.adminStats?.totalUsers ?? "—"}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Users
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground sm:text-xs">
-                  <Sparkles className="size-3.5" />
-                  Live Exams
+              {/* Live Exams */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
+                  <Sparkles className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.adminStats?.totalPlatformExams ?? "—"}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.adminStats?.totalPlatformExams ?? "—"}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Exams
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600 sm:text-xs dark:text-amber-400">
-                  <Clock className="size-3.5" />
-                  Queue
+              {/* Queue */}
+              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-amber-500/30 hover:bg-muted/40">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Clock className="size-4" />
                 </span>
-                <span className="font-heading text-lg font-black tracking-tight text-foreground sm:text-2xl">
-                  {user.adminStats?.pendingVerifications ?? 0}
-                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                    {user.adminStats?.pendingVerifications ?? 0}
+                  </span>
+                  <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                    Queue
+                  </span>
+                </div>
               </div>
             </div>
           )}
