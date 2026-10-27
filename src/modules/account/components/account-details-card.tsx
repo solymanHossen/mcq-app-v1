@@ -61,7 +61,7 @@ export function AccountDetailsCard({
   }).format(new Date(createdAt))
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       <div>
         <div className="pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -70,12 +70,12 @@ export function AccountDetailsCard({
         </div>
 
         <div className="space-y-5">
-          {/* User ID Field (Google-style large box) */}
+          {/* User ID Field (Teacher Directory style soft box, no harsh border) */}
           <div className="space-y-2">
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Account ID (UUID)
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between gap-3 rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+            <div className="flex h-13.5 w-full items-center justify-between gap-3 rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
               <code className="truncate font-mono text-xs font-semibold text-foreground sm:text-sm select-all">
                 {id}
               </code>
@@ -101,12 +101,12 @@ export function AccountDetailsCard({
             </div>
           </div>
 
-          {/* Role Field (Google-style large box) */}
+          {/* Role Field (Teacher Directory style soft box) */}
           <div className="space-y-2">
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Authority Level
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {getRoleTitle(role)}
               </span>
@@ -120,12 +120,12 @@ export function AccountDetailsCard({
             </div>
           </div>
 
-          {/* Email Verification Status Field (Google-style large box) */}
+          {/* Email Verification Status Field (Teacher Directory style soft box) */}
           <div className="space-y-2">
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Security & Verification
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {isEmailVerified ? "Email Address Verified" : "Verification Required"}
               </span>
@@ -152,12 +152,12 @@ export function AccountDetailsCard({
             </div>
           </div>
 
-          {/* Member Since Field (Google-style large box) */}
+          {/* Member Since Field (Teacher Directory style soft box) */}
           <div className="space-y-2">
             <Label className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm">
               Member Since
             </Label>
-            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl border border-border/80 bg-background/80 px-4.5 sm:h-14 sm:px-5">
+            <div className="flex h-13.5 w-full items-center justify-between rounded-2xl bg-muted/30 px-5 transition-all hover:bg-muted/50 sm:h-14">
               <span className="text-sm font-semibold text-foreground sm:text-base">
                 {createdDate}
               </span>

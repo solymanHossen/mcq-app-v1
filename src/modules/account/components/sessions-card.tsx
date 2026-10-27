@@ -21,7 +21,7 @@ export function SessionsCard() {
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       <div>
         <div className="flex items-center justify-between pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -34,17 +34,17 @@ export function SessionsCard() {
 
         <div className="space-y-4">
           {/* Current Active Session Card */}
-          <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-background/80 p-4.5">
+          <div className="flex items-center justify-between rounded-2xl bg-muted/30 p-4.5 transition-all duration-200 hover:bg-muted/50">
             <div className="flex items-center gap-3.5">
-              <span className="flex size-11 items-center justify-center rounded-xl border border-border/60 bg-muted/30 text-foreground">
-                <Laptop className="size-5 text-primary" />
+              <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Laptop className="size-5" />
               </span>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-foreground">
                     Current Web Session
                   </span>
-                  <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
                     Active Now
                   </span>
                 </div>
@@ -56,8 +56,8 @@ export function SessionsCard() {
           </div>
         </div>
 
-        {/* Seamless Integrated Footer Bar */}
-        <div className="flex items-center justify-end border-t border-border/60 pt-6 mt-6">
+        {/* Seamless Integrated Action Bar */}
+        <div className="flex items-center justify-end pt-6 mt-6">
           <Button
             type="button"
             variant="destructive"

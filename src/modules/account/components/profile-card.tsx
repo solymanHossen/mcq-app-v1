@@ -36,7 +36,7 @@ export function ProfileCard({
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       <div>
         <div className="pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -46,7 +46,7 @@ export function ProfileCard({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-5">
-            {/* Display Name Input (Google-style, large, smooth) */}
+            {/* Display Name Input (Teacher Directory style, soft bg, smooth focus, no hard border) */}
             <div className="space-y-2">
               <Label
                 htmlFor="name"
@@ -62,11 +62,11 @@ export function ProfileCard({
                 maxLength={100}
                 required
                 placeholder="Your full name"
-                className="h-13.5 w-full rounded-2xl border border-border/80 bg-background/80 px-4.5 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:border-foreground/30 focus:border-primary focus:bg-background focus:ring-4 focus:ring-primary/10 focus:outline-none sm:h-14 sm:px-5"
+                className="h-13.5 w-full rounded-2xl bg-muted/30 px-5 text-base font-medium text-foreground transition-all placeholder:text-muted-foreground/50 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14"
               />
             </div>
 
-            {/* Email Address Input (Google-style, large, smooth, read-only) */}
+            {/* Email Address Input (Teacher Directory style, read-only) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label
@@ -85,13 +85,13 @@ export function ProfileCard({
                 value={email}
                 disabled
                 readOnly
-                className="h-13.5 w-full cursor-not-allowed rounded-2xl border border-border/60 bg-muted/30 px-4.5 font-medium text-muted-foreground select-all sm:h-14 sm:px-5"
+                className="h-13.5 w-full cursor-not-allowed rounded-2xl bg-muted/20 px-5 font-medium text-muted-foreground select-all sm:h-14"
               />
             </div>
           </div>
 
           {/* Seamless Integrated Footer Bar */}
-          <div className="flex items-center justify-between border-t border-border/60 pt-6">
+          <div className="flex items-center justify-between border-t border-border/50 pt-6">
             <span className="text-xs font-medium text-muted-foreground">
               {dirty ? (
                 <span className="font-semibold text-primary">Unsaved changes</span>
@@ -103,7 +103,7 @@ export function ProfileCard({
             <Button
               type="submit"
               disabled={!dirty || isPending}
-              className="h-11 rounded-xl px-7 text-sm font-semibold shadow-none transition-all active:scale-95 cursor-pointer sm:h-12"
+              className="h-11 rounded-xl px-7 text-sm font-bold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-95 transition-all cursor-pointer sm:h-12"
             >
               {isPending && <Spinner data-icon="inline-start" />}
               Save Changes

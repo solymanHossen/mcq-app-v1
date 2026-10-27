@@ -54,7 +54,7 @@ export function StudentActivityCard({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
         <Link
           href="/exams"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+          className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
@@ -74,7 +74,7 @@ export function StudentActivityCard({
 
         <Link
           href="/mistakes"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+          className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
@@ -94,7 +94,7 @@ export function StudentActivityCard({
 
         <Link
           href="/leaderboard"
-          className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+          className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
         >
           <div className="flex items-center gap-4 sm:gap-5">
             <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
@@ -114,8 +114,8 @@ export function StudentActivityCard({
       </div>
 
       {/* Recent Exam Attempts Card — Large, Modern, Spacious */}
-      <Card className="overflow-hidden rounded-3xl border-border/80 shadow-xs">
-        <CardHeader className="border-b border-border/60 p-6 sm:p-8">
+      <Card className="overflow-hidden rounded-3xl border-0 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+        <CardHeader className="p-6 sm:p-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <CardTitle className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
@@ -136,7 +136,7 @@ export function StudentActivityCard({
           </div>
         </CardHeader>
 
-        <CardContent className="p-6 sm:p-8">
+        <CardContent className="p-6 sm:p-8 pt-0 sm:pt-0">
           {recentAttempts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-14 text-center">
               <div className="mb-4 flex size-16 items-center justify-center rounded-3xl bg-muted text-muted-foreground">
@@ -157,7 +157,7 @@ export function StudentActivityCard({
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentAttempts.map((attempt) => {
                 const dateFormatted = new Intl.DateTimeFormat("en-US", {
                   month: "short",
@@ -177,7 +177,7 @@ export function StudentActivityCard({
                 return (
                   <div
                     key={attempt.id}
-                    className="flex flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-card p-5 transition-all duration-300 hover:border-border hover:bg-muted/30 hover:shadow-md sm:flex-row sm:items-center sm:p-6"
+                    className="flex flex-col justify-between gap-4 rounded-2xl bg-muted/30 p-5 transition-all duration-200 hover:bg-muted/50 sm:flex-row sm:items-center sm:p-6"
                   >
                     {/* Left: Title, Status, and Date */}
                     <div className="min-w-0 space-y-1.5">

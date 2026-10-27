@@ -2,22 +2,13 @@
 
 import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
-import {
-  Sun,
-  Moon,
-  Monitor,
-  CheckCircle2,
-  Command,
-  Sparkles,
-} from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Sun, Moon, Monitor, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { APP_NAME } from "@/lib/config"
 
 interface ThemeOption {
   value: "light" | "dark" | "system"
   label: string
-  description: string
+  subtitle: string
   icon: typeof Sun
 }
 
@@ -25,21 +16,19 @@ const THEME_OPTIONS: ThemeOption[] = [
   {
     value: "light",
     label: "Light Mode",
-    description:
-      "Pristine, high-clarity daylight aesthetic with crisp contrast.",
+    subtitle: "Bright clarity interface",
     icon: Sun,
   },
   {
     value: "dark",
     label: "Dark Mode",
-    description: "Deep, sleek radiant palette engineered for low eye-strain.",
+    subtitle: "Low eye-strain dark theme",
     icon: Moon,
   },
   {
     value: "system",
     label: "System Sync",
-    description:
-      "Automatically synchronizes with your device operating system.",
+    subtitle: "Sync with OS preferences",
     icon: Monitor,
   },
 ]
@@ -53,22 +42,17 @@ export function AppearanceCard() {
   )
 
   return (
-    <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
-      <div className="flex items-center justify-between pb-6">
-        <div>
-          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
-            Interface Appearance & Theme
-          </h3>
-        </div>
-        <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <Sparkles className="size-4.5" />
-        </span>
+    <div className="rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+      <div className="pb-6">
+        <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+          Theme & Appearance
+        </h3>
       </div>
 
       <div className="space-y-6">
         {mounted ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {THEME_OPTIONS.map(({ value, label, description, icon: Icon }) => {
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            {THEME_OPTIONS.map(({ value, label, subtitle, icon: Icon }) => {
               const active = theme === value
 
               return (
@@ -77,128 +61,60 @@ export function AppearanceCard() {
                   type="button"
                   onClick={() => setTheme(value)}
                   className={cn(
-                    "group relative flex flex-col justify-between rounded-2xl border p-5 text-left transition-all duration-300",
+                    "group flex items-center justify-between rounded-2xl p-4 text-left transition-all duration-200 cursor-pointer sm:p-5",
                     active
-                      ? "border-primary bg-primary/[0.04] shadow-sm ring-2 ring-primary/25"
-                      : "border-border/80 bg-card hover:border-primary/40 hover:bg-muted/30 hover:shadow-xs"
+                      ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-xs"
+                      : "bg-muted/30 text-foreground hover:bg-muted/60"
                   )}
                   aria-pressed={active}
                 >
-                  {/* Visual Theme Mockup */}
-                  <div
+                  <div className="flex items-center gap-3.5">
+                    <span
+                      className={cn(
+                        "flex size-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105",
+                        active
+                          ? "bg-primary text-primary-foreground shadow-xs"
+                          : "bg-background/80 text-foreground"
+                      )}
+                    >
+                      <Icon className="size-5" />
+                    </span>
+                    <div>
+                      <p className="font-heading text-sm font-bold text-foreground sm:text-base">
+                        {label}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span
                     className={cn(
-                      "mb-4 flex h-20 w-full flex-col justify-between overflow-hidden rounded-xl border p-2.5 transition-all",
-                      value === "light" &&
-                        "border-slate-200 bg-white text-slate-900",
-                      value === "dark" &&
-                        "border-slate-800 bg-slate-950 text-slate-100",
-                      value === "system" &&
-                        "border-border bg-gradient-to-r from-white to-slate-950 p-0"
+                      "flex size-5 items-center justify-center rounded-full transition-all",
+                      active
+                        ? "bg-primary text-primary-foreground"
+                        : "border border-muted-foreground/30"
                     )}
                   >
-                    {value === "system" ? (
-                      <div className="grid size-full grid-cols-2">
-                        <div className="flex flex-col justify-between bg-white p-2 text-slate-900">
-                          <div className="h-1.5 w-6 rounded bg-slate-200" />
-                          <div className="space-y-1">
-                            <div className="h-2 w-10 rounded bg-blue-500/80" />
-                            <div className="h-1.5 w-8 rounded bg-slate-200" />
-                          </div>
-                        </div>
-                        <div className="flex flex-col justify-between bg-slate-950 p-2 text-slate-100">
-                          <div className="h-1.5 w-6 rounded bg-slate-800" />
-                          <div className="space-y-1">
-                            <div className="h-2 w-10 rounded bg-blue-400" />
-                            <div className="h-1.5 w-8 rounded bg-slate-800" />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div
-                            className={cn(
-                              "h-2 w-12 rounded-sm",
-                              value === "light"
-                                ? "bg-slate-200"
-                                : "bg-slate-800"
-                            )}
-                          />
-                          <div
-                            className={cn(
-                              "size-2 rounded-full",
-                              value === "light" ? "bg-primary/80" : "bg-primary"
-                            )}
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <div
-                            className={cn(
-                              "h-2.5 w-16 rounded",
-                              value === "light"
-                                ? "bg-slate-800"
-                                : "bg-slate-200"
-                            )}
-                          />
-                          <div
-                            className={cn(
-                              "h-1.5 w-full rounded",
-                              value === "light"
-                                ? "bg-slate-100"
-                                : "bg-slate-900"
-                            )}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Header & Icon */}
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 font-heading text-sm font-bold text-foreground">
-                      <Icon className="size-4 text-primary" />
-                      <span>{label}</span>
-                    </span>
-                    {active && <CheckCircle2 className="size-4 text-primary" />}
-                  </div>
-
-                  {/* Description */}
-                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                    {description}
-                  </p>
+                    {active && <Check className="size-3 stroke-[3]" />}
+                  </span>
                 </button>
               )
             })}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Skeleton className="h-44 w-full rounded-2xl" />
-            <Skeleton className="h-44 w-full rounded-2xl" />
-            <Skeleton className="h-44 w-full rounded-2xl" />
-          </div>
+          <div className="h-20 w-full animate-pulse rounded-2xl bg-muted/30" />
         )}
 
-        {/* Global Keyboard Shortcut Pill */}
-        <div className="flex flex-col justify-between gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-card text-foreground shadow-2xs">
-              <Command className="size-4 text-muted-foreground" />
-            </span>
-            <div>
-              <p className="text-xs font-semibold text-foreground sm:text-sm">
-                Rapid Keyboard Shortcut
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Toggle between Light and Dark themes anytime without opening
-                menus.
-              </p>
-            </div>
-          </div>
-          <div className="inline-flex items-center gap-1.5 self-start sm:self-auto">
-            <kbd className="rounded-lg border border-border/80 bg-card px-2.5 py-1 font-mono text-xs font-bold text-foreground shadow-2xs">
+        {/* Minimal 1-Line Shortcut */}
+        <div className="flex items-center justify-between pt-4 border-t border-border/50 text-xs text-muted-foreground">
+          <span>Quick theme toggle</span>
+          <div className="inline-flex items-center gap-1.5">
+            <kbd className="rounded-md bg-muted px-2 py-0.5 font-mono text-[11px] font-bold text-foreground">
               D
             </kbd>
-            <span className="text-xs text-muted-foreground">on keyboard</span>
+            <span>on keyboard</span>
           </div>
         </div>
       </div>

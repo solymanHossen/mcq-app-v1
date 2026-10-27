@@ -163,7 +163,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
         <nav
           role="tablist"
           aria-label="Profile navigation sections"
-          className="inline-flex items-center gap-1.5 rounded-2xl border border-border/80 bg-muted/40 p-1.5 backdrop-blur-xl sm:gap-2"
+          className="inline-flex items-center gap-1.5 rounded-2xl bg-muted/40 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
         >
           {tabsConfig.map((tab) => {
             const Icon = tab.icon
@@ -282,7 +282,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
                 {/* Badges showcase if student has earned achievements */}
                 {profile.badges.length > 0 && (
-                  <Card className="rounded-[28px] border border-border/80 shadow-xs">
+                  <Card className="rounded-[28px] border-0 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
                     <CardHeader className="p-6 sm:p-8">
                       <div className="flex items-center justify-between">
                         <div>
@@ -308,7 +308,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                         {profile.badges.map((badge) => (
                           <div
                             key={badge.id}
-                            className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 p-4 transition-colors hover:border-primary/40 hover:bg-muted/40"
+                            className="flex items-center gap-3.5 rounded-2xl bg-muted/30 p-4 transition-colors hover:bg-muted/50"
                           >
                             <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                               <Award className="size-5" />
@@ -344,7 +344,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
                   <Link
                     href="/teacher/exams/new"
-                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                    className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="flex items-center gap-4 sm:gap-5">
                       <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16">
@@ -364,7 +364,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
                   <Link
                     href="/teacher/questions/new"
-                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                    className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="flex items-center gap-4 sm:gap-5">
                       <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-indigo-500/15 dark:text-indigo-400">
@@ -384,7 +384,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
                   <Link
                     href="/teacher/exams"
-                    className="group flex items-center justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7"
+                    className="group flex items-center justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="flex items-center gap-4 sm:gap-5">
                       <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-2xs transition-transform duration-300 group-hover:scale-110 sm:size-16 dark:bg-emerald-500/15 dark:text-emerald-400">
@@ -487,8 +487,8 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                 </div>
 
                 {/* Published & Draft Assessment Tracks Showcase */}
-                <Card className="rounded-[28px] border border-border/80 shadow-xs">
-                  <CardHeader className="border-b border-border/60 p-6 sm:p-8">
+                <Card className="rounded-[28px] border-0 bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+                  <CardHeader className="p-6 sm:p-8">
                     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                       <div>
                         <CardTitle className="font-heading text-xl font-bold text-foreground sm:text-2xl">
@@ -511,7 +511,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-6 sm:p-8">
+                  <CardContent className="p-6 pt-0 sm:p-8 sm:pt-0">
                     {profile.teacherExams.length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
@@ -538,7 +538,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                         {profile.teacherExams.map((exam) => (
                           <div
                             key={exam.id}
-                            className="group flex flex-col justify-between gap-3.5 rounded-2xl border border-border/70 bg-card p-4 transition-all duration-200 hover:border-border hover:bg-muted/30 hover:shadow-xs min-[540px]:flex-row min-[540px]:items-center sm:p-5"
+                            className="group flex flex-col justify-between gap-3.5 rounded-2xl bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50 min-[540px]:flex-row min-[540px]:items-center sm:p-5"
                           >
                             <div className="min-w-0 space-y-1">
                               <div className="flex flex-wrap items-center gap-2.5">
@@ -600,7 +600,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
                   <Link
                     href="/admin/users"
-                    className="group flex flex-col justify-between rounded-[28px] border border-border/80 bg-card p-7 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99]"
+                    className="group flex flex-col justify-between rounded-[28px] bg-card p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="space-y-3.5">
                       <span className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110">
@@ -621,7 +621,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
                   <Link
                     href="/admin/teachers"
-                    className="group flex flex-col justify-between rounded-[28px] border border-border/80 bg-card p-7 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99]"
+                    className="group flex flex-col justify-between rounded-[28px] bg-card p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="space-y-3.5">
                       <span className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110">
@@ -642,7 +642,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
 
                   <Link
                     href="/admin/audit-log"
-                    className="group flex flex-col justify-between rounded-[28px] border border-border/80 bg-card p-7 shadow-xs transition-all duration-300 hover:border-primary/50 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99]"
+                    className="group flex flex-col justify-between rounded-[28px] bg-card p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:bg-muted/30 hover:shadow-lg active:scale-[0.99] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
                   >
                     <div className="space-y-3.5">
                       <span className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs transition-transform duration-300 group-hover:scale-110">
@@ -686,7 +686,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
             aria-labelledby="tab-billing"
             className="animate-in space-y-6 duration-300 fade-in-50 slide-in-from-bottom-2"
           >
-            <Card className="rounded-[28px] border border-border/80 p-2 shadow-xs sm:p-4">
+            <Card className="rounded-[28px] border-0 bg-card p-2 shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-4 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
               <CardHeader className="p-6 sm:p-7">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                   <div>
@@ -710,7 +710,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
               </CardHeader>
               <CardContent className="space-y-6 p-6 pt-0 sm:p-7 sm:pt-0">
                 {activeSubscription ? (
-                  <div className="space-y-3 rounded-2xl border border-border/80 bg-muted/30 p-5 sm:p-6">
+                  <div className="space-y-3 rounded-2xl bg-muted/30 p-5 sm:p-6">
                     <div className="flex items-center justify-between">
                       <p className="text-lg font-bold text-foreground sm:text-xl">
                         {activeSubscription.plan.name}
@@ -727,7 +727,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2 rounded-2xl border border-border/80 bg-muted/20 p-5 sm:p-6">
+                  <div className="space-y-2 rounded-2xl bg-muted/30 p-5 sm:p-6">
                     <p className="text-base font-bold text-foreground sm:text-lg">
                       Free Tier Account
                     </p>

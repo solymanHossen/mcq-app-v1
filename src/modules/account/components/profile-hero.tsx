@@ -104,7 +104,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-card/80 p-5 shadow-none backdrop-blur-xl transition-all sm:p-7">
+    <div className="relative overflow-hidden rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"
@@ -116,7 +116,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
         <div className="flex items-center gap-4 sm:gap-5">
           {/* Avatar with Online Beacon */}
           <div className="relative shrink-0">
-            <Avatar className="size-16 border border-border/80 shadow-xs ring-2 ring-primary/15 sm:size-18">
+            <Avatar className="size-16 ring-2 ring-primary/15 sm:size-18">
               <AvatarFallback className="bg-primary/10 font-heading text-xl font-extrabold tracking-tight text-primary sm:text-2xl">
                 {getInitials(user.name)}
               </AvatarFallback>
@@ -147,7 +147,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="group inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-muted/40 px-2.5 py-1 font-medium transition-colors hover:border-border hover:bg-muted/70 hover:text-foreground"
+                className="group inline-flex items-center gap-1.5 rounded-lg bg-muted/40 px-2.5 py-1 font-medium transition-colors hover:bg-muted/70 hover:text-foreground"
                 title="Click to copy email address"
               >
                 <Mail className="size-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
@@ -189,7 +189,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           {user.role === "STUDENT" && (
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {/* Streak */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-amber-500/30 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Flame className="size-4" />
                 </span>
@@ -204,7 +204,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* XP */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Zap className="size-4" />
                 </span>
@@ -219,7 +219,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
                   <Sparkles className="size-4" />
                 </span>
@@ -234,7 +234,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Badges */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Trophy className="size-4" />
                 </span>
@@ -254,7 +254,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           {user.role === "TEACHER" && (
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {/* Status */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span
                   className={cn(
                     "flex size-8 shrink-0 items-center justify-center rounded-xl",
@@ -283,7 +283,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <ClipboardList className="size-4" />
                 </span>
@@ -298,7 +298,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Questions */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
                   <BookOpen className="size-4" />
                 </span>
@@ -313,7 +313,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Takers */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   <Users className="size-4" />
                 </span>
@@ -333,7 +333,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
           {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {/* Users */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-primary/40 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Users className="size-4" />
                 </span>
@@ -348,7 +348,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Live Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-border hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
                   <Sparkles className="size-4" />
                 </span>
@@ -363,7 +363,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               </div>
 
               {/* Queue */}
-              <div className="flex items-center gap-2.5 rounded-2xl border border-border/70 bg-card/60 px-3.5 py-2 shadow-2xs backdrop-blur-md transition-all duration-200 hover:border-amber-500/30 hover:bg-muted/40">
+              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Clock className="size-4" />
                 </span>

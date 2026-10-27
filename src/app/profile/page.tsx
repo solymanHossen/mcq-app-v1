@@ -29,7 +29,7 @@ export default async function ProfilePage() {
       {/* Ultra-Smooth Large-Size Tabs System */}
       <Suspense
         fallback={
-          <div className="h-48 w-full animate-pulse rounded-3xl border border-border/80 bg-card/60" />
+          <div className="h-48 w-full animate-pulse rounded-3xl bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)]" />
         }
       >
         <ProfileTabs profile={profile} billingEnabled={billingEnabled} />

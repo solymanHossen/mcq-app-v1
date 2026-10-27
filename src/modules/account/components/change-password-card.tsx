@@ -54,7 +54,7 @@ export function ChangePasswordCard() {
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl border border-border/80 bg-card p-6 shadow-none backdrop-blur-xl transition-all sm:p-8">
+    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       <div>
         <div className="flex items-center justify-between pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -83,7 +83,7 @@ export function ChangePasswordCard() {
                   value={currentPassword}
                   onChange={(event) => setCurrentPassword(event.target.value)}
                   required
-                  className="h-13.5 w-full rounded-2xl border border-border/80 bg-background/80 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:border-foreground/30 focus:border-primary focus:bg-background focus:ring-4 focus:ring-primary/10 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                   placeholder="Enter existing password"
                 />
                 <button
@@ -119,7 +119,7 @@ export function ChangePasswordCard() {
                   onChange={(event) => setNewPassword(event.target.value)}
                   minLength={8}
                   required
-                  className="h-13.5 w-full rounded-2xl border border-border/80 bg-background/80 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:border-foreground/30 focus:border-primary focus:bg-background focus:ring-4 focus:ring-primary/10 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                 />
                 <button
                   type="button"
@@ -153,7 +153,7 @@ export function ChangePasswordCard() {
                   onChange={(event) => setConfirmPassword(event.target.value)}
                   minLength={8}
                   required
-                  className="h-13.5 w-full rounded-2xl border border-border/80 bg-background/80 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:border-foreground/30 focus:border-primary focus:bg-background focus:ring-4 focus:ring-primary/10 focus:outline-none sm:h-14 sm:px-5"
+                  className="h-13.5 w-full rounded-2xl bg-muted/30 px-4.5 pr-12 text-base font-medium text-foreground transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-muted/50 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14 sm:px-5"
                   placeholder="Repeat new password"
                 />
                 <button
@@ -172,7 +172,7 @@ export function ChangePasswordCard() {
             </div>
 
             {/* Realtime Password Integrity Meter */}
-            <div className="space-y-1.5 rounded-xl border border-border/60 bg-muted/20 p-3.5 text-xs">
+            <div className="space-y-1.5 rounded-2xl bg-muted/30 p-3.5 text-xs">
               <div className="flex items-center gap-2">
                 <span
                   className={
@@ -199,7 +199,7 @@ export function ChangePasswordCard() {
             </div>
 
             {/* Session Invalidation Warning */}
-            <div className="flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-3.5 text-xs text-muted-foreground">
+            <div className="flex items-start gap-3 rounded-2xl bg-destructive/10 p-3.5 text-xs text-muted-foreground">
               <ShieldAlert className="mt-0.5 size-4 shrink-0 text-destructive" />
               <p className="leading-relaxed">
                 Upon successful password update, all active sessions on every
@@ -208,8 +208,8 @@ export function ChangePasswordCard() {
             </div>
           </div>
 
-          {/* Seamless Integrated Footer Bar */}
-          <div className="flex items-center justify-end border-t border-border/60 pt-6">
+          {/* Seamless Integrated Action Bar */}
+          <div className="flex items-center justify-end pt-4">
             <Button
               type="submit"
               disabled={!passwordsMatch || !isLongEnough || isPending}
