@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Settings, User as UserIcon } from "lucide-react"
+import { ChevronsUpDown, LogOut, Settings, User as UserIcon } from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
@@ -18,7 +18,16 @@ import {
 } from "@/components/ui/sidebar"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { LogoutButton } from "@/components/shared/logout-button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { signOut } from "next-auth/react"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
 import { cn } from "@/lib/utils"
 
@@ -48,7 +57,7 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   const pathname = usePathname()
-  const { state } = useSidebar()
+  const { state, isMobile } = useSidebar()
   const isCollapsed = state === "collapsed"
 
   return (
@@ -127,43 +136,89 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer Profile */}
-      <SidebarFooter className="border-t-0 p-3 pb-8">
+      {/* Footer User Profile with Modern Smooth Popover Menu */}
+      <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex flex-col gap-1.5">
-              <Link
-                href="/profile"
-                className="group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent/60 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
-                title={`${user.name} (${user.email})`}
-              >
-                <Avatar className="size-9 rounded-lg">
-                  <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
-                    {getInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
-                  <p className="truncate text-sm font-semibold text-sidebar-foreground">
-                    {user.name}
-                  </p>
-                  <p className="truncate text-xs text-sidebar-foreground/60">
-                    {user.email}
-                  </p>
-                </div>
-                <Settings className="size-4 text-sidebar-foreground/60 transition-transform group-hover:rotate-45 group-hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
-              </Link>
-
-              <div className="flex items-center justify-between px-2 pt-0.5 group-data-[collapsible=icon]:hidden">
-                <Link
-                  href="/profile"
-                  className="inline-flex h-6 items-center gap-1.5 rounded-md px-1.5 text-xs font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="h-12 w-full rounded-lg px-2.5 transition-all duration-200 hover:bg-sidebar-accent/60 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center cursor-pointer"
+                  tooltip={`${user.name} (${user.email})`}
                 >
-                  <UserIcon className="size-3.5" />
-                  <span>Profile</span>
-                </Link>
-                <LogoutButton className="h-6 text-xs text-sidebar-foreground/70 hover:text-destructive" />
-              </div>
-            </div>
+                  <Avatar className="size-8.5 rounded-lg shrink-0">
+                    <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight min-w-0 group-data-[collapsible=icon]:hidden">
+                    <span className="truncate font-semibold text-sidebar-foreground">
+                      {user.name}
+                    </span>
+                    <span className="truncate text-xs text-sidebar-foreground/60">
+                      {user.email}
+                    </span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto size-4 text-sidebar-foreground/50 transition-transform group-hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-xl border border-sidebar-border bg-popover/98 p-1.5 text-popover-foreground shadow-xl backdrop-blur-xl animate-in fade-in-0 zoom-in-95"
+                side={isMobile ? "bottom" : isCollapsed ? "right" : "top"}
+                align={isCollapsed ? "end" : "end"}
+                sideOffset={8}
+              >
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-2 text-left text-sm">
+                    <Avatar className="size-9 rounded-lg shrink-0">
+                      <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                      <span className="truncate font-semibold text-foreground">
+                        {user.name}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {user.email}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="my-1.5" />
+                <DropdownMenuGroup className="space-y-0.5">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/profile"
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    >
+                      <UserIcon className="size-4 text-muted-foreground" />
+                      <span>Profile & Account</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/profile"
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    >
+                      <Settings className="size-4 text-muted-foreground" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator className="my-1.5" />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-semibold text-destructive transition-colors focus:bg-destructive/10 focus:text-destructive"
+                >
+                  <LogOut className="size-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
