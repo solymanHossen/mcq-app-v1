@@ -99,14 +99,20 @@ export function AppSidebar({
                       isActive={active}
                       tooltip={item.label}
                       className={cn(
-                        "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors",
+                        "relative h-10 rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 overflow-hidden",
                         active
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground [&_svg]:text-sidebar-accent-foreground data-[active=true]:[&_svg]:text-sidebar-accent-foreground"
+                          ? "bg-sidebar-accent text-primary font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-primary hover:bg-sidebar-accent hover:text-primary [&_svg]:text-primary data-[active=true]:[&_svg]:text-primary"
                           : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60 hover:[&_svg]:text-sidebar-foreground",
                         "[&_svg]:size-4.5 shrink-0"
                       )}
                     >
                       <Link href={item.href}>
+                        {active && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                          />
+                        )}
                         {item.icon}
                         <span className="tracking-tight group-data-[collapsible=icon]:hidden">
                           {item.label}
