@@ -165,6 +165,7 @@ export function DashboardKpiCard({
   subtext,
   href,
   className,
+  highlight,
   icon: Icon,
   sparklineData,
   sparklineType = "area",
@@ -176,41 +177,52 @@ export function DashboardKpiCard({
   const cardElement = (
     <Card
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/70 bg-card p-5 sm:p-5.5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        "group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-border",
+        highlight && "ring-1 ring-primary/30",
         className
       )}
     >
-      <CardHeader className="flex flex-row items-center justify-between gap-2 p-0 pb-1">
-        <div className="flex items-center gap-2 min-w-0">
-          {Icon && (
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-foreground border border-border/70 shadow-2xs">
-              <Icon className="size-4" />
-            </span>
-          )}
-          <CardDescription className="text-xs sm:text-sm font-semibold text-foreground truncate">
-            {title}
-          </CardDescription>
-        </div>
+      {/* 1. TOP BAR: Icon + Badge with ample horizontal room */}
+      <div className="flex items-center justify-between gap-2">
+        {Icon ? (
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-foreground border border-border/70 shadow-2xs transition-transform duration-200 group-hover:scale-105">
+            <Icon className="size-4.5" />
+          </span>
+        ) : (
+          <span className="size-2 rounded-full bg-primary/40" />
+        )}
 
         {badgeText && (
           <Badge
             variant="outline"
-            className="flex items-center gap-1 text-[11px] font-medium tracking-tight rounded-full px-2 py-0.5 border border-border/70 bg-muted/40 text-muted-foreground shadow-2xs shrink-0"
+            className={cn(
+              "flex items-center gap-1 text-[11px] font-semibold tracking-tight rounded-full px-2.5 py-0.5 border shadow-2xs shrink-0 transition-colors",
+              trend === "up"
+                ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                : trend === "down"
+                ? "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+                : "border-border/70 bg-muted/40 text-muted-foreground"
+            )}
           >
-            <TrendIcon className="size-3 text-muted-foreground" />
+            <TrendIcon className="size-3 shrink-0" />
             <span>{badgeText}</span>
           </Badge>
         )}
-      </CardHeader>
+      </div>
 
-      <CardContent className="flex flex-col gap-2 p-0 pt-3">
-        <div className="flex items-end justify-between gap-3">
-          <CardTitle className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground tabular-nums leading-none">
+      {/* 2. METRIC CONTENT: Dedicated full-width title + Value + Sparkline */}
+      <div className="flex flex-col gap-1.5 pt-3.5">
+        <p className="text-xs sm:text-[13px] font-semibold text-muted-foreground leading-snug">
+          {title}
+        </p>
+
+        <div className="flex items-baseline justify-between gap-2">
+          <CardTitle className="font-heading text-2xl sm:text-[28px] font-extrabold tracking-tight text-foreground tabular-nums leading-none">
             {value}
           </CardTitle>
 
           {sparklineData && sparklineData.length > 1 && (
-            <div className="h-8 w-18 sm:w-20 shrink-0 overflow-hidden">
+            <div className="h-7 w-18 sm:w-20 shrink-0 overflow-hidden">
               <KpiSparkline
                 data={sparklineData}
                 type={sparklineType}
@@ -220,26 +232,31 @@ export function DashboardKpiCard({
             </div>
           )}
         </div>
+      </div>
 
-        {(trendLabel || subtext) && (
-          <div className="flex flex-col gap-0.5 text-xs text-muted-foreground pt-0.5">
-            {trendLabel && (
-              <span className="flex items-center gap-1.5 font-medium text-foreground">
-                <TrendIcon
-                  className={cn(
-                    "size-3.5",
-                    trend === "up" && "text-emerald-600 dark:text-emerald-400",
-                    trend === "down" && "text-destructive",
-                    trend === "neutral" && "text-muted-foreground"
-                  )}
-                />
-                <span>{trendLabel}</span>
-              </span>
-            )}
-            {subtext && <span className="text-[11px] sm:text-xs text-muted-foreground font-normal">{subtext}</span>}
-          </div>
-        )}
-      </CardContent>
+      {/* 3. CONTEXT FOOTER: Clean trend indicator and subtext with subtle divider */}
+      {(trendLabel || subtext) && (
+        <div className="flex flex-col gap-0.5 text-xs text-muted-foreground pt-3 mt-3 border-t border-border/40">
+          {trendLabel && (
+            <span className="flex items-center gap-1.5 font-medium text-foreground truncate">
+              <TrendIcon
+                className={cn(
+                  "size-3.5 shrink-0",
+                  trend === "up" && "text-emerald-600 dark:text-emerald-400",
+                  trend === "down" && "text-amber-600 dark:text-amber-400",
+                  trend === "neutral" && "text-muted-foreground"
+                )}
+              />
+              <span className="truncate">{trendLabel}</span>
+            </span>
+          )}
+          {subtext && (
+            <span className="text-[11px] sm:text-xs text-muted-foreground font-normal truncate">
+              {subtext}
+            </span>
+          )}
+        </div>
+      )}
     </Card>
   )
 

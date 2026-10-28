@@ -186,7 +186,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* ================= 5-TILE GRAND KPI METRICS ROW ================= */}
-      <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 sm:gap-5">
+      <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 sm:gap-4.5">
         {/* KPI 1: Total Users */}
         <DashboardKpiCard
           title="Total Users"
@@ -214,9 +214,9 @@ export default async function AdminDashboardPage() {
         <DashboardKpiCard
           title="Assessments"
           value={totalExams}
-          badgeText={`${publishedExams} Published`}
+          badgeText={`${publishedExams} Live`}
           trend="up"
-          trendLabel={`${publishedExams} live exams`}
+          trendLabel={`${publishedExams} Published exams`}
           subtext={`${totalQuestions} Questions in bank`}
           icon={BookOpen}
           href="/admin"
@@ -237,10 +237,10 @@ export default async function AdminDashboardPage() {
         <DashboardKpiCard
           title="Exam Attempts"
           value={totalAttempts}
-          badgeText="Candidate Flow"
+          badgeText={`${completedAttempts} Done`}
           trend="neutral"
           trendLabel={`${completedAttempts} Completed`}
-          subtext={`${inProgressAttempts} In progress now`}
+          subtext={inProgressAttempts > 0 ? `${inProgressAttempts} In progress now` : "Zero active delays"}
           icon={Activity}
           sparklineData={[
             Math.max(1, Math.round(totalAttempts * 0.2)),
@@ -259,17 +259,17 @@ export default async function AdminDashboardPage() {
         <DashboardKpiCard
           title="Teacher Queue"
           value={pendingTeachers}
-          badgeText={pendingTeachers > 0 ? "Review Required" : "Cleared"}
+          badgeText={pendingTeachers > 0 ? `${pendingTeachers} Pending` : "Cleared"}
           trend={pendingTeachers > 0 ? "down" : "neutral"}
           trendLabel={
             pendingTeachers > 0
-              ? "Faculty accreditation waiting"
-              : "Zero pending verification requests"
+              ? "Accreditation waiting"
+              : "All teachers accredited"
           }
           subtext={
             pendingTeachers > 0
               ? "Action required in educator hub"
-              : "All teachers accredited"
+              : "Queue fully verified"
           }
           icon={GraduationCap}
           href="/admin/teachers"
@@ -285,10 +285,14 @@ export default async function AdminDashboardPage() {
         {/* KPI 5: Security & Integrity */}
         <DashboardKpiCard
           title="System Health"
-          value={suspendedCount + stalePending.length}
-          badgeText={(suspendedCount + stalePending.length) > 0 ? "Audit" : "Clean"}
-          trend={(suspendedCount + stalePending.length) > 0 ? "down" : "neutral"}
-          trendLabel="Platform integrity status"
+          value={suspendedCount + stalePending.length === 0 ? "Optimal" : `${suspendedCount + stalePending.length} Alert`}
+          badgeText={(suspendedCount + stalePending.length) > 0 ? "Audit" : "Healthy"}
+          trend={(suspendedCount + stalePending.length) > 0 ? "down" : "up"}
+          trendLabel={
+            (suspendedCount + stalePending.length) > 0
+              ? "Platform attention needed"
+              : "All systems operational"
+          }
           subtext={`${suspendedCount} Suspended • ${stalePending.length} Stale Txs`}
           icon={ShieldAlert}
           href="/admin/audit-log"
