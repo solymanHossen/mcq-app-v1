@@ -7,7 +7,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field"
+
+import { DateTimePicker } from "@/components/ui/date-time-picker"
 import type { ExamFormState } from "@/modules/exams/actions"
+
+
 
 export type ExamFormValues = {
   title?: string
@@ -103,23 +107,24 @@ export function ExamForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="startTime">Opens at (optional)</FieldLabel>
-            <Input
+            <DateTimePicker
               id="startTime"
               name="startTime"
-              type="datetime-local"
-              defaultValue={toLocalInputValue(initialValues?.startTime)}
+              defaultValue={initialValues?.startTime ? new Date(initialValues.startTime) : undefined}
+              placeholder="Pick opening date & time"
             />
           </Field>
           <Field>
             <FieldLabel htmlFor="endTime">Closes at (optional)</FieldLabel>
-            <Input
+            <DateTimePicker
               id="endTime"
               name="endTime"
-              type="datetime-local"
-              defaultValue={toLocalInputValue(initialValues?.endTime)}
+              defaultValue={initialValues?.endTime ? new Date(initialValues.endTime) : undefined}
+              placeholder="Pick closing date & time"
             />
           </Field>
         </div>
+
 
         <Field orientation="horizontal">
           <Checkbox

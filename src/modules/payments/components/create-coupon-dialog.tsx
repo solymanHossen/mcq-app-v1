@@ -27,7 +27,10 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { DatePicker } from "@/components/ui/date-picker"
 import { createCouponAction } from "@/modules/payments/admin-actions"
+
 
 export function CreateCouponDialog() {
   const [open, setOpen] = useState(false)
@@ -274,14 +277,15 @@ export function CreateCouponDialog() {
                 <FieldLabel htmlFor="expires-at" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Expiry Date
                 </FieldLabel>
-                <Input
+                <DatePicker
                   id="expires-at"
                   name="expiresAt"
-                  type="date"
-                  value={expiresAt}
-                  onChange={(e) => setExpiresAt(e.target.value)}
-                  className="h-11 rounded-xl text-sm border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
+                  value={expiresAt ? new Date(expiresAt) : undefined}
+                  onChange={(date) => setExpiresAt(date ? format(date, "yyyy-MM-dd") : "")}
+                  placeholder="Pick expiration date"
+                  minDate={new Date()}
                 />
+
               </Field>
             </div>
 
