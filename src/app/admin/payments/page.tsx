@@ -31,6 +31,7 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { PagePagination } from "@/components/shared/page-pagination"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { RefundForm } from "@/modules/payments/components/payment-transaction-row"
 import { ReconcileTransactionForm } from "@/modules/payments/components/reconcile-transaction-form"
 import { cn } from "@/lib/utils"
@@ -135,18 +136,13 @@ export default async function AdminPaymentsPage({
           </p>
         </div>
 
-        {/* Global Search Bar aligned with Users Page pattern */}
-        <form action="/admin/payments" className="relative w-full max-w-sm">
-          {status && <input type="hidden" name="status" value={status} />}
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            name="q"
-            defaultValue={search ?? ""}
+        {/* Global Debounced Search Bar */}
+        <div className="w-full max-w-sm">
+          <DebouncedSearchInput
             placeholder="Search by customer, email, or tx ID…"
-            className="h-11 w-full rounded-2xl border border-border/70 bg-card pl-10 pr-4 text-xs sm:text-sm shadow-xs focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-all"
+            className="w-full"
           />
-        </form>
+        </div>
       </div>
 
       {/* ================= 4-TILE SUMMARY METRICS STRIP ================= */}

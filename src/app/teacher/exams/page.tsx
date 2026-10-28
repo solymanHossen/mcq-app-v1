@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/empty"
 import { ClipboardListIcon, Plus, Clock, Users, ArrowRight } from "lucide-react"
 import { PagePagination } from "@/components/shared/page-pagination"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { cn } from "@/lib/utils"
 import type { ExamStatus } from "@/prisma/generated/prisma/client"
 
@@ -50,15 +51,25 @@ export default async function ExamsPage({
   const user = await requireUser()
   const params = await searchParams
   const status = params.status as ExamStatus | undefined
+  const search = params.q?.trim()
 
   const { items, total, page, pageCount } = await listExams({
     teacherId: user.id,
     status,
     page: params.page ? Number(params.page) : 1,
+    search,
   })
 
+  function tabHref(tabVal?: ExamStatus) {
+    const sp = new URLSearchParams()
+    if (tabVal) sp.set("status", tabVal)
+    if (search) sp.set("q", search)
+    const qs = sp.toString()
+    return qs ? `?${qs}` : "/teacher/exams"
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header with Larger Font Size and Subtitle */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -66,7 +77,8 @@ export default async function ExamsPage({
             Authored Exams
           </h1>
           <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-            Manage test schedules, questions, publishing status, and student cohorts.
+            <span className="font-semibold text-foreground">{total}</span> total exam{total === 1 ? "" : "s"}
+            {search ? ` matching "${search}"` : ""} · Manage test schedules and publishing status.
           </p>
         </div>
         <Button
@@ -81,31 +93,40 @@ export default async function ExamsPage({
         </Button>
       </div>
 
-      {/* Modern Segmented Pill Dock Tabs */}
-      <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-        <nav
-          role="tablist"
-          aria-label="Filter exams by status"
-          className="flex w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
-        >
-          {TABS.map((tab) => {
-            const isActive = status === tab.value
-            return (
-              <Link
-                key={tab.label}
-                href={tab.value ? `?status=${tab.value}` : "?"}
-                className={cn(
-                  "flex flex-1 shrink-0 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 select-none sm:text-[14px]",
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
-                )}
-              >
-                <span>{tab.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
+      {/* Filter Tabs and Debounced Search Bar */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full sm:w-auto overflow-x-auto pb-1 scrollbar-none">
+          <nav
+            role="tablist"
+            aria-label="Filter exams by status"
+            className="flex w-fit min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
+          >
+            {TABS.map((tab) => {
+              const isActive = status === tab.value
+              return (
+                <Link
+                  key={tab.label}
+                  href={tabHref(tab.value)}
+                  className={cn(
+                    "flex shrink-0 items-center justify-center rounded-xl px-4 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 select-none",
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
+                  )}
+                >
+                  <span>{tab.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
+
+        <div className="w-full sm:max-w-xs">
+          <DebouncedSearchInput
+            placeholder="Search exams by title…"
+            className="w-full"
+          />
+        </div>
       </div>
 
       {/* Content Area with Profile-Style Rounded Card */}

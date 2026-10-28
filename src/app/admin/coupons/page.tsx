@@ -25,6 +25,7 @@ import {
 import { CreateCouponDialog } from "@/modules/payments/components/create-coupon-dialog"
 import { DeactivateCouponButton } from "@/modules/payments/components/deactivate-coupon-button"
 import { CopyCouponButton } from "@/modules/payments/components/copy-coupon-button"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { cn } from "@/lib/utils"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -216,17 +217,12 @@ export default async function AdminCouponsPage({
           </nav>
         </div>
 
-        <form action="/admin/coupons" className="relative w-full max-w-sm">
-          {activeTab !== "all" && <input type="hidden" name="filter" value={activeTab} />}
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            name="q"
-            defaultValue={search ?? ""}
+        <div className="w-full max-w-sm">
+          <DebouncedSearchInput
             placeholder="Search coupon code…"
-            className="h-11 w-full rounded-2xl border border-border/70 bg-card pl-10 pr-4 text-xs sm:text-sm shadow-xs focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-all"
+            className="w-full"
           />
-        </form>
+        </div>
       </div>
 
       {/* ================= WORLD-CLASS COUPONS DATA TABLE CARD ================= */}

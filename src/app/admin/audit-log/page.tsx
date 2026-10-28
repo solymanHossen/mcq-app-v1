@@ -9,6 +9,7 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { PagePagination } from "@/components/shared/page-pagination"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -24,19 +25,34 @@ export default async function AdminAuditLogPage({
 }) {
   const sp = await searchParams
   const page = sp.page ? Math.max(1, Number(sp.page)) : 1
+  const search = sp.q?.trim()
 
-  const [entries, totalCount] = await listAdminAuditLog({ page, pageSize: PAGE_SIZE })
+  const [entries, totalCount] = await listAdminAuditLog({
+    page,
+    pageSize: PAGE_SIZE,
+    search,
+  })
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      <div>
-        <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-          System Audit Log
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Append-only, immutable record of administrative operations, policy changes, and account actions.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            System Audit Log
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">{totalCount}</span> total audit record{totalCount === 1 ? "" : "s"}
+            {search ? ` matching "${search}"` : ""} · Immutable log of administrative operations
+          </p>
+        </div>
+
+        <div className="w-full max-w-sm">
+          <DebouncedSearchInput
+            placeholder="Search action, actor, target or reason…"
+            className="w-full"
+          />
+        </div>
       </div>
 
       <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">

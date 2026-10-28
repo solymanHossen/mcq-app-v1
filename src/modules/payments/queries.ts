@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { AdminAuditAction, type Prisma } from "@/prisma/generated/prisma/client"
 
 /**
  * Access policy: every "for a user" query here is scoped by a `userId`
@@ -197,10 +198,34 @@ export function listUsers(opts: {
   ])
 }
 
-export function listAdminAuditLog(opts: { page: number; pageSize: number }) {
+export function listAdminAuditLog(opts: {
+  page: number
+  pageSize: number
+  search?: string
+}) {
   const skip = (opts.page - 1) * opts.pageSize
+  const search = opts.search?.trim()
+
+  const matchingActions = search
+    ? (Object.values(AdminAuditAction).filter((action) =>
+        action.toLowerCase().includes(search.toLowerCase())
+      ) as AdminAuditAction[])
+    : []
+
+  const where: Prisma.AdminAuditLogWhereInput | undefined = search
+    ? {
+        OR: [
+          ...(matchingActions.length > 0 ? [{ action: { in: matchingActions } }] : []),
+          { reason: { contains: search, mode: "insensitive" } },
+          { actor: { name: { contains: search, mode: "insensitive" } } },
+          { targetUser: { name: { contains: search, mode: "insensitive" } } },
+        ],
+      }
+    : undefined
+
   return Promise.all([
     prisma.adminAuditLog.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       skip,
       take: opts.pageSize,
@@ -209,6 +234,6 @@ export function listAdminAuditLog(opts: { page: number; pageSize: number }) {
         targetUser: { select: { id: true, name: true } },
       },
     }),
-    prisma.adminAuditLog.count(),
+    prisma.adminAuditLog.count({ where }),
   ])
 }

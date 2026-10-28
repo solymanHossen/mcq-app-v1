@@ -32,6 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProfileHero } from "@/modules/account/components/profile-hero"
 import { DashboardKpiCard } from "@/components/shared/dashboard-kpi-card"
 import { DashboardAreaChart } from "@/components/shared/dashboard-area-chart"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { generateDashboardChartData } from "@/lib/chart-data-utils"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -44,13 +45,20 @@ export const metadata = {
   description: "Track your exam preparation progress, review spaced mistakes, and accelerate your mastery.",
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | undefined>>
+}) {
   const user = await requireUser()
 
   if (isAdminTier(user.role)) redirect("/admin")
   if (user.role === "TEACHER") redirect("/teacher")
 
   await connection()
+
+  const sp = (await searchParams) ?? {}
+  const search = sp.q?.trim()
 
   const [dbUser, summary, recommendations, recentAttempts, attemptCount] =
     await Promise.all([
@@ -69,7 +77,16 @@ export default async function DashboardPage() {
       getLearningSummary(user.id),
       getPracticeRecommendations(user.id),
       prisma.examAttempt.findMany({
-        where: { studentId: user.id },
+        where: {
+          studentId: user.id,
+          ...(search
+            ? {
+                exam: {
+                  title: { contains: search, mode: "insensitive" },
+                },
+              }
+            : {}),
+        },
         take: 6,
         orderBy: { startedAt: "desc" },
         include: {
@@ -257,13 +274,11 @@ export default async function DashboardPage() {
 
           {/* Quick Search & Actions Toolbar */}
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="relative min-w-[200px] flex-1 sm:w-64">
-              <Search className="absolute left-3 top-2.5 size-4 text-muted-foreground" />
-              <Input
-                placeholder="Filter exam attempts..."
-                className="h-10 rounded-xl border-border/80 bg-card pl-9 text-xs shadow-2xs focus-visible:ring-1"
-              />
-            </div>
+            <DebouncedSearchInput
+              placeholder="Filter exam attempts..."
+              size="sm"
+              className="min-w-[200px] flex-1 sm:w-64"
+            />
             <Button asChild variant="outline" size="sm" className="h-10 rounded-xl px-4 text-xs font-semibold shadow-2xs">
               <Link href="/exams">
                 <span>Browse All</span>

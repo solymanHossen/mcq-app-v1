@@ -7,11 +7,21 @@ export async function listExams(opts: {
   teacherId: string
   status?: ExamStatus
   page?: number
+  search?: string
 }) {
   const page = Math.max(1, opts.page ?? 1)
+  const search = opts.search?.trim()
   const where: Prisma.ExamWhereInput = {
     teacherId: opts.teacherId,
     ...(opts.status ? { status: opts.status } : {}),
+    ...(search
+      ? {
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            { description: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {}),
   }
 
   const [items, total] = await prisma.$transaction([

@@ -24,6 +24,7 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { PagePagination } from "@/components/shared/page-pagination"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { UserRowActions } from "@/modules/users/components/user-row-actions"
 import { ChangeRoleDialog } from "@/modules/users/components/change-role-dialog"
 import { cn } from "@/lib/utils"
@@ -102,17 +103,12 @@ export default async function AdminUsersPage({
           </p>
         </div>
 
-        <form action="/admin/users" className="relative w-full max-w-sm">
-          {role && <input type="hidden" name="role" value={role} />}
-          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            name="q"
-            defaultValue={search ?? ""}
+        <div className="w-full max-w-sm">
+          <DebouncedSearchInput
             placeholder="Search by name or email…"
-            className="h-11 w-full rounded-2xl border border-border/70 bg-card pl-10 pr-4 text-xs sm:text-sm shadow-xs focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/50 transition-all"
+            className="w-full"
           />
-        </form>
+        </div>
       </div>
 
       {/* ================= MODERN SEGMENTED ROLE FILTER DOCK ================= */}
