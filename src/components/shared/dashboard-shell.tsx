@@ -67,7 +67,7 @@ export function DashboardShell({
         <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-b border-sidebar-border bg-sidebar/95 backdrop-blur-md text-sidebar-foreground px-4 sm:px-6 lg:px-8">
           {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <SidebarTrigger className="size-10 rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95" />
+            <SidebarTrigger className="size-9 rounded-lg border-none bg-sidebar-accent/50 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground" />
             <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
               {breadcrumb ?? `${badgeLabel} Workspace`}
             </span>

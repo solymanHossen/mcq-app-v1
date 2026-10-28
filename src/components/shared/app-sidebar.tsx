@@ -65,7 +65,7 @@ export function AppSidebar({
             className="flex items-center gap-3 transition-opacity hover:opacity-90"
             title={brandName}
           >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-2xs">
               {brandIcon}
             </span>
             <span className="font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
@@ -74,18 +74,18 @@ export function AppSidebar({
           </Link>
           <Badge
             variant="secondary"
-            className="ml-auto rounded-lg px-2.5 py-0.5 text-xs font-semibold shadow-2xs group-data-[collapsible=icon]:hidden"
+            className="ml-auto rounded-md px-2 py-0.5 text-xs font-semibold shadow-none group-data-[collapsible=icon]:hidden"
           >
             {badgeLabel}
           </Badge>
         </div>
       </SidebarHeader>
 
-      {/* Navigation Links with large items and primary active styling */}
+      {/* Navigation Links with shadcn semantic sidebar color palette and clean rounded-lg geometry */}
       <SidebarContent className="p-3">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1.5">
+            <SidebarMenu className="gap-1">
               {navItems.map((item) => {
                 const active = item.exact
                   ? pathname === item.href
@@ -95,15 +95,15 @@ export function AppSidebar({
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
-                      size="lg"
+                      size="default"
                       isActive={active}
                       tooltip={item.label}
                       className={cn(
-                        "h-12 rounded-2xl px-4 text-[15px] font-medium gap-3.5 transition-all duration-200 active:scale-[0.98]",
+                        "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors",
                         active
-                          ? "bg-primary text-primary-foreground font-semibold shadow-md shadow-primary/25 data-[active=true]:bg-primary! data-[active=true]:text-primary-foreground! data-[active=true]:shadow-md data-[active=true]:shadow-primary/25 hover:bg-primary/95! hover:text-primary-foreground! [&_svg]:text-primary-foreground! data-[active=true]:[&_svg]:text-primary-foreground!"
-                          : "text-muted-foreground hover:bg-muted/70 hover:text-foreground [&_svg]:text-muted-foreground/80 hover:[&_svg]:text-foreground",
-                        "[&_svg]:size-5 shrink-0"
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground [&_svg]:text-sidebar-accent-foreground data-[active=true]:[&_svg]:text-sidebar-accent-foreground"
+                          : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60 hover:[&_svg]:text-sidebar-foreground",
+                        "[&_svg]:size-4.5 shrink-0"
                       )}
                     >
                       <Link href={item.href}>
@@ -128,34 +128,34 @@ export function AppSidebar({
             <div className="flex flex-col gap-1.5">
               <Link
                 href="/profile"
-                className="group flex items-center gap-3 rounded-2xl p-2 transition-all hover:bg-muted/80 shadow-2xs group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
+                className="group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent/60 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0"
                 title={`${user.name} (${user.email})`}
               >
-                <Avatar className="size-9 shadow-xs ring-0">
-                  <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+                <Avatar className="size-9 rounded-lg">
+                  <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
-                  <p className="truncate text-sm font-semibold text-foreground">
+                  <p className="truncate text-sm font-semibold text-sidebar-foreground">
                     {user.name}
                   </p>
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="truncate text-xs text-sidebar-foreground/60">
                     {user.email}
                   </p>
                 </div>
-                <Settings className="size-4 text-muted-foreground opacity-60 transition-transform group-hover:rotate-45 group-hover:opacity-100 group-data-[collapsible=icon]:hidden" />
+                <Settings className="size-4 text-sidebar-foreground/60 transition-transform group-hover:rotate-45 group-hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
               </Link>
 
               <div className="flex items-center justify-between px-2 pt-0.5 group-data-[collapsible=icon]:hidden">
                 <Link
                   href="/profile"
-                  className="inline-flex h-6 items-center gap-1.5 rounded-md px-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="inline-flex h-6 items-center gap-1.5 rounded-md px-1.5 text-xs font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
                 >
                   <UserIcon className="size-3.5" />
                   <span>Profile</span>
                 </Link>
-                <LogoutButton className="h-6 text-xs text-muted-foreground hover:text-destructive" />
+                <LogoutButton className="h-6 text-xs text-sidebar-foreground/70 hover:text-destructive" />
               </div>
             </div>
           </SidebarMenuItem>
