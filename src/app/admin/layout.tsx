@@ -41,7 +41,7 @@ const SUPER_ADMIN_NAV_ITEMS: SidebarNavItem[] = [
     icon: <Settings />,
     items: [
       {
-        href: '/admin/settings',
+        href: '/admin/settings/branding',
         label: 'Hero & Branding',
         icon: <Palette className="size-3.5" />,
         exact: true,

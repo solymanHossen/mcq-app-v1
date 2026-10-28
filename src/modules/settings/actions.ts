@@ -140,6 +140,7 @@ export async function updateHeroBrandingSettingsAction(input: UpdateHeroBranding
     })
 
     safeRevalidatePath("/admin/settings")
+    safeRevalidatePath("/admin/settings/branding")
     safeRevalidatePath("/")
     return { success: true as const }
   } catch (error: unknown) {
