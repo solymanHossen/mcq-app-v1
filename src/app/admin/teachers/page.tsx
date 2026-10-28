@@ -100,7 +100,11 @@ export default async function TeacherVerificationPage() {
               </div>
 
               <div className="shrink-0 w-full lg:w-auto flex justify-end">
-                <TeacherVerificationRow userId={teacher.id} />
+                <TeacherVerificationRow
+                  userId={teacher.id}
+                  teacherName={teacher.name}
+                  teacherEmail={teacher.email}
+                />
               </div>
             </div>
           ))}
