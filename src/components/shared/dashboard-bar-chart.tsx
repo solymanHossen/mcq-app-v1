@@ -46,27 +46,27 @@ export function DashboardBarChart({
   itemLabel = "Questions",
 }: DashboardBarChartProps) {
   return (
-    <Card className="flex flex-col rounded-3xl border border-border/70 bg-card p-2 sm:p-3 shadow-xs transition-all hover:shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-5 pb-2 sm:pb-3">
-        <div className="space-y-1">
+    <Card className="flex flex-col rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between p-5 pb-2 sm:p-6 sm:pb-2">
+        <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <BarChart3 className="size-5 text-primary" />
-            <CardTitle className="font-heading text-xl sm:text-2xl font-black tracking-tight text-foreground">
+            <BarChart3 className="size-4.5 text-primary" />
+            <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
               {title}
             </CardTitle>
           </div>
-          <CardDescription className="text-xs sm:text-sm text-muted-foreground font-medium">
+          <CardDescription className="text-xs text-muted-foreground">
             {description}
           </CardDescription>
         </div>
-        <span className="flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs">
-          <BookOpen className="size-5" />
+        <span className="flex size-8.5 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs">
+          <BookOpen className="size-4" />
         </span>
       </CardHeader>
 
-      <CardContent className="flex-1 p-4 sm:p-5 pt-0">
-        <div className="h-[240px] w-full pt-2">
-          <ChartContainer config={chartConfig} className="h-[240px] w-full">
+      <CardContent className="flex-1 p-5 pt-0 sm:p-6 sm:pt-0">
+        <div className="h-[220px] w-full pt-2">
+          <ChartContainer config={chartConfig} className="h-[220px] w-full">
             <BarChart
               data={data}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
@@ -81,7 +81,7 @@ export function DashboardBarChart({
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                className="text-xs sm:text-sm font-bold text-muted-foreground"
+                className="text-xs font-semibold text-muted-foreground"
               />
               <YAxis
                 tickLine={false}
@@ -95,7 +95,7 @@ export function DashboardBarChart({
               />
               <Bar
                 dataKey="count"
-                radius={[8, 8, 0, 0]}
+                radius={[6, 6, 0, 0]}
                 fill="var(--chart-1)"
                 className="transition-all hover:opacity-85"
               />
@@ -104,21 +104,21 @@ export function DashboardBarChart({
         </div>
 
         {/* Breakdown Summary Tiles */}
-        <div className="mt-4 grid grid-cols-3 gap-2.5 pt-3 border-t border-border/60">
+        <div className="mt-4 grid grid-cols-3 gap-2 pt-2.5 border-t border-border/60">
           {data.map((item) => {
             const pct = totalItems > 0 ? Math.round((item.count / totalItems) * 100) : 0
             return (
               <div
                 key={item.category}
-                className="flex flex-col items-center justify-center rounded-2xl bg-muted/30 p-2.5 sm:p-3 text-center border border-border/70"
+                className="flex flex-col items-center justify-center rounded-xl bg-muted/30 p-2 text-center border border-border/70"
               >
-                <span className="text-xs font-bold text-muted-foreground truncate w-full">
+                <span className="text-[11px] font-medium text-muted-foreground truncate w-full">
                   {item.category}
                 </span>
-                <span className="font-heading text-lg sm:text-xl font-black text-foreground tabular-nums">
+                <span className="font-heading text-base font-bold text-foreground tabular-nums">
                   {item.count}
                 </span>
-                <span className="text-[11px] text-muted-foreground font-semibold">
+                <span className="text-[10px] text-muted-foreground font-normal">
                   {pct}% of {itemLabel}
                 </span>
               </div>

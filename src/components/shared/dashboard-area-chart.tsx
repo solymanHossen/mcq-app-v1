@@ -75,13 +75,13 @@ export function DashboardAreaChart({
   return (
     <Card
       className={cn(
-        "rounded-3xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md sm:p-2",
+        "rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md",
         className
       )}
     >
-      <CardHeader className="flex flex-col gap-4 p-6 pb-2 sm:flex-row sm:items-center sm:justify-between sm:p-7 sm:pb-2">
-        <div className="flex flex-col gap-1.5">
-          <CardTitle className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+      <CardHeader className="flex flex-col gap-3 p-5 pb-2 sm:flex-row sm:items-center sm:justify-between sm:p-6 sm:pb-2">
+        <div className="flex flex-col gap-1">
+          <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
             {title}
           </CardTitle>
           <CardDescription className="text-xs sm:text-sm text-muted-foreground">
@@ -94,16 +94,16 @@ export function DashboardAreaChart({
         </div>
 
         {/* Time range selector pills */}
-        <div className="flex items-center gap-1.5 rounded-2xl bg-muted/50 p-1.5 self-start sm:self-auto border border-border/60 shadow-2xs">
+        <div className="flex items-center gap-1 rounded-xl bg-muted/50 p-1 self-start sm:self-auto border border-border/60 shadow-2xs">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => setTimeRange("90d")}
             className={cn(
-              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
+              "h-7.5 rounded-lg px-3 text-xs font-medium text-muted-foreground transition-all cursor-pointer",
               timeRange === "90d" &&
-                "bg-background text-foreground shadow-xs font-bold border border-border/70"
+                "bg-background text-foreground shadow-xs font-semibold border border-border/70"
             )}
           >
             Last 3 months
@@ -114,9 +114,9 @@ export function DashboardAreaChart({
             size="sm"
             onClick={() => setTimeRange("30d")}
             className={cn(
-              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
+              "h-7.5 rounded-lg px-3 text-xs font-medium text-muted-foreground transition-all cursor-pointer",
               timeRange === "30d" &&
-                "bg-background text-foreground shadow-xs font-bold border border-border/70"
+                "bg-background text-foreground shadow-xs font-semibold border border-border/70"
             )}
           >
             Last 30 days
@@ -127,9 +127,9 @@ export function DashboardAreaChart({
             size="sm"
             onClick={() => setTimeRange("7d")}
             className={cn(
-              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
+              "h-7.5 rounded-lg px-3 text-xs font-medium text-muted-foreground transition-all cursor-pointer",
               timeRange === "7d" &&
-                "bg-background text-foreground shadow-xs font-bold border border-border/70"
+                "bg-background text-foreground shadow-xs font-semibold border border-border/70"
             )}
           >
             Last 7 days
