@@ -114,17 +114,13 @@ export function ProfileHero({ user }: ProfileHeroProps) {
       <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
         {/* ================= LEFT: CRISP IDENTITY ================= */}
         <div className="flex items-center gap-4 sm:gap-5">
-          {/* Avatar with Online Beacon */}
+          {/* Avatar */}
           <div className="relative shrink-0">
             <Avatar className="size-16 ring-2 ring-primary/15 sm:size-18">
               <AvatarFallback className="bg-primary/10 font-heading text-xl font-extrabold tracking-tight text-primary sm:text-2xl">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
-            <span
-              className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-card bg-emerald-500 shadow-xs"
-              title="Active session"
-            />
           </div>
 
           <div className="min-w-0 space-y-1.5">

@@ -71,18 +71,9 @@ export function DashboardShell({
             <SidebarTrigger className="size-10 rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95" />
             <Separator orientation="vertical" className="hidden sm:block h-5 w-[1.5px] bg-border/40" />
             
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
-                {breadcrumb ?? `${badgeLabel} Workspace`}
-              </span>
-              <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-bold text-primary">
-                <span className="relative flex size-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex size-2 rounded-full bg-primary"></span>
-                </span>
-                <span>LIVE</span>
-              </div>
-            </div>
+            <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
+              {breadcrumb ?? `${badgeLabel} Workspace`}
+            </span>
           </div>
 
           {/* Center section: World-Class Interactive Spotlight Search Trigger */}
@@ -95,14 +86,6 @@ export function DashboardShell({
             {/* Mobile Search Button */}
             <GlobalSearchMobileButton />
 
-            {/* Live Operational Status Pill */}
-            <div className="hidden lg:flex items-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 shadow-2xs">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
-              </span>
-              <span>System Healthy</span>
-            </div>
 
             {/* Quick Dark/Light Theme Toggle */}
             <ThemeToggle />

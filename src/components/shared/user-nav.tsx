@@ -114,7 +114,6 @@ export function UserNav({
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
-            <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-background bg-emerald-500 shadow-xs" />
           </button>
         </DropdownMenuTrigger>
 
