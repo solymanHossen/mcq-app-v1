@@ -75,7 +75,7 @@ export function DashboardAreaChart({
   return (
     <Card
       className={cn(
-        "rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md",
+        "overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md",
         className
       )}
     >
@@ -137,14 +137,14 @@ export function DashboardAreaChart({
         </div>
       </CardHeader>
 
-      <CardContent className="p-6 pt-2 sm:p-7 sm:pt-4">
+      <CardContent className="px-0 pb-3 pt-2">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[280px] w-full sm:h-[350px]"
+          className="aspect-auto h-[280px] w-full sm:h-[340px]"
         >
           <AreaChart
             data={activeData}
-            margin={{ top: 15, right: 15, left: -20, bottom: 0 }}
+            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
           >
             <defs>
               <linearGradient id="fillPrimary" x1="0" y1="0" x2="0" y2="1">
@@ -177,7 +177,7 @@ export function DashboardAreaChart({
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tickMargin={12}
+              tickMargin={10}
               tickFormatter={(value) => value}
               className="text-xs font-mono text-muted-foreground"
             />
@@ -192,7 +192,7 @@ export function DashboardAreaChart({
             />
             {activeData[0]?.secondary !== undefined && (
               <Area
-                type="natural"
+                type="monotone"
                 dataKey="secondary"
                 stroke="var(--color-chart-2, #60a5fa)"
                 strokeWidth={2}
@@ -201,7 +201,7 @@ export function DashboardAreaChart({
               />
             )}
             <Area
-              type="natural"
+              type="monotone"
               dataKey="primary"
               stroke="var(--color-chart-1, #2563eb)"
               strokeWidth={2.5}
