@@ -1,17 +1,27 @@
 "use client"
 
+import { CreditCard } from "lucide-react"
 import { SettingToggle } from "@/modules/settings/components/setting-toggle"
 import { setBillingEnabledAction } from "@/modules/settings/actions"
 import type { SystemSettings } from "@/modules/settings/queries"
-import { APP_NAME } from "@/lib/config"
 
 export function BillingModeSettings({ settings }: { settings: SystemSettings }) {
   return (
     <SettingToggle
-      title="Enable billing"
-      description={`When on, the billing system behaves as built — teachers and students see the Billing nav link, can view plans, and can subscribe. Turning this off makes ${APP_NAME} free for everyone: the Billing nav link and plan catalog are hidden, and new subscriptions are refused. Existing subscriptions, payment history, and the admin billing tools (Plans, Coupons, Payments) are never affected — only new subscribing is.`}
+      id="policy-billing-enabled"
+      title="Enable billing & monetization"
+      description="Enable paid subscriptions, checkout, and pricing plans across the platform"
       enabled={settings.billingEnabled}
       action={setBillingEnabledAction}
+      icon={<CreditCard className="size-6" />}
+      iconColor="emerald"
+      extraLink={{
+        label: "Manage plans",
+        href: "/admin/subscriptions",
+      }}
     />
+
   )
 }
+
+
