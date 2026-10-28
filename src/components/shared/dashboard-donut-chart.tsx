@@ -15,7 +15,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { Users, PieChartIcon } from "lucide-react"
+import { Users, BookOpen, PieChartIcon } from "lucide-react"
+
 
 interface UserDistributionData {
   role: string
@@ -29,6 +30,8 @@ interface DashboardDonutChartProps {
   description?: string
   data: UserDistributionData[]
   totalUsers: number
+  centerLabel?: string
+  iconName?: "users" | "exams" | "book"
 }
 
 const chartConfig = {
@@ -55,7 +58,10 @@ export function DashboardDonutChart({
   description = "Role distribution across verified accounts",
   data,
   totalUsers,
+  centerLabel = "Total Users",
+  iconName = "users",
 }: DashboardDonutChartProps) {
+  const HeaderIcon = iconName === "book" || iconName === "exams" ? BookOpen : Users
   const chartData = React.useMemo(() => {
     return data.map((d) => ({
       name: d.label,
@@ -79,9 +85,10 @@ export function DashboardDonutChart({
           </CardDescription>
         </div>
         <span className="flex size-8.5 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs">
-          <Users className="size-4" />
+          <HeaderIcon className="size-4" />
         </span>
       </CardHeader>
+
 
       <CardContent className="flex-1 p-5 pt-0 sm:p-6 sm:pt-0">
         <div className="relative mx-auto aspect-square max-h-[240px] w-full">
@@ -118,10 +125,11 @@ export function DashboardDonutChart({
               {totalUsers}
             </span>
             <span className="mt-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              Total Users
+              {centerLabel}
             </span>
           </div>
         </div>
+
 
         {/* Legend Pills with count & percentage */}
         <div className="mt-4 grid grid-cols-2 gap-2 pt-2.5 border-t border-border/60">
