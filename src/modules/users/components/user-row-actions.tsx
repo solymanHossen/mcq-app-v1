@@ -102,17 +102,17 @@ export function UserRowActions({
 
       {/* ================= CLEAN SUSPEND ALERT DIALOG ================= */}
       <Dialog open={suspendOpen} onOpenChange={setSuspendOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
+        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
           <DialogHeader className="p-0 text-left">
-            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+            <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
               Suspend Account
             </DialogTitle>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
+            <p className="mt-0.5 text-xs text-muted-foreground font-medium">
               {userName} · <span className="text-foreground">{userEmail}</span>
             </p>
           </DialogHeader>
 
-          <form action={suspendFormAction} className="flex flex-col gap-4 pt-1">
+          <form action={suspendFormAction} className="flex flex-col gap-3.5 pt-1">
             <Field className="space-y-1">
               <Textarea
                 id="reason"
@@ -120,7 +120,7 @@ export function UserRowActions({
                 rows={2}
                 required
                 placeholder="Reason for suspension (min 5 characters)..."
-                className="h-16 rounded-2xl border border-border/70 bg-muted/30 focus-visible:bg-background text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
+                className="h-14 rounded-xl border border-border/70 bg-muted/30 focus-visible:bg-background text-xs sm:text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
               />
             </Field>
 
@@ -130,11 +130,11 @@ export function UserRowActions({
               </FieldError>
             )}
 
-            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
+            <DialogFooter className="mt-1 flex items-center justify-end gap-2.5 border-t border-border/40 pt-3.5 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
+                className="h-10 px-4.5 rounded-xl border border-border/70 text-xs sm:text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setSuspendOpen(false)}
                 disabled={isSuspendPending}
               >
@@ -143,7 +143,7 @@ export function UserRowActions({
               <Button
                 type="submit"
                 variant="destructive"
-                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl text-sm font-bold shadow-sm cursor-pointer transition-all"
+                className="h-10 px-5.5 rounded-xl text-xs sm:text-sm font-bold shadow-xs cursor-pointer transition-all"
                 disabled={isSuspendPending}
               >
                 {isSuspendPending && <Spinner data-icon="inline-start" />}
@@ -156,28 +156,28 @@ export function UserRowActions({
 
       {/* ================= CLEAN REINSTATE DIALOG ================= */}
       <Dialog open={reinstateOpen} onOpenChange={setReinstateOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
+        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
           <DialogHeader className="p-0 text-left">
-            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+            <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
               Reinstate Account
             </DialogTitle>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
+            <p className="mt-0.5 text-xs text-muted-foreground font-medium">
               Restore full platform access for <strong className="text-foreground">{userName}</strong>?
             </p>
           </DialogHeader>
 
-          <form action={reinstateFormAction} className="flex flex-col gap-4 pt-1">
+          <form action={reinstateFormAction} className="flex flex-col gap-3.5 pt-1">
             {reinstateState && "error" in reinstateState && (
               <FieldError className="text-xs font-semibold text-destructive">
                 {reinstateState.error}
               </FieldError>
             )}
 
-            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
+            <DialogFooter className="mt-1 flex items-center justify-end gap-2.5 border-t border-border/40 pt-3.5 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
+                className="h-10 px-4.5 rounded-xl border border-border/70 text-xs sm:text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setReinstateOpen(false)}
                 disabled={isReinstatePending}
               >
@@ -185,7 +185,7 @@ export function UserRowActions({
               </Button>
               <Button
                 type="submit"
-                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm cursor-pointer transition-all"
+                className="h-10 px-5.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer transition-all"
                 disabled={isReinstatePending}
               >
                 {isReinstatePending && <Spinner data-icon="inline-start" />}

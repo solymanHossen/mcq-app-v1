@@ -120,7 +120,7 @@ export function ChangeRoleDialog({
         <span>Change Role</span>
       </Button>
 
-      {/* ================= CLEAN, MINIMAL TEXT, LARGE UI MODAL ================= */}
+      {/* ================= REFINED, PROPORTIONAL WORLD-CLASS MODAL ================= */}
       <Dialog
         open={open}
         onOpenChange={(next) => {
@@ -128,22 +128,22 @@ export function ChangeRoleDialog({
           if (next) setRole(currentRole)
         }}
       >
-        <DialogContent className="sm:max-w-lg rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
-          {/* Clean Top Title */}
+        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
+          {/* Proportional Header */}
           <DialogHeader className="p-0 text-left">
-            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+            <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
               Update Role
             </DialogTitle>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
-              {userName} · <span className="font-bold text-foreground">{currentRole}</span>
+            <p className="mt-0.5 text-xs text-muted-foreground font-medium">
+              {userName} · <span className="font-semibold text-foreground">{currentRole}</span>
             </p>
           </DialogHeader>
 
-          <form action={formAction} className="flex flex-col gap-4 pt-1">
+          <form action={formAction} className="flex flex-col gap-3.5 pt-1">
             <input type="hidden" name="role" value={role} />
 
-            {/* Large Interactive Role Tiles */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {/* Proportional Role Selection Tiles */}
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {roleOptions.map((r) => {
                 const tile = ROLE_TILES[r]
                 const Icon = tile.icon
@@ -156,40 +156,40 @@ export function ChangeRoleDialog({
                     type="button"
                     onClick={() => setRole(r)}
                     className={cn(
-                      "group relative flex items-center justify-between rounded-2xl border p-4 sm:p-4.5 transition-all duration-200 cursor-pointer select-none",
+                      "group relative flex items-center justify-between rounded-xl border p-3 sm:p-3.5 transition-all duration-200 cursor-pointer select-none",
                       isSelected
-                        ? "border-primary bg-primary/10 shadow-sm ring-2 ring-primary/30"
+                        ? "border-primary bg-primary/10 shadow-xs ring-1 ring-primary/30"
                         : "border-border/70 bg-card/70 hover:bg-muted/50 hover:border-border"
                     )}
                   >
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex items-center gap-3">
                       <span
                         className={cn(
-                          "flex size-11 sm:size-12 shrink-0 items-center justify-center rounded-2xl border transition-transform duration-200 group-hover:scale-105",
+                          "flex size-9 sm:size-9.5 shrink-0 items-center justify-center rounded-xl border transition-transform duration-200 group-hover:scale-105",
                           tile.color
                         )}
                       >
-                        <Icon className="size-5 sm:size-6" />
+                        <Icon className="size-4.5" />
                       </span>
 
                       <div className="text-left">
-                        <p className="font-heading text-base sm:text-lg font-bold text-foreground leading-tight">
+                        <p className="font-heading text-sm sm:text-[15px] font-bold text-foreground leading-snug">
                           {tile.label}
                         </p>
                         {isCurrent && (
-                          <span className="text-[11px] font-semibold text-muted-foreground">
-                            Current Role
+                          <span className="text-[10.5px] font-medium text-muted-foreground">
+                            Current
                           </span>
                         )}
                       </div>
                     </div>
 
                     {isSelected ? (
-                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                        <Check className="size-3.5 stroke-[3]" />
+                      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xs">
+                        <Check className="size-3 stroke-[3]" />
                       </span>
                     ) : (
-                      <span className="size-5 shrink-0 rounded-full border border-border/80 group-hover:border-foreground/40 transition-colors" />
+                      <span className="size-4.5 shrink-0 rounded-full border border-border/80 group-hover:border-foreground/40 transition-colors" />
                     )}
                   </button>
                 )
@@ -197,14 +197,14 @@ export function ChangeRoleDialog({
             </div>
 
             {/* Reason Field */}
-            <Field className="space-y-1 pt-1">
+            <Field className="space-y-1 pt-0.5">
               <Textarea
                 id="change-reason"
                 name="reason"
                 rows={2}
                 required
                 placeholder="Reason for role change (min 5 characters)..."
-                className="h-16 rounded-2xl border border-border/70 bg-muted/30 focus-visible:bg-background text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
+                className="h-14 rounded-xl border border-border/70 bg-muted/30 focus-visible:bg-background text-xs sm:text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
               />
             </Field>
 
@@ -214,12 +214,12 @@ export function ChangeRoleDialog({
               </FieldError>
             )}
 
-            {/* Large Buttons Footer */}
-            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
+            {/* Action Buttons */}
+            <DialogFooter className="mt-1 flex items-center justify-end gap-2.5 border-t border-border/40 pt-3.5 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
+                className="h-10 px-4.5 rounded-xl border border-border/70 text-xs sm:text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
@@ -228,7 +228,7 @@ export function ChangeRoleDialog({
               <Button
                 type="submit"
                 disabled={isPending || role === currentRole}
-                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl text-sm font-bold shadow-sm cursor-pointer transition-all"
+                className="h-10 px-5.5 rounded-xl text-xs sm:text-sm font-bold shadow-xs cursor-pointer transition-all"
               >
                 {isPending && <Spinner data-icon="inline-start" />}
                 Save Role Change
