@@ -33,19 +33,93 @@ export function listActivePlans() {
   })
 }
 
+import type { PaymentTransactionStatus } from "@/prisma/generated/prisma/client"
+
 // ─── Admin-only (caller enforces the role check before calling these) ──
 
-export function adminListPaymentTransactions(opts: { page: number; pageSize: number }) {
+export function adminListPaymentTransactions(opts: {
+  page: number
+  pageSize: number
+  status?: PaymentTransactionStatus
+  search?: string
+}) {
   const skip = (opts.page - 1) * opts.pageSize
+  const search = opts.search?.trim()
+
+  const where = {
+    ...(opts.status ? { status: opts.status } : {}),
+    ...(search
+      ? {
+          OR: [
+            { providerTransactionId: { contains: search, mode: "insensitive" as const } },
+            { id: { contains: search, mode: "insensitive" as const } },
+            { user: { name: { contains: search, mode: "insensitive" as const } } },
+            { user: { email: { contains: search, mode: "insensitive" as const } } },
+          ],
+        }
+      : {}),
+  }
+
   return Promise.all([
     prisma.paymentTransaction.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       skip,
       take: opts.pageSize,
-      include: { user: { select: { id: true, name: true, email: true } } },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        subscription: {
+          select: {
+            id: true,
+            plan: { select: { name: true } },
+          },
+        },
+      },
     }),
-    prisma.paymentTransaction.count(),
+    prisma.paymentTransaction.count({ where }),
   ])
+}
+
+export async function getPaymentOverviewMetrics() {
+  const [
+    totalTransactions,
+    succeededCount,
+    pendingCount,
+    failedCount,
+    refundedCount,
+    volumeAggregate,
+    refundAggregate,
+  ] = await Promise.all([
+    prisma.paymentTransaction.count(),
+    prisma.paymentTransaction.count({ where: { status: "SUCCEEDED" } }),
+    prisma.paymentTransaction.count({ where: { status: "PENDING" } }),
+    prisma.paymentTransaction.count({ where: { status: "FAILED" } }),
+    prisma.paymentTransaction.count({
+      where: { status: { in: ["REFUNDED", "PARTIALLY_REFUNDED"] } },
+    }),
+    prisma.paymentTransaction.aggregate({
+      where: { status: "SUCCEEDED" },
+      _sum: { amountCents: true },
+    }),
+    prisma.paymentTransaction.aggregate({
+      where: { status: { in: ["REFUNDED", "PARTIALLY_REFUNDED"] } },
+      _sum: { refundedAmountCents: true, amountCents: true },
+    }),
+  ])
+
+  const totalVolumeCents = volumeAggregate._sum.amountCents ?? 0
+  const totalRefundedCents =
+    refundAggregate._sum.refundedAmountCents ?? refundAggregate._sum.amountCents ?? 0
+
+  return {
+    totalTransactions,
+    succeededCount,
+    pendingCount,
+    failedCount,
+    refundedCount,
+    totalVolumeCents,
+    totalRefundedCents,
+  }
 }
 
 const STALE_PENDING_THRESHOLD_MS = 60 * 60 * 1000 // 1 hour
