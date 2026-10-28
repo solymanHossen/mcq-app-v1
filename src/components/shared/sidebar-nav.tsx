@@ -4,11 +4,19 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
+export type SidebarNavSubItem = {
+  href: string
+  label: string
+  icon?: React.ReactNode
+  exact?: boolean
+}
+
 export type SidebarNavItem = {
   href: string
   label: string
   icon: React.ReactNode
   exact?: boolean
+  items?: readonly SidebarNavSubItem[]
 }
 
 export function SidebarNav({

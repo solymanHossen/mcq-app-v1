@@ -4,7 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronsUpDown, LogOut, Settings, User as UserIcon } from "lucide-react"
+import { ChevronRight, ChevronsUpDown, LogOut, Settings, User as UserIcon } from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
@@ -15,8 +15,16 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -112,9 +120,148 @@ export function AppSidebar({
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
               {navItems.map((item) => {
+                const hasSubItems = Boolean(item.items && item.items.length > 0)
+                const isSubActive = Boolean(
+                  item.items?.some((sub) =>
+                    sub.exact
+                      ? pathname === sub.href
+                      : pathname === sub.href || pathname.startsWith(`${sub.href}/`)
+                  )
+                )
                 const active = item.exact
                   ? pathname === item.href
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`)
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`) || isSubActive
+
+                if (hasSubItems) {
+                  return (
+                    <Collapsible
+                      key={item.href}
+                      asChild
+                      defaultOpen={isSubActive || active}
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem>
+                        {isCollapsed ? (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <SidebarMenuButton
+                                size="default"
+                                isActive={active}
+                                tooltip={item.label}
+                                className={cn(
+                                  "relative h-10 rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer",
+                                  active
+                                    ? "bg-sidebar-accent text-primary font-semibold"
+                                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                  "[&_svg]:size-4.5 shrink-0"
+                                )}
+                              >
+                                {active && (
+                                  <span
+                                    aria-hidden="true"
+                                    className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                                  />
+                                )}
+                                {item.icon}
+                              </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              side="right"
+                              align="start"
+                              sideOffset={8}
+                              className="w-48 rounded-xl border border-sidebar-border bg-popover p-1.5 text-popover-foreground shadow-xl backdrop-blur-xl"
+                            >
+                              <DropdownMenuLabel className="px-2.5 py-1 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                                {item.label}
+                              </DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              {item.items?.map((subItem) => {
+                                const isCurrentSubActive = subItem.exact
+                                  ? pathname === subItem.href
+                                  : pathname === subItem.href || pathname.startsWith(`${subItem.href}/`)
+                                return (
+                                  <DropdownMenuItem key={subItem.href} asChild>
+                                    <Link
+                                      href={subItem.href}
+                                      className={cn(
+                                        "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium cursor-pointer transition-colors",
+                                        isCurrentSubActive
+                                          ? "bg-sidebar-accent text-primary font-semibold"
+                                          : "text-foreground hover:bg-muted"
+                                      )}
+                                    >
+                                      {subItem.icon}
+                                      <span>{subItem.label}</span>
+                                    </Link>
+                                  </DropdownMenuItem>
+                                )
+                              })}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        ) : (
+                          <>
+                            <CollapsibleTrigger asChild>
+                              <SidebarMenuButton
+                                size="default"
+                                isActive={active}
+                                tooltip={item.label}
+                                className={cn(
+                                  "relative h-10 w-full rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer overflow-hidden",
+                                  active
+                                    ? "bg-sidebar-accent text-primary font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-primary"
+                                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                  "[&_svg]:size-4.5 shrink-0"
+                                )}
+                              >
+                                {active && (
+                                  <span
+                                    aria-hidden="true"
+                                    className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                                  />
+                                )}
+                                {item.icon}
+                                <span className="tracking-tight group-data-[collapsible=icon]:hidden">
+                                  {item.label}
+                                </span>
+                                <ChevronRight className="ml-auto size-4 text-sidebar-foreground/50 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                              </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="animate-in fade-in-0 duration-200 group-data-[collapsible=icon]:hidden">
+                              <SidebarMenuSub className="mx-3.5 my-1 border-l border-sidebar-border/70 pl-2.5 space-y-0.5">
+                                {item.items?.map((subItem) => {
+                                  const isCurrentSubActive = subItem.exact
+                                    ? pathname === subItem.href
+                                    : pathname === subItem.href || pathname.startsWith(`${subItem.href}/`)
+
+                                  return (
+                                    <SidebarMenuSubItem key={subItem.href}>
+                                      <SidebarMenuSubButton
+                                        asChild
+                                        size="sm"
+                                        isActive={isCurrentSubActive}
+                                        className={cn(
+                                          "h-8 rounded-md px-2.5 text-xs font-medium transition-colors",
+                                          isCurrentSubActive
+                                            ? "bg-sidebar-accent text-primary font-semibold"
+                                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                                        )}
+                                      >
+                                        <Link href={subItem.href} className="flex items-center gap-2">
+                                          {subItem.icon}
+                                          <span>{subItem.label}</span>
+                                        </Link>
+                                      </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                  )
+                                })}
+                              </SidebarMenuSub>
+                            </CollapsibleContent>
+                          </>
+                        )}
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  )
+                }
 
                 return (
                   <SidebarMenuItem key={item.href}>

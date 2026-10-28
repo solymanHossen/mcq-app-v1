@@ -9,6 +9,7 @@ import {
   Receipt,
   ScrollText,
   Settings,
+  Palette,
 } from 'lucide-react';
 import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
@@ -34,7 +35,25 @@ const BASE_NAV_ITEMS: SidebarNavItem[] = [
 // re-asserts this (see app/admin/settings/page.tsx), this just keeps a plain
 // ADMIN from being shown a link that would reject them.
 const SUPER_ADMIN_NAV_ITEMS: SidebarNavItem[] = [
-  { href: '/admin/settings', label: 'Settings', icon: <Settings /> },
+  {
+    href: '/admin/settings',
+    label: 'Settings',
+    icon: <Settings />,
+    items: [
+      {
+        href: '/admin/settings',
+        label: 'Hero & Branding',
+        icon: <Palette className="size-3.5" />,
+        exact: true,
+      },
+      {
+        href: '/admin/settings/policies',
+        label: 'Policies & Billing',
+        icon: <ShieldCheck className="size-3.5" />,
+        exact: true,
+      },
+    ],
+  },
 ];
 
 export default async function AdminLayout({

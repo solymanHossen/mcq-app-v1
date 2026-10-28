@@ -34,6 +34,7 @@ export async function setRequireEmailVerificationAction(enabled: boolean) {
   })
 
   safeRevalidatePath("/admin/settings")
+  safeRevalidatePath("/admin/settings/policies")
   return { success: true as const }
 }
 
@@ -58,6 +59,7 @@ export async function setRequireTeacherVerificationAction(enabled: boolean) {
   })
 
   safeRevalidatePath("/admin/settings")
+  safeRevalidatePath("/admin/settings/policies")
   return { success: true as const }
 }
 
@@ -86,6 +88,7 @@ export async function setBillingEnabledAction(enabled: boolean) {
   })
 
   safeRevalidatePath("/admin/settings")
+  safeRevalidatePath("/admin/settings/policies")
   safeRevalidatePath("/billing")
   return { success: true as const }
 }

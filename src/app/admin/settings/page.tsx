@@ -1,8 +1,7 @@
 import { requireRole } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
-import { VerificationSettings } from "@/modules/settings/components/verification-settings"
-import { BillingModeSettings } from "@/modules/settings/components/billing-mode-settings"
 import { HeroBrandingSettings } from "@/modules/settings/components/hero-branding-settings"
+import { SettingsNav } from "@/modules/settings/components/settings-nav"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -16,21 +15,9 @@ export default async function AdminSettingsPage() {
   const settings = await getSystemSettings()
 
   return (
-    <div className="w-full min-w-0 space-y-8">
-      {/* Dynamic Branding & Hero Section Media Management with Integrated Title & Actions */}
+    <div className="w-full min-w-0 space-y-6">
+      <SettingsNav />
       <HeroBrandingSettings settings={settings} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 pt-4 border-t border-border/60">
-        <div className="space-y-4">
-          <h2 className="font-heading text-base font-bold text-foreground">Verification Policies</h2>
-          <VerificationSettings settings={settings} />
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="font-heading text-base font-bold text-foreground">Billing & Monetization</h2>
-          <BillingModeSettings settings={settings} />
-        </div>
-      </div>
     </div>
   )
 }
