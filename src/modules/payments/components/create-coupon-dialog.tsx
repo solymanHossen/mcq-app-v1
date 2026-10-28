@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Field, FieldLabel, FieldError, FieldDescription } from "@/components/ui/field"
+import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 import {
@@ -189,9 +189,6 @@ export function CreateCouponDialog() {
                 required
                 className="h-11 rounded-xl font-mono text-sm uppercase tracking-wider font-bold border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
               />
-              <FieldDescription className="text-[11px] text-muted-foreground">
-                Only uppercase letters, digits, and hyphens (min 3 characters).
-              </FieldDescription>
             </Field>
 
             {/* Discount Type & Value Segment */}
@@ -252,9 +249,6 @@ export function CreateCouponDialog() {
                     {discountType === "PERCENT" ? "%" : "¢"}
                   </span>
                 </div>
-                <FieldDescription className="text-[11px] text-muted-foreground">
-                  {discountType === "PERCENT" ? "Value between 1 and 100%" : "Enter amount in cents (e.g. 500 = $5.00)"}
-                </FieldDescription>
               </Field>
             </div>
 
@@ -274,9 +268,6 @@ export function CreateCouponDialog() {
                   placeholder="e.g. 100 (Optional)"
                   className="h-11 rounded-xl text-sm border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
                 />
-                <FieldDescription className="text-[11px] text-muted-foreground">
-                  Leave blank for unlimited uses.
-                </FieldDescription>
               </Field>
 
               <Field className="space-y-1.5">
@@ -291,9 +282,6 @@ export function CreateCouponDialog() {
                   onChange={(e) => setExpiresAt(e.target.value)}
                   className="h-11 rounded-xl text-sm border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
                 />
-                <FieldDescription className="text-[11px] text-muted-foreground">
-                  Leave blank if this coupon never expires.
-                </FieldDescription>
               </Field>
             </div>
 

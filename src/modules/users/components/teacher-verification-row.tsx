@@ -11,7 +11,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel, FieldError, FieldDescription } from "@/components/ui/field"
+import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 import {
@@ -158,9 +158,6 @@ export function TeacherVerificationRow({
                 placeholder="e.g. Verified university faculty badge and departmental credentials..."
                 className="rounded-xl border-border/80 bg-background/80 p-3 text-sm shadow-2xs resize-none focus-visible:ring-2 focus-visible:ring-emerald-500/30 focus-visible:border-emerald-500 transition-all"
               />
-              <FieldDescription className="text-[11px] text-muted-foreground/80">
-                Recorded in the administrative audit log for compliance records.
-              </FieldDescription>
               {verifyState && "error" in verifyState && (
                 <FieldError>{verifyState.error}</FieldError>
               )}
@@ -248,9 +245,6 @@ export function TeacherVerificationRow({
                 placeholder="Explain the justification for rejection (e.g. Unverifiable credentials, incomplete application)..."
                 className="rounded-xl border-border/80 bg-background/80 p-3 text-sm shadow-2xs resize-none focus-visible:ring-2 focus-visible:ring-rose-500/30 focus-visible:border-rose-500 transition-all"
               />
-              <FieldDescription className="text-[11px] text-muted-foreground/80">
-                Minimum 5 characters. Recorded permanently in administrative audit log.
-              </FieldDescription>
               {rejectState && "error" in rejectState && (
                 <FieldError>{rejectState.error}</FieldError>
               )}
