@@ -24,9 +24,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import type { SystemSettings } from "@/modules/settings/queries"
 
-export function HeroSection() {
+function getEmbedVideoUrl(url: string | null | undefined): string | null {
+  if (!url) return null
+  try {
+    if (url.includes("youtube.com/watch")) {
+      const videoId = new URL(url).searchParams.get("v")
+      return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1` : null
+    }
+    if (url.includes("youtu.be/")) {
+      const videoId = url.split("youtu.be/")[1]?.split("?")[0]
+      return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1` : null
+    }
+    if (url.includes("vimeo.com/")) {
+      const videoId = url.split("vimeo.com/")[1]?.split("?")[0]
+      return videoId ? `https://player.vimeo.com/video/${videoId}?autoplay=1` : null
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
+export interface HeroSectionProps {
+  settings?: Partial<SystemSettings> | null
+}
+
+export function HeroSection({ settings }: HeroSectionProps = {}) {
   const [timerText, setTimerText] = React.useState("01:42:15")
+
+  const heroImage = settings?.heroImageUrl?.trim() || "/images/hero-students-v2.jpg"
+  const heroVideo = settings?.heroVideoUrl?.trim() || "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+  const embedVideoUrl = getEmbedVideoUrl(heroVideo)
 
   // Live timer tick simulation
   React.useEffect(() => {
@@ -66,12 +96,13 @@ export function HeroSection() {
       {/* Background image positioned on right half so hero copy rests on a quiet canvas */}
       <div className="absolute right-0 bottom-0 -z-10 h-[48%] w-full overflow-hidden sm:h-[46%] lg:inset-y-0 lg:h-auto lg:w-[48%]">
         <Image
-          src="/images/hero-students-v2.jpg"
+          src={heroImage}
           alt="Students taking online exam collaboratively"
           fill
           priority
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover object-[68%_center]"
+          unoptimized={heroImage.startsWith("/uploads/") || heroImage.startsWith("http")}
         />
         {/* Soft edge blend for desktop and mobile veil */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent lg:hidden" />
@@ -83,17 +114,23 @@ export function HeroSection() {
           {/* ================= LEFT COLUMN: HERO COPY (NO GLASS EFFECT) ================= */}
           <div className="relative z-10 py-3 sm:py-6 lg:py-8 lg:pr-6">
             <div className="relative max-w-xl text-foreground">
-              <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
-                The Elite Standard
-                <span className="mt-1 block font-extrabold">
-                  for <span className="text-primary">Online</span>
-                </span>
-                <span className="mt-1 block text-primary">Examinations</span>
-              </h1>
+              {settings?.heroTitle ? (
+                <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
+                  {settings.heroTitle}
+                </h1>
+              ) : (
+                <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
+                  The Elite Standard
+                  <span className="mt-1 block font-extrabold">
+                    for <span className="text-primary">Online</span>
+                  </span>
+                  <span className="mt-1 block text-primary">Examinations</span>
+                </h1>
+              )}
 
               <p className="relative mt-4 max-w-lg text-[15px] font-medium text-muted-foreground sm:mt-5 sm:text-lg sm:leading-relaxed">
-                Empower your institution with a secure, intuitive, and
-                frictionless testing platform built for the modern era.
+                {settings?.heroSubtitle?.trim() ||
+                  "Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."}
               </p>
 
               {/* Action Buttons */}
@@ -190,16 +227,27 @@ export function HeroSection() {
 
                     {/* 16:9 Video Player Frame */}
                     <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden bg-black">
-                      <video
-                        className="block size-full object-contain"
-                        controls
-                        autoPlay
-                        playsInline
-                        preload="metadata"
-                        src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-                      >
-                        Your browser does not support video playback.
-                      </video>
+                      {embedVideoUrl ? (
+                        <iframe
+                          src={embedVideoUrl}
+                          title="ExamHub Platform Walkthrough"
+                          className="size-full border-0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <video
+                          key={heroVideo}
+                          className="block size-full object-contain"
+                          controls
+                          autoPlay
+                          playsInline
+                          preload="metadata"
+                          src={heroVideo}
+                        >
+                          Your browser does not support video playback.
+                        </video>
+                      )}
                     </div>
 
                     {/* Cinematic Footer Bar */}

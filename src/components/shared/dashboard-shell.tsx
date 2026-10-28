@@ -17,6 +17,8 @@ import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
 import type { Role } from "@/prisma/generated/prisma/client"
 import { APP_NAME } from "@/lib/config"
 
+import { getSystemSettings } from "@/modules/settings/queries"
+
 /**
  * World-Class Official shadcn/ui Dashboard Shell:
  * Features modern trendy icons, interactive spotlight search command palette,
@@ -25,7 +27,7 @@ import { APP_NAME } from "@/lib/config"
  * Runs as a React Server Component to seamlessly bridge Server Layouts
  * with rich Client interactive triggers.
  */
-export function DashboardShell({
+export async function DashboardShell({
   icon: Icon,
   badgeLabel,
   mobileLabel,
@@ -43,6 +45,7 @@ export function DashboardShell({
   breadcrumb?: string
   children: React.ReactNode
 }) {
+  const settings = await getSystemSettings()
   const resolvedRole =
     user.role ??
     (badgeLabel.toUpperCase().includes("SUPER")
@@ -59,6 +62,7 @@ export function DashboardShell({
         brandIcon={<Icon className="size-4.5" />}
         brandName={APP_NAME}
         badgeLabel={badgeLabel}
+        logoUrl={settings.logoUrl}
         navItems={navItems}
         user={user}
       />

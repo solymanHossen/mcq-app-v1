@@ -2,6 +2,7 @@ import { requireRole } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { VerificationSettings } from "@/modules/settings/components/verification-settings"
 import { BillingModeSettings } from "@/modules/settings/components/billing-mode-settings"
+import { HeroBrandingSettings } from "@/modules/settings/components/hero-branding-settings"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -21,11 +22,14 @@ export default async function AdminSettingsPage() {
           Platform Settings
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Platform-wide security policies, instructor gates, and billing configuration. Changes take effect immediately and are logged.
+          Platform-wide security policies, branding & hero media, instructor gates, and billing configuration. Changes take effect immediately and are logged.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+      {/* Dynamic Branding & Hero Section Media Management */}
+      <HeroBrandingSettings settings={settings} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 pt-2">
         <div className="space-y-4">
           <h2 className="font-heading text-base font-bold text-foreground">Verification Policies</h2>
           <VerificationSettings settings={settings} />

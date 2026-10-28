@@ -89,3 +89,54 @@ export async function setBillingEnabledAction(enabled: boolean) {
   safeRevalidatePath("/billing")
   return { success: true as const }
 }
+
+export type UpdateHeroBrandingInput = {
+  logoUrl?: string | null
+  heroImageUrl?: string | null
+  heroVideoUrl?: string | null
+  heroTitle?: string | null
+  heroSubtitle?: string | null
+}
+
+export async function updateHeroBrandingSettingsAction(input: UpdateHeroBrandingInput) {
+  const admin = await assertRole("SUPER_ADMIN")
+
+  const current = await prisma.systemSettings.findUnique({ where: { id: "global" } })
+  const previousData = {
+    logoUrl: current?.logoUrl ?? null,
+    heroImageUrl: current?.heroImageUrl ?? null,
+    heroVideoUrl: current?.heroVideoUrl ?? null,
+    heroTitle: current?.heroTitle ?? null,
+    heroSubtitle: current?.heroSubtitle ?? null,
+  }
+
+  const sanitized = {
+    logoUrl: input.logoUrl?.trim() ? input.logoUrl.trim() : null,
+    heroImageUrl: input.heroImageUrl?.trim() ? input.heroImageUrl.trim() : null,
+    heroVideoUrl: input.heroVideoUrl?.trim() ? input.heroVideoUrl.trim() : null,
+    heroTitle: input.heroTitle?.trim() ? input.heroTitle.trim() : null,
+    heroSubtitle: input.heroSubtitle?.trim() ? input.heroSubtitle.trim() : null,
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.systemSettings.upsert({
+      where: { id: "global" },
+      update: { ...sanitized, updatedById: admin.id },
+      create: { id: "global", ...sanitized, updatedById: admin.id },
+    })
+    await recordAdminAction(tx, {
+      action: "SYSTEM_SETTINGS_UPDATED",
+      actorId: admin.id,
+      metadata: {
+        field: "heroBrandingSettings",
+        from: previousData,
+        to: sanitized,
+      },
+    })
+  })
+
+  safeRevalidatePath("/admin/settings")
+  safeRevalidatePath("/")
+  return { success: true as const }
+}
+

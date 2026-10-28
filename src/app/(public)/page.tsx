@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { HeroSection } from "@/components/landing/hero-section"
 import { CapabilityStrip } from "@/components/landing/capability-strip"
+import { getSystemSettings } from "@/modules/settings/queries"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -129,11 +130,13 @@ const ENTERPRISE_FEATURES = [
   },
 ] as const
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const settings = await getSystemSettings()
+
   return (
     <>
-      {/* Hero Section matching design reference */}
-      <HeroSection />
+      {/* Hero Section matching design reference with dynamic settings */}
+      <HeroSection settings={settings} />
 
       {/* World-Class Modern Capability Proof Strip */}
       <CapabilityStrip />

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
@@ -38,6 +39,7 @@ export interface NavbarUser {
 
 interface NavbarProps {
   user?: NavbarUser | null
+  logoUrl?: string | null
   className?: string
 }
 
@@ -57,7 +59,7 @@ function getInitials(name: string) {
     .join("")
 }
 
-export function Navbar({ user, className }: NavbarProps) {
+export function Navbar({ user, logoUrl, className }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
   const { theme, setTheme } = useTheme()
@@ -121,9 +123,22 @@ export function Navbar({ user, className }: NavbarProps) {
             href="/"
             className="group flex items-center gap-3 transition-opacity hover:opacity-95"
           >
-            <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-              <Sparkles className="size-5" />
-            </span>
+            {logoUrl ? (
+              <div className="relative size-9.5 sm:size-10 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+                <Image
+                  src={logoUrl}
+                  alt={APP_NAME}
+                  width={40}
+                  height={40}
+                  className="size-full object-contain"
+                  unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                />
+              </div>
+            ) : (
+              <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
+                <Sparkles className="size-5" />
+              </span>
+            )}
             <span className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-[22px]">
               {APP_NAME}
             </span>

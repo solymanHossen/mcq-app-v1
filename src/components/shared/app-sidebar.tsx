@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronsUpDown, LogOut, Settings, User as UserIcon } from "lucide-react"
@@ -44,6 +45,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   brandIcon: React.ReactNode
   brandName: string
   badgeLabel: string
+  logoUrl?: string | null
   navItems: readonly SidebarNavItem[]
   user: { name: string; email: string }
 }
@@ -52,6 +54,7 @@ export function AppSidebar({
   brandIcon,
   brandName,
   badgeLabel,
+  logoUrl,
   navItems,
   user,
   ...props
@@ -74,9 +77,22 @@ export function AppSidebar({
             className="flex items-center gap-3 transition-opacity hover:opacity-90"
             title={brandName}
           >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-2xs">
-              {brandIcon}
-            </span>
+            {logoUrl ? (
+              <div className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-sidebar-border/60 bg-sidebar-accent/50 p-1 shadow-2xs flex items-center justify-center">
+                <Image
+                  src={logoUrl}
+                  alt={brandName}
+                  width={36}
+                  height={36}
+                  className="size-full object-contain"
+                  unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                />
+              </div>
+            ) : (
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-2xs">
+                {brandIcon}
+              </span>
+            )}
             <span className="font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
               {brandName}
             </span>

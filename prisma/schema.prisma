@@ -1190,6 +1190,13 @@ model SystemSettings {
   // existing subscription are never gated by this — only *new* subscribing.
   billingEnabled Boolean @default(true)
 
+  // Branding & Hero Section Customization
+  logoUrl      String?
+  heroImageUrl String?
+  heroVideoUrl String?
+  heroTitle    String?
+  heroSubtitle String?
+
   updatedAt   DateTime @updatedAt
   updatedById String?
   updatedBy   User?    @relation("SystemSettingsUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
