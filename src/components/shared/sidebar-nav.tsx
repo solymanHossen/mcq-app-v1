@@ -48,25 +48,25 @@ export function SidebarNav({
             className={cn(
               "relative overflow-hidden",
               variant === "sidebar"
-                ? "flex items-center rounded-lg text-sm font-medium transition-colors [&_svg]:size-4.5"
+                ? "flex items-center rounded-xl text-sm font-medium transition-colors [&_svg]:size-4.5"
                 : "flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors [&_svg]:size-4",
               variant === "sidebar" &&
                 (collapsed
                   ? "size-10 justify-center p-0 mx-auto"
-                  : "h-10 gap-3 pl-3.5 pr-3"),
+                  : "h-11 gap-3 pl-3.5 pr-3"),
               active
                 ? variant === "sidebar"
-                  ? "bg-sidebar-accent text-primary font-semibold [&_svg]:text-primary"
+                  ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10 [&_svg]:text-primary [&_svg]:drop-shadow-[0_1px_2px_rgba(14,165,233,0.35)]"
                   : "border-primary bg-primary text-primary-foreground font-bold shadow-xs [&_svg]:text-primary-foreground"
                 : variant === "sidebar"
-                  ? "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60"
+                  ? "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60"
                   : "border-border/80 text-muted-foreground hover:text-foreground hover:bg-muted/50"
             )}
           >
             {active && variant === "sidebar" && (
               <span
                 aria-hidden="true"
-                className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
               />
             )}
             {icon}

@@ -149,17 +149,17 @@ export function AppSidebar({
                                 isActive={active}
                                 tooltip={item.label}
                                 className={cn(
-                                  "relative h-10 rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer",
+                                  "relative h-11 rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer",
                                   active
-                                    ? "bg-sidebar-accent text-primary font-semibold"
-                                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                    ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10"
+                                    : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
                                   "[&_svg]:size-4.5 shrink-0"
                                 )}
                               >
                                 {active && (
                                   <span
                                     aria-hidden="true"
-                                    className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                                    className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
                                   />
                                 )}
                                 {item.icon}
@@ -186,7 +186,7 @@ export function AppSidebar({
                                       className={cn(
                                         "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium cursor-pointer transition-colors",
                                         isCurrentSubActive
-                                          ? "bg-sidebar-accent text-primary font-semibold"
+                                          ? "bg-primary/15 text-primary font-semibold border border-primary/20 shadow-2xs"
                                           : "text-foreground hover:bg-muted"
                                       )}
                                     >
@@ -206,17 +206,17 @@ export function AppSidebar({
                                 isActive={active}
                                 tooltip={item.label}
                                 className={cn(
-                                  "relative h-10 w-full rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer overflow-hidden",
+                                  "relative h-11 w-full rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer overflow-hidden",
                                   active
-                                    ? "bg-sidebar-accent text-primary font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-primary"
-                                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                    ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/15 data-[active=true]:via-primary/8 data-[active=true]:to-primary/3 data-[active=true]:text-primary data-[active=true]:border-primary/20"
+                                    : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
                                   "[&_svg]:size-4.5 shrink-0"
                                 )}
                               >
                                 {active && (
                                   <span
                                     aria-hidden="true"
-                                    className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                                    className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
                                   />
                                 )}
                                 {item.icon}
@@ -240,9 +240,9 @@ export function AppSidebar({
                                         size="sm"
                                         isActive={isCurrentSubActive}
                                         className={cn(
-                                          "h-8 rounded-md px-2.5 text-xs font-medium transition-colors",
+                                          "h-9 rounded-lg px-2.5 text-xs font-medium transition-colors",
                                           isCurrentSubActive
-                                            ? "bg-sidebar-accent text-primary font-semibold"
+                                            ? "bg-primary/15 text-primary font-semibold border border-primary/20 shadow-2xs"
                                             : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                                         )}
                                       >
@@ -275,10 +275,10 @@ export function AppSidebar({
                           : item.label
                       }
                       className={cn(
-                        "relative h-10 rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 overflow-hidden",
+                        "relative h-11 rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 overflow-hidden",
                         active
-                          ? "bg-sidebar-accent text-primary font-semibold data-[active=true]:bg-sidebar-accent data-[active=true]:text-primary hover:bg-sidebar-accent hover:text-primary [&_svg]:text-primary data-[active=true]:[&_svg]:text-primary"
-                          : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60 hover:[&_svg]:text-sidebar-foreground",
+                          ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/15 data-[active=true]:via-primary/8 data-[active=true]:to-primary/3 data-[active=true]:text-primary data-[active=true]:border-primary/20 hover:from-primary/20 hover:to-primary/6 [&_svg]:text-primary [&_svg]:drop-shadow-[0_1px_2px_rgba(14,165,233,0.35)]"
+                          : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60 hover:[&_svg]:text-sidebar-foreground",
                         "[&_svg]:size-4.5 shrink-0"
                       )}
                     >
@@ -286,7 +286,7 @@ export function AppSidebar({
                         {active && (
                           <span
                             aria-hidden="true"
-                            className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary shadow-xs shadow-primary/40 transition-all duration-200"
+                            className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
                           />
                         )}
                         {item.icon}
