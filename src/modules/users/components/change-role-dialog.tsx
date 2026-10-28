@@ -7,6 +7,7 @@ import {
   Crown,
   GraduationCap,
   Users,
+  User,
   Check,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -38,7 +39,7 @@ const ROLE_TILES: Record<
 > = {
   STUDENT: {
     label: "Student",
-    icon: Users,
+    icon: User,
     color: "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20",
   },
   TEACHER: {

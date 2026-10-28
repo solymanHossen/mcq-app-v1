@@ -5,7 +5,7 @@ import {
   ShieldCheck,
   GraduationCap,
   Users,
-  Sparkles,
+  User,
   CheckCircle2,
   Ban,
   Calendar,
@@ -41,11 +41,11 @@ const ROLE_FILTERS: {
   value: Role | undefined
   icon: React.ElementType
 }[] = [
-  { label: "All Users", value: undefined, icon: Sparkles },
+  { label: "All Users", value: undefined, icon: Users },
   { label: "Super Admins", value: "SUPER_ADMIN", icon: Crown },
   { label: "Admins", value: "ADMIN", icon: ShieldCheck },
   { label: "Teachers", value: "TEACHER", icon: GraduationCap },
-  { label: "Students", value: "STUDENT", icon: Users },
+  { label: "Students", value: "STUDENT", icon: User },
 ]
 
 function initials(name: string) {
@@ -217,7 +217,7 @@ export default async function AdminUsersPage({
                           "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
                       }
                     : {
-                        icon: Users,
+                        icon: User,
                         badgeClass:
                           "border-sky-500/25 bg-sky-500/10 text-sky-700 dark:text-sky-300",
                       }
