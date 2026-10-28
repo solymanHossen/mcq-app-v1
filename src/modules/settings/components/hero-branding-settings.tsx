@@ -6,6 +6,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import {
   Film,
+  Shapes,
   Sparkles,
   Type,
   Upload,
@@ -173,7 +174,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
 
   const tabs: Array<{ key: TabKey; label: string; icon: React.ElementType }> = [
     { key: "media", label: "Hero Media", icon: Film },
-    { key: "logo", label: "Platform Logo", icon: Sparkles },
+    { key: "logo", label: "Platform Logo", icon: Shapes },
     { key: "text", label: "Hero", icon: Type },
   ]
 
@@ -565,7 +566,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                   </div>
                 ) : (
                   <span className="flex size-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                    <Sparkles className="size-5" />
+                    <Shapes className="size-5" />
                   </span>
                 )}
                 <div>
@@ -590,7 +591,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                   </div>
                 ) : (
                   <span className="flex size-11 items-center justify-center rounded-xl bg-white text-slate-950 shadow-xs">
-                    <Sparkles className="size-5" />
+                    <Shapes className="size-5" />
                   </span>
                 )}
                 <div>
