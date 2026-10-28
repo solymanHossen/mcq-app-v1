@@ -15,6 +15,7 @@ import { prisma } from "@/lib/prisma"
 import { getStalePendingTransactions } from "@/modules/payments/queries"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import {
   Card,
   CardHeader,
@@ -329,17 +330,40 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* ================= TABS DATA OPERATIONS HUB ================= */}
-      <Tabs defaultValue="teachers" className="flex flex-col gap-5 pt-2">
+      <Tabs defaultValue="teachers" className="flex flex-col gap-4 pt-2">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <TabsList className="h-10 sm:h-11 rounded-xl bg-muted/40 p-1 border border-border/70 shadow-2xs">
-            <TabsTrigger value="teachers" className="rounded-lg px-3.5 py-1 text-xs sm:text-sm font-semibold cursor-pointer">
-              Faculty Queue ({pendingTeachers})
+          <TabsList className="group-data-horizontal/tabs:!h-auto !h-auto flex w-fit items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 sm:p-2 min-h-12 sm:min-h-14">
+            <TabsTrigger
+              value="teachers"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+            >
+              <GraduationCap className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Faculty Queue</span>
+              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
+                {pendingTeachers}
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="users" className="rounded-lg px-3.5 py-1 text-xs sm:text-sm font-semibold cursor-pointer">
-              Recent Users ({recentUsers.length})
+
+            <TabsTrigger
+              value="users"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+            >
+              <Users className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Recent Users</span>
+              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
+                {recentUsers.length}
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="attempts" className="rounded-lg px-3.5 py-1 text-xs sm:text-sm font-semibold cursor-pointer">
-              Recent Attempts ({recentAttempts.length})
+
+            <TabsTrigger
+              value="attempts"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+            >
+              <Activity className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Recent Attempts</span>
+              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
+                {recentAttempts.length}
+              </span>
             </TabsTrigger>
           </TabsList>
 
@@ -349,11 +373,11 @@ export default async function AdminDashboardPage() {
               asChild
               variant="outline"
               size="sm"
-              className="h-9.5 rounded-xl border border-border/70 bg-card px-3.5 text-xs font-semibold shadow-2xs hover:bg-muted/70 cursor-pointer"
+              className="h-11 sm:h-12 rounded-xl border border-border/70 bg-card px-4 sm:px-5 text-xs sm:text-sm font-semibold shadow-2xs hover:bg-muted/70 cursor-pointer"
             >
               <Link href="/admin/teachers">
                 <span>Manage Verifications</span>
-                <ArrowRight className="ml-1.5 size-3.5" />
+                <ArrowRight className="ml-1.5 size-4" />
               </Link>
             </Button>
           </div>
