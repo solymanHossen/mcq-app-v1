@@ -36,7 +36,7 @@ export function PlanActiveToggle({
       onClick={toggle}
       disabled={isPending}
       className={cn(
-        "h-8.5 rounded-xl border text-xs font-semibold shadow-2xs transition-all gap-1.5 cursor-pointer",
+        "h-8 rounded-xl border px-3 text-xs font-semibold shadow-2xs transition-all gap-1.5 cursor-pointer",
         isActive
           ? "border-border/70 bg-card text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/40"
           : "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/15 hover:border-emerald-500/50"
@@ -45,9 +45,9 @@ export function PlanActiveToggle({
       {isPending ? (
         <Spinner data-icon="inline-start" />
       ) : isActive ? (
-        <PowerOff className="size-3.5" />
+        <PowerOff className="size-3" />
       ) : (
-        <Power className="size-3.5" />
+        <Power className="size-3" />
       )}
       <span>{isActive ? "Deactivate" : "Activate"}</span>
     </Button>
