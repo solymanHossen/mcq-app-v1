@@ -326,8 +326,8 @@ export default async function AdminPaymentsPage({
       {/* ================= WORLD-CLASS TRANSACTIONS DATA TABLE ================= */}
       <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs">
         <Table>
-          <TableHeader className="bg-muted/40 border-b border-border/60">
-            <TableRow className="border-none hover:bg-transparent">
+          <TableHeader className="bg-muted/35 border-b border-border/70">
+            <TableRow className="border-b border-border/70 hover:bg-transparent">
               <TableHead className="py-4 pl-6 font-bold text-xs uppercase tracking-wider text-muted-foreground">
                 Customer & Account
               </TableHead>
@@ -349,7 +349,7 @@ export default async function AdminPaymentsPage({
             </TableRow>
           </TableHeader>
 
-          <TableBody className="divide-y divide-border/50">
+          <TableBody>
             {transactions.length === 0 ? (
               <TableRow className="hover:bg-transparent">
                 <TableCell
@@ -380,7 +380,7 @@ export default async function AdminPaymentsPage({
                 return (
                   <TableRow
                     key={t.id}
-                    className="border-none hover:bg-muted/30 transition-colors"
+                    className="border-b border-border/70 dark:border-border/40 last:border-b-0 hover:bg-muted/35 dark:hover:bg-muted/20 transition-colors duration-150"
                   >
                     {/* Column 1: Customer & Account */}
                     <TableCell className="py-4 pl-6">
