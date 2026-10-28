@@ -149,19 +149,13 @@ export function AppSidebar({
                                 isActive={active}
                                 tooltip={item.label}
                                 className={cn(
-                                  "relative h-11 rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer",
+                                  "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors cursor-pointer",
                                   active
-                                    ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10"
-                                    : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
                                   "[&_svg]:size-4.5 shrink-0"
                                 )}
                               >
-                                {active && (
-                                  <span
-                                    aria-hidden="true"
-                                    className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
-                                  />
-                                )}
                                 {item.icon}
                               </SidebarMenuButton>
                             </DropdownMenuTrigger>
@@ -186,7 +180,7 @@ export function AppSidebar({
                                       className={cn(
                                         "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium cursor-pointer transition-colors",
                                         isCurrentSubActive
-                                          ? "bg-primary/15 text-primary font-semibold border border-primary/20 shadow-2xs"
+                                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                                           : "text-foreground hover:bg-muted"
                                       )}
                                     >
@@ -206,19 +200,13 @@ export function AppSidebar({
                                 isActive={active}
                                 tooltip={item.label}
                                 className={cn(
-                                  "relative h-11 w-full rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 cursor-pointer overflow-hidden",
+                                  "h-10 w-full rounded-lg px-3 text-sm font-medium gap-3 transition-colors cursor-pointer",
                                   active
-                                    ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/15 data-[active=true]:via-primary/8 data-[active=true]:to-primary/3 data-[active=true]:text-primary data-[active=true]:border-primary/20"
-                                    : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
                                   "[&_svg]:size-4.5 shrink-0"
                                 )}
                               >
-                                {active && (
-                                  <span
-                                    aria-hidden="true"
-                                    className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
-                                  />
-                                )}
                                 {item.icon}
                                 <span className="tracking-tight group-data-[collapsible=icon]:hidden">
                                   {item.label}
@@ -240,9 +228,9 @@ export function AppSidebar({
                                         size="sm"
                                         isActive={isCurrentSubActive}
                                         className={cn(
-                                          "h-9 rounded-lg px-2.5 text-xs font-medium transition-colors",
+                                          "h-8.5 rounded-md px-2.5 text-xs font-medium transition-colors",
                                           isCurrentSubActive
-                                            ? "bg-primary/15 text-primary font-semibold border border-primary/20 shadow-2xs"
+                                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                                             : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                                         )}
                                       >
@@ -275,20 +263,14 @@ export function AppSidebar({
                           : item.label
                       }
                       className={cn(
-                        "relative h-11 rounded-xl pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 overflow-hidden",
+                        "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors",
                         active
-                          ? "bg-gradient-to-r from-primary/15 via-primary/8 to-primary/3 text-primary font-semibold border border-primary/20 shadow-xs shadow-primary/10 data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/15 data-[active=true]:via-primary/8 data-[active=true]:to-primary/3 data-[active=true]:text-primary data-[active=true]:border-primary/20 hover:from-primary/20 hover:to-primary/6 [&_svg]:text-primary [&_svg]:drop-shadow-[0_1px_2px_rgba(14,165,233,0.35)]"
-                          : "border border-transparent text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground [&_svg]:text-sidebar-foreground/60 hover:[&_svg]:text-sidebar-foreground",
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
                         "[&_svg]:size-4.5 shrink-0"
                       )}
                     >
-                      <Link href={item.href} className="flex items-center w-full min-w-0">
-                        {active && (
-                          <span
-                            aria-hidden="true"
-                            className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-sky-400 via-primary to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.55)] dark:from-sky-300 dark:via-sky-400 dark:to-blue-500 dark:shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-all duration-200"
-                          />
-                        )}
+                      <Link href={item.href} className="flex items-center w-full min-w-0 gap-3">
                         {item.icon}
                         <span className="tracking-tight group-data-[collapsible=icon]:hidden truncate">
                           {item.label}
@@ -298,10 +280,12 @@ export function AppSidebar({
                             className={cn(
                               "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums group-data-[collapsible=icon]:hidden transition-colors shrink-0",
                               typeof item.badge === "number" && item.badge > 0
-                                ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-2xs"
+                                ? active
+                                  ? "bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30"
+                                  : "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-2xs"
                                 : typeof item.badge === "number" && item.badge === 0
                                 ? "bg-muted/70 text-muted-foreground border border-border/50"
-                                : "bg-primary/15 text-primary border border-primary/25"
+                                : "bg-sidebar-accent text-sidebar-accent-foreground"
                             )}
                           >
                             {item.badge}
