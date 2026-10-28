@@ -47,6 +47,81 @@ function getEmbedVideoUrl(url: string | null | undefined): string | null {
   return null
 }
 
+function renderHighlightedTitle(title?: string | null) {
+  if (!title?.trim()) {
+    return (
+      <>
+        The Elite Standard
+        <span className="mt-1 block font-extrabold">
+          for <span className="text-primary">Online</span>
+        </span>
+        <span className="mt-1 block text-primary">Examinations</span>
+      </>
+    )
+  }
+
+  const raw = title.trim()
+  const hasMarkup = /\{([^}]+)\}|\[([^\]]+)\]|\*([^*]+)\*/.test(raw)
+
+  if (hasMarkup) {
+    const lines = raw.split("\n")
+    return (
+      <>
+        {lines.map((line, lineIdx) => {
+          const parts: React.ReactNode[] = []
+          const regex = /\{([^}]+)\}|\[([^\]]+)\]|\*([^*]+)\*/g
+          let lastIndex = 0
+          let match: RegExpExecArray | null
+
+          while ((match = regex.exec(line)) !== null) {
+            if (match.index > lastIndex) {
+              parts.push(line.slice(lastIndex, match.index))
+            }
+            const word = match[1] || match[2] || match[3]
+            parts.push(
+              <span key={`hl-${lineIdx}-${match.index}`} className="text-primary font-extrabold">
+                {word}
+              </span>
+            )
+            lastIndex = regex.lastIndex
+          }
+
+          if (lastIndex < line.length) {
+            parts.push(line.slice(lastIndex))
+          }
+
+          return (
+            <span key={lineIdx} className={lineIdx > 0 ? "mt-1 block" : "inline"}>
+              {parts}
+            </span>
+          )
+        })}
+      </>
+    )
+  }
+
+  // Fallback: If no explicit markup, highlight "Online" and "Examinations" if present
+  if (/online|examinations/i.test(raw)) {
+    const parts = raw.split(/(online|examinations)/i)
+    return (
+      <>
+        {parts.map((part, idx) => {
+          if (/^(online|examinations)$/i.test(part)) {
+            return (
+              <span key={idx} className="text-primary font-extrabold">
+                {part}
+              </span>
+            )
+          }
+          return part
+        })}
+      </>
+    )
+  }
+
+  return raw
+}
+
 export interface HeroSectionProps {
   settings?: Partial<SystemSettings> | null
 }
@@ -114,19 +189,9 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
           {/* ================= LEFT COLUMN: HERO COPY (NO GLASS EFFECT) ================= */}
           <div className="relative z-10 py-3 sm:py-6 lg:py-8 lg:pr-6">
             <div className="relative max-w-xl text-foreground">
-              {settings?.heroTitle ? (
-                <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
-                  {settings.heroTitle}
-                </h1>
-              ) : (
-                <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
-                  The Elite Standard
-                  <span className="mt-1 block font-extrabold">
-                    for <span className="text-primary">Online</span>
-                  </span>
-                  <span className="mt-1 block text-primary">Examinations</span>
-                </h1>
-              )}
+              <h1 className="relative max-w-[580px] font-heading text-[32px] leading-[1.12] font-extrabold tracking-tight text-foreground min-[400px]:text-[36px] sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem] xl:text-[3.85rem]">
+                {renderHighlightedTitle(settings?.heroTitle)}
+              </h1>
 
               <p className="relative mt-4 max-w-lg text-[15px] font-medium text-muted-foreground sm:mt-5 sm:text-lg sm:leading-relaxed">
                 {settings?.heroSubtitle?.trim() ||

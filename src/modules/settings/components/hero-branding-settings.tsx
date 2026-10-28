@@ -174,8 +174,91 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
   const tabs: Array<{ key: TabKey; label: string; icon: React.ElementType }> = [
     { key: "media", label: "Hero Media", icon: Film },
     { key: "logo", label: "Platform Logo", icon: Sparkles },
-    { key: "text", label: "Hero Copy", icon: Type },
+    { key: "text", label: "Hero", icon: Type },
   ]
+
+  const heroTitleWords = React.useMemo(() => {
+    const text = heroTitle.trim()
+    if (!text) return []
+    const words = text.split(/\s+/)
+    return words.map((w) => {
+      const isHighlighted = w.startsWith("{") && w.endsWith("}")
+      const cleanWord = w.replace(/[{}]/g, "")
+      return {
+        rawWord: w,
+        cleanWord,
+        isHighlighted,
+      }
+    })
+  }, [heroTitle])
+
+  const toggleWordHighlight = (targetRawWord: string) => {
+    if (targetRawWord.startsWith("{") && targetRawWord.endsWith("}")) {
+      const unwrapped = targetRawWord.slice(1, -1)
+      setHeroTitle((prev) => prev.replace(targetRawWord, unwrapped))
+    } else {
+      const clean = targetRawWord.replace(/[{}]/g, "")
+      const escaped = targetRawWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      const regex = new RegExp(`(?<=^|\\s)${escaped}(?=\\s|$)`, "g")
+      setHeroTitle((prev) => prev.replace(regex, `{${clean}}`))
+    }
+  }
+
+  const renderPreviewTitle = (title: string) => {
+    if (!title.trim()) {
+      return (
+        <>
+          The Elite Standard for <span className="text-primary font-extrabold">Online</span>{" "}
+          <span className="text-primary font-extrabold">Examinations</span>
+        </>
+      )
+    }
+
+    const regex = /\{([^}]+)\}|\[([^\]]+)\]|\*([^*]+)\*/g
+    const hasMarkup = regex.test(title)
+
+    if (hasMarkup) {
+      const parts: React.ReactNode[] = []
+      let lastIndex = 0
+      let match: RegExpExecArray | null
+      regex.lastIndex = 0
+
+      while ((match = regex.exec(title)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(title.slice(lastIndex, match.index))
+        }
+        const highlighted = match[1] || match[2] || match[3]
+        parts.push(
+          <span key={match.index} className="text-primary font-extrabold">
+            {highlighted}
+          </span>
+        )
+        lastIndex = regex.lastIndex
+      }
+
+      if (lastIndex < title.length) {
+        parts.push(title.slice(lastIndex))
+      }
+
+      return parts
+    }
+
+    if (/online|examinations/i.test(title)) {
+      const parts = title.split(/(online|examinations)/i)
+      return parts.map((part, idx) => {
+        if (/^(online|examinations)$/i.test(part)) {
+          return (
+            <span key={idx} className="text-primary font-extrabold">
+              {part}
+            </span>
+          )
+        }
+        return part
+      })
+    }
+
+    return title
+  }
 
   return (
     <div className="w-full space-y-6">
@@ -522,7 +605,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
         </div>
       )}
 
-      {/* ================= TAB 3: HERO COPY ================= */}
+      {/* ================= TAB 3: HERO (HEADLINES & SUBTITLE) ================= */}
       {activeTab === "text" && (
         <div className="rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs max-w-3xl">
           <div className="space-y-4">
@@ -540,30 +623,72 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                   className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                 >
                   <RotateCcw className="size-3" />
-                  <span>Reset</span>
+                  <span>Reset to default</span>
                 </button>
               )}
             </div>
 
             <div className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">Headline</label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-foreground">Headline</label>
+                  <span className="text-[11px] text-muted-foreground">
+                    Wrap with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-primary">{"{words}"}</code> for brand accent color
+                  </span>
+                </div>
                 <Input
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
-                  placeholder="The Elite Standard for Online Examinations"
-                  className="h-10 rounded-lg text-sm px-3.5 bg-background border-border/80"
+                  placeholder="The Elite Standard for {Online} {Examinations}"
+                  className="h-10 rounded-lg text-xs sm:text-sm px-3.5 bg-background border-border/80 shadow-2xs"
                 />
+
+                {/* Quick Word Highlighter Chips */}
+                {heroTitleWords.length > 0 && (
+                  <div className="space-y-1.5 pt-1">
+                    <span className="text-[11px] font-medium text-muted-foreground block">
+                      Click any word to toggle brand accent color:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {heroTitleWords.map((item, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => toggleWordHighlight(item.rawWord)}
+                          className={cn(
+                            "inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-all cursor-pointer select-none",
+                            item.isHighlighted
+                              ? "bg-primary text-primary-foreground shadow-xs"
+                              : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          <span>{item.cleanWord}</span>
+                          {item.isHighlighted && <Check className="size-3 stroke-[2.5]" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Live Preview of Headline */}
+                <div className="rounded-lg border border-border/70 bg-muted/20 p-3.5 mt-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 block mb-1">
+                    Live Headline Preview
+                  </span>
+                  <div className="font-heading text-lg sm:text-xl font-extrabold tracking-tight text-foreground">
+                    {renderPreviewTitle(heroTitle)}
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 pt-1">
                 <label className="text-xs font-semibold text-foreground">Subtitle</label>
                 <textarea
                   value={heroSubtitle}
                   onChange={(e) => setHeroSubtitle(e.target.value)}
                   rows={3}
                   placeholder="Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."
-                  className="w-full rounded-lg border border-border/80 bg-background p-3 text-sm placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-lg border border-border/80 bg-background p-3 text-xs sm:text-sm placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-2xs"
                 />
               </div>
             </div>
