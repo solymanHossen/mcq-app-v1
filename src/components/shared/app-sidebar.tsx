@@ -58,7 +58,7 @@ export function AppSidebar({
       {...props}
     >
       {/* Brand Header: Aligned height (h-20) with Dashboard Header */}
-      <SidebarHeader className="h-20 border-b-0 p-0">
+      <SidebarHeader className="h-20 border-b border-sidebar-border p-0">
         <div className="flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
           <Link
             href="/"

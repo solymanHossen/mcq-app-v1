@@ -5,7 +5,6 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
 import { AppSidebar } from "@/components/shared/app-sidebar"
 import { UserNav } from "@/components/shared/user-nav"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
@@ -69,8 +68,6 @@ export function DashboardShell({
           {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <SidebarTrigger className="size-10 rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95" />
-            <Separator orientation="vertical" className="hidden sm:block h-5 w-[1.5px] bg-border/40" />
-            
             <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
               {breadcrumb ?? `${badgeLabel} Workspace`}
             </span>
