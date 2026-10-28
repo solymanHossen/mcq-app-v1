@@ -75,16 +75,16 @@ export function DashboardAreaChart({
   return (
     <Card
       className={cn(
-        "rounded-3xl border-none bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all sm:p-2 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        "rounded-3xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md sm:p-2",
         className
       )}
     >
       <CardHeader className="flex flex-col gap-4 p-6 pb-2 sm:flex-row sm:items-center sm:justify-between sm:p-7 sm:pb-2">
         <div className="flex flex-col gap-1.5">
-          <CardTitle className="font-heading text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
+          <CardTitle className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
             {title}
           </CardTitle>
-          <CardDescription className="text-xs text-muted-foreground sm:text-sm">
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
             {timeRange === "90d"
               ? description
               : timeRange === "30d"
@@ -94,16 +94,16 @@ export function DashboardAreaChart({
         </div>
 
         {/* Time range selector pills */}
-        <div className="flex items-center gap-1 rounded-2xl bg-muted/60 p-1.5 self-start sm:self-auto border-none shadow-2xs">
+        <div className="flex items-center gap-1.5 rounded-2xl bg-muted/50 p-1.5 self-start sm:self-auto border border-border/60 shadow-2xs">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => setTimeRange("90d")}
             className={cn(
-              "h-8 rounded-xl px-3.5 text-xs font-medium text-muted-foreground transition-all",
+              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
               timeRange === "90d" &&
-                "bg-card text-foreground shadow-xs font-bold"
+                "bg-background text-foreground shadow-xs font-bold border border-border/70"
             )}
           >
             Last 3 months
@@ -114,9 +114,9 @@ export function DashboardAreaChart({
             size="sm"
             onClick={() => setTimeRange("30d")}
             className={cn(
-              "h-8 rounded-xl px-3.5 text-xs font-medium text-muted-foreground transition-all",
+              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
               timeRange === "30d" &&
-                "bg-card text-foreground shadow-xs font-bold"
+                "bg-background text-foreground shadow-xs font-bold border border-border/70"
             )}
           >
             Last 30 days
@@ -127,9 +127,9 @@ export function DashboardAreaChart({
             size="sm"
             onClick={() => setTimeRange("7d")}
             className={cn(
-              "h-8 rounded-xl px-3.5 text-xs font-medium text-muted-foreground transition-all",
+              "h-8.5 rounded-xl px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground transition-all cursor-pointer",
               timeRange === "7d" &&
-                "bg-card text-foreground shadow-xs font-bold"
+                "bg-background text-foreground shadow-xs font-bold border border-border/70"
             )}
           >
             Last 7 days
@@ -140,7 +140,7 @@ export function DashboardAreaChart({
       <CardContent className="p-6 pt-2 sm:p-7 sm:pt-4">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[260px] w-full sm:h-[320px]"
+          className="aspect-auto h-[280px] w-full sm:h-[350px]"
         >
           <AreaChart
             data={activeData}
