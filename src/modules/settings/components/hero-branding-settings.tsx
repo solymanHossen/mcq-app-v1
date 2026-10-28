@@ -39,13 +39,38 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
   const [isPending, startTransition] = React.useTransition()
   const [uploadingTarget, setUploadingTarget] = React.useState<string | null>(null)
 
+  const [lastSaved, setLastSaved] = React.useState({
+    logoUrl: settings.logoUrl ?? "",
+    heroImageUrl: settings.heroImageUrl ?? "",
+    heroVideoUrl: settings.heroVideoUrl ?? "",
+    heroTitle: settings.heroTitle ?? "",
+    heroSubtitle: settings.heroSubtitle ?? "",
+  })
+
+  React.useEffect(() => {
+    setLastSaved({
+      logoUrl: settings.logoUrl ?? "",
+      heroImageUrl: settings.heroImageUrl ?? "",
+      heroVideoUrl: settings.heroVideoUrl ?? "",
+      heroTitle: settings.heroTitle ?? "",
+      heroSubtitle: settings.heroSubtitle ?? "",
+    })
+  }, [settings])
+
+  const isDirty =
+    logoUrl !== lastSaved.logoUrl ||
+    heroImageUrl !== lastSaved.heroImageUrl ||
+    heroVideoUrl !== lastSaved.heroVideoUrl ||
+    heroTitle !== lastSaved.heroTitle ||
+    heroSubtitle !== lastSaved.heroSubtitle
+
   const DEFAULT_HERO_IMAGE = "/images/hero-students-v2.jpg"
   const DEFAULT_HERO_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
 
   const effectiveHeroImage = heroImageUrl.trim() || DEFAULT_HERO_IMAGE
   const effectiveHeroVideo = heroVideoUrl.trim() || DEFAULT_HERO_VIDEO
 
-  // Smart detect YouTube/Vimeo embed
+  // Smart detect YouTube / Vimeo embed
   const getEmbedVideoUrl = (url: string) => {
     if (!url) return null
     try {
@@ -111,6 +136,8 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
   }
 
   const handleSave = () => {
+    if (!isDirty) return
+
     startTransition(async () => {
       try {
         const res = await updateHeroBrandingSettingsAction({
@@ -120,8 +147,22 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
           heroTitle,
           heroSubtitle,
         })
+        if ("error" in res && res.error) {
+          toast.error(res.error)
+          return
+        }
         if (res?.success) {
-          toast.success("Settings saved successfully")
+          setLastSaved({
+            logoUrl,
+            heroImageUrl,
+            heroVideoUrl,
+            heroTitle,
+            heroSubtitle,
+          })
+          toast.success("Settings saved successfully!", {
+            description: "Platform branding, hero video, and media are now live across the platform.",
+            duration: 4000,
+          })
         }
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Failed to update settings"
@@ -138,59 +179,104 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
 
   return (
     <div className="w-full space-y-6">
-      {/* ================= LARGE SMOOTH TAB DOCK (PROFILE PAGE STYLE) ================= */}
-      <nav
-        role="tablist"
-        aria-label="Branding sections"
-        className="flex w-full min-w-fit items-center gap-2 rounded-2xl bg-muted/60 p-1.5 shadow-2xs backdrop-blur-xl sm:p-2 sm:gap-2.5"
-      >
-        {tabs.map((tab) => {
-          const Icon = tab.icon
-          const isActive = activeTab === tab.key
+      {/* ================= HEADER: TITLE ON LEFT, ACTIONS ON RIGHT (NO SUB-DESCRIPTION) ================= */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-1">
+        <h1 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          Platform Settings
+        </h1>
 
-          return (
-            <button
-              key={tab.key}
-              role="tab"
-              type="button"
-              aria-selected={isActive}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 select-none sm:px-6 sm:py-3.5 sm:text-base",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
-              )}
-            >
-              <Icon
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="h-9 rounded-lg gap-2 text-xs sm:text-sm font-medium border-border/80 hover:bg-muted/70 cursor-pointer"
+          >
+            <Link href="/" target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="size-3.5 text-muted-foreground" />
+              <span>View Live Site</span>
+            </Link>
+          </Button>
+
+          <Button
+            onClick={handleSave}
+            disabled={!isDirty || isPending}
+            size="sm"
+            className={cn(
+              "h-9 rounded-lg px-4 text-xs sm:text-sm font-semibold gap-2 transition-all duration-200",
+              isDirty
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs cursor-pointer active:scale-[0.98]"
+                : "bg-muted text-muted-foreground/60 opacity-60 cursor-not-allowed border border-border/50 shadow-none pointer-events-none"
+            )}
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <Check className="size-3.5 stroke-[2.5]" />
+                <span>Save Changes</span>
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* ================= SMOOTH SEGMENTED TABS WITH COMFORTABLE PADDING & GAP ================= */}
+      <div className="w-full">
+        <nav
+          role="tablist"
+          aria-label="Settings sections"
+          className="inline-flex w-fit items-center gap-1.5 rounded-xl bg-muted/60 p-1.5 border border-border/60 shadow-2xs backdrop-blur-xl"
+        >
+          {tabs.map((tab) => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.key
+
+            return (
+              <button
+                key={tab.key}
+                role="tab"
+                type="button"
+                aria-selected={isActive}
+                onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "size-4.5 transition-transform duration-200 group-hover:scale-105 sm:size-5",
+                  "inline-flex h-9 sm:h-9.5 items-center justify-center gap-2 rounded-lg px-4 text-xs sm:text-sm font-medium transition-all duration-150 select-none cursor-pointer",
                   isActive
-                    ? "text-primary-foreground"
-                    : "text-muted-foreground group-hover:text-foreground"
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                    : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
                 )}
-              />
-              <span className="whitespace-nowrap">{tab.label}</span>
-            </button>
-          )
-        })}
-      </nav>
+              >
+                <Icon
+                  className={cn(
+                    "size-4 shrink-0 transition-transform duration-150",
+                    isActive ? "text-primary-foreground" : "text-muted-foreground"
+                  )}
+                />
+                <span className="whitespace-nowrap">{tab.label}</span>
+              </button>
+            )
+          })}
+        </nav>
+      </div>
 
       {/* ================= TAB 1: HERO MEDIA (IMAGE & VIDEO) ================= */}
       {activeTab === "media" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
           {/* HERO IMAGE CARD */}
-          <div className="flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] ring-1 ring-border/80 transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-            <div className="space-y-5">
+          <div className="flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
-                  Hero Image
-                </h3>
+                <span className="text-sm font-bold text-foreground">
+                  Hero Banner Image
+                </span>
                 {heroImageUrl && (
                   <button
                     type="button"
                     onClick={() => setHeroImageUrl("")}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                   >
                     <RotateCcw className="size-3" />
                     <span>Reset</span>
@@ -198,14 +284,15 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              {/* INTEGRATED INPUT + UPLOAD PILL */}
+              <div className="relative flex items-center">
                 <Input
                   value={heroImageUrl}
                   onChange={(e) => setHeroImageUrl(e.target.value)}
-                  placeholder="Image URL or upload..."
-                  className="h-12 rounded-xl text-sm sm:text-base px-4 bg-background"
+                  placeholder="Paste image URL or choose file..."
+                  className="h-10 rounded-lg pr-24 pl-3.5 text-xs sm:text-sm bg-background border-border/80 shadow-2xs focus-visible:ring-1 focus-visible:ring-primary"
                 />
-                <label className="inline-flex cursor-pointer shrink-0">
+                <label className="absolute right-1.5 inline-flex cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -213,24 +300,24 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                     onChange={(e) => handleFileUpload(e, "hero-image")}
                     disabled={uploadingTarget === "hero-image"}
                   />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={uploadingTarget === "hero-image"}
-                    className="h-12 rounded-xl px-4 sm:px-5 font-semibold gap-2 pointer-events-none"
+                  <span
+                    className={cn(
+                      "inline-flex h-7 items-center gap-1.5 rounded-md bg-secondary hover:bg-secondary/80 px-2.5 text-xs font-semibold text-secondary-foreground transition-colors shadow-2xs select-none",
+                      uploadingTarget === "hero-image" && "opacity-70 pointer-events-none"
+                    )}
                   >
                     {uploadingTarget === "hero-image" ? (
-                      <Loader2 className="size-4 animate-spin" />
+                      <Loader2 className="size-3.5 animate-spin" />
                     ) : (
-                      <Upload className="size-4" />
+                      <Upload className="size-3.5" />
                     )}
                     <span>Upload</span>
-                  </Button>
+                  </span>
                 </label>
               </div>
 
-              {/* CLEAN LARGE IMAGE PREVIEW */}
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border/80 bg-muted/30 shadow-xs">
+              {/* CLEAN 16:9 PREVIEW */}
+              <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-border/70 bg-muted/30 shadow-xs">
                 <Image
                   src={effectiveHeroImage}
                   alt="Hero Image Preview"
@@ -242,18 +329,24 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
             </div>
           </div>
 
-          {/* HERO VIDEO CARD */}
-          <div className="flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] ring-1 ring-border/80 transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-            <div className="space-y-5">
+          {/* WORLD-CLASS HERO VIDEO SHOWCASE CARD */}
+          <div className="flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
-                  Hero Video
-                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-foreground">
+                    Landing Page Video
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Live Preview
+                  </span>
+                </div>
                 {heroVideoUrl && (
                   <button
                     type="button"
                     onClick={() => setHeroVideoUrl("")}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                   >
                     <RotateCcw className="size-3" />
                     <span>Reset</span>
@@ -261,14 +354,15 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              {/* INTEGRATED INPUT + UPLOAD PILL */}
+              <div className="relative flex items-center">
                 <Input
                   value={heroVideoUrl}
                   onChange={(e) => setHeroVideoUrl(e.target.value)}
                   placeholder="MP4 URL or YouTube / Vimeo link..."
-                  className="h-12 rounded-xl text-sm sm:text-base px-4 bg-background"
+                  className="h-10 rounded-lg pr-24 pl-3.5 text-xs sm:text-sm bg-background border-border/80 shadow-2xs focus-visible:ring-1 focus-visible:ring-primary"
                 />
-                <label className="inline-flex cursor-pointer shrink-0">
+                <label className="absolute right-1.5 inline-flex cursor-pointer">
                   <input
                     type="file"
                     accept="video/mp4,video/webm"
@@ -276,24 +370,24 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                     onChange={(e) => handleFileUpload(e, "hero-video")}
                     disabled={uploadingTarget === "hero-video"}
                   />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={uploadingTarget === "hero-video"}
-                    className="h-12 rounded-xl px-4 sm:px-5 font-semibold gap-2 pointer-events-none"
+                  <span
+                    className={cn(
+                      "inline-flex h-7 items-center gap-1.5 rounded-md bg-secondary hover:bg-secondary/80 px-2.5 text-xs font-semibold text-secondary-foreground transition-colors shadow-2xs select-none",
+                      uploadingTarget === "hero-video" && "opacity-70 pointer-events-none"
+                    )}
                   >
                     {uploadingTarget === "hero-video" ? (
-                      <Loader2 className="size-4 animate-spin" />
+                      <Loader2 className="size-3.5 animate-spin" />
                     ) : (
-                      <Upload className="size-4" />
+                      <Upload className="size-3.5" />
                     )}
                     <span>Upload</span>
-                  </Button>
+                  </span>
                 </label>
               </div>
 
-              {/* CLEAN LARGE VIDEO PREVIEW */}
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border/80 bg-black shadow-xs">
+              {/* WORLD-CLASS 16:9 CINEMA VIDEO PLAYER */}
+              <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-border/80 bg-slate-950 shadow-sm ring-1 ring-black/5 dark:ring-white/5">
                 {embedUrl ? (
                   <iframe
                     src={embedUrl}
@@ -322,32 +416,33 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
 
       {/* ================= TAB 2: PLATFORM LOGO ================= */}
       {activeTab === "logo" && (
-        <div className="rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] ring-1 ring-border/80 transition-all sm:p-8 max-w-4xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-          <div className="space-y-6">
+        <div className="rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs max-w-4xl">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+              <span className="text-sm font-bold text-foreground">
                 Brand Logo
-              </h3>
+              </span>
               {logoUrl && (
                 <button
                   type="button"
                   onClick={() => setLogoUrl("")}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                 >
                   <RotateCcw className="size-3" />
-                  <span>Reset to default</span>
+                  <span>Reset</span>
                 </button>
               )}
             </div>
 
-            <div className="flex gap-2 max-w-2xl">
+            {/* INTEGRATED INPUT + UPLOAD PILL */}
+            <div className="relative flex items-center max-w-2xl">
               <Input
                 value={logoUrl}
                 onChange={(e) => setLogoUrl(e.target.value)}
                 placeholder="Logo URL or upload SVG / PNG..."
-                className="h-12 rounded-xl text-sm sm:text-base px-4 bg-background"
+                className="h-10 rounded-lg pr-24 pl-3.5 text-xs sm:text-sm bg-background border-border/80 shadow-2xs focus-visible:ring-1 focus-visible:ring-primary"
               />
-              <label className="inline-flex cursor-pointer shrink-0">
+              <label className="absolute right-1.5 inline-flex cursor-pointer">
                 <input
                   type="file"
                   accept="image/*"
@@ -355,71 +450,71 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                   onChange={(e) => handleFileUpload(e, "logo")}
                   disabled={uploadingTarget === "logo"}
                 />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={uploadingTarget === "logo"}
-                  className="h-12 rounded-xl px-4 sm:px-5 font-semibold gap-2 pointer-events-none"
+                <span
+                  className={cn(
+                    "inline-flex h-7 items-center gap-1.5 rounded-md bg-secondary hover:bg-secondary/80 px-2.5 text-xs font-semibold text-secondary-foreground transition-colors shadow-2xs select-none",
+                    uploadingTarget === "logo" && "opacity-70 pointer-events-none"
+                  )}
                 >
                   {uploadingTarget === "logo" ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <Loader2 className="size-3.5 animate-spin" />
                   ) : (
-                    <Upload className="size-4" />
+                    <Upload className="size-3.5" />
                   )}
                   <span>Upload</span>
-                </Button>
+                </span>
               </label>
             </div>
 
             {/* PREVIEW TILES */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl pt-2">
-              <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs">
+              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-2xs">
                 {logoUrl ? (
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-1 flex items-center justify-center">
+                  <div className="relative size-11 shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1 flex items-center justify-center">
                     <Image
                       src={logoUrl}
                       alt="Logo"
-                      width={48}
-                      height={48}
+                      width={44}
+                      height={44}
                       className="size-full object-contain"
                       unoptimized
                     />
                   </div>
                 ) : (
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                    <Sparkles className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
+                    <Sparkles className="size-5" />
                   </span>
                 )}
                 <div>
-                  <span className="font-heading text-lg font-bold text-slate-900 block">
+                  <span className="font-heading text-base font-bold text-slate-900 block">
                     {APP_NAME}
                   </span>
-                  <span className="text-xs text-slate-500">Light theme preview</span>
+                  <span className="text-xs text-slate-500">Light theme</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-5 shadow-2xs">
+              <div className="flex items-center gap-4 rounded-xl border border-slate-800 bg-slate-950 p-4 shadow-2xs">
                 {logoUrl ? (
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-1 flex items-center justify-center">
+                  <div className="relative size-11 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-1 flex items-center justify-center">
                     <Image
                       src={logoUrl}
                       alt="Logo Dark"
-                      width={48}
-                      height={48}
+                      width={44}
+                      height={44}
                       className="size-full object-contain"
                       unoptimized
                     />
                   </div>
                 ) : (
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-white text-slate-950 shadow-xs">
-                    <Sparkles className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-xl bg-white text-slate-950 shadow-xs">
+                    <Sparkles className="size-5" />
                   </span>
                 )}
                 <div>
-                  <span className="font-heading text-lg font-bold text-white block">
+                  <span className="font-heading text-base font-bold text-white block">
                     {APP_NAME}
                   </span>
-                  <span className="text-xs text-slate-400">Dark theme preview</span>
+                  <span className="text-xs text-slate-400">Dark theme</span>
                 </div>
               </div>
             </div>
@@ -429,12 +524,12 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
 
       {/* ================= TAB 3: HERO COPY ================= */}
       {activeTab === "text" && (
-        <div className="rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] ring-1 ring-border/80 transition-all sm:p-8 max-w-3xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-          <div className="space-y-6">
+        <div className="rounded-xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs max-w-3xl">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+              <span className="text-sm font-bold text-foreground">
                 Hero Headlines
-              </h3>
+              </span>
               {(heroTitle || heroSubtitle) && (
                 <button
                   type="button"
@@ -442,72 +537,39 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
                     setHeroTitle("")
                     setHeroSubtitle("")
                   }}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline cursor-pointer"
                 >
                   <RotateCcw className="size-3" />
-                  <span>Reset to default</span>
+                  <span>Reset</span>
                 </button>
               )}
             </div>
 
             <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Headline</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">Headline</label>
                 <Input
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
                   placeholder="The Elite Standard for Online Examinations"
-                  className="h-12 rounded-xl text-sm sm:text-base px-4 bg-background"
+                  className="h-10 rounded-lg text-sm px-3.5 bg-background border-border/80"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">Subtitle</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">Subtitle</label>
                 <textarea
                   value={heroSubtitle}
                   onChange={(e) => setHeroSubtitle(e.target.value)}
                   rows={3}
                   placeholder="Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."
-                  className="w-full rounded-xl border border-input bg-background p-4 text-sm sm:text-base placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-lg border border-border/80 bg-background p-3 text-sm placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* ================= ULTRA-CLEAN MODERN GOOGLE-STYLE ACTION BAR ================= */}
-      <div className="flex items-center justify-between rounded-2xl bg-card/70 px-5 py-3.5 ring-1 ring-border/80 shadow-xs backdrop-blur-md">
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="h-11 rounded-xl text-sm font-medium gap-2 cursor-pointer hover:bg-muted/70"
-        >
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <span>View Landing Page</span>
-            <ExternalLink className="size-4 text-muted-foreground" />
-          </Link>
-        </Button>
-
-        <Button
-          onClick={handleSave}
-          disabled={isPending}
-          className="h-11 sm:h-12 rounded-xl px-6 sm:px-8 text-sm sm:text-base font-semibold shadow-md gap-2 cursor-pointer active:scale-[0.99] transition-all"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="size-4.5 animate-spin" />
-              <span>Saving...</span>
-            </>
-          ) : (
-            <>
-              <Check className="size-4.5 stroke-[2.5]" />
-              <span>Save Changes</span>
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   )
 }
