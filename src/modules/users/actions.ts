@@ -172,6 +172,7 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
   })
 
   safeRevalidatePath("/admin/teachers")
+  safeRevalidatePath("/admin", "layout")
   return { success: true }
 }
 
@@ -204,6 +205,7 @@ export async function rejectTeacherAction(userId: string, _state: unknown, formD
   })
 
   safeRevalidatePath("/admin/teachers")
+  safeRevalidatePath("/admin", "layout")
   return { success: true }
 }
 
@@ -232,5 +234,6 @@ export async function resetTeacherVerificationAction(userId: string) {
   })
 
   safeRevalidatePath("/admin/teachers")
+  safeRevalidatePath("/admin", "layout")
   return { success: true }
 }

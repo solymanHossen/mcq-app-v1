@@ -77,6 +77,12 @@ export function listPendingTeacherVerifications() {
   })
 }
 
+export function countPendingTeacherVerifications() {
+  return prisma.user.count({
+    where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
+  })
+}
+
 export function listUsers(opts: {
   page: number
   pageSize: number

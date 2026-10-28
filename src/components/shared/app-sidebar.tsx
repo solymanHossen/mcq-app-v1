@@ -269,7 +269,11 @@ export function AppSidebar({
                       asChild
                       size="default"
                       isActive={active}
-                      tooltip={item.label}
+                      tooltip={
+                        item.badge !== undefined && item.badge !== null
+                          ? `${item.label} (${item.badge})`
+                          : item.label
+                      }
                       className={cn(
                         "relative h-10 rounded-lg pl-3.5 pr-3 text-sm font-medium gap-3 transition-all duration-200 overflow-hidden",
                         active
@@ -278,7 +282,7 @@ export function AppSidebar({
                         "[&_svg]:size-4.5 shrink-0"
                       )}
                     >
-                      <Link href={item.href}>
+                      <Link href={item.href} className="flex items-center w-full min-w-0">
                         {active && (
                           <span
                             aria-hidden="true"
@@ -286,9 +290,23 @@ export function AppSidebar({
                           />
                         )}
                         {item.icon}
-                        <span className="tracking-tight group-data-[collapsible=icon]:hidden">
+                        <span className="tracking-tight group-data-[collapsible=icon]:hidden truncate">
                           {item.label}
                         </span>
+                        {item.badge !== undefined && item.badge !== null && (
+                          <span
+                            className={cn(
+                              "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums group-data-[collapsible=icon]:hidden transition-colors shrink-0",
+                              typeof item.badge === "number" && item.badge > 0
+                                ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-2xs"
+                                : typeof item.badge === "number" && item.badge === 0
+                                ? "bg-muted/70 text-muted-foreground border border-border/50"
+                                : "bg-primary/15 text-primary border border-primary/25"
+                            )}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

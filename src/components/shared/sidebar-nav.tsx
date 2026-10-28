@@ -16,6 +16,7 @@ export type SidebarNavItem = {
   label: string
   icon: React.ReactNode
   exact?: boolean
+  badge?: number | string | React.ReactNode
   items?: readonly SidebarNavSubItem[]
 }
 
@@ -34,7 +35,7 @@ export function SidebarNav({
 
   return (
     <nav className={className}>
-      {items.map(({ href, label, icon, exact }) => {
+      {items.map(({ href, label, icon, exact, badge }) => {
         const active = exact
           ? pathname === href
           : pathname === href || pathname.startsWith(`${href}/`)
@@ -71,6 +72,20 @@ export function SidebarNav({
             {icon}
             {!collapsed && <span className="tracking-tight">{label}</span>}
             {collapsed && <span className="sr-only">{label}</span>}
+            {!collapsed && badge !== undefined && badge !== null && (
+              <span
+                className={cn(
+                  "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums transition-colors shrink-0",
+                  typeof badge === "number" && badge > 0
+                    ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-2xs"
+                    : typeof badge === "number" && badge === 0
+                    ? "bg-muted text-muted-foreground/80 border border-border/50"
+                    : "bg-primary/15 text-primary border border-primary/25"
+                )}
+              >
+                {badge}
+              </span>
+            )}
           </Link>
         )
       })}
