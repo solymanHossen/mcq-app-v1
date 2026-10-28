@@ -2,17 +2,16 @@
 
 import { useActionState, useState } from "react"
 import { toast } from "sonner"
-import { AlertTriangle, Ban, CheckCircle2, RotateCcw } from "lucide-react"
+import { Ban, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
 import { suspendUserAction, reinstateUserAction } from "@/modules/users/actions"
@@ -41,9 +40,7 @@ export function UserRowActions({
       const result = await suspendUserAction(userId, _state, formData)
       if ("success" in result) {
         setSuspendOpen(false)
-        toast.success(`Account for ${userName} has been suspended`, {
-          description: "All active sessions were revoked immediately.",
-        })
+        toast.success(`Account for ${userName} suspended`)
       } else if ("error" in result) {
         toast.error(result.error)
       }
@@ -57,9 +54,7 @@ export function UserRowActions({
       const result = await reinstateUserAction(userId)
       if ("success" in result) {
         setReinstateOpen(false)
-        toast.success(`Account for ${userName} has been reinstated`, {
-          description: "The user may now sign in and access the platform.",
-        })
+        toast.success(`Account for ${userName} reinstated`)
       } else if ("error" in result) {
         toast.error(result.error)
       }
@@ -105,49 +100,27 @@ export function UserRowActions({
         </Button>
       )}
 
-      {/* ================= SUSPENSION CONFIRMATION ALERT DIALOG ================= */}
+      {/* ================= CLEAN SUSPEND ALERT DIALOG ================= */}
       <Dialog open={suspendOpen} onOpenChange={setSuspendOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
-          <div className="flex items-start gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-destructive/10 text-destructive border border-destructive/20 shadow-2xs">
-              <AlertTriangle className="size-6" />
-            </div>
+        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
+          <DialogHeader className="p-0 text-left">
+            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+              Suspend Account
+            </DialogTitle>
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
+              {userName} · <span className="text-foreground">{userEmail}</span>
+            </p>
+          </DialogHeader>
 
-            <div className="min-w-0 flex-1 space-y-1">
-              <DialogHeader className="p-0 text-left">
-                <DialogTitle className="font-heading text-lg font-bold text-foreground">
-                  Suspend User Account
-                </DialogTitle>
-                <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
-                  Are you sure you want to suspend{" "}
-                  <strong className="text-foreground font-semibold">{userName}</strong> (
-                  <span className="text-muted-foreground">{userEmail}</span>)?
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-3.5 text-xs text-destructive/90 space-y-1">
-            <p className="font-bold">Immediate System Consequences:</p>
-            <ul className="list-disc pl-4 space-y-0.5 text-destructive/80">
-              <li>All active user device sessions will be revoked instantly.</li>
-              <li>Future login attempts will be strictly denied.</li>
-              <li>This action is permanently recorded in the system audit log.</li>
-            </ul>
-          </div>
-
-          <form action={suspendFormAction} className="flex flex-col gap-4">
-            <Field>
-              <FieldLabel htmlFor="reason" className="text-xs font-semibold text-foreground">
-                Reason for Suspension (Required)
-              </FieldLabel>
+          <form action={suspendFormAction} className="flex flex-col gap-4 pt-1">
+            <Field className="space-y-1">
               <Textarea
                 id="reason"
                 name="reason"
-                rows={3}
+                rows={2}
                 required
-                placeholder="Document the exact policy violation or operational reason (min 5 characters)..."
-                className="rounded-xl border border-border/70 bg-muted/30 focus-visible:bg-background text-xs sm:text-sm resize-none shadow-2xs"
+                placeholder="Reason for suspension (min 5 characters)..."
+                className="h-16 rounded-2xl border border-border/70 bg-muted/30 focus-visible:bg-background text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
               />
             </Field>
 
@@ -157,11 +130,11 @@ export function UserRowActions({
               </FieldError>
             )}
 
-            <DialogFooter className="mt-2 flex items-center justify-end gap-2 border-t border-border/40 pt-4 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
+            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl border border-border/70 text-xs font-semibold cursor-pointer"
+                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setSuspendOpen(false)}
                 disabled={isSuspendPending}
               >
@@ -170,58 +143,41 @@ export function UserRowActions({
               <Button
                 type="submit"
                 variant="destructive"
-                className="rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl text-sm font-bold shadow-sm cursor-pointer transition-all"
                 disabled={isSuspendPending}
               >
                 {isSuspendPending && <Spinner data-icon="inline-start" />}
-                Yes, Suspend Account
+                Suspend Account
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* ================= REINSTATE CONFIRMATION DIALOG ================= */}
+      {/* ================= CLEAN REINSTATE DIALOG ================= */}
       <Dialog open={reinstateOpen} onOpenChange={setReinstateOpen}>
-        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
-          <div className="flex items-start gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs">
-              <CheckCircle2 className="size-6" />
-            </div>
-
-            <div className="min-w-0 flex-1 space-y-1">
-              <DialogHeader className="p-0 text-left">
-                <DialogTitle className="font-heading text-lg font-bold text-foreground">
-                  Reinstate User Account
-                </DialogTitle>
-                <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
-                  Confirm restoring full platform privileges for{" "}
-                  <strong className="text-foreground font-semibold">{userName}</strong> (
-                  <span className="text-muted-foreground">{userEmail}</span>).
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3.5 text-xs text-emerald-800 dark:text-emerald-200">
-            <p className="font-bold">Restoration Details:</p>
-            <p className="mt-0.5 text-emerald-700/90 dark:text-emerald-300/90">
-              The user will immediately be able to sign in, take examinations, and participate on the platform.
+        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
+          <DialogHeader className="p-0 text-left">
+            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+              Reinstate Account
+            </DialogTitle>
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
+              Restore full platform access for <strong className="text-foreground">{userName}</strong>?
             </p>
-          </div>
+          </DialogHeader>
 
-          <form action={reinstateFormAction} className="flex flex-col gap-4">
+          <form action={reinstateFormAction} className="flex flex-col gap-4 pt-1">
             {reinstateState && "error" in reinstateState && (
               <FieldError className="text-xs font-semibold text-destructive">
                 {reinstateState.error}
               </FieldError>
             )}
 
-            <DialogFooter className="mt-2 flex items-center justify-end gap-2 border-t border-border/40 pt-4 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
+            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl border border-border/70 text-xs font-semibold cursor-pointer"
+                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setReinstateOpen(false)}
                 disabled={isReinstatePending}
               >
@@ -229,11 +185,11 @@ export function UserRowActions({
               </Button>
               <Button
                 type="submit"
-                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs cursor-pointer"
+                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm cursor-pointer transition-all"
                 disabled={isReinstatePending}
               >
                 {isReinstatePending && <Spinner data-icon="inline-start" />}
-                Confirm Reinstatement
+                Confirm Reinstate
               </Button>
             </DialogFooter>
           </form>

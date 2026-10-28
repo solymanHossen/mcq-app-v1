@@ -8,20 +8,16 @@ import {
   GraduationCap,
   Users,
   Check,
-  Sparkles,
-  Info,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import { Field, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -32,40 +28,31 @@ const ALL_ROLES: Role[] = ["STUDENT", "TEACHER", "ADMIN", "SUPER_ADMIN"]
 const NON_ADMIN_ROLES: Role[] = ["STUDENT", "TEACHER"]
 const ADMIN_TIER: Role[] = ["SUPER_ADMIN", "ADMIN"]
 
-interface RoleMeta {
-  role: Role
-  title: string
-  desc: string
-  icon: React.ElementType
-  color: string
-}
-
-const ROLE_DEFINITIONS: Record<Role, RoleMeta> = {
+const ROLE_TILES: Record<
+  Role,
+  {
+    label: string
+    icon: React.ElementType
+    color: string
+  }
+> = {
   STUDENT: {
-    role: "STUDENT",
-    title: "Student Candidate",
-    desc: "Candidate access to practice questions, timed examinations, and personal learning records.",
+    label: "Student",
     icon: Users,
     color: "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20",
   },
   TEACHER: {
-    role: "TEACHER",
-    title: "Faculty Educator",
-    desc: "Author timed exams, manage question vaults, and inspect candidate cohort performance.",
+    label: "Teacher",
     icon: GraduationCap,
     color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   },
   ADMIN: {
-    role: "ADMIN",
-    title: "Platform Admin",
-    desc: "Operational governance, educator accreditations, content moderation, and user oversight.",
+    label: "Admin",
     icon: ShieldCheck,
     color: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
   },
   SUPER_ADMIN: {
-    role: "SUPER_ADMIN",
-    title: "Super Administrator",
-    desc: "Unrestricted platform authority, billing configurations, and administrator role assignment.",
+    label: "Super Admin",
     icon: Crown,
     color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",
   },
@@ -95,9 +82,7 @@ export function ChangeRoleDialog({
       const result = await changeUserRoleAction(userId, _state, formData)
       if ("success" in result) {
         setOpen(false)
-        toast.success(`Role for ${userName} changed to ${role}`, {
-          description: "Permissions updated and logged to audit trail.",
-        })
+        toast.success(`Role for ${userName} changed to ${role}`)
       } else if ("error" in result) {
         toast.error(result.error)
       }
@@ -135,7 +120,7 @@ export function ChangeRoleDialog({
         <span>Change Role</span>
       </Button>
 
-      {/* ================= MODAL FOR ROLE MANAGEMENT ================= */}
+      {/* ================= CLEAN, MINIMAL TEXT, LARGE UI MODAL ================= */}
       <Dialog
         open={open}
         onOpenChange={(next) => {
@@ -143,137 +128,83 @@ export function ChangeRoleDialog({
           if (next) setRole(currentRole)
         }}
       >
-        <DialogContent className="sm:max-w-lg rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
-          {/* Header */}
-          <div className="flex items-start gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-2xs">
-              <ShieldCheck className="size-6" />
-            </div>
+        <DialogContent className="sm:max-w-lg rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 sm:p-7 shadow-2xl">
+          {/* Clean Top Title */}
+          <DialogHeader className="p-0 text-left">
+            <DialogTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+              Update Role
+            </DialogTitle>
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground font-medium">
+              {userName} · <span className="font-bold text-foreground">{currentRole}</span>
+            </p>
+          </DialogHeader>
 
-            <div className="min-w-0 flex-1 space-y-1">
-              <DialogHeader className="p-0 text-left">
-                <DialogTitle className="font-heading text-lg font-bold text-foreground">
-                  Update Account Role
-                </DialogTitle>
-                <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
-                  Adjust platform access privileges and credentials for{" "}
-                  <strong className="text-foreground font-semibold">{userName}</strong>.
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-          </div>
-
-          {/* User Preview Capsule */}
-          <div className="flex items-center justify-between rounded-2xl border border-border/60 bg-muted/40 p-3.5 shadow-2xs">
-            <div className="min-w-0">
-              <p className="font-heading text-sm font-bold text-foreground truncate">{userName}</p>
-              <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[11px] font-medium text-muted-foreground">Current:</span>
-              <Badge variant="outline" className="font-bold text-xs uppercase tracking-wider border-border/70 bg-card shadow-2xs">
-                {currentRole}
-              </Badge>
-            </div>
-          </div>
-
-          <form action={formAction} className="flex flex-col gap-4">
+          <form action={formAction} className="flex flex-col gap-4 pt-1">
             <input type="hidden" name="role" value={role} />
 
-            {/* Interactive Role Cards Grid */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground tracking-wide uppercase">
-                Select Target Role
-              </label>
+            {/* Large Interactive Role Tiles */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {roleOptions.map((r) => {
+                const tile = ROLE_TILES[r]
+                const Icon = tile.icon
+                const isSelected = role === r
+                const isCurrent = currentRole === r
 
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                {roleOptions.map((r) => {
-                  const meta = ROLE_DEFINITIONS[r]
-                  const Icon = meta.icon
-                  const isSelected = role === r
-                  const isCurrent = currentRole === r
+                return (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setRole(r)}
+                    className={cn(
+                      "group relative flex items-center justify-between rounded-2xl border p-4 sm:p-4.5 transition-all duration-200 cursor-pointer select-none",
+                      isSelected
+                        ? "border-primary bg-primary/10 shadow-sm ring-2 ring-primary/30"
+                        : "border-border/70 bg-card/70 hover:bg-muted/50 hover:border-border"
+                    )}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <span
+                        className={cn(
+                          "flex size-11 sm:size-12 shrink-0 items-center justify-center rounded-2xl border transition-transform duration-200 group-hover:scale-105",
+                          tile.color
+                        )}
+                      >
+                        <Icon className="size-5 sm:size-6" />
+                      </span>
 
-                  return (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setRole(r)}
-                      className={cn(
-                        "group relative flex flex-col justify-between rounded-2xl border p-3.5 text-left transition-all duration-200 cursor-pointer select-none",
-                        isSelected
-                          ? "border-primary bg-primary/5 shadow-xs ring-1 ring-primary/40"
-                          : "border-border/60 bg-card/60 hover:bg-muted/40 hover:border-border"
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={cn(
-                            "flex size-8.5 items-center justify-center rounded-xl border transition-transform duration-200 group-hover:scale-105",
-                            meta.color
-                          )}
-                        >
-                          <Icon className="size-4.5" />
-                        </span>
-
-                        <div className="flex items-center gap-1.5">
-                          {isCurrent && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-1.5 py-0.5 rounded-md bg-muted/70">
-                              Active
-                            </span>
-                          )}
-                          {isSelected && (
-                            <span className="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xs">
-                              <Check className="size-3 stroke-[3]" />
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mt-2.5">
-                        <p className="font-heading text-sm font-bold text-foreground">
-                          {meta.title}
+                      <div className="text-left">
+                        <p className="font-heading text-base sm:text-lg font-bold text-foreground leading-tight">
+                          {tile.label}
                         </p>
-                        <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                          {meta.desc}
-                        </p>
+                        {isCurrent && (
+                          <span className="text-[11px] font-semibold text-muted-foreground">
+                            Current Role
+                          </span>
+                        )}
                       </div>
-                    </button>
-                  )
-                })}
-              </div>
+                    </div>
+
+                    {isSelected ? (
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                        <Check className="size-3.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="size-5 shrink-0 rounded-full border border-border/80 group-hover:border-foreground/40 transition-colors" />
+                    )}
+                  </button>
+                )
+              })}
             </div>
 
-            {/* Context Notices */}
-            {role === "TEACHER" && currentRole !== "TEACHER" && (
-              <div className="flex items-start gap-2.5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-emerald-800 dark:text-emerald-200">
-                <Info className="size-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
-                <span>
-                  Promoting to Teacher will automatically initiate a new verification entry in the Faculty Accreditation queue.
-                </span>
-              </div>
-            )}
-
-            {canManageAdminTier && (role === "SUPER_ADMIN" || role === "ADMIN") && (
-              <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-800 dark:text-amber-200">
-                <Sparkles className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                <span>
-                  Admin-tier roles grant administrative authority across the platform and are permanently logged in the audit trail.
-                </span>
-              </div>
-            )}
-
-            {/* Justification Reason */}
-            <Field>
-              <FieldLabel htmlFor="change-reason" className="text-xs font-semibold text-foreground">
-                Operational Reason (Required)
-              </FieldLabel>
+            {/* Reason Field */}
+            <Field className="space-y-1 pt-1">
               <Textarea
                 id="change-reason"
                 name="reason"
-                rows={3}
+                rows={2}
                 required
-                placeholder="State why this user role is being changed (min 5 characters)..."
-                className="rounded-xl border border-border/70 bg-muted/30 focus-visible:bg-background text-xs sm:text-sm resize-none shadow-2xs"
+                placeholder="Reason for role change (min 5 characters)..."
+                className="h-16 rounded-2xl border border-border/70 bg-muted/30 focus-visible:bg-background text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
               />
             </Field>
 
@@ -283,11 +214,12 @@ export function ChangeRoleDialog({
               </FieldError>
             )}
 
-            <DialogFooter className="mt-2 flex items-center justify-end gap-2 border-t border-border/40 pt-4 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
+            {/* Large Buttons Footer */}
+            <DialogFooter className="mt-2 flex items-center justify-end gap-3 border-t border-border/40 pt-4 -mx-6 -mb-6 sm:-mx-7 sm:-mb-7 px-6 pb-6 sm:px-7 sm:pb-7 bg-muted/20 rounded-b-3xl">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl border border-border/70 text-xs font-semibold cursor-pointer"
+                className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl border border-border/70 text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
@@ -296,7 +228,7 @@ export function ChangeRoleDialog({
               <Button
                 type="submit"
                 disabled={isPending || role === currentRole}
-                className="rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                className="h-11 sm:h-12 px-6 sm:px-8 rounded-2xl text-sm font-bold shadow-sm cursor-pointer transition-all"
               >
                 {isPending && <Spinner data-icon="inline-start" />}
                 Save Role Change
