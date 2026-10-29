@@ -9,6 +9,7 @@ import {
   Camera,
   AlertTriangle,
   ArrowRight,
+  ArrowLeft,
   Sparkles,
   Trophy,
   Shield,
@@ -468,11 +469,14 @@ export function ExamForm({
 
                 <Button
                   asChild
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-xs font-semibold text-muted-foreground hover:text-foreground h-9 rounded-xl"
+                  variant="outline"
+                  size="lg"
+                  className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-semibold border-border/80 bg-background text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors shadow-2xs"
                 >
-                  <Link href={cancelHref}>Discard and return</Link>
+                  <Link href={cancelHref} className="flex items-center justify-center gap-2">
+                    <ArrowLeft className="size-4 text-muted-foreground/80 shrink-0" />
+                    <span>Discard & Return</span>
+                  </Link>
                 </Button>
               </div>
             </CardContent>
