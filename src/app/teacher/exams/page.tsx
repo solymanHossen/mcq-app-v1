@@ -33,6 +33,7 @@ import {
 } from "lucide-react"
 import { PagePagination } from "@/components/shared/page-pagination"
 import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
+import { ShareExamModal } from "@/modules/exams/components/share-exam-modal"
 import { cn } from "@/lib/utils"
 import type { ExamStatus } from "@/prisma/generated/prisma/client"
 
@@ -320,17 +321,22 @@ export default async function ExamsPage({
                       }).format(new Date(exam.createdAt))}
                     </TableCell>
                     <TableCell className="py-4 text-right">
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="h-8 rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40"
-                      >
-                        <Link href={`/teacher/exams/${exam.id}`}>
-                          <span>Manage</span>
-                          <ArrowRight className="ml-1 size-3.5" />
-                        </Link>
-                      </Button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        {exam.status === "PUBLISHED" && (
+                          <ShareExamModal exam={exam} />
+                        )}
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="h-8 rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40"
+                        >
+                          <Link href={`/teacher/exams/${exam.id}`}>
+                            <span>Manage</span>
+                            <ArrowRight className="ml-1 size-3.5" />
+                          </Link>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

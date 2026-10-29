@@ -13,6 +13,7 @@ import {
   ClipboardList,
   Users,
   ShieldCheck,
+  ShieldAlert,
   Crown,
   LogOut,
   Sun,
@@ -44,6 +45,7 @@ export interface UserNavProps {
     name: string
     email: string
     role: Role
+    isGuest?: boolean
   }
   showDashboardButton?: boolean
   className?: string
@@ -138,13 +140,23 @@ export function UserNav({
                 {user.email}
               </span>
               <div className="mt-1.5 flex items-center">
-                <Badge
-                  variant="secondary"
-                  className="h-5 gap-1 rounded-md px-2 text-[11px] font-semibold text-muted-foreground"
-                >
-                  <RoleIcon className="size-3" />
-                  {roleInfo.label}
-                </Badge>
+                {user.isGuest ? (
+                  <Badge
+                    variant="secondary"
+                    className="h-5 gap-1 rounded-md px-2 text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                  >
+                    <ShieldAlert className="size-3" />
+                    Guest Candidate
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="secondary"
+                    className="h-5 gap-1 rounded-md px-2 text-[11px] font-semibold text-muted-foreground"
+                  >
+                    <RoleIcon className="size-3" />
+                    {roleInfo.label}
+                  </Badge>
+                )}
               </div>
             </div>
           </div>

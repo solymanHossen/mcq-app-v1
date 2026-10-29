@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation"
 import { requireRole } from "@/lib/authorization"
 import { getGlobalLeaderboard, LEADERBOARD_PAGE_SIZE } from "@/modules/leaderboard/engine"
 import {
@@ -23,6 +24,7 @@ export default async function GlobalLeaderboardPage({
   searchParams: Promise<Record<string, string | undefined>>
 }) {
   const user = await requireRole("STUDENT")
+  if (user.isGuest) redirect("/exams")
   const sp = await searchParams
 
   const board = await getGlobalLeaderboard({

@@ -1,33 +1,42 @@
 "use client"
 
+import * as React from "react"
 import { useActionState, useState } from "react"
 import Link from "next/link"
 import {
   Clock,
-  Sparkles,
-  ShieldCheck,
   Shuffle,
-  Video,
+  Camera,
   AlertTriangle,
-  Award,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Trophy,
+  Shield,
+  Calendar,
   Layers,
   Check,
-  ArrowRight,
-  FileText,
-  Calendar,
-  AlertCircle,
-  HelpCircle,
+  Trash2,
+  Plus,
+  Globe,
+  Lock,
+  Users,
+  RefreshCw,
 } from "lucide-react"
+
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Spinner } from "@/components/ui/spinner"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
-import { cn } from "@/lib/utils"
+import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
 import type { ExamFormState } from "@/modules/exams/actions"
+import { cn } from "@/lib/utils"
 
 export type ExamFormValues = {
   title?: string
@@ -41,20 +50,17 @@ export type ExamFormValues = {
   shuffleOptions?: boolean
   webcamMonitoringRequired?: boolean
   violationReviewThreshold?: number
+  isPublic?: boolean
+  allowGuestAccess?: boolean
+  accessCode?: string | null
 }
 
-const DURATION_PRESETS = [15, 30, 45, 60, 90, 120]
-const ATTEMPTS_PRESETS = [1, 2, 3, 5]
-const THRESHOLD_PRESETS = [
-  { val: 3, label: "Strict (3)" },
-  { val: 5, label: "Standard (5)" },
-  { val: 10, label: "Lenient (10)" },
-]
+const DURATION_PRESETS = [30, 45, 60, 90, 120] as const
 
 export function ExamForm({
   action,
   initialValues,
-  submitLabel,
+  submitLabel = "Create Exam",
   cancelHref = "/teacher/exams",
 }: {
   action: (
@@ -62,530 +68,722 @@ export function ExamForm({
     formData: FormData
   ) => Promise<ExamFormState>
   initialValues?: ExamFormValues
-  submitLabel: string
+  submitLabel?: string
   cancelHref?: string
 }) {
   const [state, formAction, isPending] = useActionState(action, undefined)
 
-  // Interactive local states for quick presets and toggles
-  const [duration, setDuration] = useState<number | string>(
+  const [title, setTitle] = useState(initialValues?.title ?? "")
+  const [titleTouched, setTitleTouched] = useState(false)
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
+
+  function handleSelectPresetTitle(presetTitle: string) {
+    setTitle(presetTitle)
+    setTitleTouched(true)
+  }
+
+  const [durationMinutes, setDurationMinutes] = useState<number>(
     initialValues?.durationMinutes ?? 60
   )
-  const [maxAttempts, setMaxAttempts] = useState<number | string>(
+  const [durationTouched, setDurationTouched] = useState(false)
+
+  const [maxAttempts, setMaxAttempts] = useState<number>(
     initialValues?.maxAttempts ?? 1
   )
-  const [threshold, setThreshold] = useState<number | string>(
-    initialValues?.violationReviewThreshold ?? 5
+  const [attemptsTouched, setAttemptsTouched] = useState(false)
+
+  const [passingMarks, setPassingMarks] = useState<string>(
+    initialValues?.passingMarks != null ? String(initialValues.passingMarks) : ""
   )
-  const [shuffleQuestions, setShuffleQuestions] = useState(
+  const [passingMarksTouched, setPassingMarksTouched] = useState(false)
+
+  const [startTime, setStartTime] = useState<Date | undefined>(
+    initialValues?.startTime ? new Date(initialValues.startTime) : undefined
+  )
+  const [endTime, setEndTime] = useState<Date | undefined>(
+    initialValues?.endTime ? new Date(initialValues.endTime) : undefined
+  )
+
+  const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(
     initialValues?.shuffleQuestions ?? true
   )
-  const [shuffleOptions, setShuffleOptions] = useState(
+  const [shuffleOptions, setShuffleOptions] = useState<boolean>(
     initialValues?.shuffleOptions ?? false
   )
-  const [webcamRequired, setWebcamRequired] = useState(
-    initialValues?.webcamMonitoringRequired ?? false
+  const [webcamMonitoringRequired, setWebcamMonitoringRequired] =
+    useState<boolean>(initialValues?.webcamMonitoringRequired ?? false)
+  const [violationThreshold, setViolationThreshold] = useState<number>(
+    initialValues?.violationReviewThreshold ?? 5
   )
 
-  return (
-    <form action={formAction} className="w-full space-y-8">
-      {/* Hidden native checkboxes for Zod / FormData parity */}
-      <input
-        type="checkbox"
-        name="shuffleQuestions"
-        checked={shuffleQuestions}
-        onChange={(e) => setShuffleQuestions(e.target.checked)}
-        className="sr-only"
-        tabIndex={-1}
-        aria-hidden="true"
-      />
-      <input
-        type="checkbox"
-        name="shuffleOptions"
-        checked={shuffleOptions}
-        onChange={(e) => setShuffleOptions(e.target.checked)}
-        className="sr-only"
-        tabIndex={-1}
-        aria-hidden="true"
-      />
-      <input
-        type="checkbox"
-        name="webcamMonitoringRequired"
-        checked={webcamRequired}
-        onChange={(e) => setWebcamRequired(e.target.checked)}
-        className="sr-only"
-        tabIndex={-1}
-        aria-hidden="true"
-      />
+  const [isPublic, setIsPublic] = useState<boolean>(
+    initialValues?.isPublic ?? true
+  )
+  const [allowGuestAccess, setAllowGuestAccess] = useState<boolean>(
+    initialValues?.allowGuestAccess ?? true
+  )
+  const [accessCode, setAccessCode] = useState<string>(
+    initialValues?.accessCode ?? ""
+  )
 
-      {/* Error Banner */}
+  // Real-time Field Validation Rules
+  const isTitleValid = title.trim().length >= 3 && title.trim().length <= 200
+  const isDurationValid =
+    !isNaN(durationMinutes) && durationMinutes >= 1 && durationMinutes <= 600
+  const isAttemptsValid =
+    !isNaN(maxAttempts) && maxAttempts >= 1 && maxAttempts <= 10
+  const isPassingMarksValid =
+    passingMarks.trim() === "" ||
+    (!isNaN(Number(passingMarks)) && Number(passingMarks) >= 0)
+  const isScheduleValid =
+    !startTime || !endTime || startTime.getTime() < endTime.getTime()
+  const isThresholdValid =
+    !isNaN(violationThreshold) && violationThreshold >= 1 && violationThreshold <= 1000
+
+  // Form is valid when all required criteria pass
+  const isFormValid =
+    isTitleValid &&
+    isDurationValid &&
+    isAttemptsValid &&
+    isPassingMarksValid &&
+    isScheduleValid &&
+    isThresholdValid
+
+  const activeProctoringCount = [
+    shuffleQuestions,
+    shuffleOptions,
+    webcamMonitoringRequired,
+  ].filter(Boolean).length
+
+  return (
+    <form action={formAction} className="w-full">
       {state && "error" in state && (
-        <Alert variant="destructive" className="rounded-2xl border-destructive/30 shadow-xs">
-          <AlertCircle className="size-5" />
-          <AlertDescription className="text-sm font-medium">
-            {state.error}
-          </AlertDescription>
+        <Alert variant="destructive" className="mb-6 rounded-xl border-destructive/30">
+          <AlertTriangle className="size-4" />
+          <AlertTitle className="text-sm font-semibold">Error saving exam</AlertTitle>
+          <AlertDescription className="text-xs mt-0.5">{state.error}</AlertDescription>
         </Alert>
       )}
 
-      {/* SECTION 1: GENERAL INFORMATION */}
-      <div className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-xs transition-all">
-        <div className="flex items-center gap-3 border-b border-border/50 pb-5">
-          <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-2xs">
-            <FileText className="size-5" />
-          </div>
-          <div>
-            <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              General Details
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Primary identification and instructions presented to students.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6 space-y-6">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="title"
-                className="text-sm font-semibold tracking-tight text-foreground"
-              >
-                Assessment Title <span className="text-destructive">*</span>
-              </label>
-              <span className="text-xs text-muted-foreground">Max 200 characters</span>
-            </div>
-            <Input
-              id="title"
-              name="title"
-              defaultValue={initialValues?.title}
-              placeholder="e.g. Midterm Examination — Computer Science 101"
-              required
-              maxLength={200}
-              className="h-11 sm:h-12 rounded-xl text-base px-4 bg-background/50 border-border/80 focus-visible:ring-primary/20"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="description"
-                className="text-sm font-semibold tracking-tight text-foreground"
-              >
-                Description & Instructions
-                <span className="ml-1.5 text-xs font-normal text-muted-foreground">
-                  (optional)
-                </span>
-              </label>
-              <span className="text-xs text-muted-foreground">Markdown supported</span>
-            </div>
-            <Textarea
-              id="description"
-              name="description"
-              rows={4}
-              defaultValue={initialValues?.description}
-              placeholder="Provide test instructions, syllabus breakdown, allowed materials, or grading rubrics..."
-              className="rounded-xl text-sm p-4 bg-background/50 border-border/80 focus-visible:ring-primary/20 resize-y"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 2: TIMING & SCORING POLICY */}
-      <div className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-xs transition-all">
-        <div className="flex items-center gap-3 border-b border-border/50 pb-5">
-          <div className="flex size-10 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-2xs">
-            <Clock className="size-5" />
-          </div>
-          <div>
-            <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Timing & Scoring Policy
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Define test duration, maximum attempts, and target pass mark.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {/* Duration Minutes with Quick Presets */}
-          <div className="space-y-3">
-            <label
-              htmlFor="durationMinutes"
-              className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-            >
-              <Clock className="size-4 text-muted-foreground" />
-              Duration (minutes) <span className="text-destructive">*</span>
-            </label>
-            <Input
-              id="durationMinutes"
-              name="durationMinutes"
-              type="number"
-              min={1}
-              max={600}
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              required
-              className="h-11 rounded-xl text-base px-4 bg-background/50 border-border/80"
-            />
-            {/* Quick Presets */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-xs text-muted-foreground mr-1">Presets:</span>
-              {DURATION_PRESETS.map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setDuration(m)}
-                  className={cn(
-                    "rounded-lg px-2.5 py-1 text-xs font-semibold transition-all",
-                    Number(duration) === m
-                      ? "bg-primary text-primary-foreground shadow-2xs"
-                      : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  {m}m
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Max Attempts with Quick Presets */}
-          <div className="space-y-3">
-            <label
-              htmlFor="maxAttempts"
-              className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-            >
-              <Layers className="size-4 text-muted-foreground" />
-              Max Attempts per Student <span className="text-destructive">*</span>
-            </label>
-            <Input
-              id="maxAttempts"
-              name="maxAttempts"
-              type="number"
-              min={1}
-              max={10}
-              value={maxAttempts}
-              onChange={(e) => setMaxAttempts(e.target.value)}
-              required
-              className="h-11 rounded-xl text-base px-4 bg-background/50 border-border/80"
-            />
-            {/* Quick Presets */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-xs text-muted-foreground mr-1">Quick:</span>
-              {ATTEMPTS_PRESETS.map((a) => (
-                <button
-                  key={a}
-                  type="button"
-                  onClick={() => setMaxAttempts(a)}
-                  className={cn(
-                    "rounded-lg px-2.5 py-1 text-xs font-semibold transition-all",
-                    Number(maxAttempts) === a
-                      ? "bg-primary text-primary-foreground shadow-2xs"
-                      : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  {a} {a === 1 ? "attempt" : "attempts"}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Passing Marks */}
-          <div className="space-y-2 sm:col-span-2">
-            <label
-              htmlFor="passingMarks"
-              className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-            >
-              <Award className="size-4 text-muted-foreground" />
-              Passing Marks
-              <span className="text-xs font-normal text-muted-foreground">
-                (optional)
-              </span>
-            </label>
-            <Input
-              id="passingMarks"
-              name="passingMarks"
-              type="number"
-              min={0}
-              step="any"
-              defaultValue={initialValues?.passingMarks ?? undefined}
-              placeholder="e.g. 50 (leave empty if no passing threshold)"
-              className="h-11 rounded-xl text-base px-4 bg-background/50 border-border/80"
-            />
-            <p className="text-xs text-muted-foreground">
-              Students scoring at or above this mark will receive a passing badge on results.
-            </p>
-          </div>
-
-          {/* Schedule Windows */}
-          <div className="space-y-2">
-            <label
-              htmlFor="startTime"
-              className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-            >
-              <Calendar className="size-4 text-muted-foreground" />
-              Opens at
-              <span className="text-xs font-normal text-muted-foreground">
-                (optional)
-              </span>
-            </label>
-            <DateTimePicker
-              id="startTime"
-              name="startTime"
-              defaultValue={
-                initialValues?.startTime ? new Date(initialValues.startTime) : undefined
-              }
-              placeholder="Select start date & time"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="endTime"
-              className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-            >
-              <Calendar className="size-4 text-muted-foreground" />
-              Closes at
-              <span className="text-xs font-normal text-muted-foreground">
-                (optional)
-              </span>
-            </label>
-            <DateTimePicker
-              id="endTime"
-              name="endTime"
-              defaultValue={
-                initialValues?.endTime ? new Date(initialValues.endTime) : undefined
-              }
-              placeholder="Select closing date & time"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 3: RANDOMIZATION & PROCTORING */}
-      <div className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-xs transition-all">
-        <div className="flex items-center gap-3 border-b border-border/50 pb-5">
-          <div className="flex size-10 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 shadow-2xs">
-            <ShieldCheck className="size-5" />
-          </div>
-          <div>
-            <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Randomization & Academic Integrity
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Prevent collusion, shuffle content dynamically, and set up proctoring review triggers.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6 space-y-4">
-          {/* Card Toggle 1: Shuffle Questions */}
-          <div
-            onClick={() => setShuffleQuestions(!shuffleQuestions)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === " " || e.key === "Enter") {
-                e.preventDefault()
-                setShuffleQuestions(!shuffleQuestions)
-              }
-            }}
-            className={cn(
-              "flex cursor-pointer items-center justify-between rounded-2xl border p-4 sm:p-5 transition-all select-none",
-              shuffleQuestions
-                ? "border-primary/50 bg-primary/[0.03] shadow-xs"
-                : "border-border/70 bg-muted/20 hover:border-border hover:bg-muted/40"
-            )}
-          >
-            <div className="flex items-start gap-3.5 pr-4">
-              <div
-                className={cn(
-                  "mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors",
-                  shuffleQuestions
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                )}
-              >
-                <Shuffle className="size-4.5" />
+      {/* Main 2-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+        {/* Left Form Canvas (8 Columns on lg/xl) */}
+        <div className="space-y-6 lg:col-span-8 min-w-0">
+          {/* Card 1: Details */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground">
+                  Exam Details
+                </CardTitle>
+                <Badge variant="secondary" className="text-xs font-medium px-2 py-0.5">
+                  General
+                </Badge>
               </div>
-              <div>
-                <p className="font-heading text-sm sm:text-base font-semibold text-foreground">
-                  Shuffle Question Order
-                </p>
-                <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">
-                  Randomizes the sequence of questions independently for every student attempt.
-                </p>
-              </div>
-            </div>
-            <Switch
-              checked={shuffleQuestions}
-              onCheckedChange={setShuffleQuestions}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-
-          {/* Card Toggle 2: Shuffle Options */}
-          <div
-            onClick={() => setShuffleOptions(!shuffleOptions)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === " " || e.key === "Enter") {
-                e.preventDefault()
-                setShuffleOptions(!shuffleOptions)
-              }
-            }}
-            className={cn(
-              "flex cursor-pointer items-center justify-between rounded-2xl border p-4 sm:p-5 transition-all select-none",
-              shuffleOptions
-                ? "border-primary/50 bg-primary/[0.03] shadow-xs"
-                : "border-border/70 bg-muted/20 hover:border-border hover:bg-muted/40"
-            )}
-          >
-            <div className="flex items-start gap-3.5 pr-4">
-              <div
-                className={cn(
-                  "mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors",
-                  shuffleOptions
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                )}
-              >
-                <Shuffle className="size-4.5" />
-              </div>
-              <div>
-                <p className="font-heading text-sm sm:text-base font-semibold text-foreground">
-                  Shuffle Answer Options
-                </p>
-                <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">
-                  Randomizes choices (A, B, C, D) per question so option answers cannot be shared.
-                </p>
-              </div>
-            </div>
-            <Switch
-              checked={shuffleOptions}
-              onCheckedChange={setShuffleOptions}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-
-          {/* Card Toggle 3: Webcam Monitoring */}
-          <div
-            onClick={() => setWebcamRequired(!webcamRequired)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === " " || e.key === "Enter") {
-                e.preventDefault()
-                setWebcamRequired(!webcamRequired)
-              }
-            }}
-            className={cn(
-              "flex cursor-pointer items-center justify-between rounded-2xl border p-4 sm:p-5 transition-all select-none",
-              webcamRequired
-                ? "border-primary/50 bg-primary/[0.03] shadow-xs"
-                : "border-border/70 bg-muted/20 hover:border-border hover:bg-muted/40"
-            )}
-          >
-            <div className="flex items-start gap-3.5 pr-4">
-              <div
-                className={cn(
-                  "mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors",
-                  webcamRequired
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                )}
-              >
-                <Video className="size-4.5" />
-              </div>
-              <div>
-                <p className="font-heading text-sm sm:text-base font-semibold text-foreground">
-                  Require Webcam Monitoring Consent
-                </p>
-                <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">
-                  Students must grant front-camera authorization before commencing the exam.
-                </p>
-              </div>
-            </div>
-            <Switch
-              checked={webcamRequired}
-              onCheckedChange={setWebcamRequired}
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-
-          {/* Violation Review Threshold */}
-          <div className="mt-6 rounded-2xl border border-border/70 bg-muted/20 p-5 space-y-3">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <label
-                  htmlFor="violationReviewThreshold"
-                  className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5"
-                >
-                  <AlertTriangle className="size-4 text-amber-500" />
-                  Violation Review Threshold <span className="text-destructive">*</span>
-                </label>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Cumulative severity score from tab switches or fullscreen exits that flags an attempt.
-                </p>
-              </div>
-              <div className="flex items-center gap-1.5 pt-2 sm:pt-0">
-                {THRESHOLD_PRESETS.map((t) => (
-                  <button
-                    key={t.val}
-                    type="button"
-                    onClick={() => setThreshold(t.val)}
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+              <div className="space-y-1.5 sm:space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Label htmlFor="title" className="text-xs sm:text-sm font-semibold text-foreground">
+                      Title <span className="text-destructive">*</span>
+                    </Label>
+                    <button
+                      type="button"
+                      onClick={() => setIsTemplateModalOpen(true)}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-[11px] sm:text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
+                      title="Open Title Presets & Dropdown Generator"
+                    >
+                      <Plus className="size-3.5 shrink-0" />
+                      <span>Title Presets</span>
+                    </button>
+                  </div>
+                  <span
                     className={cn(
-                      "rounded-lg px-2.5 py-1 text-xs font-semibold transition-all",
-                      Number(threshold) === t.val
-                        ? "bg-primary text-primary-foreground shadow-2xs"
-                        : "bg-muted/80 text-muted-foreground hover:bg-muted hover:text-foreground"
+                      "text-xs transition-colors",
+                      titleTouched && !isTitleValid
+                        ? "text-destructive font-semibold"
+                        : "text-muted-foreground"
                     )}
                   >
-                    {t.label}
+                    {title.length}/200
+                  </span>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="title"
+                    name="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setTitleTouched(true)}
+                    placeholder="e.g. Mathematics Mid-Term 2026"
+                    maxLength={200}
+                    className={cn(
+                      "h-10 sm:h-12 text-sm sm:text-base font-medium rounded-xl pr-11 transition-colors",
+                      titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsTemplateModalOpen(true)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                    title="Open Title Presets & Dropdown Generator"
+                  >
+                    <Plus className="size-4" />
                   </button>
-                ))}
+                </div>
+                {titleTouched && !isTitleValid && (
+                  <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
+                    <AlertTriangle className="size-3.5 shrink-0" />
+                    <span>
+                      {title.trim().length === 0
+                        ? "Exam title is required"
+                        : "Title must be at least 3 characters"}
+                    </span>
+                  </p>
+                )}
               </div>
+
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="description" className="text-xs sm:text-sm font-semibold text-foreground">
+                  Description <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
+                </Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  rows={3}
+                  defaultValue={initialValues?.description}
+                  placeholder="Instructions, syllabus topics, or candidate rules..."
+                  className="rounded-xl text-xs sm:text-sm min-h-[80px] sm:min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Card 2: Timing & Scoring */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-2">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                  <Clock className="size-4 text-primary shrink-0" />
+                  <span>Timing & Limits</span>
+                </CardTitle>
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
+                  {DURATION_PRESETS.map((mins) => (
+                    <button
+                      key={mins}
+                      type="button"
+                      onClick={() => setDurationMinutes(mins)}
+                      className={cn(
+                        "text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
+                        durationMinutes === mins
+                          ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
+                          : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
+                      )}
+                    >
+                      {mins}m
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="durationMinutes" className="text-sm font-semibold text-foreground">
+                    Duration (Minutes) <span className="text-destructive">*</span>
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="durationMinutes"
+                      name="durationMinutes"
+                      type="number"
+                      min={1}
+                      max={600}
+                      value={durationMinutes || ""}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? 0 : Number(e.target.value)
+                        setDurationMinutes(val)
+                      }}
+                      onBlur={() => setDurationTouched(true)}
+                      className={cn(
+                        "h-11 sm:h-12 text-base font-semibold rounded-xl pr-12 transition-colors",
+                        durationTouched && !isDurationValid && "border-destructive focus-visible:ring-destructive/30"
+                      )}
+                      required
+                    />
+                    <span className="absolute inset-y-0 right-3.5 flex items-center text-xs font-semibold text-muted-foreground pointer-events-none">
+                      min
+                    </span>
+                  </div>
+                  {durationTouched && !isDurationValid && (
+                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-3.5 shrink-0" />
+                      <span>Duration must be 1-600 mins</span>
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="maxAttempts" className="text-sm font-semibold text-foreground">
+                    Max Attempts <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="maxAttempts"
+                    name="maxAttempts"
+                    type="number"
+                    min={1}
+                    max={10}
+                    value={maxAttempts || ""}
+                    onChange={(e) => {
+                      const val = e.target.value === "" ? 0 : Number(e.target.value)
+                      setMaxAttempts(val)
+                    }}
+                    onBlur={() => setAttemptsTouched(true)}
+                    className={cn(
+                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
+                      attemptsTouched && !isAttemptsValid && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                    required
+                  />
+                  {attemptsTouched && !isAttemptsValid && (
+                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-3.5 shrink-0" />
+                      <span>Attempts must be 1-10</span>
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="passingMarks" className="text-sm font-semibold text-foreground">
+                    Passing Marks <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
+                  </Label>
+                  <Input
+                    id="passingMarks"
+                    name="passingMarks"
+                    type="number"
+                    min={0}
+                    step="any"
+                    value={passingMarks}
+                    onChange={(e) => setPassingMarks(e.target.value)}
+                    onBlur={() => setPassingMarksTouched(true)}
+                    placeholder="e.g. 40"
+                    className={cn(
+                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
+                      passingMarksTouched && !isPassingMarksValid && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                  />
+                  {passingMarksTouched && !isPassingMarksValid && (
+                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-3.5 shrink-0" />
+                      <span>Must be 0 or higher</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Card 3: Schedule */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                  <Calendar className="size-4 text-purple-500 shrink-0" />
+                  <span>Schedule Window</span>
+                </CardTitle>
+                <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                  Leave empty for anytime access
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="startTime" className="text-xs sm:text-sm font-semibold text-foreground">
+                    Opens At
+                  </Label>
+                  <DateTimePicker
+                    id="startTime"
+                    name="startTime"
+                    value={startTime}
+                    onChange={setStartTime}
+                    placeholder="Opening date & time"
+                  />
+                </div>
+
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="endTime" className="text-xs sm:text-sm font-semibold text-foreground">
+                    Closes At
+                  </Label>
+                  <DateTimePicker
+                    id="endTime"
+                    name="endTime"
+                    value={endTime}
+                    onChange={setEndTime}
+                    minDate={startTime}
+                    placeholder="Closing date & time"
+                  />
+                </div>
+              </div>
+              {!isScheduleValid && (
+                <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-2.5 animate-in fade-in-50 duration-200">
+                  <AlertTriangle className="size-3.5 shrink-0" />
+                  <span>Closing date & time must be strictly after the opening date & time.</span>
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Card 4: Proctoring & Integrity */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                  <Shield className="size-4 text-emerald-500" />
+                  Proctoring & Integrity
+                </CardTitle>
+                <Badge variant="outline" className="text-[11px] sm:text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+                  {activeProctoringCount} of 3 active
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+              {/* Clean 3-Item Toggle Rows */}
+              <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden bg-card">
+                <label
+                  htmlFor="shuffleQuestionsSwitch"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <Shuffle className="size-4 text-primary shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Questions</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Randomize question order per student</p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="shuffleQuestionsSwitch"
+                    checked={shuffleQuestions}
+                    onCheckedChange={setShuffleQuestions}
+                  />
+                  <input
+                    type="checkbox"
+                    name="shuffleQuestions"
+                    checked={shuffleQuestions}
+                    readOnly
+                    className="sr-only"
+                  />
+                </label>
+
+                <label
+                  htmlFor="shuffleOptionsSwitch"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <Shuffle className="size-4 rotate-90 text-primary shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Options</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Randomize choices (A, B, C, D) inside MCQs</p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="shuffleOptionsSwitch"
+                    checked={shuffleOptions}
+                    onCheckedChange={setShuffleOptions}
+                  />
+                  <input
+                    type="checkbox"
+                    name="shuffleOptions"
+                    checked={shuffleOptions}
+                    readOnly
+                    className="sr-only"
+                  />
+                </label>
+
+                <label
+                  htmlFor="webcamMonitoringSwitch"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <Camera className="size-4 text-primary shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Webcam Consent</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Require camera permission to start</p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="webcamMonitoringSwitch"
+                    checked={webcamMonitoringRequired}
+                    onCheckedChange={setWebcamMonitoringRequired}
+                  />
+                  <input
+                    type="checkbox"
+                    name="webcamMonitoringRequired"
+                    checked={webcamMonitoringRequired}
+                    readOnly
+                    className="sr-only"
+                  />
+                </label>
+              </div>
+
+              {/* Review Threshold */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+                <div>
+                  <Label htmlFor="violationReviewThreshold" className="text-sm font-semibold text-foreground">
+                    Review Threshold Score
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Cumulative anomaly score that flags attempt for review.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="violationReviewThreshold"
+                    name="violationReviewThreshold"
+                    type="number"
+                    min={1}
+                    max={100}
+                    value={violationThreshold}
+                    onChange={(e) => setViolationThreshold(Number(e.target.value))}
+                    className="w-20 h-10 text-center font-bold rounded-xl"
+                    required
+                  />
+                  <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1">
+                    {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Card 5: Link Access & Student Participation */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                  <Globe className="size-4 text-primary" />
+                  Link Sharing & Student Access
+                </CardTitle>
+                <Badge variant={allowGuestAccess ? "default" : "secondary"} className="text-xs font-semibold">
+                  {allowGuestAccess ? "Open Link Enabled" : "Registered Only"}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 space-y-4">
+              {/* Participation Mode */}
+              <div className="space-y-3">
+                <label
+                  htmlFor="allowGuestAccessSwitch"
+                  className="flex items-start justify-between gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                      <Users className="size-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        Direct Link Participation (No Registration Required)
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Students can start instantly via link by entering their <strong>Name & Email</strong>. Registered students can also participate with their logged-in account.
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="allowGuestAccessSwitch"
+                    checked={allowGuestAccess}
+                    onCheckedChange={setAllowGuestAccess}
+                  />
+                  <input
+                    type="checkbox"
+                    name="allowGuestAccess"
+                    checked={allowGuestAccess}
+                    readOnly
+                    className="sr-only"
+                  />
+                </label>
+              </div>
+
+              {/* Optional Passcode / Security PIN */}
+              <div className="rounded-xl border border-border/60 bg-card p-3.5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="accessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+                    <Lock className="size-3.5 text-muted-foreground" />
+                    <span>Access Passcode / PIN (Optional)</span>
+                  </Label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
+                      setAccessCode(randomCode)
+                    }}
+                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className="size-3" />
+                    <span>Generate PIN</span>
+                  </button>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="accessCode"
+                    name="accessCode"
+                    placeholder="e.g. 2026EXAM or leave empty for open access"
+                    value={accessCode}
+                    onChange={(e) => setAccessCode(e.target.value)}
+                    className="h-10 text-sm font-mono rounded-xl pr-14"
+                    maxLength={50}
+                  />
+                  {accessCode && (
+                    <button
+                      type="button"
+                      onClick={() => setAccessCode("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer px-1 py-0.5"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  If set, students must enter this passcode along with their Name & Email before starting the test.
+                </p>
+              </div>
+
+              {/* Hidden isPublic field */}
+              <input type="checkbox" name="isPublic" checked={isPublic} readOnly className="sr-only" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
+        <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 border-b border-border/50 bg-muted/10">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Overview
+                </span>
+                <Badge variant="secondary" className="font-semibold text-xs px-2 py-0.5">
+                  Draft
+                </Badge>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-foreground mt-1 truncate">
+                {title.trim() ? title : "Untitled Exam"}
+              </h3>
             </div>
-            <Input
-              id="violationReviewThreshold"
-              name="violationReviewThreshold"
-              type="number"
-              min={1}
-              max={1000}
-              value={threshold}
-              onChange={(e) => setThreshold(e.target.value)}
-              required
-              className="h-10 w-full sm:w-44 rounded-xl text-base px-3.5 bg-background border-border/80"
-            />
-            <p className="text-xs text-muted-foreground italic">
-              Note: Flagging only requests human teacher review in the results dashboard — it never disqualifies students automatically.
-            </p>
-          </div>
+
+            <CardContent className="p-4 sm:p-5 space-y-4 sm:space-y-5">
+              {/* Clean Specs List (No cut-offs on any resolution!) */}
+              <div className="divide-y divide-border/50 text-sm">
+                <div className="flex items-center justify-between py-2.5 first:pt-0">
+                  <span className="text-muted-foreground font-medium">Duration</span>
+                  <span className={cn("font-bold", isDurationValid ? "text-foreground" : "text-destructive")}>
+                    {durationMinutes > 0 ? `${durationMinutes} mins` : "Required"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-muted-foreground font-medium">Max Attempts</span>
+                  <span className={cn("font-bold", isAttemptsValid ? "text-foreground" : "text-destructive")}>
+                    {maxAttempts > 0
+                      ? `${maxAttempts} ${maxAttempts === 1 ? "attempt" : "attempts"}`
+                      : "Required"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-muted-foreground font-medium">Passing Marks</span>
+                  <span className={cn("font-bold", isPassingMarksValid ? "text-foreground" : "text-destructive")}>
+                    {passingMarks ? passingMarks : "None"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-muted-foreground font-medium">Proctoring</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {activeProctoringCount} of 3 active
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-2.5 last:pb-0">
+                  <span className="text-muted-foreground font-medium">Student Access</span>
+                  <span className="font-bold text-primary text-xs">
+                    {allowGuestAccess ? "Direct Link (No Reg.)" : "Registered Only"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Form Readiness Indicator */}
+              {!isFormValid ? (
+                <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 px-3.5 py-2.5 text-xs text-amber-700 dark:text-amber-400 font-medium">
+                  <AlertTriangle className="size-4 shrink-0 text-amber-500" />
+                  <span>
+                    {!isTitleValid
+                      ? "Enter exam title (min 3 chars)"
+                      : !isDurationValid
+                      ? "Enter valid duration (1-600 mins)"
+                      : !isAttemptsValid
+                      ? "Enter valid attempts (1-10)"
+                      : !isPassingMarksValid
+                      ? "Passing marks must be ≥ 0"
+                      : !isScheduleValid
+                      ? "Closing time must be after opening time"
+                      : "Fill required fields to activate"}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-2.5 text-xs text-emerald-700 dark:text-emerald-400 font-semibold animate-in fade-in-50 duration-200">
+                  <Check className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <span>All fields valid — ready to submit!</span>
+                </div>
+              )}
+
+              {/* Action Buttons: Primary on left, Discard Exam on the right */}
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={!isFormValid || isPending}
+                  className={cn(
+                    "w-full sm:flex-1 h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
+                    isFormValid && !isPending
+                      ? "cursor-pointer hover:shadow-md active:scale-[0.99] text-primary-foreground"
+                      : "opacity-45 cursor-not-allowed pointer-events-auto"
+                  )}
+                >
+                  {isPending ? (
+                    <>
+                      <Spinner className="mr-2" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{submitLabel}</span>
+                      <ArrowRight className="ml-1.5 size-4" />
+                    </>
+                  )}
+                </Button>
+
+                <Button
+                  asChild
+                  variant="destructive"
+                  size="lg"
+                  className="w-full sm:w-auto h-12 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs shrink-0 whitespace-nowrap"
+                >
+                  <Link href={cancelHref} className="flex items-center justify-center gap-2 whitespace-nowrap">
+                    <Trash2 className="size-4 shrink-0" />
+                    <span>Discard Exam</span>
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
-      {/* FOOTER ACTIONS BAR */}
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end pt-2">
-        <Button
-          asChild
-          variant="outline"
-          size="lg"
-          className="h-12 rounded-xl px-6 text-sm font-semibold shadow-2xs hover:bg-muted"
-        >
-          <Link href={cancelHref}>Cancel</Link>
-        </Button>
-        <Button
-          type="submit"
-          size="lg"
-          disabled={isPending}
-          className="h-12 rounded-xl px-7 text-sm font-semibold shadow-xs"
-        >
-          {isPending && <Spinner className="mr-2" />}
-          <span>{submitLabel}</span>
-          {!isPending && <ArrowRight className="ml-2 size-4" />}
-        </Button>
-      </div>
+      {/* Title Presets & Dropdown Generator Modal */}
+      <TitleTemplateModal
+        open={isTemplateModalOpen}
+        onOpenChange={setIsTemplateModalOpen}
+        onSelectTitle={handleSelectPresetTitle}
+      />
     </form>
   )
 }

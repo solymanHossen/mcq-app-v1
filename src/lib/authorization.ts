@@ -24,6 +24,7 @@ export type CurrentUser = {
   name: string
   email: string
   role: Role
+  isGuest: boolean
   teacherVerificationStatus: TeacherVerificationStatus
 }
 
@@ -52,6 +53,7 @@ export async function resolveCurrentUser(
       name: true,
       email: true,
       role: true,
+      isGuest: true,
       isActive: true,
       tokenVersion: true,
       teacherVerificationStatus: true,
@@ -65,6 +67,7 @@ export async function resolveCurrentUser(
     name: user.name,
     email: user.email,
     role: user.role,
+    isGuest: user.isGuest,
     teacherVerificationStatus: user.teacherVerificationStatus,
   }
 }

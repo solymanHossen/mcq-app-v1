@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { requireRole } from "@/lib/authorization"
 import { getLearningSummary } from "@/modules/learning/queries"
 import { getPracticeRecommendations } from "@/modules/learning/recommendations"
@@ -29,6 +30,7 @@ export const instant = false
 
 export default async function ProgressPage() {
   const user = await requireRole("STUDENT")
+  if (user.isGuest) redirect("/exams")
 
   const [summary, recommendations, topicPerformance, overall] = await Promise.all([
     getLearningSummary(user.id),

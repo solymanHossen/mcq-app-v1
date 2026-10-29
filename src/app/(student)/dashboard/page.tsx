@@ -54,6 +54,7 @@ export default async function DashboardPage({
 
   if (isAdminTier(user.role)) redirect("/admin")
   if (user.role === "TEACHER") redirect("/teacher")
+  if (user.isGuest) redirect("/exams")
 
   await connection()
 
