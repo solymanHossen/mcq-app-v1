@@ -17,6 +17,7 @@ import {
   Layers,
   Check,
   Trash2,
+  Plus,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -29,6 +30,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Spinner } from "@/components/ui/spinner"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
+import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
 import type { ExamFormState } from "@/modules/exams/actions"
 import { cn } from "@/lib/utils"
 
@@ -66,6 +68,12 @@ export function ExamForm({
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [titleTouched, setTitleTouched] = useState(false)
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
+
+  function handleSelectPresetTitle(presetTitle: string) {
+    setTitle(presetTitle)
+    setTitleTouched(true)
+  }
 
   const [durationMinutes, setDurationMinutes] = useState<number>(
     initialValues?.durationMinutes ?? 60
@@ -159,9 +167,20 @@ export function ExamForm({
             <CardContent className="p-5 sm:p-6 space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="title" className="text-sm font-semibold text-foreground">
-                    Title <span className="text-destructive">*</span>
-                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="title" className="text-sm font-semibold text-foreground">
+                      Title <span className="text-destructive">*</span>
+                    </Label>
+                    <button
+                      type="button"
+                      onClick={() => setIsTemplateModalOpen(true)}
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
+                      title="Open Title Presets & Dropdown Generator"
+                    >
+                      <Plus className="size-3.5 shrink-0" />
+                      <span>Title Presets</span>
+                    </button>
+                  </div>
                   <span
                     className={cn(
                       "text-xs transition-colors",
@@ -173,20 +192,30 @@ export function ExamForm({
                     {title.length}/200
                   </span>
                 </div>
-                <Input
-                  id="title"
-                  name="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  onBlur={() => setTitleTouched(true)}
-                  placeholder="e.g. Mathematics Mid-Term 2026"
-                  maxLength={200}
-                  className={cn(
-                    "h-11 sm:h-12 text-base font-medium rounded-xl transition-colors",
-                    titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
-                  )}
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    id="title"
+                    name="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setTitleTouched(true)}
+                    placeholder="e.g. Mathematics Mid-Term 2026"
+                    maxLength={200}
+                    className={cn(
+                      "h-11 sm:h-12 text-base font-medium rounded-xl pr-11 transition-colors",
+                      titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsTemplateModalOpen(true)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                    title="Open Title Presets & Dropdown Generator"
+                  >
+                    <Plus className="size-4.5" />
+                  </button>
+                </div>
                 {titleTouched && !isTitleValid && (
                   <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
                     <AlertTriangle className="size-3.5 shrink-0" />
@@ -628,6 +657,13 @@ export function ExamForm({
           </Card>
         </div>
       </div>
+
+      {/* Title Presets & Dropdown Generator Modal */}
+      <TitleTemplateModal
+        open={isTemplateModalOpen}
+        onOpenChange={setIsTemplateModalOpen}
+        onSelectTitle={handleSelectPresetTitle}
+      />
     </form>
   )
 }
