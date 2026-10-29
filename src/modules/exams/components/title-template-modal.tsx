@@ -12,7 +12,6 @@ import {
   Trash2,
   Plus,
   Loader2,
-  Database,
   SlidersHorizontal,
   X,
   Library,
@@ -21,7 +20,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
@@ -44,7 +42,6 @@ import {
   type TitleTemplateDTO,
 } from "@/modules/exams/template-actions"
 import { DEFAULT_SYSTEM_TEMPLATES } from "@/modules/exams/template-constants"
-
 
 export interface TitleTemplateModalProps {
   open: boolean
@@ -232,7 +229,6 @@ export function TitleTemplateModal({
         setJustSaved(true)
         setTimeout(() => setJustSaved(false), 2500)
       } else if (!res.success) {
-        // Optimistic local add if database server action had permission issue
         const localTemplate: TitleTemplateDTO = {
           id: `local-${Date.now()}`,
           title: titleToSave,
@@ -249,7 +245,6 @@ export function TitleTemplateModal({
         setTimeout(() => setJustSaved(false), 2500)
       }
     } catch {
-      // Optimistic fallback
       const localTemplate: TitleTemplateDTO = {
         id: `local-${Date.now()}`,
         title: titleToSave,
@@ -293,42 +288,35 @@ export function TitleTemplateModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-xl p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden gap-0">
-        {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-border/50 bg-muted/15 flex items-start gap-3.5">
-          <div className="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-2xs">
-            <Sparkles className="size-5" />
+      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-2xl p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden gap-0">
+        <DialogDescription className="sr-only">
+          Select or generate standardized exam titles
+        </DialogDescription>
+
+        {/* Minimal Header: ONLY the relevant icon and clean bold title */}
+        <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-border/50 bg-muted/10 flex items-center gap-3">
+          <div className="size-10 sm:size-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-2xs">
+            <Sparkles className="size-5 sm:size-5.5" />
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <DialogTitle className="text-base sm:text-lg font-bold text-foreground">
-                Exam Title Presets
-              </DialogTitle>
-              <Badge variant="secondary" className="text-[10px] font-bold px-2 py-0.5 gap-1 border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <Database className="size-3" />
-                <span>DB Synced</span>
-              </Badge>
-            </div>
-            <DialogDescription className="text-xs text-muted-foreground mt-0.5">
-              Standardized title generator with persistent database presets and 1-click apply.
-            </DialogDescription>
-          </div>
+          <DialogTitle className="text-lg sm:text-xl font-bold text-foreground tracking-tight">
+            Exam Title Presets
+          </DialogTitle>
         </div>
 
-        {/* Segmented Control Pill Navigation */}
-        <div className="px-4 sm:px-5 pt-3 pb-2 border-b border-border/50 bg-background/50">
+        {/* Segmented Control Navigation with larger text */}
+        <div className="px-5 sm:px-6 pt-3 pb-2.5 border-b border-border/50 bg-background/50">
           <div className="flex items-center p-1 bg-muted/60 rounded-xl gap-1">
             <button
               type="button"
               onClick={() => setActiveTab("generator")}
               className={cn(
-                "flex-1 py-1.5 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5",
+                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
                 activeTab === "generator"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <SlidersHorizontal className="size-3.5" />
+              <SlidersHorizontal className="size-4" />
               <span>Smart Generator</span>
             </button>
 
@@ -336,13 +324,13 @@ export function TitleTemplateModal({
               type="button"
               onClick={() => setActiveTab("my-saved")}
               className={cn(
-                "flex-1 py-1.5 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5",
+                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
                 activeTab === "my-saved"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Bookmark className="size-3.5" />
+              <Bookmark className="size-4" />
               <span>My Saved ({mySavedTemplates.length})</span>
             </button>
 
@@ -350,39 +338,38 @@ export function TitleTemplateModal({
               type="button"
               onClick={() => setActiveTab("all-presets")}
               className={cn(
-                "flex-1 py-1.5 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5",
+                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
                 activeTab === "all-presets"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Library className="size-3.5" />
+              <Library className="size-4" />
               <span>All Presets ({dbTemplates.length})</span>
             </button>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="p-4 sm:p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div className="p-5 sm:p-6 space-y-5 max-h-[72vh] overflow-y-auto">
           {/* TAB 1: SMART GENERATOR */}
           {activeTab === "generator" && (
-            <div className="space-y-4">
+            <div className="space-y-4 sm:space-y-5">
               {/* Dropdowns Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 {/* 1. Subject */}
-                <div className="space-y-1.5 sm:col-span-2">
-                  <label className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center justify-between">
+                <div className="space-y-2 sm:col-span-2">
+                  <label className="text-sm font-semibold text-foreground flex items-center justify-between">
                     <span>Subject / Discipline</span>
-                    <span className="text-[10px] text-muted-foreground font-normal">Academic standard</span>
                   </label>
                   <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-                    <SelectTrigger className="w-full h-10 rounded-xl text-xs sm:text-sm font-semibold border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
                       <SelectValue placeholder="Select Subject" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl shadow-xl max-h-60">
+                    <SelectContent className="rounded-xl shadow-xl max-h-64">
                       <SelectGroup>
                         {SUBJECT_OPTIONS.map((sub) => (
-                          <SelectItem key={sub} value={sub} className="text-xs sm:text-sm cursor-pointer">
+                          <SelectItem key={sub} value={sub} className="text-sm sm:text-base py-2.5 cursor-pointer">
                             {sub}
                           </SelectItem>
                         ))}
@@ -392,18 +379,18 @@ export function TitleTemplateModal({
                 </div>
 
                 {/* 2. Assessment Type */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground uppercase tracking-wider">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-foreground">
                     Assessment Type
                   </label>
                   <Select value={selectedExamType} onValueChange={setSelectedExamType}>
-                    <SelectTrigger className="w-full h-10 rounded-xl text-xs sm:text-sm font-semibold border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
                       <SelectValue placeholder="Select Exam Type" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl shadow-xl max-h-60">
+                    <SelectContent className="rounded-xl shadow-xl max-h-64">
                       <SelectGroup>
                         {EXAM_TYPE_OPTIONS.map((type) => (
-                          <SelectItem key={type} value={type} className="text-xs sm:text-sm cursor-pointer">
+                          <SelectItem key={type} value={type} className="text-sm sm:text-base py-2.5 cursor-pointer">
                             {type}
                           </SelectItem>
                         ))}
@@ -413,18 +400,18 @@ export function TitleTemplateModal({
                 </div>
 
                 {/* 3. Session / Year */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground uppercase tracking-wider">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-foreground">
                     Term / Session
                   </label>
                   <Select value={selectedYear} onValueChange={setSelectedYear}>
-                    <SelectTrigger className="w-full h-10 rounded-xl text-xs sm:text-sm font-semibold border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
                       <SelectValue placeholder="Select Term / Year" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl shadow-xl max-h-60">
+                    <SelectContent className="rounded-xl shadow-xl max-h-64">
                       <SelectGroup>
                         {YEAR_OPTIONS.map((y) => (
-                          <SelectItem key={y} value={y} className="text-xs sm:text-sm cursor-pointer">
+                          <SelectItem key={y} value={y} className="text-sm sm:text-base py-2.5 cursor-pointer">
                             {y}
                           </SelectItem>
                         ))}
@@ -435,11 +422,11 @@ export function TitleTemplateModal({
               </div>
 
               {/* Quick Tag Modifiers */}
-              <div className="space-y-1.5 pt-1">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+              <div className="space-y-2 pt-0.5">
+                <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
                   Quick Modifiers (Optional)
                 </span>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {QUICK_TAGS.map((tag) => {
                     const isSelected = selectedTags.includes(tag)
                     return (
@@ -448,9 +435,9 @@ export function TitleTemplateModal({
                         type="button"
                         onClick={() => toggleTag(tag)}
                         className={cn(
-                          "px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer active:scale-95",
+                          "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition-all cursor-pointer active:scale-95",
                           isSelected
-                            ? "border-primary bg-primary text-primary-foreground shadow-2xs font-bold"
+                            ? "border-primary bg-primary text-primary-foreground shadow-2xs font-semibold"
                             : "border-border/70 bg-card hover:bg-muted text-foreground"
                         )}
                       >
@@ -461,36 +448,31 @@ export function TitleTemplateModal({
                 </div>
               </div>
 
-              {/* Live Preview & Apply / Save Card */}
-              <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-3.5 shadow-2xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-primary">
-                      Live Title Preview
-                    </span>
-                  </div>
-                  <Badge variant="outline" className="text-[11px] border-primary/30 text-primary font-bold">
-                    Standardized
-                  </Badge>
+              {/* Live Preview Card */}
+              <div className="rounded-xl border border-primary/25 bg-primary/[0.04] p-4 sm:p-5 space-y-3.5 shadow-2xs">
+                <div className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-primary">
+                    Live Generated Title
+                  </span>
                 </div>
 
-                <div className="rounded-xl bg-background border border-border/70 p-3.5 shadow-2xs">
-                  <p className="text-sm sm:text-base font-extrabold text-foreground leading-snug break-words">
+                <div className="rounded-xl bg-background border border-border/80 p-4 shadow-2xs">
+                  <p className="text-base sm:text-lg font-bold text-foreground leading-snug break-words">
                     {generatedTitle}
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-2.5">
+                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                   {/* Primary 1-Click Apply */}
                   <Button
                     type="button"
                     size="lg"
                     onClick={() => handleApply(generatedTitle)}
-                    className="flex-1 h-11 rounded-xl text-sm font-bold shadow-xs cursor-pointer active:scale-98"
+                    className="flex-1 h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs cursor-pointer active:scale-98"
                   >
-                    <Check className="size-4 mr-1.5" />
-                    <span>Apply to Exam Form</span>
+                    <Check className="size-4.5 mr-2" />
+                    <span>Apply to Exam</span>
                   </Button>
 
                   {/* Save to Database Button */}
@@ -500,21 +482,21 @@ export function TitleTemplateModal({
                     size="lg"
                     disabled={isSaving}
                     onClick={() => handleSaveToDatabase(generatedTitle, selectedSubject)}
-                    className="h-11 px-4 rounded-xl text-xs sm:text-sm font-semibold border-primary/40 bg-background text-primary hover:bg-primary/10 transition-all cursor-pointer shrink-0 shadow-2xs active:scale-98"
+                    className="h-12 px-5 rounded-xl text-sm sm:text-base font-semibold border-primary/40 bg-background text-primary hover:bg-primary/10 transition-all cursor-pointer shrink-0 shadow-2xs active:scale-98"
                   >
                     {isSaving ? (
                       <>
-                        <Loader2 className="size-4 mr-1.5 animate-spin" />
+                        <Loader2 className="size-4 mr-2 animate-spin" />
                         <span>Saving...</span>
                       </>
                     ) : justSaved ? (
                       <>
-                        <BookmarkCheck className="size-4 mr-1.5 text-emerald-500" />
+                        <BookmarkCheck className="size-4.5 mr-2 text-emerald-500" />
                         <span>Saved to DB!</span>
                       </>
                     ) : (
                       <>
-                        <Bookmark className="size-4 mr-1.5" />
+                        <Bookmark className="size-4.5 mr-2" />
                         <span>Save to DB</span>
                       </>
                     )}
@@ -526,12 +508,12 @@ export function TitleTemplateModal({
 
           {/* TAB 2: MY SAVED TEMPLATES */}
           {activeTab === "my-saved" && (
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               {/* Quick Inline Add to DB */}
-              <div className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-2">
-                <span className="text-[11px] font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
-                  <Plus className="size-3.5 text-primary" />
-                  <span>Create & Save New Title to Database</span>
+              <div className="p-4 rounded-xl border border-border/80 bg-muted/20 space-y-2.5">
+                <span className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+                  <Plus className="size-4 text-primary" />
+                  <span>Create & Save Custom Title</span>
                 </span>
                 <div className="flex items-center gap-2">
                   <Input
@@ -543,34 +525,34 @@ export function TitleTemplateModal({
                         handleDirectSaveCustom()
                       }
                     }}
-                    placeholder="e.g. Physics Chapter 3 Motion & Vector Special Quiz"
-                    className="h-9 text-xs sm:text-sm rounded-lg bg-background border-border/80"
+                    placeholder="Enter custom title name..."
+                    className="h-11 text-sm sm:text-base rounded-xl bg-background border-border/80"
                   />
                   <Button
                     type="button"
                     size="sm"
                     disabled={!customTitleInput.trim() || isSaving}
                     onClick={handleDirectSaveCustom}
-                    className="h-9 px-3.5 rounded-lg text-xs font-bold cursor-pointer shrink-0"
+                    className="h-11 px-5 rounded-xl text-sm font-bold cursor-pointer shrink-0"
                   >
-                    {isSaving ? <Loader2 className="size-3.5 animate-spin" /> : "Save"}
+                    {isSaving ? <Loader2 className="size-4 animate-spin" /> : "Save"}
                   </Button>
                 </div>
               </div>
 
               {isLoading && mySavedTemplates.length === 0 ? (
-                <div className="flex items-center justify-center py-10 text-muted-foreground gap-2">
+                <div className="flex items-center justify-center py-12 text-muted-foreground gap-2">
                   <Loader2 className="size-5 animate-spin text-primary" />
-                  <span className="text-sm font-medium">Loading saved templates...</span>
+                  <span className="text-sm sm:text-base font-medium">Loading saved templates...</span>
                 </div>
               ) : mySavedTemplates.length === 0 ? (
-                <div className="text-center py-10 px-4 rounded-xl border border-dashed border-border/80 bg-muted/10 space-y-2.5">
-                  <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
-                    <Bookmark className="size-5" />
+                <div className="text-center py-12 px-4 rounded-xl border border-dashed border-border/80 bg-muted/10 space-y-3">
+                  <div className="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                    <Bookmark className="size-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">No custom templates saved yet</p>
-                    <p className="text-xs text-muted-foreground max-w-sm mx-auto mt-0.5">
+                    <p className="text-base font-bold text-foreground">No custom templates saved yet</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto mt-1">
                       Use the Smart Generator or the box above to permanently save your custom exam titles to the database.
                     </p>
                   </div>
@@ -579,33 +561,33 @@ export function TitleTemplateModal({
                     variant="outline"
                     size="sm"
                     onClick={() => setActiveTab("generator")}
-                    className="mt-1 text-xs font-semibold rounded-lg cursor-pointer"
+                    className="mt-1 text-xs sm:text-sm font-semibold rounded-xl cursor-pointer h-10 px-4"
                   >
-                    <SlidersHorizontal className="size-3.5 mr-1.5" />
+                    <SlidersHorizontal className="size-4 mr-2" />
                     <span>Go to Smart Generator</span>
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {mySavedTemplates.map((t) => (
                     <div
                       key={t.id}
                       onClick={() => handleApply(t.title)}
-                      className="group flex items-center justify-between p-3 rounded-xl border border-border/70 bg-card hover:bg-primary/5 hover:border-primary/40 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
+                      className="group flex items-center justify-between p-3.5 sm:p-4 rounded-xl border border-border/70 bg-card hover:bg-primary/5 hover:border-primary/40 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
                     >
-                      <div className="flex items-center gap-3 min-w-0 pr-2">
-                        <div className="size-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
-                          <BookmarkCheck className="size-4" />
+                      <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                        <div className="size-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+                          <BookmarkCheck className="size-4.5" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary truncate transition-colors">
+                          <p className="text-sm sm:text-base font-bold text-foreground group-hover:text-primary truncate transition-colors">
                             {t.title}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                            <span className="text-xs font-semibold text-muted-foreground">
                               {t.category || "Custom"}
                             </span>
-                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                               • Saved in DB
                             </span>
                           </div>
@@ -617,17 +599,17 @@ export function TitleTemplateModal({
                           type="button"
                           onClick={(e) => handleDeleteTemplate(e, t.id)}
                           disabled={deletingId === t.id}
-                          className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 flex items-center justify-center transition-colors cursor-pointer"
+                          className="size-9 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 flex items-center justify-center transition-colors cursor-pointer"
                           title="Delete template from database"
                         >
                           {deletingId === t.id ? (
-                            <Loader2 className="size-3.5 animate-spin" />
+                            <Loader2 className="size-4 animate-spin" />
                           ) : (
-                            <Trash2 className="size-3.5" />
+                            <Trash2 className="size-4" />
                           )}
                         </button>
-                        <div className="size-8 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground transition-colors">
-                          <ArrowRight className="size-3.5" />
+                        <div className="size-9 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground transition-colors">
+                          <ArrowRight className="size-4" />
                         </div>
                       </div>
                     </div>
@@ -639,38 +621,38 @@ export function TitleTemplateModal({
 
           {/* TAB 3: ALL PRESETS */}
           {activeTab === "all-presets" && (
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               {/* Search input */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-muted-foreground pointer-events-none" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search templates by subject, title or term..."
-                  className="h-10 pl-9 pr-8 rounded-xl text-xs sm:text-sm bg-background border-border/80"
+                  className="h-11 sm:h-12 pl-10 pr-9 rounded-xl text-sm sm:text-base bg-background border-border/80"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 size-5 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 size-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground"
                   >
-                    <X className="size-3.5" />
+                    <X className="size-4" />
                   </button>
                 )}
               </div>
 
               {/* Category Filter Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
                 {CATEGORY_FILTERS.map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setCategoryFilter(cat)}
                     className={cn(
-                      "px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
+                      "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer",
                       categoryFilter === cat
-                        ? "bg-primary text-primary-foreground shadow-2xs font-bold"
+                        ? "bg-primary text-primary-foreground shadow-2xs font-semibold"
                         : "bg-muted/60 text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -680,46 +662,46 @@ export function TitleTemplateModal({
               </div>
 
               {/* Presets List */}
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {filteredPresets.map((preset) => (
                   <button
                     key={preset.id}
                     type="button"
                     onClick={() => handleApply(preset.title)}
-                    className="group w-full flex items-center justify-between p-3 rounded-xl border border-border/70 bg-card hover:bg-primary/5 hover:border-primary/40 transition-all cursor-pointer text-left shadow-2xs active:scale-[0.99]"
+                    className="group w-full flex items-center justify-between p-3.5 sm:p-4 rounded-xl border border-border/70 bg-card hover:bg-primary/5 hover:border-primary/40 transition-all cursor-pointer text-left shadow-2xs active:scale-[0.99]"
                   >
-                    <div className="flex items-center gap-3 min-w-0 pr-2">
-                      <div className="size-8 rounded-lg bg-muted group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center text-muted-foreground shrink-0 transition-colors">
-                        <BookOpen className="size-4" />
+                    <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                      <div className="size-9 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center text-muted-foreground shrink-0 transition-colors">
+                        <BookOpen className="size-4.5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary truncate transition-colors">
+                        <p className="text-sm sm:text-base font-bold text-foreground group-hover:text-primary truncate transition-colors">
                           {preset.title}
                         </p>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs font-semibold text-muted-foreground">
                             {preset.category}
                           </span>
                           {preset.isSystem ? (
-                            <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium">
-                              System Preset
+                            <Badge variant="outline" className="text-[10px] px-2 py-0 font-medium">
+                              Preset
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="text-[9px] px-1.5 py-0 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
+                            <Badge variant="secondary" className="text-[10px] px-2 py-0 font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
                               My DB
                             </Badge>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="size-7 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground shrink-0 transition-colors">
-                      <ArrowRight className="size-3.5" />
+                    <div className="size-8 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground shrink-0 transition-colors">
+                      <ArrowRight className="size-4" />
                     </div>
                   </button>
                 ))}
 
                 {filteredPresets.length === 0 && (
-                  <p className="text-center text-xs text-muted-foreground py-8">
+                  <p className="text-center text-sm text-muted-foreground py-10">
                     No matching title templates found.
                   </p>
                 )}
