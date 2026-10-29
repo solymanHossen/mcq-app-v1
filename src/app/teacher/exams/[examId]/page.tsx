@@ -236,18 +236,18 @@ export default async function ExamDetailPage({
         </div>
       </div>
 
-      {/* ─── 3. LARGE MODERN SEGMENTED PILL DOCK TABS (Profile Page Style) ─── */}
+      {/* ─── 3. SLEEK SEGMENTED PILL DOCK TABS (Matching Teacher Dashboard Standard) ─── */}
       <Tabs defaultValue={defaultTab} className="w-full space-y-8">
         <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-          <TabsList className="flex w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 h-auto">
+          <TabsList className="group-data-horizontal/tabs:!h-auto !h-auto flex w-fit items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 sm:p-2 min-h-12 sm:min-h-14">
             {/* Tab 1: Questions */}
             <TabsTrigger
               value="questions"
-              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
             >
-              <HelpCircle className="size-4.5" />
-              <span>Questions</span>
-              <span className="ml-1 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-extrabold bg-background/20 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground text-foreground">
+              <HelpCircle className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Questions</span>
+              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
                 {exam.examQuestions.length}
               </span>
             </TabsTrigger>
@@ -255,19 +255,19 @@ export default async function ExamDetailPage({
             {/* Tab 2: Settings */}
             <TabsTrigger
               value="settings"
-              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
             >
-              <Settings className="size-4.5" />
-              <span>Settings & Rules</span>
+              <Settings className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Settings & Rules</span>
             </TabsTrigger>
 
             {/* Tab 3: Share Link */}
             <TabsTrigger
               value="share"
-              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
             >
-              <Share2 className="size-4.5" />
-              <span>Share & Link Hub</span>
+              <Share2 className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <span className="whitespace-nowrap">Share & Link Hub</span>
             </TabsTrigger>
           </TabsList>
         </div>
