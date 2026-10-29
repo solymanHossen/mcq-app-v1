@@ -735,14 +735,14 @@ export function ExamForm({
                 </div>
               )}
 
-              {/* Action Buttons: Primary on left, Discard Exam on the right */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Action Buttons: Stacked vertically so button text has full width and never truncates */}
+              <div className="pt-2 flex flex-col gap-2.5 w-full">
                 <Button
                   type="submit"
                   size="lg"
                   disabled={!isFormValid || isPending}
                   className={cn(
-                    "w-full sm:flex-1 h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
+                    "w-full h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
                     isFormValid && !isPending
                       ? "cursor-pointer hover:shadow-md active:scale-[0.99] text-primary-foreground"
                       : "opacity-45 cursor-not-allowed pointer-events-auto"
@@ -765,7 +765,7 @@ export function ExamForm({
                   asChild
                   variant="destructive"
                   size="lg"
-                  className="w-full sm:w-auto h-12 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs shrink-0 whitespace-nowrap"
+                  className="w-full h-11 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs whitespace-nowrap"
                 >
                   <Link href={cancelHref} className="flex items-center justify-center gap-2 whitespace-nowrap">
                     <Trash2 className="size-4 shrink-0" />

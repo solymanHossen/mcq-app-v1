@@ -70,7 +70,7 @@ export default async function AddQuestionsPage({
   ])
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8 pb-12">
+    <div className="w-full space-y-8 pb-12">
       {/* Header */}
       <div>
         <Button

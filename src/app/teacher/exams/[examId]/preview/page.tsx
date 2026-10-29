@@ -24,7 +24,7 @@ export default async function ExamPreviewPage({
   const totalMarks = getExamTotalMarks(exam.examQuestions)
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 pb-16">
+    <div className="w-full space-y-8 pb-16">
       {/* Top Header */}
       <div>
         <Button

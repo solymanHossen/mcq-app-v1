@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function NewExamPage() {
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 pb-12">
+    <div className="w-full space-y-8 pb-12">
       {/* Top Navigation & Breadcrumb */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

@@ -47,7 +47,7 @@ export default async function ExamViolationsPage({
   const attempts = await listFlaggedAttempts(examId)
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8 pb-16">
+    <div className="w-full space-y-8 pb-16">
       {/* Header */}
       <div>
         <Button

@@ -67,7 +67,7 @@ export default async function ExamResultsPage({
       : 0
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8 pb-16">
+    <div className="w-full space-y-8 pb-16">
       {/* ================= PAGE HEADER & TOOLBAR ================= */}
       <div>
         <Button
