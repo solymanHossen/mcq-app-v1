@@ -14,6 +14,7 @@ import {
   Shield,
   Calendar,
   Layers,
+  Check,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -90,22 +91,22 @@ export function ExamForm({
   ].filter(Boolean).length
 
   return (
-    <form action={formAction} className="w-full space-y-6">
+    <form action={formAction} className="w-full">
       {state && "error" in state && (
-        <Alert variant="destructive" className="rounded-xl border-destructive/30">
+        <Alert variant="destructive" className="mb-6 rounded-xl border-destructive/30">
           <AlertTriangle className="size-4" />
           <AlertTitle className="text-sm font-semibold">Error saving exam</AlertTitle>
           <AlertDescription className="text-xs mt-0.5">{state.error}</AlertDescription>
         </Alert>
       )}
 
-      {/* Main Grid: Form Canvas (8 cols) + Sticky Summary Hub (4 cols) */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start w-full">
-        {/* Left Form Canvas */}
-        <div className="space-y-6 xl:col-span-8">
+      {/* Main 2-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+        {/* Left Form Canvas (8 Columns on lg/xl) */}
+        <div className="space-y-6 lg:col-span-8 min-w-0">
           {/* Card 1: Details */}
-          <Card className="rounded-2xl border-border/70 bg-card shadow-xs">
-            <CardHeader className="px-6 pt-5 pb-3 border-b border-border/50">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-bold text-foreground">
                   Exam Details
@@ -115,8 +116,8 @@ export function ExamForm({
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              <div className="space-y-1.5">
+            <CardContent className="p-5 sm:p-6 space-y-4">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="title" className="text-sm font-semibold text-foreground">
                     Title <span className="text-destructive">*</span>
@@ -135,7 +136,7 @@ export function ExamForm({
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-semibold text-foreground">
                   Description <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
                 </Label>
@@ -145,16 +146,16 @@ export function ExamForm({
                   rows={3}
                   defaultValue={initialValues?.description}
                   placeholder="Instructions, syllabus topics, or candidate rules..."
-                  className="rounded-xl text-sm min-h-[90px] resize-y"
+                  className="rounded-xl text-sm min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
                 />
               </div>
             </CardContent>
           </Card>
 
           {/* Card 2: Timing & Scoring */}
-          <Card className="rounded-2xl border-border/70 bg-card shadow-xs">
-            <CardHeader className="px-6 pt-5 pb-3 border-b border-border/50">
-              <div className="flex items-center justify-between">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
                   <Clock className="size-4 text-primary" />
                   Timing & Limits
@@ -168,7 +169,7 @@ export function ExamForm({
                       className={cn(
                         "text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border",
                         durationMinutes === mins
-                          ? "bg-primary text-primary-foreground border-primary font-semibold"
+                          ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
                           : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
                       )}
                     >
@@ -178,9 +179,9 @@ export function ExamForm({
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-5 sm:p-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label htmlFor="durationMinutes" className="text-sm font-semibold text-foreground">
                     Duration (Minutes) <span className="text-destructive">*</span>
                   </Label>
@@ -196,13 +197,13 @@ export function ExamForm({
                       className="h-11 sm:h-12 text-base font-semibold rounded-xl pr-12"
                       required
                     />
-                    <span className="absolute inset-y-0 right-3.5 flex items-center text-xs font-medium text-muted-foreground pointer-events-none">
+                    <span className="absolute inset-y-0 right-3.5 flex items-center text-xs font-semibold text-muted-foreground pointer-events-none">
                       min
                     </span>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label htmlFor="maxAttempts" className="text-sm font-semibold text-foreground">
                     Max Attempts <span className="text-destructive">*</span>
                   </Label>
@@ -219,7 +220,7 @@ export function ExamForm({
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label htmlFor="passingMarks" className="text-sm font-semibold text-foreground">
                     Passing Marks <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
                   </Label>
@@ -240,8 +241,8 @@ export function ExamForm({
           </Card>
 
           {/* Card 3: Schedule */}
-          <Card className="rounded-2xl border-border/70 bg-card shadow-xs">
-            <CardHeader className="px-6 pt-5 pb-3 border-b border-border/50">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
                   <Calendar className="size-4 text-purple-500" />
@@ -252,9 +253,9 @@ export function ExamForm({
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-5 sm:p-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label htmlFor="startTime" className="text-sm font-semibold text-foreground">
                     Opens At
                   </Label>
@@ -266,7 +267,7 @@ export function ExamForm({
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label htmlFor="endTime" className="text-sm font-semibold text-foreground">
                     Closes At
                   </Label>
@@ -282,8 +283,8 @@ export function ExamForm({
           </Card>
 
           {/* Card 4: Proctoring & Integrity */}
-          <Card className="rounded-2xl border-border/70 bg-card shadow-xs">
-            <CardHeader className="px-6 pt-5 pb-3 border-b border-border/50">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
                   <Shield className="size-4 text-emerald-500" />
@@ -294,18 +295,18 @@ export function ExamForm({
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-5 sm:p-6 space-y-4">
               {/* Clean 3-Item Toggle Rows */}
-              <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden">
+              <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden bg-card">
                 <label
                   htmlFor="shuffleQuestionsSwitch"
-                  className="flex items-center justify-between p-3.5 bg-card hover:bg-muted/30 transition-colors cursor-pointer"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 text-primary" />
+                    <Shuffle className="size-4 text-primary shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Shuffle Questions</p>
-                      <p className="text-xs text-muted-foreground">Randomize question order per student</p>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Questions</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Randomize question order per student</p>
                     </div>
                   </div>
                   <Switch
@@ -324,13 +325,13 @@ export function ExamForm({
 
                 <label
                   htmlFor="shuffleOptionsSwitch"
-                  className="flex items-center justify-between p-3.5 bg-card hover:bg-muted/30 transition-colors cursor-pointer"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 rotate-90 text-primary" />
+                    <Shuffle className="size-4 rotate-90 text-primary shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Shuffle Options</p>
-                      <p className="text-xs text-muted-foreground">Randomize choices (A, B, C, D) inside MCQs</p>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Options</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Randomize choices (A, B, C, D) inside MCQs</p>
                     </div>
                   </div>
                   <Switch
@@ -349,13 +350,13 @@ export function ExamForm({
 
                 <label
                   htmlFor="webcamMonitoringSwitch"
-                  className="flex items-center justify-between p-3.5 bg-card hover:bg-muted/30 transition-colors cursor-pointer"
+                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <Camera className="size-4 text-primary" />
+                    <Camera className="size-4 text-primary shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-foreground">Webcam Consent</p>
-                      <p className="text-xs text-muted-foreground">Require camera permission to start</p>
+                      <p className="text-sm font-semibold text-foreground leading-tight">Webcam Consent</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Require camera permission to start</p>
                     </div>
                   </div>
                   <Switch
@@ -373,14 +374,14 @@ export function ExamForm({
                 </label>
               </div>
 
-              {/* Compact Review Threshold */}
+              {/* Review Threshold */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
                 <div>
                   <Label htmlFor="violationReviewThreshold" className="text-sm font-semibold text-foreground">
                     Review Threshold Score
                   </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Score that flags attempt for review (does not auto-disqualify).
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Cumulative anomaly score that flags attempt for review.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -392,10 +393,10 @@ export function ExamForm({
                     max={100}
                     value={violationThreshold}
                     onChange={(e) => setViolationThreshold(Number(e.target.value))}
-                    className="w-24 h-10 text-center font-bold rounded-xl"
+                    className="w-20 h-10 text-center font-bold rounded-xl"
                     required
                   />
-                  <Badge variant="outline" className="text-xs font-medium">
+                  <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1">
                     {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"}
                   </Badge>
                 </div>
@@ -404,50 +405,52 @@ export function ExamForm({
           </Card>
         </div>
 
-        {/* Right Sticky Summary Sidebar */}
-        <div className="space-y-4 xl:col-span-4 xl:sticky xl:top-24">
-          <Card className="rounded-2xl border-border/70 bg-card shadow-xs overflow-hidden">
-            <div className="p-5 border-b border-border/50 bg-muted/20">
+        {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
+        <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <div className="px-5 py-4 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Overview
                 </span>
-                <Badge variant="secondary" className="font-semibold text-xs">
+                <Badge variant="secondary" className="font-semibold text-xs px-2 py-0.5">
                   Draft
                 </Badge>
               </div>
-              <h3 className="text-lg font-bold text-foreground mt-1.5 truncate">
+              <h3 className="text-base font-bold text-foreground mt-1 truncate">
                 {title.trim() ? title : "Untitled Exam"}
               </h3>
             </div>
 
-            <CardContent className="p-5 space-y-4">
-              {/* 4 Compact Metric Tiles */}
-              <div className="grid grid-cols-2 gap-2.5">
-                <div className="p-3 rounded-xl border border-border/50 bg-muted/20">
-                  <span className="text-xs text-muted-foreground font-medium block">Duration</span>
-                  <span className="text-base font-bold text-foreground">{durationMinutes}m</span>
+            <CardContent className="p-5 space-y-5">
+              {/* Clean Specs List (No cut-offs on any resolution!) */}
+              <div className="divide-y divide-border/50 text-sm">
+                <div className="flex items-center justify-between py-2.5 first:pt-0">
+                  <span className="text-muted-foreground font-medium">Duration</span>
+                  <span className="font-bold text-foreground">{durationMinutes} mins</span>
                 </div>
-                <div className="p-3 rounded-xl border border-border/50 bg-muted/20">
-                  <span className="text-xs text-muted-foreground font-medium block">Attempts</span>
-                  <span className="text-base font-bold text-foreground">{maxAttempts}x</span>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-muted-foreground font-medium">Max Attempts</span>
+                  <span className="font-bold text-foreground">{maxAttempts} {maxAttempts === 1 ? "attempt" : "attempts"}</span>
                 </div>
-                <div className="p-3 rounded-xl border border-border/50 bg-muted/20">
-                  <span className="text-xs text-muted-foreground font-medium block">Pass Mark</span>
-                  <span className="text-base font-bold text-foreground">{passingMarks ? passingMarks : "—"}</span>
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-muted-foreground font-medium">Passing Marks</span>
+                  <span className="font-bold text-foreground">{passingMarks ? passingMarks : "None"}</span>
                 </div>
-                <div className="p-3 rounded-xl border border-border/50 bg-muted/20">
-                  <span className="text-xs text-muted-foreground font-medium block">Proctoring</span>
-                  <span className="text-base font-bold text-foreground">{activeProctoringCount}/3</span>
+                <div className="flex items-center justify-between py-2.5 last:pb-0">
+                  <span className="text-muted-foreground font-medium">Proctoring</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {activeProctoringCount} of 3 active
+                  </span>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-2 space-y-2">
+              <div className="pt-2 space-y-2.5">
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full h-12 rounded-xl text-base font-bold shadow-xs transition-transform active:scale-[0.99]"
+                  className="w-full h-11 sm:h-12 rounded-xl text-base font-bold shadow-xs transition-transform active:scale-[0.99]"
                   disabled={isPending}
                 >
                   {isPending ? (
@@ -467,9 +470,9 @@ export function ExamForm({
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="w-full text-xs text-muted-foreground hover:text-foreground h-9"
+                  className="w-full text-xs font-semibold text-muted-foreground hover:text-foreground h-9 rounded-xl"
                 >
-                  <Link href={cancelHref}>Discard</Link>
+                  <Link href={cancelHref}>Discard and return</Link>
                 </Button>
               </div>
             </CardContent>
