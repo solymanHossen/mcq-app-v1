@@ -154,9 +154,9 @@ export function ExamForm({
         <div className="space-y-6 lg:col-span-8 min-w-0">
           {/* Card 1: Details */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-foreground">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground">
                   Exam Details
                 </CardTitle>
                 <Badge variant="secondary" className="text-xs font-medium px-2 py-0.5">
@@ -164,17 +164,17 @@ export function ExamForm({
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-5 sm:p-6 space-y-4">
-              <div className="space-y-2">
+            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+              <div className="space-y-1.5 sm:space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="title" className="text-sm font-semibold text-foreground">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Label htmlFor="title" className="text-xs sm:text-sm font-semibold text-foreground">
                       Title <span className="text-destructive">*</span>
                     </Label>
                     <button
                       type="button"
                       onClick={() => setIsTemplateModalOpen(true)}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-[11px] sm:text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
                       title="Open Title Presets & Dropdown Generator"
                     >
                       <Plus className="size-3.5 shrink-0" />
@@ -202,7 +202,7 @@ export function ExamForm({
                     placeholder="e.g. Mathematics Mid-Term 2026"
                     maxLength={200}
                     className={cn(
-                      "h-11 sm:h-12 text-base font-medium rounded-xl pr-11 transition-colors",
+                      "h-10 sm:h-12 text-sm sm:text-base font-medium rounded-xl pr-11 transition-colors",
                       titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
                     )}
                     required
@@ -210,10 +210,10 @@ export function ExamForm({
                   <button
                     type="button"
                     onClick={() => setIsTemplateModalOpen(true)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
                     title="Open Title Presets & Dropdown Generator"
                   >
-                    <Plus className="size-4.5" />
+                    <Plus className="size-4" />
                   </button>
                 </div>
                 {titleTouched && !isTitleValid && (
@@ -228,8 +228,8 @@ export function ExamForm({
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-semibold text-foreground">
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label htmlFor="description" className="text-xs sm:text-sm font-semibold text-foreground">
                   Description <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
                 </Label>
                 <Textarea
@@ -238,7 +238,7 @@ export function ExamForm({
                   rows={3}
                   defaultValue={initialValues?.description}
                   placeholder="Instructions, syllabus topics, or candidate rules..."
-                  className="rounded-xl text-sm min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
+                  className="rounded-xl text-xs sm:text-sm min-h-[80px] sm:min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
                 />
               </div>
             </CardContent>
@@ -246,20 +246,20 @@ export function ExamForm({
 
           {/* Card 2: Timing & Scoring */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-2">
-                <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
                   <Clock className="size-4 text-primary shrink-0" />
                   <span>Timing & Limits</span>
                 </CardTitle>
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
                   {DURATION_PRESETS.map((mins) => (
                     <button
                       key={mins}
                       type="button"
                       onClick={() => setDurationMinutes(mins)}
                       className={cn(
-                        "text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
+                        "text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
                         durationMinutes === mins
                           ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
                           : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
@@ -271,7 +271,7 @@ export function ExamForm({
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-5 sm:p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="durationMinutes" className="text-sm font-semibold text-foreground">
@@ -370,21 +370,21 @@ export function ExamForm({
 
           {/* Card 3: Schedule */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-                <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
                   <Calendar className="size-4 text-purple-500 shrink-0" />
                   <span>Schedule Window</span>
                 </CardTitle>
-                <span className="text-xs text-muted-foreground font-medium">
+                <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
                   Leave empty for anytime access
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="p-5 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startTime" className="text-sm font-semibold text-foreground">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="startTime" className="text-xs sm:text-sm font-semibold text-foreground">
                     Opens At
                   </Label>
                   <DateTimePicker
@@ -396,8 +396,8 @@ export function ExamForm({
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="endTime" className="text-sm font-semibold text-foreground">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="endTime" className="text-xs sm:text-sm font-semibold text-foreground">
                     Closes At
                   </Label>
                   <DateTimePicker
@@ -421,18 +421,18 @@ export function ExamForm({
 
           {/* Card 4: Proctoring & Integrity */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
                   <Shield className="size-4 text-emerald-500" />
                   Proctoring & Integrity
                 </CardTitle>
-                <Badge variant="outline" className="text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+                <Badge variant="outline" className="text-[11px] sm:text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
                   {activeProctoringCount} of 3 active
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-5 sm:p-6 space-y-4">
+            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
               {/* Clean 3-Item Toggle Rows */}
               <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden bg-card">
                 <label
@@ -545,21 +545,21 @@ export function ExamForm({
         {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <div className="px-5 py-4 border-b border-border/50 bg-muted/10">
+            <div className="px-4 py-3 sm:px-5 sm:py-4 border-b border-border/50 bg-muted/10">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Overview
                 </span>
                 <Badge variant="secondary" className="font-semibold text-xs px-2 py-0.5">
                   Draft
                 </Badge>
               </div>
-              <h3 className="text-base font-bold text-foreground mt-1 truncate">
+              <h3 className="text-sm sm:text-base font-bold text-foreground mt-1 truncate">
                 {title.trim() ? title : "Untitled Exam"}
               </h3>
             </div>
 
-            <CardContent className="p-5 space-y-5">
+            <CardContent className="p-4 sm:p-5 space-y-4 sm:space-y-5">
               {/* Clean Specs List (No cut-offs on any resolution!) */}
               <div className="divide-y divide-border/50 text-sm">
                 <div className="flex items-center justify-between py-2.5 first:pt-0">
