@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import Link from "next/link"
 import { toast } from "sonner"
 import {
@@ -11,26 +11,33 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { LatexText } from "@/components/shared/latex-text"
 import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-} from "@/components/ui/empty"
-import {
   ArrowUp,
   ArrowDown,
   Trash2,
-  HelpCircle,
-  Plus,
+  FolderPlus,
+  FilePlus2,
   Award,
   Loader2,
+  CheckCircle2,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react"
 
-type ListedQuestion = {
+export type ListedQuestion = {
   id: string
-  questionTextSnapshot: string
+  order?: number
   marks: number
+  negativeMarks?: number
+  questionTextSnapshot: string
+  optionASnapshot?: string
+  optionBSnapshot?: string
+  optionCSnapshot?: string
+  optionDSnapshot?: string
+  correctOptionSnapshot?: string
+  explanationSnapshot?: string | null
 }
 
 export function ExamQuestionList({
@@ -43,6 +50,11 @@ export function ExamQuestionList({
   editable: boolean
 }) {
   const [isPending, startTransition] = useTransition()
+  const [expandedExplanations, setExpandedExplanations] = useState<Record<string, boolean>>({})
+
+  function toggleExplanation(id: string) {
+    setExpandedExplanations((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   function move(index: number, direction: -1 | 1) {
     const target = index + direction
@@ -70,103 +82,224 @@ export function ExamQuestionList({
 
   if (questions.length === 0) {
     return (
-      <Empty className="rounded-2xl border border-dashed border-border/80 bg-card/50 p-8 sm:p-12 text-center">
-        <EmptyHeader>
-          <EmptyMedia variant="icon" className="size-12 rounded-2xl bg-primary/10 text-primary mb-3">
-            <HelpCircle className="size-6 text-primary" />
-          </EmptyMedia>
-          <EmptyTitle className="text-lg font-bold text-foreground">
-            No Questions Added Yet
-          </EmptyTitle>
-          <EmptyDescription className="text-xs sm:text-sm text-muted-foreground max-w-sm">
-            This exam is currently empty. Browse and select questions from your personal question bank to build this assessment.
-          </EmptyDescription>
-        </EmptyHeader>
+      <div className="rounded-3xl border border-dashed border-border/80 bg-gradient-to-b from-card via-muted/10 to-card p-8 sm:p-12 text-center space-y-8 shadow-xs">
+        <div className="max-w-md mx-auto space-y-2">
+          <div className="size-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center shadow-xs">
+            <HelpCircle className="size-7" />
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+            Build Your Assessment Questions
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            This examination currently has no questions. Choose one of the quick start methods below to populate this test.
+          </p>
+        </div>
+
         {editable && (
-          <div className="mt-4">
-            <Button asChild className="gap-2 shadow-sm font-semibold rounded-xl text-xs sm:text-sm h-10 px-5">
-              <Link href={`/teacher/exams/${examId}/add-questions`}>
-                <Plus className="size-4" />
-                <span>Add Questions from Bank</span>
-              </Link>
-            </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto text-left">
+            {/* Option 1: Add from Bank */}
+            <div className="group relative rounded-2xl border border-border/80 bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <FolderPlus className="size-5" />
+                </div>
+                <h4 className="font-bold text-foreground text-base">
+                  Import from Question Bank
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Select and snapshot multiple-choice questions you have already verified and stored in your question bank.
+                </p>
+              </div>
+
+              <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-10 text-xs">
+                <Link href={`/teacher/exams/${examId}/add-questions`}>
+                  <span>Browse Question Bank</span>
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
+            </div>
+
+            {/* Option 2: Create Brand New */}
+            <div className="group relative rounded-2xl border border-border/80 bg-card p-5 hover:border-emerald-500/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
+              <div className="space-y-2">
+                <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <FilePlus2 className="size-5" />
+                </div>
+                <h4 className="font-bold text-foreground text-base">
+                  Create New Question
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Draft a brand new question with 4 multiple choice options, LaTeX math formulas, and answer explanations.
+                </p>
+              </div>
+
+              <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-10 text-xs">
+                <Link href="/teacher/questions/new">
+                  <span>Create New Question</span>
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         )}
-      </Empty>
+      </div>
     )
   }
 
   return (
-    <div className="space-y-3">
-      {questions.map((q, index) => (
-        <div
-          key={q.id}
-          className="group relative flex items-start gap-3.5 rounded-2xl border border-border/70 bg-card p-4 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
-        >
-          {/* Order Badge */}
-          <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-bold text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            {index + 1}
-          </div>
+    <div className="space-y-4">
+      {questions.map((q, index) => {
+        const hasOptions =
+          q.optionASnapshot &&
+          q.optionBSnapshot &&
+          q.optionCSnapshot &&
+          q.optionDSnapshot
+        const hasExplanation = Boolean(q.explanationSnapshot)
+        const isExplanationOpen = expandedExplanations[q.id]
 
-          {/* Question Text & Marks */}
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="text-sm font-medium text-foreground leading-relaxed">
+        const options = hasOptions
+          ? [
+              { key: "A", text: q.optionASnapshot! },
+              { key: "B", text: q.optionBSnapshot! },
+              { key: "C", text: q.optionCSnapshot! },
+              { key: "D", text: q.optionDSnapshot! },
+            ]
+          : []
+
+        return (
+          <div
+            key={q.id}
+            className="group relative rounded-2xl border border-border/70 bg-card p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-sm space-y-4"
+          >
+            {/* Top Row: Question Number, Marks & Actions */}
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center size-8 rounded-xl bg-primary/10 text-primary font-bold text-xs">
+                  Q{index + 1}
+                </div>
+                <Badge variant="outline" className="text-xs font-semibold gap-1 px-2.5 py-1 rounded-lg border-border/70 text-foreground">
+                  <Award className="size-3 text-primary" />
+                  <span>{q.marks} {q.marks === 1 ? "Mark" : "Marks"}</span>
+                  {typeof q.negativeMarks === "number" && q.negativeMarks > 0 && (
+                    <span className="text-destructive font-normal ml-1">
+                      (-{q.negativeMarks} neg.)
+                    </span>
+                  )}
+                </Badge>
+              </div>
+
+              {/* Action Buttons */}
+              {editable && (
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                    disabled={isPending || index === 0}
+                    onClick={() => move(index, -1)}
+                    title="Move Question Up"
+                    aria-label="Move question up"
+                  >
+                    <ArrowUp className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                    disabled={isPending || index === questions.length - 1}
+                    onClick={() => move(index, 1)}
+                    title="Move Question Down"
+                    aria-label="Move question down"
+                  >
+                    <ArrowDown className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    disabled={isPending}
+                    onClick={() => remove(q.id)}
+                    title="Remove Question from Exam"
+                    aria-label="Remove question"
+                  >
+                    {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Question Text */}
+            <div className="text-sm sm:text-base font-semibold text-foreground leading-relaxed pl-1">
               <LatexText text={q.questionTextSnapshot} />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-[11px] gap-1 px-2 py-0.5 rounded-md font-medium text-muted-foreground border-border/80">
-                <Award className="size-3 text-primary" />
-                <span>
-                  {q.marks} mark{q.marks === 1 ? "" : "s"}
-                </span>
-              </Badge>
-            </div>
-          </div>
+            {/* Options Grid (if snapshots are available) */}
+            {hasOptions && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
+                {options.map((opt) => {
+                  const isCorrect = q.correctOptionSnapshot === opt.key
 
-          {/* Action buttons (Reorder & Remove) */}
-          {editable && (
-            <div className="flex items-center gap-1 shrink-0 pt-0.5">
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
-                disabled={isPending || index === 0}
-                onClick={() => move(index, -1)}
-                title="Move up"
-                aria-label="Move up"
-              >
-                <ArrowUp className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
-                disabled={isPending || index === questions.length - 1}
-                onClick={() => move(index, 1)}
-                title="Move down"
-                aria-label="Move down"
-              >
-                <ArrowDown className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                disabled={isPending}
-                onClick={() => remove(q.id)}
-                title="Remove question"
-                aria-label="Remove"
-              >
-                {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
-              </Button>
-            </div>
-          )}
-        </div>
-      ))}
+                  return (
+                    <div
+                      key={opt.key}
+                      className={`flex items-start gap-2.5 p-3 rounded-xl border transition-all text-xs sm:text-sm ${
+                        isCorrect
+                          ? "bg-emerald-500/10 border-emerald-500/40 text-foreground font-medium"
+                          : "bg-muted/30 border-border/60 text-muted-foreground"
+                      }`}
+                    >
+                      <div
+                        className={`size-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                          isCorrect
+                            ? "bg-emerald-500 text-white"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {opt.key}
+                      </div>
+
+                      <div className="flex-1 min-w-0 pt-0.5">
+                        <LatexText text={opt.text} />
+                      </div>
+
+                      {isCorrect && (
+                        <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0 self-center">
+                          <CheckCircle2 className="size-3.5" />
+                          <span>Correct</span>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Explanation Toggle */}
+            {hasExplanation && (
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => toggleExplanation(q.id)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Sparkles className="size-3 text-primary" />
+                  <span>{isExplanationOpen ? "Hide Explanation" : "View Explanation"}</span>
+                  {isExplanationOpen ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+                </button>
+
+                {isExplanationOpen && (
+                  <div className="mt-2 p-3.5 rounded-xl bg-muted/40 border border-border/50 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <LatexText text={q.explanationSnapshot!} />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
