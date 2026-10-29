@@ -100,6 +100,7 @@ model User {
   adminAuditLogsActed  AdminAuditLog[]      @relation("AdminAuditActor")
   adminAuditLogsTarget AdminAuditLog[]      @relation("AdminAuditTarget")
   systemSettingsUpdates SystemSettings[]    @relation("SystemSettingsUpdatedBy")
+  titleTemplates        ExamTitleTemplate[] @relation("TeacherTitleTemplates")
 
   @@index([role, isActive])
   @@index([teacherVerificationStatus])
@@ -378,6 +379,25 @@ model ExamQuestion {
 
   @@unique([examId, questionId])
   @@index([examId, order])
+}
+
+model ExamTitleTemplate {
+  id        String   @id @default(uuid())
+  title     String
+  category  String   @default("General")
+  subject   String?
+  examType  String?
+  year      String?
+  isSystem  Boolean  @default(false)
+
+  teacherId String?
+  teacher   User?    @relation("TeacherTitleTemplates", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teacherId, createdAt])
+  @@index([category])
 }
 
 enum ReportStatus {
