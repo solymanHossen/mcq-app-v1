@@ -111,23 +111,25 @@ export function RefundForm({
           {/* Form Fields */}
           <div className="space-y-4">
             <Field className="space-y-1.5">
-              <FieldLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Refund Amount in Cents{" "}
-                <span className="font-normal text-[11px] normal-case text-muted-foreground/75">
-                  (Optional)
+              <div className="flex items-center justify-between">
+                <FieldLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Refund Amount (Cents)
+                </FieldLabel>
+                <span className="text-[11px] text-muted-foreground/70 font-medium">
+                  Leave blank for full refund
                 </span>
-              </FieldLabel>
+              </div>
               <Input
                 name="amountCents"
                 type="number"
                 min={1}
-                placeholder="Leave blank for full amount"
-                className="h-11 rounded-xl border-border/80 bg-background/80 px-3.5 text-sm shadow-2xs placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-rose-500/30 focus-visible:border-rose-500 transition-all"
+                placeholder={
+                  formattedAmount
+                    ? `Full refund: ${formattedAmount}`
+                    : "Leave blank for full refund"
+                }
+                className="h-11 rounded-xl border-border/80 bg-background/80 px-3.5 text-sm shadow-2xs placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-rose-500/30 focus-visible:border-rose-500 transition-all"
               />
-              <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 pt-0.5">
-                <span className="inline-block size-1.5 rounded-full bg-rose-500/60 shrink-0" />
-                Leave blank to refund the full transaction amount automatically.
-              </p>
             </Field>
 
             <Field className="space-y-1.5">
