@@ -228,9 +228,10 @@ export function DateTimePicker({
         </PopoverTrigger>
 
         <PopoverContent
-          className="w-[330px] sm:w-[370px] p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden"
+          className="w-[calc(100vw-2rem)] sm:w-[370px] max-w-[370px] p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden"
           align="start"
         >
+
           {/* Top Quick Date Presets Bar (No 'QUICK:' text, 4 clean pills) */}
           <div className="p-2.5 sm:p-3 border-b border-border/50 bg-muted/20 grid grid-cols-4 gap-1.5 sm:gap-2">
             <Button

@@ -288,70 +288,73 @@ export function TitleTemplateModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-2xl p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden gap-0">
+      <DialogContent className="max-w-[calc(100vw-1.5rem)] sm:max-w-2xl max-h-[90dvh] flex flex-col p-0 rounded-2xl shadow-2xl border border-border/80 bg-popover overflow-hidden gap-0">
         <DialogDescription className="sr-only">
           Select or generate standardized exam titles
         </DialogDescription>
 
-        {/* Minimal Header: ONLY the relevant icon and clean bold title */}
-        <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-border/50 bg-muted/10 flex items-center gap-3">
-          <div className="size-10 sm:size-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-2xs">
-            <Sparkles className="size-5 sm:size-5.5" />
-          </div>
-          <DialogTitle className="text-lg sm:text-xl font-bold text-foreground tracking-tight">
+        {/* Minimal Header: Title only, icon removed as requested */}
+        <div className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10 flex items-center justify-between shrink-0">
+          <DialogTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight">
             Exam Title Presets
           </DialogTitle>
         </div>
 
-        {/* Segmented Control Navigation with larger text */}
-        <div className="px-5 sm:px-6 pt-3 pb-2.5 border-b border-border/50 bg-background/50">
-          <div className="flex items-center p-1 bg-muted/60 rounded-xl gap-1">
+        {/* Segmented Control Navigation: 100% responsive 3-column grid */}
+        <div className="px-3.5 sm:px-6 pt-3 pb-2.5 border-b border-border/50 bg-background/50 shrink-0">
+          <div className="grid grid-cols-3 p-1 bg-muted/60 rounded-xl gap-1 w-full">
             <button
               type="button"
               onClick={() => setActiveTab("generator")}
               className={cn(
-                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
+                "py-2 px-1 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-2 truncate",
                 activeTab === "generator"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <SlidersHorizontal className="size-4" />
-              <span>Smart Generator</span>
+              <SlidersHorizontal className="size-3.5 sm:size-4 shrink-0" />
+              <span className="truncate">
+                <span className="hidden sm:inline">Smart </span>Generator
+              </span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("my-saved")}
               className={cn(
-                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
+                "py-2 px-1 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-2 truncate",
                 activeTab === "my-saved"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Bookmark className="size-4" />
-              <span>My Saved ({mySavedTemplates.length})</span>
+              <Bookmark className="size-3.5 sm:size-4 shrink-0" />
+              <span className="truncate">
+                <span className="hidden sm:inline">My </span>Saved ({mySavedTemplates.length})
+              </span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("all-presets")}
               className={cn(
-                "flex-1 py-2 px-3 rounded-lg text-sm sm:text-base font-semibold transition-all cursor-pointer flex items-center justify-center gap-2",
+                "py-2 px-1 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-2 truncate",
                 activeTab === "all-presets"
                   ? "bg-background text-primary shadow-xs font-bold"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Library className="size-4" />
-              <span>All Presets ({dbTemplates.length})</span>
+              <Library className="size-3.5 sm:size-4 shrink-0" />
+              <span className="truncate">
+                <span className="hidden sm:inline">All </span>Presets ({dbTemplates.length})
+              </span>
             </button>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-6 space-y-5 max-h-[72vh] overflow-y-auto">
+        <div className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto">
           {/* TAB 1: SMART GENERATOR */}
           {activeTab === "generator" && (
             <div className="space-y-4 sm:space-y-5">

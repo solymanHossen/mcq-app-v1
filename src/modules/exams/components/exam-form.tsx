@@ -247,19 +247,19 @@ export function ExamForm({
           {/* Card 2: Timing & Scoring */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
             <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-2">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
-                  <Clock className="size-4 text-primary" />
-                  Timing & Limits
+                  <Clock className="size-4 text-primary shrink-0" />
+                  <span>Timing & Limits</span>
                 </CardTitle>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
                   {DURATION_PRESETS.map((mins) => (
                     <button
                       key={mins}
                       type="button"
                       onClick={() => setDurationMinutes(mins)}
                       className={cn(
-                        "text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border",
+                        "text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
                         durationMinutes === mins
                           ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
                           : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
@@ -371,10 +371,10 @@ export function ExamForm({
           {/* Card 3: Schedule */}
           <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
             <CardHeader className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
                 <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
-                  <Calendar className="size-4 text-purple-500" />
-                  Schedule Window
+                  <Calendar className="size-4 text-purple-500 shrink-0" />
+                  <span>Schedule Window</span>
                 </CardTitle>
                 <span className="text-xs text-muted-foreground font-medium">
                   Leave empty for anytime access
@@ -616,13 +616,13 @@ export function ExamForm({
               )}
 
               {/* Action Buttons: Primary on left, Discard Exam on the right */}
-              <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   type="submit"
                   size="lg"
                   disabled={!isFormValid || isPending}
                   className={cn(
-                    "flex-1 h-11 sm:h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
+                    "w-full sm:flex-1 h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
                     isFormValid && !isPending
                       ? "cursor-pointer hover:shadow-md active:scale-[0.99] text-primary-foreground"
                       : "opacity-45 cursor-not-allowed pointer-events-auto"
@@ -645,10 +645,10 @@ export function ExamForm({
                   asChild
                   variant="destructive"
                   size="lg"
-                  className="h-11 sm:h-12 px-4 rounded-xl text-xs sm:text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs shrink-0 whitespace-nowrap"
+                  className="w-full sm:w-auto h-12 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs shrink-0 whitespace-nowrap"
                 >
-                  <Link href={cancelHref} className="flex items-center justify-center gap-1.5 whitespace-nowrap">
-                    <Trash2 className="size-3.5 sm:size-4 shrink-0" />
+                  <Link href={cancelHref} className="flex items-center justify-center gap-2 whitespace-nowrap">
+                    <Trash2 className="size-4 shrink-0" />
                     <span>Discard Exam</span>
                   </Link>
                 </Button>

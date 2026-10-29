@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge"
 
 export default function NewExamPage() {
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 pb-24 lg:pb-12">
+
       {/* Clean Top Header */}
       <div className="flex items-center justify-between pb-1">
         <div className="flex items-center gap-3">
