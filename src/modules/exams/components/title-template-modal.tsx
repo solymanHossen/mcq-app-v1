@@ -359,11 +359,11 @@ export function TitleTemplateModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 {/* 1. Subject */}
                 <div className="space-y-2 sm:col-span-2">
-                  <label className="text-sm font-semibold text-foreground flex items-center justify-between">
+                  <label className="text-sm sm:text-base font-semibold text-foreground flex items-center justify-between">
                     <span>Subject / Discipline</span>
                   </label>
                   <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-12 sm:h-12.5 rounded-xl text-base font-semibold border-border/80 bg-background/80 hover:bg-background px-4 py-3 cursor-pointer shadow-2xs">
                       <SelectValue placeholder="Select Subject" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl shadow-xl max-h-64">
@@ -380,11 +380,11 @@ export function TitleTemplateModal({
 
                 {/* 2. Assessment Type */}
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                  <label className="text-sm sm:text-base font-semibold text-foreground">
                     Assessment Type
                   </label>
                   <Select value={selectedExamType} onValueChange={setSelectedExamType}>
-                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-12 sm:h-12.5 rounded-xl text-base font-semibold border-border/80 bg-background/80 hover:bg-background px-4 py-3 cursor-pointer shadow-2xs">
                       <SelectValue placeholder="Select Exam Type" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl shadow-xl max-h-64">
@@ -401,11 +401,11 @@ export function TitleTemplateModal({
 
                 {/* 3. Session / Year */}
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                  <label className="text-sm sm:text-base font-semibold text-foreground">
                     Term / Session
                   </label>
                   <Select value={selectedYear} onValueChange={setSelectedYear}>
-                    <SelectTrigger className="w-full h-11 sm:h-12 rounded-xl text-sm sm:text-base font-medium border-border/80 bg-background cursor-pointer">
+                    <SelectTrigger className="w-full h-12 sm:h-12.5 rounded-xl text-base font-semibold border-border/80 bg-background/80 hover:bg-background px-4 py-3 cursor-pointer shadow-2xs">
                       <SelectValue placeholder="Select Term / Year" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl shadow-xl max-h-64">
@@ -422,8 +422,8 @@ export function TitleTemplateModal({
               </div>
 
               {/* Quick Tag Modifiers */}
-              <div className="space-y-2 pt-0.5">
-                <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
+              <div className="space-y-2 pt-1">
+                <span className="text-sm font-semibold text-muted-foreground">
                   Quick Modifiers (Optional)
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -435,7 +435,7 @@ export function TitleTemplateModal({
                         type="button"
                         onClick={() => toggleTag(tag)}
                         className={cn(
-                          "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition-all cursor-pointer active:scale-95",
+                          "px-3.5 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer active:scale-95",
                           isSelected
                             ? "border-primary bg-primary text-primary-foreground shadow-2xs font-semibold"
                             : "border-border/70 bg-card hover:bg-muted text-foreground"
