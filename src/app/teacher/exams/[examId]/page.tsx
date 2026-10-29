@@ -106,13 +106,6 @@ export default async function ExamDetailPage({
               >
                 {exam.status}
               </Badge>
-
-              {exam.allowGuestAccess && (
-                <Badge variant="outline" className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-primary/10 text-primary border-primary/20">
-                  <Globe className="size-3 mr-1" />
-                  Direct Link Active
-                </Badge>
-              )}
             </div>
 
             {exam.description && (
@@ -124,6 +117,15 @@ export default async function ExamDetailPage({
 
           {/* Unified Action Button Bar: Big, Consistent, Polished Buttons */}
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            {/* Direct Link Active Status Badge (Contextually paired with Share Exam) */}
+            {isPublished && exam.allowGuestAccess && (
+              <div className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs h-10 select-none">
+                <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <Globe className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span>Direct Link Active</span>
+              </div>
+            )}
+
             {/* Share Exam Button */}
             {isPublished && (
               <ShareExamModal
@@ -201,15 +203,32 @@ export default async function ExamDetailPage({
 
         {/* Card 3: Student Access & PIN */}
         <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-4">
-          <div className="size-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+          <div
+            className={`size-12 rounded-2xl flex items-center justify-center shrink-0 ${
+              exam.allowGuestAccess
+                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+            }`}
+          >
             <Globe className="size-6" />
           </div>
-          <div className="space-y-0.5 min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Student Access
-            </p>
+          <div className="space-y-0.5 min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-1.5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Student Access
+              </p>
+              {exam.allowGuestAccess && isPublished && (
+                <Badge
+                  variant="outline"
+                  className="text-[10px] h-4.5 px-1.5 font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 flex items-center gap-1 shrink-0"
+                >
+                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Active
+                </Badge>
+              )}
+            </div>
             <p className="text-lg font-extrabold text-foreground tracking-tight truncate">
-              {exam.allowGuestAccess ? "Direct Link (No Reg.)" : "Registered Only"}
+              {exam.allowGuestAccess ? "Direct Link Access" : "Registered Only"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {exam.accessCode ? `PIN: ${exam.accessCode}` : "Open without passcode"}
