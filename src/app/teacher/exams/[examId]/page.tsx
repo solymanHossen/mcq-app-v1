@@ -2,15 +2,18 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { requireUser, assertOwner } from "@/lib/authorization"
 import { getExamWithQuestions, getExamTotalMarks } from "@/modules/exams/queries"
+import { listActiveUnusedQuestions } from "@/modules/question-bank/queries"
 import { updateExamAction } from "@/modules/exams/actions"
 import { ExamForm } from "@/modules/exams/components/exam-form"
 import { ExamStatusActions } from "@/modules/exams/components/exam-status-actions"
 import { ExamQuestionList } from "@/modules/exams/components/exam-question-list"
+import { StudentPreviewModal } from "@/modules/exams/components/student-preview-modal"
+import { AddQuestionsModal } from "@/modules/exams/components/add-questions-modal"
+import { ShareExamModal } from "@/modules/exams/components/share-exam-modal"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ShareExamModal } from "@/modules/exams/components/share-exam-modal"
 import {
   ArrowLeft,
   HelpCircle,
@@ -29,6 +32,7 @@ import {
   Users,
   CheckCircle2,
   Layers,
+  FilePlus2,
 } from "lucide-react"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -46,7 +50,16 @@ export default async function ExamDetailPage({
   const { examId } = await params
   const sp = (await searchParams) ?? {}
   const user = await requireUser()
-  const exam = await getExamWithQuestions(examId)
+
+  const [exam, unusedQuestionsData] = await Promise.all([
+    getExamWithQuestions(examId),
+    listActiveUnusedQuestions({
+      teacherId: user.id,
+      examId,
+      page: 1,
+    }),
+  ])
+
   if (!exam) notFound()
   assertOwner(user, exam.teacherId)
 
@@ -56,8 +69,8 @@ export default async function ExamDetailPage({
   const defaultTab = sp.tab || "questions"
 
   return (
-    <div className="w-full space-y-8 pb-24 lg:pb-16 max-w-7xl mx-auto">
-      {/* ─── 1. TOP BREADCRUMB & HERO COMMAND HEADER ─── */}
+    <div className="w-full space-y-8 pb-24 lg:pb-16">
+      {/* ─── 1. TOP BREADCRUMB & HERO COMMAND BAR ─── */}
       <div className="space-y-4">
         {/* Back Link */}
         <div>
@@ -109,8 +122,9 @@ export default async function ExamDetailPage({
             )}
           </div>
 
-          {/* Action Button Bar */}
+          {/* Unified Action Button Bar: Big, Consistent, Polished Buttons */}
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            {/* Share Exam Button */}
             {isPublished && (
               <ShareExamModal
                 exam={exam}
@@ -123,15 +137,15 @@ export default async function ExamDetailPage({
               />
             )}
 
-            <Button variant="outline" asChild className="gap-1.5 rounded-xl text-xs sm:text-sm h-10 px-4 shadow-2xs">
-              <Link href={`/teacher/exams/${examId}/preview`}>
-                <Eye className="size-4 text-muted-foreground" />
-                <span>Student Preview</span>
-              </Link>
-            </Button>
+            {/* Student Preview Modal Button (Opens directly in Modal) */}
+            <StudentPreviewModal
+              exam={exam}
+              totalMarks={totalMarks}
+            />
 
+            {/* Results Button */}
             {!isDraft && (
-              <Button variant="outline" asChild className="gap-1.5 rounded-xl text-xs sm:text-sm h-10 px-4 shadow-2xs">
+              <Button variant="outline" asChild className="gap-1.5 rounded-xl text-xs sm:text-sm h-10 px-4 shadow-2xs font-semibold">
                 <Link href={`/teacher/exams/${examId}/results`}>
                   <BarChart3 className="size-4 text-primary" />
                   <span>Results & Roster</span>
@@ -139,6 +153,7 @@ export default async function ExamDetailPage({
               </Button>
             )}
 
+            {/* Big Publish & Delete Draft Buttons with Confirmation AlertDialogs */}
             <ExamStatusActions examId={exam.id} status={exam.status} />
           </div>
         </div>
@@ -221,33 +236,41 @@ export default async function ExamDetailPage({
         </div>
       </div>
 
-      {/* ─── 3. MODERN SPACIOUS TABS ─── */}
-      <Tabs defaultValue={defaultTab} className="space-y-6">
-        <TabsList className="h-14 p-1.5 bg-muted/60 rounded-2xl border border-border/60 max-w-xl">
-          <TabsTrigger
-            value="questions"
-            className="flex-1 rounded-xl text-xs sm:text-sm font-bold gap-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-11"
-          >
-            <HelpCircle className="size-4 text-primary" />
-            <span>Questions ({exam.examQuestions.length})</span>
-          </TabsTrigger>
+      {/* ─── 3. LARGE MODERN SEGMENTED PILL DOCK TABS (Profile Page Style) ─── */}
+      <Tabs defaultValue={defaultTab} className="w-full space-y-8">
+        <div className="w-full overflow-x-auto pb-1 scrollbar-none">
+          <TabsList className="flex w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 h-auto">
+            {/* Tab 1: Questions */}
+            <TabsTrigger
+              value="questions"
+              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+            >
+              <HelpCircle className="size-4.5" />
+              <span>Questions</span>
+              <span className="ml-1 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-extrabold bg-background/20 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground text-foreground">
+                {exam.examQuestions.length}
+              </span>
+            </TabsTrigger>
 
-          <TabsTrigger
-            value="settings"
-            className="flex-1 rounded-xl text-xs sm:text-sm font-bold gap-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-11"
-          >
-            <Settings className="size-4" />
-            <span>Settings & Rules</span>
-          </TabsTrigger>
+            {/* Tab 2: Settings */}
+            <TabsTrigger
+              value="settings"
+              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+            >
+              <Settings className="size-4.5" />
+              <span>Settings & Rules</span>
+            </TabsTrigger>
 
-          <TabsTrigger
-            value="share"
-            className="flex-1 rounded-xl text-xs sm:text-sm font-bold gap-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-11"
-          >
-            <Share2 className="size-4" />
-            <span>Share Link</span>
-          </TabsTrigger>
-        </TabsList>
+            {/* Tab 3: Share Link */}
+            <TabsTrigger
+              value="share"
+              className="group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm sm:text-base font-bold transition-all duration-200 select-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-background/80 data-[state=inactive]:hover:text-foreground"
+            >
+              <Share2 className="size-4.5" />
+              <span>Share & Link Hub</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* ─── TAB 1: QUESTIONS MANAGEMENT ─── */}
         <TabsContent value="questions" className="space-y-6 outline-none">
@@ -266,18 +289,24 @@ export default async function ExamDetailPage({
             </div>
 
             {isDraft && (
-              <div className="flex items-center gap-2">
-                <Button asChild size="sm" className="gap-2 rounded-xl font-semibold text-xs sm:text-sm h-10 px-4 shadow-xs">
-                  <Link href={`/teacher/exams/${examId}/add-questions`}>
-                    <Plus className="size-4" />
-                    <span>Add from Question Bank</span>
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Instant Modal Trigger: Add Questions from Bank */}
+                <AddQuestionsModal
+                  examId={examId}
+                  availableQuestions={unusedQuestionsData.items}
+                />
+
+                <Button asChild variant="outline" size="sm" className="gap-2 rounded-xl font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs">
+                  <Link href="/teacher/questions/new">
+                    <FilePlus2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <span>Create New Question</span>
                   </Link>
                 </Button>
               </div>
             )}
           </div>
 
-          {/* Full Rich Question List with LaTeX and Option Snapshots */}
+          {/* Question List (with instant modal trigger if empty) */}
           <ExamQuestionList
             examId={examId}
             editable={isDraft}
