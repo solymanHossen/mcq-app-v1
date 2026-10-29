@@ -18,6 +18,10 @@ import {
   Check,
   Trash2,
   Plus,
+  Globe,
+  Lock,
+  Users,
+  RefreshCw,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -46,6 +50,9 @@ export type ExamFormValues = {
   shuffleOptions?: boolean
   webcamMonitoringRequired?: boolean
   violationReviewThreshold?: number
+  isPublic?: boolean
+  allowGuestAccess?: boolean
+  accessCode?: string | null
 }
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120] as const
@@ -107,6 +114,16 @@ export function ExamForm({
     useState<boolean>(initialValues?.webcamMonitoringRequired ?? false)
   const [violationThreshold, setViolationThreshold] = useState<number>(
     initialValues?.violationReviewThreshold ?? 5
+  )
+
+  const [isPublic, setIsPublic] = useState<boolean>(
+    initialValues?.isPublic ?? true
+  )
+  const [allowGuestAccess, setAllowGuestAccess] = useState<boolean>(
+    initialValues?.allowGuestAccess ?? true
+  )
+  const [accessCode, setAccessCode] = useState<string>(
+    initialValues?.accessCode ?? ""
   )
 
   // Real-time Field Validation Rules
@@ -540,6 +557,103 @@ export function ExamForm({
               </div>
             </CardContent>
           </Card>
+
+          {/* Card 5: Link Access & Student Participation */}
+          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
+            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                  <Globe className="size-4 text-primary" />
+                  Link Sharing & Student Access
+                </CardTitle>
+                <Badge variant={allowGuestAccess ? "default" : "secondary"} className="text-xs font-semibold">
+                  {allowGuestAccess ? "Open Link Enabled" : "Registered Only"}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 space-y-4">
+              {/* Participation Mode */}
+              <div className="space-y-3">
+                <label
+                  htmlFor="allowGuestAccessSwitch"
+                  className="flex items-start justify-between gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                      <Users className="size-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        Direct Link Participation (No Registration Required)
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Students can start instantly via link by entering their <strong>Name & Email</strong>. Registered students can also participate with their logged-in account.
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="allowGuestAccessSwitch"
+                    checked={allowGuestAccess}
+                    onCheckedChange={setAllowGuestAccess}
+                  />
+                  <input
+                    type="checkbox"
+                    name="allowGuestAccess"
+                    checked={allowGuestAccess}
+                    readOnly
+                    className="sr-only"
+                  />
+                </label>
+              </div>
+
+              {/* Optional Passcode / Security PIN */}
+              <div className="rounded-xl border border-border/60 bg-card p-3.5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="accessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+                    <Lock className="size-3.5 text-muted-foreground" />
+                    <span>Access Passcode / PIN (Optional)</span>
+                  </Label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
+                      setAccessCode(randomCode)
+                    }}
+                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className="size-3" />
+                    <span>Generate PIN</span>
+                  </button>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="accessCode"
+                    name="accessCode"
+                    placeholder="e.g. 2026EXAM or leave empty for open access"
+                    value={accessCode}
+                    onChange={(e) => setAccessCode(e.target.value)}
+                    className="h-10 text-sm font-mono rounded-xl pr-14"
+                    maxLength={50}
+                  />
+                  {accessCode && (
+                    <button
+                      type="button"
+                      onClick={() => setAccessCode("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer px-1 py-0.5"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  If set, students must enter this passcode along with their Name & Email before starting the test.
+                </p>
+              </div>
+
+              {/* Hidden isPublic field */}
+              <input type="checkbox" name="isPublic" checked={isPublic} readOnly className="sr-only" />
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
@@ -582,10 +696,16 @@ export function ExamForm({
                     {passingMarks ? passingMarks : "None"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2.5 last:pb-0">
+                <div className="flex items-center justify-between py-2.5">
                   <span className="text-muted-foreground font-medium">Proctoring</span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400">
                     {activeProctoringCount} of 3 active
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-2.5 last:pb-0">
+                  <span className="text-muted-foreground font-medium">Student Access</span>
+                  <span className="font-bold text-primary text-xs">
+                    {allowGuestAccess ? "Direct Link (No Reg.)" : "Registered Only"}
                   </span>
                 </div>
               </div>

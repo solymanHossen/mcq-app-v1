@@ -101,7 +101,14 @@ export default async function ExamResultsPage({
             {results.map((r) => (
               <TableRow key={r.id}>
                 <TableCell>
-                  <div>{r.student.name}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{r.student.name}</span>
+                    {r.student.isGuest && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-500/10">
+                        Guest
+                      </Badge>
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground">
                     {r.student.email}
                   </div>

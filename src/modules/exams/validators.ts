@@ -46,6 +46,15 @@ export const examSchema = z
       .int()
       .min(1, "Must be at least 1")
       .max(1000),
+    isPublic: z.boolean().default(true),
+    allowGuestAccess: z.boolean().default(true),
+    accessCode: z
+      .string()
+      .trim()
+      .max(50)
+      .optional()
+      .or(z.literal(""))
+      .transform((v) => (v ? v : undefined)),
   })
   .refine(
     (data) =>

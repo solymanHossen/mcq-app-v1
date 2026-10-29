@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
+import { ShareExamModal } from "@/modules/exams/components/share-exam-modal"
+import { Globe, Share2 } from "lucide-react"
+
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
@@ -37,7 +40,7 @@ export default async function ExamDetailPage({
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold">{exam.title}</h1>
           <div className="mt-1 flex items-center gap-2">
@@ -49,7 +52,10 @@ export default async function ExamDetailPage({
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {exam.status === "PUBLISHED" && (
+            <ShareExamModal exam={exam} />
+          )}
           <Button variant="outline" size="sm" asChild>
             <Link href={`/teacher/exams/${examId}/preview`}>Preview</Link>
           </Button>
@@ -63,10 +69,34 @@ export default async function ExamDetailPage({
       </div>
 
       {!isDraft && (
-        <p className="text-sm text-muted-foreground">
-          This exam is {exam.status.toLowerCase()} and is now read-only — its
-          details and question list can&apos;t change anymore.
-        </p>
+        <div className="p-3.5 rounded-xl border border-border/70 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Globe className="size-3.5 text-primary" />
+              <span>
+                {exam.allowGuestAccess
+                  ? "Direct Link Access: Active (No Student Registration Needed)"
+                  : "Private Access: Registered Students Only"}
+              </span>
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              {exam.accessCode
+                ? `Passcode protected (PIN: ${exam.accessCode}). Students can take this exam via the shared link.`
+                : "Students can take this exam anytime via the shared link."}
+            </p>
+          </div>
+          {exam.status === "PUBLISHED" && (
+            <ShareExamModal
+              exam={exam}
+              trigger={
+                <Button size="sm" className="h-8 rounded-lg font-bold text-xs gap-1.5 shrink-0">
+                  <Share2 className="size-3.5" />
+                  <span>Share Exam</span>
+                </Button>
+              }
+            />
+          )}
+        </div>
       )}
 
       {isDraft ? (
@@ -85,6 +115,9 @@ export default async function ExamDetailPage({
             shuffleOptions: exam.shuffleOptions,
             webcamMonitoringRequired: exam.webcamMonitoringRequired,
             violationReviewThreshold: exam.violationReviewThreshold,
+            isPublic: exam.isPublic,
+            allowGuestAccess: exam.allowGuestAccess,
+            accessCode: exam.accessCode,
           }}
         />
       ) : (

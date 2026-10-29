@@ -18,19 +18,29 @@ import { recordViolationEvent } from "@/modules/proctoring/record"
 import { recordDailyActivity } from "@/modules/learning/streak"
 import { awardXP, XP_PER_STREAK_DAY } from "@/modules/learning/xp"
 import { evaluateBadgesAfterStreakUpdate } from "@/modules/learning/badges"
+import { cookies } from "next/headers"
+import { encode } from "next-auth/jwt"
+import { hashPassword } from "@/modules/auth/password"
 
 // ─── Start (idempotent: resumes an existing in-progress attempt) ──
 export type StartAttemptResult = { attemptId: string } | { error: string }
 
 export async function startAttemptAction(
   examId: string,
-  opts: { webcamConsent?: boolean } = {}
+  opts: { webcamConsent?: boolean; accessCode?: string } = {}
 ): Promise<StartAttemptResult> {
   const user = await assertRole("STUDENT")
 
   const exam = await prisma.exam.findUnique({ where: { id: examId } })
   if (!exam) return { error: "Exam not found" }
   if (exam.status !== "PUBLISHED") return { error: "This exam isn't available" }
+
+  if (
+    exam.accessCode &&
+    opts.accessCode?.trim().toLowerCase() !== exam.accessCode.trim().toLowerCase()
+  ) {
+    return { error: "Invalid exam passcode" }
+  }
 
   if (exam.webcamMonitoringRequired && opts.webcamConsent !== true) {
     return {
@@ -114,6 +124,194 @@ export async function startAttemptAction(
         e.code === "P2002"
       ) {
         continue // lost the race — recount and retry
+      }
+      throw e
+    }
+  }
+
+  return { error: "Could not start the attempt — please try again" }
+}
+
+export type GuestExamInput = {
+  examId: string
+  name: string
+  email: string
+  accessCode?: string
+  webcamConsent?: boolean
+}
+
+export async function startGuestExamAction(
+  input: GuestExamInput
+): Promise<StartAttemptResult> {
+  const { examId, name, email, accessCode, webcamConsent } = input
+
+  if (!name || name.trim().length < 2) {
+    return { error: "Please provide your full name (at least 2 characters)" }
+  }
+
+  const cleanEmail = email?.trim().toLowerCase()
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+    return { error: "Please provide a valid email address" }
+  }
+
+  const exam = await prisma.exam.findUnique({ where: { id: examId } })
+  if (!exam) return { error: "Exam not found" }
+  if (exam.status !== "PUBLISHED") {
+    return { error: "This exam is not currently available" }
+  }
+
+  if (!exam.allowGuestAccess) {
+    return {
+      error:
+        "This exam is restricted to registered students. Please log in to take it.",
+    }
+  }
+
+  if (
+    exam.accessCode &&
+    accessCode?.trim().toLowerCase() !== exam.accessCode.trim().toLowerCase()
+  ) {
+    return { error: "Invalid exam passcode" }
+  }
+
+  if (exam.webcamMonitoringRequired && webcamConsent !== true) {
+    return {
+      error:
+        "This exam requires webcam monitoring — you must give consent before starting.",
+    }
+  }
+
+  const now = new Date()
+  if (exam.startTime && now < exam.startTime) {
+    return { error: "This exam hasn't opened yet" }
+  }
+  if (exam.endTime && now > exam.endTime) {
+    return { error: "This exam has closed" }
+  }
+
+  // Find or create student account
+  let user = await prisma.user.findUnique({ where: { email: cleanEmail } })
+  if (user) {
+    if (!user.isActive) {
+      return { error: "This student account is suspended" }
+    }
+  } else {
+    const dummyHash = await hashPassword(crypto.randomUUID())
+    user = await prisma.user.create({
+      data: {
+        name: name.trim(),
+        email: cleanEmail,
+        passwordHash: dummyHash,
+        role: "STUDENT",
+        isActive: true,
+        isGuest: true,
+        isEmailVerified: true,
+      },
+    })
+  }
+
+  // Issue NextAuth session cookie so student is automatically authenticated
+  const secret =
+    process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "default-secret-key"
+  const token = await encode({
+    token: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      tokenVersion: user.tokenVersion,
+    },
+    secret,
+    maxAge: 7 * 24 * 60 * 60,
+  })
+
+  const cookieStore = await cookies()
+  const isSecure =
+    process.env.NODE_ENV === "production" &&
+    process.env.NEXTAUTH_URL?.startsWith("https://")
+  const cookieOptions = {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    path: "/",
+    secure: !!isSecure,
+    maxAge: 7 * 24 * 60 * 60,
+  }
+
+  cookieStore.set(
+    isSecure ? "__Secure-next-auth.session-token" : "next-auth.session-token",
+    token,
+    cookieOptions
+  )
+  if (isSecure) {
+    cookieStore.set("next-auth.session-token", token, cookieOptions)
+  }
+
+  // Resume active in-progress attempt if exists
+  const existing = await findActiveOrLatestAttempt(user.id, examId)
+  if (existing) {
+    const current = await finalizeIfExpired(existing)
+    if (current.status === "IN_PROGRESS") {
+      return { attemptId: current.id }
+    }
+  }
+
+  const questions = await prisma.examQuestion.findMany({
+    where: { examId },
+    orderBy: { order: "asc" },
+    select: { id: true },
+  })
+  if (questions.length === 0) return { error: "This exam has no questions" }
+
+  const deadline = new Date(
+    Math.min(
+      now.getTime() + exam.durationMinutes * 60_000,
+      exam.endTime?.getTime() ?? Infinity
+    )
+  )
+
+  for (let i = 0; i < 5; i++) {
+    const count = await countAttempts(user.id, examId)
+    if (count >= exam.maxAttempts) {
+      return { error: "You've used all your attempts for this exam" }
+    }
+
+    try {
+      const attempt = await prisma.$transaction(async (tx) => {
+        const created = await tx.examAttempt.create({
+          data: {
+            examId,
+            studentId: user!.id,
+            attemptNumber: count + 1,
+            startedAt: now,
+            deadline,
+            webcamConsentGivenAt: webcamConsent ? now : null,
+          },
+        })
+
+        const order = exam.shuffleQuestions
+          ? shuffledQuestionOrder(questions.length, created.id)
+          : questions.map((_, idx) => idx)
+
+        await tx.attemptAnswer.createMany({
+          data: questions.map((q, idx) => ({
+            attemptId: created.id,
+            examQuestionId: q.id,
+            presentationOrder: order[idx],
+            clientUpdatedAt: now,
+          })),
+        })
+
+        return created
+      })
+
+      return { attemptId: attempt.id }
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2002"
+      ) {
+        continue
       }
       throw e
     }

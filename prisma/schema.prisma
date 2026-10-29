@@ -35,6 +35,7 @@ model User {
   passwordHash    String
   role            Role      @default(STUDENT)
   isActive        Boolean   @default(true)
+  isGuest         Boolean   @default(false)
   isEmailVerified Boolean   @default(false)
   lastLoginAt     DateTime?
 
@@ -295,6 +296,11 @@ model Exam {
   shuffleQuestions Boolean    @default(true)
   shuffleOptions   Boolean    @default(false)
   passingMarks     Float?
+
+  // Access and participation rules
+  isPublic         Boolean    @default(true)
+  allowGuestAccess Boolean    @default(true)
+  accessCode       String?
 
   // Scheduling window. "Is this exam currently open" is derived from
   // (status == PUBLISHED && now within [startTime, endTime]) rather than
