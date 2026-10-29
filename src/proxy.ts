@@ -23,6 +23,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // If an unauthenticated visitor navigates to an exam page /exams/[examId] (without /attempt),
+  // redirect them to the open public assessment entry page /exam/[examId]
+  if (!token && /^\/exams\/[0-9a-fA-F-]+(?:\/)?$/.test(pathname)) {
+    const examId = pathname.split('/')[2];
+    return NextResponse.redirect(new URL(`/exam/${examId}`, request.url));
+  }
+
   if (!isPublicRoute(pathname) && !token) {
     const signInUrl = new URL(authConfig.pages.signIn, request.url);
     signInUrl.searchParams.set('callbackUrl', `${pathname}${request.nextUrl.search}`);

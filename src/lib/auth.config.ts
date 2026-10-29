@@ -44,11 +44,17 @@ export function isPublicRoute(pathname: string) {
 }
 
 // Routes accessible to both guests and authenticated users
-export const openRoutes = ["/", "/teachers"] as const
+export const openRoutes = ["/", "/teachers", "/exam"] as const
 
 export function isOpenRoute(pathname: string) {
+  // Normalize consecutive slashes and trailing slashes (e.g. /exam/id// -> /exam/id)
+  const clean = pathname.replace(/\/+/g, "/").replace(/\/+$/, "") || "/"
   return openRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) =>
+      pathname === route ||
+      clean === route ||
+      pathname.startsWith(`${route}/`) ||
+      clean.startsWith(`${route}/`)
   )
 }
 
