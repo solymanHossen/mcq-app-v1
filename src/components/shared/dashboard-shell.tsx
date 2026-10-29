@@ -40,7 +40,7 @@ export async function DashboardShell({
   badgeLabel: string
   mobileLabel?: string
   navItems: readonly SidebarNavItem[]
-  user: { name: string; email: string; role?: Role; id?: string }
+  user: { name: string; email: string; role?: Role; id?: string; isGuest?: boolean }
   quickAction?: unknown
   breadcrumb?: string
   children: React.ReactNode
@@ -98,6 +98,7 @@ export async function DashboardShell({
                 name: user.name,
                 email: user.email,
                 role: resolvedRole as Role,
+                isGuest: user.isGuest,
               }}
               showDashboardButton={false}
             />

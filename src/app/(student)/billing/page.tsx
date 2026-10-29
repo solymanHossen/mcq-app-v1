@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation"
 import { Sparkles } from "lucide-react"
 import { requireUser } from "@/lib/authorization"
 import { getCurrentSubscription } from "@/modules/payments/entitlements"
@@ -29,6 +30,7 @@ function formatPrice(cents: number, currency: string) {
 
 export default async function BillingPage() {
   const user = await requireUser()
+  if (user.isGuest) redirect("/exams")
 
   const [subscription, history, plans, { billingEnabled }] = await Promise.all([
     getCurrentSubscription(user.id),

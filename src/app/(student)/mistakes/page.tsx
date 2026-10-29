@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { requireRole } from "@/lib/authorization"
 import { getMistakeNotebook, getBookmarks } from "@/modules/learning/queries"
 import { MistakeReviewCard } from "@/modules/learning/components/mistake-review-card"
@@ -18,6 +19,7 @@ export const instant = false
 
 export default async function MistakeNotebookPage() {
   const user = await requireRole("STUDENT")
+  if (user.isGuest) redirect("/exams")
 
   const [mistakes, bookmarks] = await Promise.all([
     getMistakeNotebook(user.id),
