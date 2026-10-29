@@ -125,7 +125,7 @@ export function AddQuestionsModal({
         </DialogTrigger>
       )}
 
-      <DialogContent className="max-w-4xl max-h-[88vh] flex flex-col rounded-3xl p-6 sm:p-8">
+      <DialogContent className="w-[96vw] sm:w-[92vw] sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-[1240px] max-h-[88vh] flex flex-col rounded-3xl p-6 sm:p-8 shadow-2xl border-border/80">
         <DialogHeader className="space-y-1.5 text-left border-b border-border/50 pb-4 shrink-0">
           <div className="flex items-center gap-2">
             <div className="size-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
