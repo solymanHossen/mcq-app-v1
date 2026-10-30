@@ -460,32 +460,45 @@ export default async function ExamDetailPage({
 
         {/* ─── TAB 3: SHARE & STUDENT ACCESS LINK ─── */}
         <TabsContent value="share" className="space-y-6 outline-none">
-          <Card className="rounded-2xl border-border/70 shadow-2xs overflow-hidden">
-            <CardHeader className="border-b border-border/60 bg-muted/20 p-5 sm:p-6 space-y-1.5">
-              <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
-                <Globe className="size-4" />
-                <span>Candidate Assessment Hub</span>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            {/* Master Header Bar */}
+            <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                  <Globe className="size-4.5 sm:size-5.5" />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                    Share Assessment with Students
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                    Direct candidate link sharing, entry credentials, and test distribution
+                  </p>
+                </div>
               </div>
-              <CardTitle className="text-xl sm:text-2xl font-extrabold tracking-tight">
-                Share Assessment with Students
-              </CardTitle>
-              <CardDescription className="text-xs sm:text-sm max-w-2xl leading-relaxed">
-                Send this direct link to your students via WhatsApp, Messenger, Telegram, or email. Students can start the test instantly with only their Name and Email address — no prior registration required.
-              </CardDescription>
-            </CardHeader>
+              <Badge variant="outline" className="text-xs font-semibold px-2.5 py-0.5 sm:py-1 border-border/70 shrink-0 self-start sm:self-auto">
+                Candidate Access
+              </Badge>
+            </div>
 
-            <CardContent className="p-5 sm:p-6 space-y-5">
-              <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-primary/25 bg-primary/[0.03] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
+            {/* Card Content Body */}
+            <div className="p-4 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-3xl">
+                Send this direct link to your students via WhatsApp, Messenger, Telegram, or email. Students can start the test instantly with only their Name and Email address — no prior registration required.
+              </p>
+
+              {/* Status and Action Banner */}
+              <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold px-2.5 py-0.5">
-                      <CheckCircle2 className="size-3 mr-1" />
-                      Direct Link Active
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold px-2.5 py-0.5 rounded-full gap-1">
+                      <CheckCircle2 className="size-3" />
+                      <span>Direct Link Active</span>
                     </Badge>
                     {exam.accessCode && (
-                      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 font-mono px-2.5 py-0.5">
-                        <Lock className="size-3 mr-1" />
-                        PIN: {exam.accessCode}
+                      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 font-mono font-bold px-2.5 py-0.5 rounded-full gap-1">
+                        <Lock className="size-3" />
+                        <span>PIN: {exam.accessCode}</span>
                       </Badge>
                     )}
                   </div>
@@ -497,7 +510,7 @@ export default async function ExamDetailPage({
                 <ShareExamModal
                   exam={exam}
                   trigger={
-                    <Button className="gap-2 shadow-xs font-semibold rounded-xl text-xs sm:text-sm h-10 px-4 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer">
+                    <Button className="gap-2 shadow-xs font-semibold rounded-xl text-xs sm:text-sm h-10 sm:h-10.5 px-4 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer">
                       <Share2 className="size-4" />
                       <span>Open Share Hub</span>
                     </Button>
@@ -507,37 +520,43 @@ export default async function ExamDetailPage({
 
               {/* Student Experience Info Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 pt-1">
-                <div className="p-4 rounded-xl border border-border/70 bg-card shadow-2xs space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-foreground">
-                    <Users className="size-4 text-primary" />
-                    <span>1. Direct Join</span>
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-primary/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/20">
+                      <Users className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">1. Direct Join</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Student clicks the shared link on their phone or computer.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl border border-border/70 bg-card shadow-2xs space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-foreground">
-                    <Award className="size-4 text-emerald-500" />
-                    <span>2. Name & Email</span>
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-emerald-500/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20">
+                      <Award className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">2. Name &amp; Email</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Enters their full name, email, and optional PIN to start immediately.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl border border-border/70 bg-card shadow-2xs space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-foreground">
-                    <BarChart3 className="size-4 text-blue-500" />
-                    <span>3. Instant Grading</span>
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-blue-500/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 ring-1 ring-blue-500/20">
+                      <BarChart3 className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">3. Instant Grading</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Upon submission, results flow straight into your teacher dashboard.
                   </p>
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
       </Tabs>
