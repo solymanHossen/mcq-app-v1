@@ -24,6 +24,7 @@ import {
   Eye,
   KeyRound,
   ShieldAlert,
+  Plus,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -50,6 +51,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
 import type { ExamFormState } from "@/modules/exams/actions"
 import { cn } from "@/lib/utils"
 
@@ -114,10 +116,16 @@ export function ExamForm({
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [titleTouched, setTitleTouched] = useState(false)
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
 
   // Advanced Configuration Modals State
   const [isProctoringModalOpen, setIsProctoringModalOpen] = useState(false)
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
+
+  function handleSelectPresetTitle(presetTitle: string) {
+    setTitle(presetTitle)
+    setTitleTouched(true)
+  }
 
   const [durationMinutes, setDurationMinutes] = useState<number>(
     initialValues?.durationMinutes ?? 60
@@ -252,20 +260,39 @@ export function ExamForm({
                     </span>
                   </div>
 
-                  <Input
-                    id="title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    onBlur={() => setTitleTouched(true)}
-                    placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
-                    maxLength={200}
-                    className={cn(
-                      "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all",
-                      titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
-                    )}
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      id="title"
+                      name="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => setTitleTouched(true)}
+                      placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
+                      maxLength={200}
+                      className={cn(
+                        "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all pr-12",
+                        titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
+                      )}
+                      required
+                    />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsTemplateModalOpen(true)}
+                          className="absolute right-1.5 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                          aria-label="Open Title Presets & Generator"
+                        >
+                          <Plus className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        <p className="text-xs font-medium">Title Presets & Generator</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
 
                   {titleTouched && !isTitleValid && (
                     <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
@@ -1250,6 +1277,13 @@ export function ExamForm({
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Title Presets & Dropdown Generator Modal */}
+        <TitleTemplateModal
+          open={isTemplateModalOpen}
+          onOpenChange={setIsTemplateModalOpen}
+          onSelectTitle={handleSelectPresetTitle}
+        />
       </form>
     </TooltipProvider>
   )
