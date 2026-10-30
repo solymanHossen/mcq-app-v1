@@ -3,7 +3,10 @@
 import { useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { setQuestionStatusAction, deleteQuestionAction } from "@/modules/question-bank/actions"
+import {
+  setQuestionStatusAction,
+  deleteQuestionAction,
+} from "@/modules/question-bank/actions"
 
 export function QuestionStatusActions({
   questionId,
@@ -30,9 +33,17 @@ export function QuestionStatusActions({
   }
 
   return (
-    <div className="flex gap-2">
+    <div
+      aria-busy={isPending}
+      className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-2.5 lg:shrink-0"
+    >
       {status === "DRAFT" && (
-        <Button size="sm" disabled={isPending} onClick={() => run("ACTIVE")}>
+        <Button
+          size="sm"
+          disabled={isPending}
+          onClick={() => run("ACTIVE")}
+          className="h-10 rounded-xl px-4 text-sm font-semibold shadow-xs"
+        >
           Publish to bank
         </Button>
       )}
@@ -42,12 +53,18 @@ export function QuestionStatusActions({
           variant="outline"
           disabled={isPending}
           onClick={() => run("ARCHIVED")}
+          className="h-10 rounded-xl px-4 text-sm font-semibold shadow-2xs"
         >
           Archive
         </Button>
       )}
       {status === "ARCHIVED" && (
-        <Button size="sm" disabled={isPending} onClick={() => run("ACTIVE")}>
+        <Button
+          size="sm"
+          disabled={isPending}
+          onClick={() => run("ACTIVE")}
+          className="h-10 rounded-xl px-4 text-sm font-semibold shadow-xs"
+        >
           Restore
         </Button>
       )}
@@ -56,6 +73,7 @@ export function QuestionStatusActions({
         variant="destructive"
         disabled={isPending}
         onClick={remove}
+        className="h-10 rounded-xl px-4 text-sm font-semibold shadow-2xs"
       >
         Delete
       </Button>

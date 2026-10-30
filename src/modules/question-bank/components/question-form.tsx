@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   FileCode2,
   AlertTriangle,
-  ArrowRight,
 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import type { QuestionFormState } from "@/modules/question-bank/actions"
+import { cn } from "@/lib/utils"
 
 export type QuestionFormValues = {
   subject?: string
@@ -46,6 +46,7 @@ export function QuestionForm({
   action,
   initialValues,
   submitLabel,
+  className,
 }: {
   action: (
     state: QuestionFormState,
@@ -53,6 +54,7 @@ export function QuestionForm({
   ) => Promise<QuestionFormState>
   initialValues?: QuestionFormValues
   submitLabel: string
+  className?: string
 }) {
   const [state, formAction, isPending] = useActionState(action, undefined)
   const [confirmedDuplicate, setConfirmedDuplicate] = useState(false)
@@ -70,7 +72,11 @@ export function QuestionForm({
     state && "duplicateWarning" in state && !confirmedDuplicate
 
   return (
-    <form ref={formRef} action={formAction} className="w-full space-y-6 sm:space-y-8">
+    <form
+      ref={formRef}
+      action={formAction}
+      className={cn("w-full space-y-6 sm:space-y-8", className)}
+    >
       <input type="hidden" name="confirmDuplicate" value="false" />
 
       {/* ── CARD 1: QUESTION CLASSIFICATION & CORE ── */}
