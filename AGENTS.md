@@ -1,293 +1,397 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Master UI/UX Design System & Responsive Implementation Rules
 
-## This is NOT the Next.js you know
+## 1. Master Design Reference
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+The route `/teacher/exams/new` is the single source of truth for the application's UI/UX design system.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-# MASTER UI/UX REPLICATION & DESIGN SYSTEM ENFORCEMENT INSTRUCTION
+Whenever I request a UI/UX implementation for another page, section, component, or route, you MUST inspect `/teacher/exams/new` and use its existing design as the reference.
 
-## 1. Primary Objective
+The objective is to make every requested page look and feel like it belongs to the same application.
 
-Treat `/teacher/exams/new` as the **Single Source of Truth (Master Design Reference)** for all UI/UX implementation tasks in this project.
+You MUST replicate the reference page's relevant design conventions, including:
 
-Whenever I specify a target page, section, component, or route, inspect the master reference page and reproduce its existing design language, visual hierarchy, component styling, interaction patterns, and user experience on the requested target.
+- Typography, font family, font sizes, font weights, and line heights.
+- Colors, backgrounds, borders, and visual hierarchy.
+- Spacing, padding, margins, and gaps.
+- Container widths, alignment, and layout structure.
+- Card styles, border radii, shadows, and separators.
+- Buttons, inputs, selects, dropdowns, and other form controls.
+- Icons, labels, helper text, and validation messages.
+- Hover, focus, active, selected, disabled, loading, and error states.
+- Responsive behavior across desktop, tablet, and mobile.
+- Interaction patterns, accessibility, and UX flow.
 
-**Your responsibility is to replicate the existing design system, not invent a new one.**
+**Reference first. Analyze second. Implement third. Verify last.**
 
-The master reference defines how the application should look and feel. Every target page must follow the same established design conventions unless I explicitly authorize a deviation.
+Never independently redesign a requested page when an appropriate design pattern already exists in the reference.
 
-## 2. Mandatory Reference Page Analysis
+---
 
-Before modifying any target page, inspect `/teacher/exams/new` and analyze the following elements:
+## 2. Responsive Design Is Mandatory
 
-### A. Typography System
-- Font family and font weights.
-- Page title, section title, subsection title, body text, labels, helper text, and placeholder sizes.
-- Line height, letter spacing, text alignment, and text hierarchy.
-- Font colors and muted text colors.
-- Text wrapping and responsive typography behavior.
+Every requested UI/UX implementation MUST be responsive.
 
-### B. Spacing System
-- Page padding and horizontal margins.
-- Section spacing and vertical rhythm.
-- Gaps between form fields and components.
-- Padding inside cards, containers, dialogs, and dropdowns.
-- Alignment between labels, inputs, buttons, and surrounding elements.
-- Consistent spacing across different screen sizes.
+Responsive behavior is part of the design system, not an optional enhancement.
 
-### C. Color System
-- Primary, secondary, background, surface, border, and text colors.
-- Muted backgrounds and subtle visual separators.
-- Input, button, card, and interactive-state colors.
-- Success, warning, error, disabled, hover, focus, and selected states.
+Inspect how `/teacher/exams/new` adapts to different viewport sizes and reproduce its responsive design principles on the requested target page.
 
-Use the actual colors and design tokens from the reference implementation. Do not introduce a new palette.
+Do not implement a desktop-only interface and consider the task complete.
 
-### D. Layout and Visual Hierarchy
-- Page structure and content width.
-- Header and page-title placement.
-- Section arrangement and grouping.
-- Grid, flexbox, and responsive layout patterns.
-- Card dimensions, border radius, shadows, and borders.
-- Alignment, density, whitespace, and content hierarchy.
-- Desktop, tablet, and mobile behavior.
+### 2.1 Desktop
 
-### E. Component Design
-Inspect the exact appearance and behavior of existing components, including:
-- Buttons and button variants.
-- Text inputs and textareas.
-- Selects, searchable dropdowns, and comboboxes.
-- Checkboxes, radio buttons, and switches.
-- Form labels and validation messages.
-- Cards, panels, tabs, and accordions.
-- Tooltips, popovers, dialogs, and confirmation modals.
-- Icons, loading indicators, empty states, and error states.
-- Primary and secondary actions.
-
-Reuse existing shared components and project design tokens whenever possible.
-
-### F. Interaction and UX Flow
-Analyze:
-- Form interaction patterns.
-- Focus, hover, active, selected, and disabled states.
-- Field validation and error presentation.
-- Loading and submission feedback.
-- Button placement and action hierarchy.
-- Navigation and back-button behavior.
-- Confirmation and cancellation flows.
-- Keyboard accessibility and responsive usability.
-
-Replicate these patterns on the target page wherever the corresponding interaction exists.
-
-## 3. Target Page Implementation Rules
-
-When I provide a target route or section, follow this exact workflow:
-
-**Step 1 — Inspect**
-
-Read the target page's existing implementation, related components, styles, routes, data models, and relevant application logic.
-
-**Step 2 — Compare**
-
-Compare the target page with `/teacher/exams/new`.
-
-Identify visual inconsistencies in typography, font sizes, colors, spacing, layout, component styling, responsive behavior, and interaction patterns.
-
-**Step 3 — Map**
-
-Map each relevant target component to its closest equivalent on the reference page.
-
-For example:
-- Target page title → Reference page title.
-- Target form label → Reference form label.
-- Target input → Reference input.
-- Target primary action → Reference primary button.
-- Target content container → Reference content container.
-- Target section spacing → Reference section spacing.
-
-Use the closest existing equivalent rather than creating a new visual style.
-
-**Step 4 — Implement**
-
-Modify only the requested target page and the supporting components or styles strictly necessary to achieve the required consistency.
-
-Preserve the target page's existing functionality and business logic.
-
-**Step 5 — Verify**
-
-Inspect the implemented page and verify its visual and functional consistency with the reference.
-
-Correct any unintended differences before considering the task complete.
-
-## 4. STRICT NO-ADDITION POLICY
-
-This is a critical requirement.
-
-**Do not add anything that I have not requested or that is not already required by the target page's existing functionality.**
-
-Specifically, do not independently introduce:
-
-- New sections or content blocks.
-- Additional cards, dashboards, panels, or summary widgets.
-- New buttons, actions, or navigation elements.
-- New form fields or input options.
-- New filters, tabs, toolbars, or menus.
-- Additional descriptions, subtitles, helper text, or explanatory copy.
-- Decorative illustrations, gradients, animations, or visual effects.
-- New icons or badges purely for decoration.
-- New features or business rules.
-- New steps in an existing user workflow.
-- New design patterns simply because they look modern.
-
-Do not remove existing required functionality or content merely to simplify the design.
-
-The goal is to improve consistency, not to expand or redesign the product.
-
-If the reference contains a component that has no equivalent purpose on the target page, do not add that component to the target.
-
-If the target requires a component that does not exist on the reference page, implement it using the closest existing design conventions. Add only the minimum UI necessary for the target's existing functionality.
-
-**Visual consistency does not mean copying irrelevant content or duplicating the entire page structure.**
-
-## 5. Preserve Existing Architecture and Functionality
-
-Follow the project's current architecture and conventions.
-
-- Reuse existing shared components.
-- Reuse existing design tokens and CSS variables.
-- Follow the existing framework and component patterns.
-- Preserve API integrations, server actions, state management, and data flow.
-- Preserve validation rules and submission behavior.
-- Preserve existing permissions and authentication logic.
-- Preserve route structure and navigation behavior.
-- Do not replace working functionality with mock data.
-- Do not introduce unnecessary dependencies.
-- Do not duplicate components or styles when an appropriate reusable implementation already exists.
-- Avoid unrelated refactoring or changes to other pages.
-- Do not modify the master reference page unless I explicitly authorize it.
-
-If shared components or global design tokens need modification, first determine whether those changes could unintentionally affect other pages. Make the smallest safe change necessary.
-
-## 6. Design System Fidelity
-
-The following principle is mandatory:
-
-**Reference first → Analyze → Map → Implement → Compare → Refine.**
-
-Never start by inventing a new layout.
-
-Do not substitute your own design preferences for the actual reference design.
-
-Do not assume that a generic modern dashboard, a default shadcn/ui component, or a common SaaS layout is equivalent to this project's design system.
-
-If the reference uses customized components, reproduce those customizations.
-
-If the project already has reusable design tokens or components, use them instead of hardcoding new values.
-
-If an exact value is unavailable, inspect the rendered reference and the relevant styles to determine the closest accurate equivalent. Do not guess when the implementation can be inspected.
-
-## 7. Responsive Design Requirements
-
-The target page must preserve the reference page's responsive design philosophy.
+On desktop, preserve the reference design's intended layout, proportions, spacing, and visual hierarchy.
 
 Verify:
-- Desktop layout and spacing.
-- Tablet layout and component alignment.
-- Mobile layout and readability.
-- Input and button sizing.
-- Content overflow and wrapping.
-- Responsive grid or column behavior.
-- Touch-friendly interaction areas.
-- Dialog and dropdown positioning.
 
-Do not introduce a separate mobile design language. Adapt the same design system to the target viewport.
+- Appropriate content width and horizontal alignment.
+- Consistent page padding and section spacing.
+- Correct grid and column proportions.
+- Proper alignment of form labels, fields, and actions.
+- Consistent button sizes and placement.
+- No unnecessary empty space or excessive content density.
+- No unintended overflow or horizontal scrolling.
 
-Do not redesign unrelated layouts or responsive behavior outside the requested scope.
+Do not introduce additional columns, panels, cards, or widgets that do not belong to the requested page.
 
-## 8. Accessibility and Functional Quality
+### 2.2 Tablet
 
-Maintain the existing accessibility standards and improve obvious issues only when necessary for the requested implementation.
+On tablet-sized screens, adapt the existing layout without introducing a new visual style.
+
+Verify:
+
+- Grid columns adapt appropriately to available space.
+- Form fields remain readable and usable.
+- Buttons and actions remain accessible.
+- Cards and containers fit within the viewport.
+- Navigation and surrounding layout do not overlap the content.
+- Spacing remains consistent with the reference design.
+- No text clipping, element collision, or horizontal overflow occurs.
+
+Stack or resize components only when necessary to maintain usability and preserve the reference design's layout philosophy.
+
+### 2.3 Mobile
+
+On mobile devices, ensure that the requested page remains fully usable.
+
+Verify:
+
+- Content fits within the viewport.
+- No unintended horizontal scrolling occurs.
+- Text remains readable without unnecessary zooming.
+- Inputs, selects, and other controls remain usable.
+- Buttons have sufficient touch-friendly interaction areas.
+- Form fields stack appropriately when required.
+- Labels and helper text wrap naturally.
+- Long titles and button labels do not break the layout.
+- Dialogs, dropdowns, and popovers fit within the available screen.
+- Primary and secondary actions remain accessible.
+- Existing navigation and page structure work correctly on small screens.
+- Fixed or sticky elements do not obscure important content.
+- Keyboard appearance does not make critical form actions inaccessible.
+
+Do not hide required content or functionality simply to make the page fit a smaller screen.
+
+Do not introduce a separate mobile design system. Adapt the same visual language to the smaller viewport.
+
+### 2.4 Responsive Breakpoints
+
+Inspect the project's existing responsive breakpoints, CSS conventions, and utility classes before implementing changes.
+
+- Reuse the existing breakpoint system.
+- Reuse existing responsive utilities and layout patterns.
+- Follow the project's established styling conventions.
+- Do not introduce arbitrary breakpoints when existing ones are sufficient.
+- Avoid unnecessary device-specific overrides.
+- Avoid excessive media queries and duplicated CSS.
+- Prevent conflicting styles between breakpoints.
+
+If the project uses Tailwind CSS, follow the existing Tailwind configuration and responsive utility conventions.
+
+If the project uses another styling approach, follow its existing architecture.
+
+Never introduce a new styling framework solely for a responsive implementation.
+
+### 2.5 Responsive Component Behavior
+
+Inspect and reproduce the responsive behavior of relevant components, including:
+
+- Page containers and section layouts.
+- Forms and field groups.
+- Buttons and action groups.
+- Cards and content panels.
+- Navigation and page headers.
+- Tables and data lists, where applicable.
+- Tabs, dropdowns, dialogs, and popovers.
+- Pagination and filters, where applicable.
+
+Only implement components that are relevant to the target page's existing functionality.
+
+Do not add components simply because they appear on the reference page.
+
+### 2.6 Responsive Verification
+
+When browser or screenshot tools are available, inspect the actual rendered page at representative viewport widths:
+
+- Mobile: 375px and 430px.
+- Tablet: 768px.
+- Desktop: 1024px and 1440px.
+
+These are verification viewport sizes, not mandatory CSS breakpoints.
+
+Check for:
+
+- Horizontal overflow.
+- Clipped or overlapping content.
+- Incorrect spacing or alignment.
+- Unreadable or excessively small text.
+- Broken grids and form layouts.
+- Inaccessible buttons or controls.
+- Dialogs extending beyond the viewport.
+- Inconsistent typography or component sizing.
+- Differences from the reference page's responsive behavior.
+
+If automated visual comparison is available, compare the reference and target at equivalent viewport sizes.
+
+If a specific viewport cannot be tested, report that limitation honestly instead of claiming successful verification.
+
+---
+
+## 3. Typography and Sizing Consistency
+
+Inspect the reference implementation before changing typography.
+
+Match the existing:
+
+- Font family.
+- Font weights.
+- Page title and section heading sizes.
+- Body text and secondary text sizes.
+- Input text and placeholder sizes.
+- Label and helper text sizes.
+- Line heights and letter spacing.
+- Text colors and hierarchy.
+- Responsive typography behavior.
+
+Do not arbitrarily increase font sizes, introduce new font families, or change heading hierarchy.
+
+Use existing design tokens, CSS variables, shared typography classes, or reusable components whenever possible.
+
+If the reference uses different typography levels for desktop and mobile, reproduce that behavior where appropriate.
+
+---
+
+## 4. Spacing, Colors, and Layout
+
+Match the reference page's:
+
+- Page padding and margins.
+- Content width and alignment.
+- Vertical and horizontal spacing.
+- Form field gaps.
+- Section separation.
+- Card padding.
+- Border thickness and color.
+- Border radius.
+- Shadow intensity.
+- Background and surface colors.
+- Button dimensions.
+- Layout density and whitespace.
+
+Do not introduce a new color palette, arbitrary spacing values, decorative gradients, or unrelated visual effects.
+
+Prefer existing design tokens and component styles over hardcoded values.
+
+When exact values are available in the codebase, use them instead of estimating.
+
+---
+
+## 5. Strict No-Unrequested-Additions Policy
+
+This rule is mandatory.
+
+**Do not invent, add, remove, or expand UI content beyond the explicitly requested scope.**
+
+Never independently introduce:
+
+- New sections.
+- Additional cards or dashboard widgets.
+- Unrequested form fields.
+- New buttons or actions.
+- Additional tabs, filters, or toolbars.
+- New navigation elements.
+- Unrequested helper text or descriptions.
+- Decorative icons or badges.
+- Illustrations, animations, or visual effects.
+- New features or business rules.
+- New steps in the user workflow.
+
+Do not remove existing required content or functionality.
+
+If the target page requires an element that does not exist on the reference page, implement only the minimum necessary element using the closest established design conventions.
+
+Do not copy irrelevant reference-page content into the target.
+
+**The goal is design consistency, not feature expansion or content duplication.**
+
+---
+
+## 6. Preserve Existing Functionality
+
+UI/UX changes must not break the existing application.
+
+Preserve:
+
+- Business logic.
+- API integrations.
+- Server actions and data flow.
+- State management.
+- Form validation and submission.
+- Authentication and authorization.
+- Permissions and role restrictions.
+- Existing routes and navigation.
+- Loading, success, and error handling.
+- Existing accessibility behavior.
+
+Do not replace working functionality with mock data.
+
+Do not introduce unnecessary dependencies.
+
+Do not refactor unrelated modules or modify unrelated pages.
+
+Do not modify `/teacher/exams/new` unless explicitly authorized.
+
+---
+
+## 7. Mandatory Implementation Workflow
+
+Whenever a target route is provided, follow this workflow.
+
+### Step 1: Inspect the Reference
+
+Inspect `/teacher/exams/new` in the codebase.
+
+Identify its actual typography, layout, spacing, colors, components, interaction patterns, and responsive implementation.
+
+Inspect the rendered interface when browser tools are available.
+
+Do not rely exclusively on assumptions or generic design conventions.
+
+### Step 2: Inspect the Target
+
+Inspect the requested target route and its related components, styles, state, validation, and business logic.
+
+Understand the existing functionality before changing its appearance.
+
+### Step 3: Compare and Map
+
+Map each relevant target element to the closest existing pattern in the reference.
+
+Examples:
+
+- Target page title → Reference page title.
+- Target section heading → Reference section heading.
+- Target form field → Reference form field.
+- Target primary button → Reference primary button.
+- Target content container → Reference content container.
+- Target field spacing → Reference field spacing.
+- Target mobile layout → Reference mobile layout principles.
+
+Identify differences before making changes.
+
+### Step 4: Implement
+
+Apply the reference design system to the requested target.
+
+Reuse existing components and tokens whenever possible.
+
+Modify only the requested page and supporting files strictly necessary for the implementation.
+
+Maintain existing behavior and avoid unrelated changes.
+
+### Step 5: Verify
+
+Check the implemented page against the reference.
+
+Verify typography, sizing, spacing, colors, layout, component states, responsive behavior, and existing functionality.
+
+Correct unintended inconsistencies before finishing.
+
+### Step 6: Report
+
+Provide a concise summary containing:
+
+1. The target route modified.
+2. The files changed.
+3. The design and responsive improvements implemented.
+4. The functional checks completed.
+5. Any verification that could not be performed.
+
+Do not claim that visual or responsive testing passed unless it was actually performed.
+
+---
+
+## 8. Technical Quality and Accessibility
+
+Follow the existing project architecture and conventions.
 
 Ensure:
-- Proper labels and input associations.
+
+- Semantic and maintainable components.
+- Accessible labels and form controls.
 - Keyboard navigation and visible focus states.
 - Readable text contrast.
-- Accessible interactive controls.
 - Appropriate validation feedback.
-- No broken buttons or dead interactions.
-- No unintended horizontal overflow.
-- No console errors introduced by your changes.
+- Correct responsive layout behavior.
+- No unintended overflow.
+- No broken interactive elements.
+- No new console errors or build errors introduced by the changes.
 
-Do not add unnecessary accessibility-related content or new UI sections. Make accessibility improvements through correct implementation of existing components and interactions.
+Prefer small, targeted changes over unnecessary rewrites.
 
-## 9. Verification Checklist
+If shared components or global design tokens must change, assess the impact on other pages before modifying them.
 
-Before finishing, verify all of the following:
+---
 
-### Design
-- [ ] Typography follows the master reference.
-- [ ] Font sizes and font weights are consistent.
-- [ ] Colors match the existing design system.
-- [ ] Spacing and alignment are consistent.
-- [ ] Cards, borders, radius, and shadows match.
-- [ ] Buttons and form controls use the correct variants.
-- [ ] Icons and interactive states follow existing conventions.
-- [ ] Responsive behavior is consistent with the reference.
+## 9. Definition of Done
 
-### Scope
-- [ ] Only the requested page and necessary supporting files were changed.
-- [ ] No unrequested sections were introduced.
-- [ ] No unrequested content was written.
-- [ ] No new features were invented.
-- [ ] No existing required functionality was removed.
-- [ ] The master reference remains unchanged.
+A requested UI/UX task is complete only when:
 
-### Functionality
-- [ ] Existing form behavior still works.
-- [ ] Validation and submission behavior remain intact.
-- [ ] Navigation and permissions remain intact.
-- [ ] No unrelated functionality was broken.
-- [ ] No new console or build errors were introduced.
+- The reference page has been inspected.
+- The target page has been inspected.
+- The relevant design patterns have been reproduced.
+- Typography and sizing are consistent.
+- Colors, spacing, and layout are consistent.
+- Responsive behavior has been implemented.
+- Mobile usability has been considered.
+- Existing functionality has been preserved.
+- No unsolicited content or features have been introduced.
+- Relevant visual and functional checks have been completed.
+- Unverified behavior or limitations have been reported honestly.
 
-### Final Comparison
-- [ ] The target looks like it belongs to the same application and design system as `/teacher/exams/new`.
-- [ ] All relevant visual differences have been corrected.
-- [ ] Any unavoidable deviations are justified by the target page's actual requirements.
+---
 
-## 10. Execution Rules
+## 10. Final Non-Negotiable Directive
 
-When I specify a page, for example:
+`/teacher/exams/new` is the application's Master Design Reference.
 
-`Apply the /teacher/exams/new design system to /teacher/questions/new`
+For every page I explicitly request, reproduce its relevant:
 
-You must:
-1. Inspect `/teacher/exams/new`.
-2. Inspect `/teacher/questions/new`.
-3. Identify the exact design and UX differences.
-4. Implement the reference design on the target page.
-5. Preserve all existing target functionality.
-6. Verify the final result.
-7. Report the changed files, key improvements, and verification results.
+- Design System.
+- Typography and sizing.
+- Colors and spacing.
+- Layout and component styling.
+- Interaction patterns.
+- UX flow.
+- Responsive behavior.
 
-Do not ask me to describe typography, spacing, colors, or component styles when these can be inspected directly in the codebase.
+Do not independently invent a design.
 
-Do not ask unnecessary clarification questions when the target page and desired reference are clear.
+Do not add unrequested content or features.
 
-If the reference page cannot be accessed or inspected, stop before making speculative design changes. Report the specific blocker and request the minimum information needed to continue.
+Do not break existing functionality.
 
-If an implementation requirement conflicts with an existing business rule, security requirement, or technical constraint, preserve the critical existing behavior and explain the conflict instead of silently changing it.
+Do not modify unrelated pages.
 
-## FINAL DIRECTIVE
+Inspect the reference, analyze the target, implement the established design patterns, verify the result, and report the outcome.
 
-`/teacher/exams/new` is the master design reference.
-
-Every page I explicitly request must follow its existing visual language, typography, sizing, spacing, layout conventions, component styling, interaction patterns, and UX philosophy.
-
-**Do not invent. Do not expand scope. Do not add unsolicited content or features. Do not redesign independently.**
-
-Inspect the reference, understand its system, reproduce the relevant patterns, preserve functionality, and implement only what I requested.
-
-The final result must feel like the target page was originally designed as part of the same interface as `/teacher/exams/new`.
-
-<!-- END:nextjs-agent-rules -->
+**Every requested page must look and behave like a natural part of the same application, with consistent UI/UX across desktop, tablet, and mobile.**
