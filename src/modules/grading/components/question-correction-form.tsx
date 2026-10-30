@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field"
 import {
   Select,
   SelectContent,
@@ -15,9 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { LatexText } from "@/components/shared/latex-text"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Wrench, CheckCircle2, AlertCircle } from "lucide-react"
+import { Wrench } from "lucide-react"
 
 type Props = {
   examId: string
@@ -44,126 +54,144 @@ export function QuestionCorrectionForm({
   )
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs space-y-3 transition-all">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5 flex-1 min-w-0">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-bold text-foreground">
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className="min-w-0 rounded-xl border border-border/70 bg-card p-4 shadow-2xs sm:p-5"
+    >
+      <div className="flex min-w-0 flex-col justify-between gap-3 lg:flex-row lg:items-start lg:gap-4">
+        <div className="flex min-w-0 flex-1 items-start gap-2.5">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-bold text-foreground">
             {order + 1}
           </span>
-          <div className="text-sm font-medium text-foreground leading-relaxed line-clamp-2">
+          <div className="min-w-0 flex-1 overflow-x-auto pt-0.5 text-sm leading-relaxed font-medium break-words text-foreground">
             <LatexText text={questionText} />
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 self-end sm:self-start">
-          {isCancelled ? (
-            <Badge variant="secondary" className="rounded-lg text-xs font-semibold">
-              Cancelled (Full Credit)
-            </Badge>
-          ) : (
-            <Badge
+        <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
+          <Badge variant={isCancelled ? "secondary" : "outline"}>
+            {isCancelled
+              ? "Cancelled (Full Credit)"
+              : `Key: Option ${correctOption}`}
+          </Badge>
+          <CollapsibleTrigger asChild>
+            <Button
+              type="button"
+              size="sm"
               variant="outline"
-              className="rounded-lg px-2.5 py-0.5 text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+              className="h-10 gap-2 rounded-xl px-3 text-xs font-semibold shadow-2xs sm:text-sm"
             >
-              Key: Option {correctOption}
-            </Badge>
-          )}
-
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setOpen((o) => !o)}
-            className="h-8 rounded-xl text-xs font-semibold shadow-2xs"
-          >
-            <Wrench className="mr-1.5 size-3.5" />
-            {open ? "Cancel Edit" : "Change Key / Cancel"}
-          </Button>
+              <Wrench data-icon="inline-start" />
+              {open ? "Cancel Edit" : "Change Key / Cancel"}
+            </Button>
+          </CollapsibleTrigger>
         </div>
       </div>
 
-      {open && (
-        <form action={formAction} className="mt-3 space-y-4 border-t border-border/50 pt-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-            <div className="space-y-1.5">
-              <label
-                htmlFor={`correct-${examQuestionId}`}
-                className="text-xs font-semibold text-foreground"
-              >
-                Correct Option Key
-              </label>
-              <Select name="correctOption" defaultValue={correctOption}>
-                <SelectTrigger id={`correct-${examQuestionId}`} className="h-10 rounded-xl bg-background">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="A">Option A</SelectItem>
-                    <SelectItem value="B">Option B</SelectItem>
-                    <SelectItem value="C">Option C</SelectItem>
-                    <SelectItem value="D">Option D</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+      <CollapsibleContent>
+        <form
+          action={formAction}
+          className="mt-4 border-t border-border/50 pt-4 sm:mt-5 sm:pt-5"
+        >
+          <FieldGroup>
+            <FieldGroup className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 sm:gap-5">
+              <Field>
+                <FieldLabel
+                  htmlFor={`correct-${examQuestionId}`}
+                  className="text-sm font-semibold"
+                >
+                  Correct Option Key
+                </FieldLabel>
+                <Select name="correctOption" defaultValue={correctOption}>
+                  <SelectTrigger id={`correct-${examQuestionId}`}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="A">Option A</SelectItem>
+                      <SelectItem value="B">Option B</SelectItem>
+                      <SelectItem value="C">Option C</SelectItem>
+                      <SelectItem value="D">Option D</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </Field>
 
-            <div className="flex items-center gap-2.5 pb-2">
-              <Checkbox
-                id={`cancel-${examQuestionId}`}
-                name="isCancelled"
-                checked={cancelledChecked}
-                onCheckedChange={(checked) => setCancelledChecked(Boolean(checked))}
-                className="rounded-md"
+              <Field
+                orientation="horizontal"
+                className="items-start gap-2.5 py-2 sm:pb-3"
+              >
+                <Checkbox
+                  id={`cancel-${examQuestionId}`}
+                  name="isCancelled"
+                  checked={cancelledChecked}
+                  onCheckedChange={(checked) =>
+                    setCancelledChecked(Boolean(checked))
+                  }
+                />
+                <FieldLabel
+                  htmlFor={`cancel-${examQuestionId}`}
+                  className="text-sm leading-relaxed font-medium"
+                >
+                  Cancel question (grant full points to all students)
+                </FieldLabel>
+              </Field>
+            </FieldGroup>
+
+            <Field>
+              <FieldLabel
+                htmlFor={`reason-${examQuestionId}`}
+                className="text-sm font-semibold"
+              >
+                Correction Justification (Audit Log)
+                <span className="text-destructive" aria-hidden="true">
+                  *
+                </span>
+              </FieldLabel>
+              <Textarea
+                id={`reason-${examQuestionId}`}
+                name="reason"
+                placeholder="e.g. Typo in question prompt; Option B accepted as valid answer..."
+                rows={2}
+                required
+                className="resize-y"
               />
-              <label
-                htmlFor={`cancel-${examQuestionId}`}
-                className="text-xs font-medium text-foreground cursor-pointer select-none"
+            </Field>
+
+            {state && "error" in state && (
+              <FieldError>{state.error}</FieldError>
+            )}
+            {state && "regradedCount" in state && (
+              <p role="status" className="text-sm font-semibold text-primary">
+                Successfully regraded {state.regradedCount} attempt
+                {state.regradedCount === 1 ? "" : "s"}.
+              </p>
+            )}
+
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setOpen(false)}
+                className="h-10 rounded-xl px-4 text-sm font-semibold"
               >
-                Cancel question (grant full points to all students)
-              </label>
+                Dismiss
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={isPending}
+                className="h-10 gap-2 rounded-xl px-4 text-sm font-semibold shadow-xs"
+              >
+                {isPending && <Spinner data-icon="inline-start" />}
+                Apply Correction & Regrade
+              </Button>
             </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label
-              htmlFor={`reason-${examQuestionId}`}
-              className="text-xs font-semibold text-foreground"
-            >
-              Correction Justification (Audit Log) <span className="text-destructive">*</span>
-            </label>
-            <Textarea
-              id={`reason-${examQuestionId}`}
-              name="reason"
-              placeholder="e.g. Typo in question prompt; Option B accepted as valid answer..."
-              rows={2}
-              required
-              className="rounded-xl text-xs bg-background resize-none"
-            />
-          </div>
-
-          {state && "error" in state && <FieldError>{state.error}</FieldError>}
-          {state && "regradedCount" in state && (
-            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-              Successfully regraded {state.regradedCount} attempt{state.regradedCount === 1 ? "" : "s"}.
-            </p>
-          )}
-
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setOpen(false)}
-              className="h-9 rounded-xl text-xs"
-            >
-              Dismiss
-            </Button>
-            <Button type="submit" size="sm" disabled={isPending} className="h-9 rounded-xl text-xs font-semibold shadow-xs">
-              {isPending && <Spinner className="mr-1.5" />}
-              Apply Correction & Regrade
-            </Button>
-          </div>
+          </FieldGroup>
         </form>
-      )}
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }

@@ -7,14 +7,14 @@ import {
   Clock,
   ShieldAlert,
   Trophy,
-  Award,
-  FileQuestion,
   Wrench,
-  Search,
 } from "lucide-react"
 import { requireUser, assertOwner } from "@/lib/authorization"
 import { prisma } from "@/lib/prisma"
-import { listExamResults, getExamQuestionsForCorrection } from "@/modules/grading/queries"
+import {
+  listExamResults,
+  getExamQuestionsForCorrection,
+} from "@/modules/grading/queries"
 import { getLiveContestStats } from "@/modules/leaderboard/stats"
 import {
   Table,
@@ -27,12 +27,29 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card"
+import { DashboardKpiCard } from "@/components/shared/dashboard-kpi-card"
 import { ResultDisclosureActions } from "@/modules/grading/components/result-disclosure-actions"
 import { QuestionCorrectionForm } from "@/modules/grading/components/question-correction-form"
 import { DisqualifyButton } from "@/modules/grading/components/disqualify-button"
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty"
 
 export const instant = false
+
+const summaryCardClassName =
+  "min-w-0 justify-start gap-0 hover:translate-y-0 hover:shadow-sm [&_.truncate]:whitespace-normal"
 
 function getInitials(name: string) {
   return name
@@ -67,326 +84,292 @@ export default async function ExamResultsPage({
       : 0
 
   return (
-    <div className="w-full max-w-full min-w-0 space-y-6 sm:space-y-8 pb-12 sm:pb-16">
-      {/* ================= PAGE HEADER & TOOLBAR ================= */}
-      <div className="space-y-3 sm:space-y-4">
+    <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
+      <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
         <div>
           <Button
             asChild
             variant="outline"
             size="sm"
-            className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs active:scale-95 group gap-1.5 sm:gap-2 mb-2 sm:mb-3"
+            className="group h-8 gap-1.5 rounded-full border-border/70 bg-card px-3 text-xs font-semibold text-muted-foreground shadow-2xs transition-all hover:bg-muted hover:text-foreground active:scale-95 sm:h-8.5 sm:gap-2 sm:px-3.5 sm:text-sm"
           >
             <Link href={`/teacher/exams/${examId}`}>
-              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-              <span>Back to exam</span>
+              <ArrowLeft
+                data-icon="inline-start"
+                className="transition-transform group-hover:-translate-x-1"
+              />
+              Back to exam
             </Link>
           </Button>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-border/60">
-          <div>
-            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
-                {exam.title} — Results & Grading
-              </h1>
-              <Badge
-                variant="outline"
-                className="rounded-full px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
-              >
-                {results.length} {results.length === 1 ? "Submission" : "Submissions"}
-              </Badge>
-            </div>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
-              Candidate performance breakdown, real-time attempt statuses, and answer key regrading.
+        <div className="flex min-w-0 flex-col gap-2 border-b border-border/60 pb-3 sm:gap-3 sm:pb-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+              Results & Grading
+            </h1>
+            <Badge
+              variant="outline"
+              className="h-auto rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-muted-foreground sm:px-3 sm:py-1 sm:text-xs"
+            >
+              {results.length}{" "}
+              {results.length === 1 ? "Submission" : "Submissions"}
+            </Badge>
+          </div>
+          <div className="flex min-w-0 flex-col gap-1">
+            <p className="text-sm font-semibold break-words text-foreground sm:text-base">
+              {exam.title}
+            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+              Candidate performance breakdown, real-time attempt statuses, and
+              answer key regrading.
             </p>
           </div>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5 xl:flex xl:flex-wrap xl:items-center">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="h-10 gap-2 rounded-xl border-border/70 px-4 text-sm font-semibold shadow-2xs"
+          >
+            <Link href={`/teacher/exams/${examId}/violations`}>
+              <ShieldAlert data-icon="inline-start" />
+              Flagged Attempts
+            </Link>
+          </Button>
+          {exam.leaderboardEnabled && (
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="h-10 rounded-xl px-4 text-xs sm:text-sm font-semibold border-border/70 shadow-2xs hover:bg-muted transition-all"
+              className="h-10 gap-2 rounded-xl border-border/70 px-4 text-sm font-semibold shadow-2xs"
             >
-              <Link href={`/teacher/exams/${examId}/violations`}>
-                <ShieldAlert className="mr-1.5 size-4 text-amber-500" />
-                <span>Flagged Attempts</span>
+              <Link href={`/exams/${examId}/leaderboard`}>
+                <Trophy data-icon="inline-start" />
+                Public Leaderboard
               </Link>
             </Button>
-
-            {exam.leaderboardEnabled && (
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="h-10 rounded-xl px-4 text-xs sm:text-sm font-semibold border-border/70 shadow-2xs hover:bg-muted transition-all"
-              >
-                <Link href={`/exams/${examId}/leaderboard`}>
-                  <Trophy className="mr-1.5 size-4 text-primary" />
-                  <span>Public Leaderboard</span>
-                </Link>
-              </Button>
-            )}
-
-            {exam.status === "PUBLISHED" && (
-              <ResultDisclosureActions
-                examId={examId}
-                answerKeyReleased={exam.answerKeyReleased}
-              />
-            )}
-          </div>
+          )}
+          {exam.status === "PUBLISHED" && (
+            <ResultDisclosureActions
+              examId={examId}
+              answerKeyReleased={exam.answerKeyReleased}
+            />
+          )}
         </div>
       </div>
 
-      {/* ================= 4-TILE SUMMARY KPI METRICS ================= */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
-        {/* Metric 1: Total Participants */}
-        <div className="flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-2xs hover:shadow-sm transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Participants
-            </span>
-            <span className="flex size-9 sm:size-10 items-center justify-center rounded-xl sm:rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-2xs ring-1 ring-primary/20">
-              <Users className="size-4.5 sm:size-5" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-              {liveStats.totalParticipants}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {liveStats.inProgress} in progress currently
-            </p>
-          </div>
-        </div>
+      <section
+        aria-label="Assessment summary"
+        className="grid min-w-0 grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4"
+      >
+        <DashboardKpiCard
+          className={summaryCardClassName}
+          title="Participants"
+          value={liveStats.totalParticipants}
+          subtext={`${liveStats.inProgress} in progress currently`}
+          icon={Users}
+        />
+        <DashboardKpiCard
+          className={summaryCardClassName}
+          title="Completed"
+          value={`${liveStats.completed} (${completionPercent}%)`}
+          subtext="Successfully finalized attempts"
+          icon={CheckCircle2}
+        />
+        <DashboardKpiCard
+          className={summaryCardClassName}
+          title="Avg Time Taken"
+          value={
+            liveStats.averageTimeTakenSec !== null
+              ? `${Math.round(liveStats.averageTimeTakenSec / 60)} min`
+              : "—"
+          }
+          subtext={`${liveStats.timedOut} auto-timed out`}
+          icon={Clock}
+        />
+        <DashboardKpiCard
+          className={summaryCardClassName}
+          title="Disqualified"
+          value={liveStats.disqualified}
+          subtext="Academic integrity breaches"
+          icon={ShieldAlert}
+        />
+      </section>
 
-        {/* Metric 2: Completed Submissions */}
-        <div className="flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-2xs hover:shadow-sm transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Completed
-            </span>
-            <span className="flex size-9 sm:size-10 items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs ring-1 ring-emerald-500/20">
-              <CheckCircle2 className="size-4.5 sm:size-5" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-              {liveStats.completed}{" "}
-              <span className="text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                ({completionPercent}%)
-              </span>
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Successfully finalized attempts
-            </p>
-          </div>
-        </div>
-
-        {/* Metric 3: Average Duration */}
-        <div className="flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-2xs hover:shadow-sm transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Avg Time Taken
-            </span>
-            <span className="flex size-9 sm:size-10 items-center justify-center rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-2xs ring-1 ring-amber-500/20">
-              <Clock className="size-4.5 sm:size-5" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-              {liveStats.averageTimeTakenSec !== null
-                ? `${Math.round(liveStats.averageTimeTakenSec / 60)} min`
-                : "—"}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {liveStats.timedOut} auto-timed out
-            </p>
-          </div>
-        </div>
-
-        {/* Metric 4: Disqualified / Flagged */}
-        <div className="flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-2xs hover:shadow-sm transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Disqualified
-            </span>
-            <span className="flex size-9 sm:size-10 items-center justify-center rounded-xl sm:rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 shadow-2xs ring-1 ring-rose-500/20">
-              <ShieldAlert className="size-4.5 sm:size-5" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-              {liveStats.disqualified}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Academic integrity breaches
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= RESULTS TABLE CARD ================= */}
-      <div className="w-full max-w-full min-w-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-4 sm:p-6 sm:p-7 shadow-2xs space-y-4 sm:space-y-5">
-        <div className="flex items-center justify-between px-1">
-          <div>
-            <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Candidate Submissions
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Live score logs and grading status for all enrolled students.
-            </p>
-          </div>
-        </div>
-
-        {results.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border/80 bg-muted/20 py-12 px-4 text-center">
-            <Empty>
+      <Card className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs">
+        <CardHeader className="gap-1 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+          <CardTitle className="text-base font-bold tracking-tight text-foreground sm:text-xl">
+            <h2>Candidate Submissions</h2>
+          </CardTitle>
+          <CardDescription className="text-xs leading-relaxed sm:text-sm">
+            Live score logs and grading status for all enrolled students.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="min-w-0 p-4 sm:p-6 lg:p-7">
+          {results.length === 0 ? (
+            <Empty className="rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 py-10 sm:py-12">
               <EmptyHeader>
                 <EmptyMedia variant="icon">
-                  <Users className="size-8 text-primary" />
+                  <Users />
                 </EmptyMedia>
-                <EmptyTitle className="font-heading text-lg sm:text-xl font-bold">
+                <EmptyTitle className="font-heading text-base font-bold sm:text-xl">
                   No submissions yet
                 </EmptyTitle>
-                <EmptyDescription className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Student submissions will automatically appear here once candidates start the assessment.
+                <EmptyDescription>
+                  Student submissions will automatically appear here once
+                  candidates start the assessment.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
-          </div>
-        ) : (
-          <div className="w-full max-w-full min-w-0 overflow-x-auto rounded-xl border border-border/60">
-            <Table>
-              <TableHeader className="bg-muted/30 border-b border-border/70">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Candidate
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Attempt Status
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Score
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Accuracy (C / I / S)
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Result
-                  </TableHead>
-                  <TableHead className="text-right h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {results.map((r) => (
-                  <TableRow key={r.id} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
-                    <TableCell className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="size-9 rounded-xl border border-border/80 shadow-2xs">
-                          <AvatarFallback className="rounded-xl text-xs font-bold bg-muted text-foreground">
-                            {getInitials(r.student.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-foreground text-sm leading-snug">
-                            {r.student.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {r.student.email}
-                          </p>
+          ) : (
+            <div className="min-w-0 overflow-hidden rounded-xl border border-border/60">
+              <Table aria-label="Candidate submissions" tabIndex={0}>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="h-11 px-4 sm:px-5">
+                      Candidate
+                    </TableHead>
+                    <TableHead className="h-11 px-4 sm:px-5">
+                      Attempt Status
+                    </TableHead>
+                    <TableHead className="h-11 px-4 sm:px-5">Score</TableHead>
+                    <TableHead className="h-11 px-4 sm:px-5">
+                      Accuracy (C / I / S)
+                    </TableHead>
+                    <TableHead className="h-11 px-4 sm:px-5">Result</TableHead>
+                    <TableHead className="h-11 px-4 text-right sm:px-5">
+                      Action
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {results.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell className="max-w-80 min-w-56 px-4 py-4 whitespace-normal sm:px-5 sm:py-4.5">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="size-9 shrink-0 rounded-xl border border-border/70">
+                            <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
+                              {getInitials(r.student.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex min-w-0 flex-col gap-0.5">
+                            <p className="text-sm leading-snug font-semibold break-words text-foreground">
+                              {r.student.name}
+                            </p>
+                            <p className="text-xs break-all text-muted-foreground">
+                              {r.student.email}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="py-3.5 px-4">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {r.status === "DISQUALIFIED" ? (
-                          <span className="inline-flex items-center rounded-full border border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2.5 py-0.5 text-xs font-semibold">
-                            Disqualified
-                          </span>
-                        ) : r.status === "TIMEOUT" ? (
-                          <span className="inline-flex items-center rounded-full border border-border/70 bg-secondary/80 text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
-                            Timed Out
+                      </TableCell>
+                      <TableCell className="px-4 py-4 sm:px-5 sm:py-4.5">
+                        <div className="flex flex-col items-start gap-1.5">
+                          <Badge
+                            variant={
+                              r.status === "DISQUALIFIED"
+                                ? "destructive"
+                                : r.status === "TIMEOUT"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
+                            {r.status === "DISQUALIFIED"
+                              ? "Disqualified"
+                              : r.status === "TIMEOUT"
+                                ? "Timed Out"
+                                : "Completed"}
+                          </Badge>
+                          {r.disqualifiedReason && (
+                            <p className="max-w-xs text-xs leading-relaxed break-words whitespace-normal text-destructive">
+                              {r.disqualifiedReason}
+                            </p>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-4 tabular-nums sm:px-5 sm:py-4.5">
+                        {r.result ? (
+                          <Badge
+                            variant="outline"
+                            className="border-primary/20 bg-primary/10 font-bold text-primary"
+                          >
+                            {r.result.obtainedMarks} / {r.result.totalMarks}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-4 text-sm tabular-nums sm:px-5 sm:py-4.5">
+                        {r.result ? (
+                          <span className="font-medium">
+                            <span className="text-primary">
+                              {r.result.correctCount}
+                            </span>
+                            <span className="text-muted-foreground"> / </span>
+                            <span className="text-destructive">
+                              {r.result.incorrectCount}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {" "}
+                              / {r.result.skippedCount}
+                            </span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 text-xs font-bold">
-                            <span className="size-1.5 rounded-full bg-emerald-500" />
-                            {r.status}
-                          </span>
+                          <span className="text-muted-foreground">—</span>
                         )}
-                      </div>
-                      {r.disqualifiedReason && (
-                        <p className="mt-1 text-xs text-destructive max-w-xs truncate font-medium">
-                          {r.disqualifiedReason}
-                        </p>
-                      )}
-                    </TableCell>
+                      </TableCell>
+                      <TableCell className="px-4 py-4 sm:px-5 sm:py-4.5">
+                        {r.result ? (
+                          <Badge
+                            variant={
+                              r.result.status === "PUBLISHED"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {r.result.status === "PUBLISHED"
+                              ? "Published"
+                              : "Provisional"}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-4 text-right sm:px-5 sm:py-4.5">
+                        {r.status !== "DISQUALIFIED" && (
+                          <DisqualifyButton attemptId={r.id} />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-                    <TableCell className="py-3.5 px-4 font-bold text-foreground tabular-nums">
-                      {r.result ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary border border-primary/20">
-                          {r.result.obtainedMarks} / {r.result.totalMarks}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">—</span>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="py-3.5 px-4 text-xs text-muted-foreground tabular-nums">
-                      {r.result ? (
-                        <span className="font-medium text-foreground">
-                          <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{r.result.correctCount}</span>
-                          {" / "}
-                          <span className="text-rose-500 font-semibold">{r.result.incorrectCount}</span>
-                          {" / "}
-                          <span className="text-muted-foreground">{r.result.skippedCount}</span>
-                        </span>
-                      ) : (
-                        "—"
-                      )}
-                    </TableCell>
-
-                    <TableCell className="py-3.5 px-4">
-                      {r.result && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 text-xs font-bold">
-                          {r.result.status}
-                        </span>
-                      )}
-                    </TableCell>
-
-                    <TableCell className="py-3.5 px-4 text-right">
-                      {r.status !== "DISQUALIFIED" && <DisqualifyButton attemptId={r.id} />}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </div>
-
-      {/* ================= ANSWER KEY CORRECTIONS SECTION ================= */}
       {exam.status === "PUBLISHED" && (
-        <div className="w-full max-w-full min-w-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-2xs space-y-6">
-          <div className="flex items-center gap-3.5 border-b border-border/50 pb-5">
-            <div className="flex size-10 sm:size-11 items-center justify-center rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-2xs ring-1 ring-amber-500/20">
-              <Wrench className="size-5" />
+        <Card className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs">
+          <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+            <div className="flex items-start gap-3 sm:gap-3.5">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20 sm:size-11 sm:rounded-2xl">
+                <Wrench className="size-4.5 sm:size-5.5" aria-hidden="true" />
+              </div>
+              <div className="flex min-w-0 flex-col gap-1">
+                <CardTitle className="text-base font-bold tracking-tight text-foreground sm:text-xl">
+                  <h2>Answer-Key Corrections & Regrading</h2>
+                </CardTitle>
+                <CardDescription className="text-xs leading-relaxed sm:text-sm">
+                  Updating an answer key or cancelling a question automatically
+                  recalculates scores for all submitted candidate attempts.
+                </CardDescription>
+              </div>
             </div>
-            <div>
-              <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                Answer-Key Corrections & Regrading
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Updating an answer key or cancelling a question automatically recalculates scores for all submitted candidate attempts.
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-3">
+          </CardHeader>
+          <CardContent className="flex min-w-0 flex-col gap-3 p-4 sm:gap-4 sm:p-6 lg:p-7">
             {questions.map((q) => (
               <QuestionCorrectionForm
                 key={q.id}
@@ -398,8 +381,8 @@ export default async function ExamResultsPage({
                 isCancelled={q.isCancelled}
               />
             ))}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
