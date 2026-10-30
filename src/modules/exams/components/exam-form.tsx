@@ -275,23 +275,17 @@ export function ExamForm({
                       )}
                       required
                     />
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setIsTemplateModalOpen(true)}
-                          className="absolute right-1.5 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
-                          aria-label="Open Title Presets & Generator"
-                        >
-                          <Plus className="size-5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="top">
-                        <p className="text-xs font-medium">Title Presets & Generator</p>
-                      </TooltipContent>
-                    </Tooltip>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsTemplateModalOpen(true)}
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 cursor-pointer"
+                      title="Open Title Presets & Generator"
+                      aria-label="Open Title Presets & Generator"
+                    >
+                      <Plus className="size-5" />
+                    </Button>
                   </div>
 
                   {titleTouched && !isTitleValid && (

@@ -14,7 +14,6 @@ import {
   SlidersHorizontal,
   X,
   Library,
-  Sparkles,
 } from "lucide-react"
 
 import {
@@ -293,21 +292,17 @@ export function TitleTemplateModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[calc(100vw-1rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 rounded-2xl shadow-2xl border border-border/80 bg-background overflow-hidden gap-0">
-        <DialogHeader className="px-5 py-4 sm:px-6 sm:py-5 border-b border-border/50 bg-muted/20 shrink-0 text-left">
-          <div className="flex items-center gap-3.5">
-            <div className="size-10 sm:size-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
-              <BookOpen className="size-5 sm:size-5.5" />
+        <DialogHeader className="px-5 py-3.5 sm:px-6 sm:py-4 border-b border-border/50 bg-muted/10 shrink-0 text-left">
+          <div className="flex items-center gap-3">
+            <div className="size-9 sm:size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <BookOpen className="size-4.5 sm:size-5" />
             </div>
             <div>
-              <DialogTitle className="text-base sm:text-xl font-bold text-foreground tracking-tight flex items-center gap-2">
-                <span>Assessment Title Presets</span>
-                <Badge variant="secondary" className="text-[11px] font-semibold text-primary bg-primary/10 border-primary/20">
-                  <Sparkles className="size-3 mr-1" />
-                  Presets
-                </Badge>
+              <DialogTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+                Assessment Title Presets
               </DialogTitle>
-              <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                Choose standardized academic templates, use the smart generator, or manage custom titles.
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                Generate or choose an assessment title
               </DialogDescription>
             </div>
           </div>
@@ -319,13 +314,13 @@ export function TitleTemplateModal({
           onValueChange={(val) => setActiveTab(val as "generator" | "my-saved" | "all-presets")}
           className="flex-1 flex flex-col min-h-0 overflow-hidden"
         >
-          <div className="px-4 sm:px-6 py-2.5 border-b border-border/50 bg-muted/10 shrink-0">
-            <TabsList className="grid grid-cols-3 w-full h-10 p-1 bg-muted/80 rounded-xl">
+          <div className="px-4 sm:px-6 py-3 border-b border-border/50 bg-muted/5 shrink-0">
+            <TabsList className="grid grid-cols-3 w-full h-12 sm:h-13 p-1.5 bg-muted/70 rounded-xl">
               <TabsTrigger
                 value="generator"
-                className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
+                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
               >
-                <SlidersHorizontal className="size-3.5 sm:size-4 shrink-0" />
+                <SlidersHorizontal className="size-4 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">Smart </span>Generator
                 </span>
@@ -333,9 +328,9 @@ export function TitleTemplateModal({
 
               <TabsTrigger
                 value="my-saved"
-                className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
+                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
               >
-                <Bookmark className="size-3.5 sm:size-4 shrink-0" />
+                <Bookmark className="size-4 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">My </span>Saved ({mySavedTemplates.length})
                 </span>
@@ -343,9 +338,9 @@ export function TitleTemplateModal({
 
               <TabsTrigger
                 value="all-presets"
-                className="rounded-lg text-xs sm:text-sm font-semibold gap-1.5 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
+                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-all"
               >
-                <Library className="size-3.5 sm:size-4 shrink-0" />
+                <Library className="size-4 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">All </span>Presets ({dbTemplates.length})
                 </span>
