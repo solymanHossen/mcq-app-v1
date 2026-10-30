@@ -4,7 +4,13 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronRight, ChevronsUpDown, LogOut, Settings, User as UserIcon } from "lucide-react"
+import {
+  ChevronRight,
+  ChevronsUpDown,
+  LogOut,
+  Settings,
+  User as UserIcon,
+} from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
@@ -69,68 +75,79 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const pathname = usePathname()
   const { state, isMobile } = useSidebar()
-  const isCollapsed = state === "collapsed"
+  const isCollapsed = state === "collapsed" && !isMobile
 
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-sidebar-border bg-sidebar z-30"
+      className="z-30 border-r border-sidebar-border bg-sidebar"
       {...props}
     >
       {/* Brand Header: Aligned height (h-20) with Dashboard Header */}
       <SidebarHeader className="h-20 border-b border-sidebar-border p-0">
-        <div className="flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+        <div
+          className={cn(
+            "flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+            isMobile && "pr-14"
+          )}
+        >
           <Link
             href="/"
-            className="flex items-center gap-3 transition-opacity hover:opacity-90"
+            className="flex min-w-0 items-center gap-3 rounded-xl transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
             title={brandName}
           >
             {logoUrl ? (
-              <div className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-sidebar-border/60 bg-sidebar-accent/50 p-1 shadow-2xs flex items-center justify-center">
+              <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/60 bg-sidebar-accent/50 p-1 shadow-2xs">
                 <Image
                   src={logoUrl}
                   alt={brandName}
                   width={36}
                   height={36}
                   className="size-full object-contain"
-                  unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                  unoptimized={
+                    logoUrl.startsWith("/uploads/") ||
+                    logoUrl.startsWith("http")
+                  }
                 />
               </div>
             ) : (
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-2xs">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs">
                 {brandIcon}
               </span>
             )}
-            <span className="font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
+            <span className="min-w-0 truncate font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
               {brandName}
             </span>
           </Link>
           <Badge
             variant="secondary"
-            className="ml-auto rounded-md px-2 py-0.5 text-xs font-semibold shadow-none group-data-[collapsible=icon]:hidden"
+            className="ml-auto rounded-full border border-sidebar-border/70 px-2.5 py-0.5 text-xs font-semibold shadow-none group-data-[collapsible=icon]:hidden"
           >
             {badgeLabel}
           </Badge>
         </div>
       </SidebarHeader>
 
-      {/* Navigation Links with shadcn semantic sidebar color palette and clean rounded-lg geometry */}
-      <SidebarContent className="p-3">
+      {/* Navigation Links with shadcn semantic sidebar color palette and master control geometry */}
+      <SidebarContent className="px-3 py-4 group-data-[collapsible=icon]:px-2">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
+            <SidebarMenu className="gap-2">
               {navItems.map((item) => {
                 const hasSubItems = Boolean(item.items && item.items.length > 0)
                 const isSubActive = Boolean(
                   item.items?.some((sub) =>
                     sub.exact
                       ? pathname === sub.href
-                      : pathname === sub.href || pathname.startsWith(`${sub.href}/`)
+                      : pathname === sub.href ||
+                        pathname.startsWith(`${sub.href}/`)
                   )
                 )
                 const active = item.exact
                   ? pathname === item.href
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`) || isSubActive
+                  : pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`) ||
+                    isSubActive
 
                 if (hasSubItems) {
                   return (
@@ -147,13 +164,14 @@ export function AppSidebar({
                               <SidebarMenuButton
                                 size="default"
                                 isActive={active}
-                                tooltip={item.label}
+                                tooltip={isMobile ? undefined : item.label}
+                                aria-label={item.label}
                                 className={cn(
-                                  "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors cursor-pointer",
+                                  "h-10 cursor-pointer gap-3 rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors group-data-[collapsible=icon]:border-0",
                                   active
-                                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-                                  "[&_svg]:size-4.5 shrink-0"
+                                    ? "border-sidebar-primary/20 bg-sidebar-accent font-semibold text-sidebar-accent-foreground shadow-2xs"
+                                    : "text-sidebar-foreground/70 hover:border-sidebar-border/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                  "shrink-0"
                                 )}
                               >
                                 {item.icon}
@@ -163,33 +181,44 @@ export function AppSidebar({
                               side="right"
                               align="start"
                               sideOffset={8}
-                              className="w-48 rounded-xl border border-sidebar-border bg-popover p-1.5 text-popover-foreground shadow-xl backdrop-blur-xl"
+                              className="w-48 rounded-xl border border-sidebar-border bg-popover p-1.5 text-popover-foreground shadow-md"
                             >
-                              <DropdownMenuLabel className="px-2.5 py-1 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                              <DropdownMenuLabel className="px-2.5 py-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
                                 {item.label}
                               </DropdownMenuLabel>
                               <DropdownMenuSeparator />
-                              {item.items?.map((subItem) => {
-                                const isCurrentSubActive = subItem.exact
-                                  ? pathname === subItem.href
-                                  : pathname === subItem.href || pathname.startsWith(`${subItem.href}/`)
-                                return (
-                                  <DropdownMenuItem key={subItem.href} asChild>
-                                    <Link
-                                      href={subItem.href}
-                                      className={cn(
-                                        "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium cursor-pointer transition-colors",
-                                        isCurrentSubActive
-                                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                                          : "text-foreground hover:bg-muted"
-                                      )}
+                              <DropdownMenuGroup>
+                                {item.items?.map((subItem) => {
+                                  const isCurrentSubActive = subItem.exact
+                                    ? pathname === subItem.href
+                                    : pathname === subItem.href ||
+                                      pathname.startsWith(`${subItem.href}/`)
+                                  return (
+                                    <DropdownMenuItem
+                                      key={subItem.href}
+                                      asChild
                                     >
-                                      {subItem.icon}
-                                      <span>{subItem.label}</span>
-                                    </Link>
-                                  </DropdownMenuItem>
-                                )
-                              })}
+                                      <Link
+                                        href={subItem.href}
+                                        aria-current={
+                                          isCurrentSubActive
+                                            ? "page"
+                                            : undefined
+                                        }
+                                        className={cn(
+                                          "flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+                                          isCurrentSubActive
+                                            ? "border-sidebar-primary/20 bg-sidebar-accent font-semibold text-sidebar-accent-foreground shadow-2xs"
+                                            : "text-foreground hover:bg-muted"
+                                        )}
+                                      >
+                                        {subItem.icon}
+                                        <span>{subItem.label}</span>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                  )
+                                })}
+                              </DropdownMenuGroup>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         ) : (
@@ -198,28 +227,30 @@ export function AppSidebar({
                               <SidebarMenuButton
                                 size="default"
                                 isActive={active}
-                                tooltip={item.label}
+                                tooltip={isMobile ? undefined : item.label}
+                                aria-label={item.label}
                                 className={cn(
-                                  "h-10 w-full rounded-lg px-3 text-sm font-medium gap-3 transition-colors cursor-pointer",
+                                  "h-10 w-full cursor-pointer gap-3 rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors group-data-[collapsible=icon]:border-0",
                                   active
-                                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-                                  "[&_svg]:size-4.5 shrink-0"
+                                    ? "border-sidebar-primary/20 bg-sidebar-accent font-semibold text-sidebar-accent-foreground shadow-2xs"
+                                    : "text-sidebar-foreground/70 hover:border-sidebar-border/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                                  "shrink-0"
                                 )}
                               >
                                 {item.icon}
                                 <span className="tracking-tight group-data-[collapsible=icon]:hidden">
                                   {item.label}
                                 </span>
-                                <ChevronRight className="ml-auto size-4 text-sidebar-foreground/50 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                                <ChevronRight className="ml-auto size-4 text-sidebar-foreground/50 transition-transform duration-200 group-data-[collapsible=icon]:hidden group-data-[state=open]/collapsible:rotate-90" />
                               </SidebarMenuButton>
                             </CollapsibleTrigger>
-                            <CollapsibleContent className="animate-in fade-in-0 duration-200 group-data-[collapsible=icon]:hidden">
-                              <SidebarMenuSub className="mx-3.5 my-1 border-l border-sidebar-border/70 pl-2.5 space-y-0.5">
+                            <CollapsibleContent className="animate-in duration-200 fade-in-0 group-data-[collapsible=icon]:hidden">
+                              <SidebarMenuSub className="mx-3.5 my-1 gap-1 border-l border-sidebar-border/70 pl-2.5">
                                 {item.items?.map((subItem) => {
                                   const isCurrentSubActive = subItem.exact
                                     ? pathname === subItem.href
-                                    : pathname === subItem.href || pathname.startsWith(`${subItem.href}/`)
+                                    : pathname === subItem.href ||
+                                      pathname.startsWith(`${subItem.href}/`)
 
                                   return (
                                     <SidebarMenuSubItem key={subItem.href}>
@@ -228,13 +259,21 @@ export function AppSidebar({
                                         size="sm"
                                         isActive={isCurrentSubActive}
                                         className={cn(
-                                          "h-8.5 rounded-md px-2.5 text-xs font-medium transition-colors",
+                                          "h-9 rounded-lg border border-transparent px-2.5 text-xs font-medium transition-colors",
                                           isCurrentSubActive
-                                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                                            ? "border-sidebar-primary/20 bg-sidebar-accent font-semibold text-sidebar-accent-foreground shadow-2xs"
+                                            : "text-sidebar-foreground/70 hover:border-sidebar-border/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                                         )}
                                       >
-                                        <Link href={subItem.href} className="flex items-center gap-2">
+                                        <Link
+                                          href={subItem.href}
+                                          aria-current={
+                                            isCurrentSubActive
+                                              ? "page"
+                                              : undefined
+                                          }
+                                          className="flex items-center gap-2"
+                                        >
                                           {subItem.icon}
                                           <span>{subItem.label}</span>
                                         </Link>
@@ -258,34 +297,42 @@ export function AppSidebar({
                       size="default"
                       isActive={active}
                       tooltip={
-                        item.badge !== undefined && item.badge !== null
-                          ? `${item.label} (${item.badge})`
-                          : item.label
+                        isMobile
+                          ? undefined
+                          : item.badge !== undefined && item.badge !== null
+                            ? `${item.label} (${item.badge})`
+                            : item.label
                       }
                       className={cn(
-                        "h-10 rounded-lg px-3 text-sm font-medium gap-3 transition-colors",
+                        "h-10 gap-3 rounded-xl border border-transparent px-3 text-sm font-semibold transition-colors group-data-[collapsible=icon]:border-0",
                         active
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-                        "[&_svg]:size-4.5 shrink-0"
+                          ? "border-sidebar-primary/20 bg-sidebar-accent font-semibold text-sidebar-accent-foreground shadow-2xs"
+                          : "text-sidebar-foreground/70 hover:border-sidebar-border/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                        "shrink-0"
                       )}
                     >
-                      <Link href={item.href} className="flex items-center w-full min-w-0 gap-3">
+                      <Link
+                        href={item.href}
+                        aria-label={item.label}
+                        aria-current={active ? "page" : undefined}
+                        className="flex w-full min-w-0 items-center gap-3"
+                      >
                         {item.icon}
-                        <span className="tracking-tight group-data-[collapsible=icon]:hidden truncate">
+                        <span className="truncate tracking-tight group-data-[collapsible=icon]:hidden">
                           {item.label}
                         </span>
                         {item.badge !== undefined && item.badge !== null && (
                           <span
                             className={cn(
-                              "ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums group-data-[collapsible=icon]:hidden transition-colors shrink-0",
+                              "ml-auto inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[10.5px] font-bold tabular-nums transition-colors group-data-[collapsible=icon]:hidden",
                               typeof item.badge === "number" && item.badge > 0
                                 ? active
-                                  ? "bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30"
-                                  : "bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shadow-2xs"
-                                : typeof item.badge === "number" && item.badge === 0
-                                ? "bg-muted/70 text-muted-foreground border border-border/50"
-                                : "bg-sidebar-accent text-sidebar-accent-foreground"
+                                  ? "border border-amber-500/30 bg-amber-500/20 text-amber-800 dark:text-amber-300"
+                                  : "border border-amber-500/30 bg-amber-500/15 text-amber-600 shadow-2xs dark:text-amber-400"
+                                : typeof item.badge === "number" &&
+                                    item.badge === 0
+                                  ? "border border-border/50 bg-muted/70 text-muted-foreground"
+                                  : "bg-sidebar-accent text-sidebar-accent-foreground"
                             )}
                           >
                             {item.badge}
@@ -302,22 +349,25 @@ export function AppSidebar({
       </SidebarContent>
 
       {/* Footer User Profile with Modern Smooth Popover Menu */}
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="border-t border-sidebar-border p-3 group-data-[collapsible=icon]:p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="h-12 w-full rounded-lg px-2.5 transition-all duration-200 hover:bg-sidebar-accent/60 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center cursor-pointer"
-                  tooltip={`${user.name} (${user.email})`}
+                  className="h-12 w-full cursor-pointer gap-3 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/20 px-2.5 py-1 shadow-2xs transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0 hover:bg-sidebar-accent/60 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  aria-label={`${user.name} account menu`}
+                  tooltip={
+                    isMobile ? undefined : `${user.name} (${user.email})`
+                  }
                 >
-                  <Avatar className="size-8.5 rounded-lg shrink-0">
-                    <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
+                  <Avatar className="size-9 shrink-0 rounded-xl group-data-[collapsible=icon]:size-7">
+                    <AvatarFallback className="rounded-xl bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight min-w-0 group-data-[collapsible=icon]:hidden">
+                  <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                     <span className="truncate font-semibold text-sidebar-foreground">
                       {user.name}
                     </span>
@@ -330,19 +380,19 @@ export function AppSidebar({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent
-                className="w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-xl border border-sidebar-border bg-popover/98 p-1.5 text-popover-foreground shadow-xl backdrop-blur-xl animate-in fade-in-0 zoom-in-95"
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-xl border border-sidebar-border bg-popover p-1.5 text-popover-foreground shadow-md"
                 side={isMobile ? "bottom" : isCollapsed ? "right" : "top"}
-                align={isCollapsed ? "end" : "end"}
+                align="end"
                 sideOffset={8}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-2 text-left text-sm">
-                    <Avatar className="size-9 rounded-lg shrink-0">
-                      <AvatarFallback className="rounded-lg bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
+                    <Avatar className="size-9 shrink-0 rounded-lg">
+                      <AvatarFallback className="rounded-xl bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                    <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold text-foreground">
                         {user.name}
                       </span>
@@ -353,7 +403,7 @@ export function AppSidebar({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="my-1.5" />
-                <DropdownMenuGroup className="space-y-0.5">
+                <DropdownMenuGroup className="flex flex-col gap-1">
                   <DropdownMenuItem asChild>
                     <Link
                       href="/profile"
