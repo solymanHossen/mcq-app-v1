@@ -13,7 +13,6 @@ import {
   Trophy,
   ShieldCheck,
   Calendar,
-  Check,
   Trash2,
   Plus,
   Globe,
@@ -21,7 +20,6 @@ import {
   Users,
   RefreshCw,
   FileText,
-  SlidersHorizontal,
   CheckCircle2,
 } from "lucide-react"
 
@@ -30,13 +28,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
@@ -178,29 +170,28 @@ export function ExamForm({
         {/* Left Form Canvas (8 Columns on lg/xl) */}
         <div className="space-y-8 lg:col-span-8 min-w-0">
           {/* ── CARD 1: EXAM DETAILS ── */}
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
-                    <FileText className="size-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                      Assessment Details
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      General title, subject presets, and candidate instructions
-                    </CardDescription>
-                  </div>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            {/* Seamless Top Header (Zero Gap/Padding at Top) */}
+            <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
+                  <FileText className="size-5" />
                 </div>
-                <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1 border-border/70 shrink-0">
-                  Required
-                </Badge>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Assessment Details
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    General title, subject presets, and candidate instructions
+                  </p>
+                </div>
               </div>
-            </CardHeader>
+              <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1 border-border/70 shrink-0">
+                Required
+              </Badge>
+            </div>
 
-            <CardContent className="p-6 sm:p-7 space-y-6">
+            <div className="p-6 sm:p-7 space-y-6">
               {/* Title Field with Presets Tool */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
@@ -252,7 +243,7 @@ export function ExamForm({
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsTemplateModalOpen(true)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
                     title="Choose from presets"
                   >
                     <Plus className="size-5" />
@@ -290,55 +281,53 @@ export function ExamForm({
                   className="rounded-xl text-sm sm:text-base min-h-[105px] resize-y p-4 leading-relaxed"
                 />
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* ── CARD 2: TIMING & LIMITS ── */}
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Clock className="size-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                      Timing & Scoring Limits
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Test duration, maximum attempts, and passing threshold
-                    </CardDescription>
-                  </div>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Clock className="size-5" />
                 </div>
-
-                {/* Duration Presets as Shadcn Buttons */}
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
-                  <span className="text-xs font-semibold text-muted-foreground mr-1 hidden md:inline">Presets:</span>
-                  {DURATION_PRESETS.map((mins) => (
-                    <Button
-                      key={mins}
-                      type="button"
-                      variant={durationMinutes === mins ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => {
-                        setDurationMinutes(mins)
-                        setDurationTouched(true)
-                      }}
-                      className={cn(
-                        "h-8 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0",
-                        durationMinutes === mins
-                          ? "shadow-sm font-bold"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {mins}m
-                    </Button>
-                  ))}
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Timing & Scoring Limits
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Test duration, maximum attempts, and passing threshold
+                  </p>
                 </div>
               </div>
-            </CardHeader>
 
-            <CardContent className="p-6 sm:p-7">
+              {/* Duration Presets as Shadcn Buttons */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
+                <span className="text-xs font-semibold text-muted-foreground mr-1 hidden md:inline">Presets:</span>
+                {DURATION_PRESETS.map((mins) => (
+                  <Button
+                    key={mins}
+                    type="button"
+                    variant={durationMinutes === mins ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setDurationMinutes(mins)
+                      setDurationTouched(true)
+                    }}
+                    className={cn(
+                      "h-8 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer active:scale-95",
+                      durationMinutes === mins
+                        ? "shadow-sm font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {mins}m
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-7">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {/* Duration */}
                 <div className="space-y-2">
@@ -438,33 +427,31 @@ export function ExamForm({
                   )}
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* ── CARD 3: SCHEDULE WINDOW ── */}
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Calendar className="size-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                      Schedule Window
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Restrict exam accessibility within a specified date & time range
-                    </CardDescription>
-                  </div>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Calendar className="size-5" />
                 </div>
-                <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 shrink-0 self-start sm:self-auto">
-                  Leave empty for 24/7 access
-                </Badge>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Schedule Window
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Restrict exam accessibility within a specified date & time range
+                  </p>
+                </div>
               </div>
-            </CardHeader>
+              <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 shrink-0 self-start sm:self-auto">
+                Leave empty for 24/7 access
+              </Badge>
+            </div>
 
-            <CardContent className="p-6 sm:p-7 space-y-4">
+            <div className="p-6 sm:p-7 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <Label htmlFor="startTime" className="text-sm sm:text-base font-semibold text-foreground">
@@ -500,50 +487,43 @@ export function ExamForm({
                   <span>Closing date & time must be strictly later than opening date & time.</span>
                 </p>
               )}
-            </CardContent>
+            </div>
           </Card>
 
           {/* ── CARD 4: PROCTORING & INTEGRITY ── */}
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <ShieldCheck className="size-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                      Proctoring & Anti-Cheating
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Question randomization, webcam consent, and AI violation monitoring
-                    </CardDescription>
-                  </div>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <ShieldCheck className="size-5" />
                 </div>
-
-                <Badge
-                  variant="outline"
-                  className="text-xs sm:text-sm font-bold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 px-3 py-1 bg-emerald-500/5 shrink-0"
-                >
-                  {activeProctoringCount} of 3 active
-                </Badge>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Proctoring & Anti-Cheating
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Question randomization, webcam consent, and AI violation monitoring
+                  </p>
+                </div>
               </div>
-            </CardHeader>
 
-            <CardContent className="p-6 sm:p-7 space-y-6">
-              {/* 3 Modern Feature Toggle Cards */}
-              <div className="space-y-3">
+              <Badge
+                variant="outline"
+                className="text-xs sm:text-sm font-bold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 px-3 py-1 bg-emerald-500/5 shrink-0"
+              >
+                {activeProctoringCount} of 3 active
+              </Badge>
+            </div>
+
+            <div className="p-6 sm:p-7 space-y-6">
+              {/* Grouped Settings List (Clean, Sleek, No Clunky Nested Boxes) */}
+              <div className="divide-y divide-border/50 rounded-xl border border-border/60 bg-muted/15 overflow-hidden">
                 {/* 1. Shuffle Questions */}
                 <div
                   onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                  className={cn(
-                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
-                    shuffleQuestions
-                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
-                      : "border-border/70 hover:bg-muted/30"
-                  )}
+                  className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <div className={cn(
                       "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleQuestions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -577,14 +557,9 @@ export function ExamForm({
                 {/* 2. Shuffle Options */}
                 <div
                   onClick={() => setShuffleOptions(!shuffleOptions)}
-                  className={cn(
-                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
-                    shuffleOptions
-                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
-                      : "border-border/70 hover:bg-muted/30"
-                  )}
+                  className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <div className={cn(
                       "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleOptions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -618,14 +593,9 @@ export function ExamForm({
                 {/* 3. Webcam Monitoring */}
                 <div
                   onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
-                  className={cn(
-                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
-                    webcamMonitoringRequired
-                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
-                      : "border-border/70 hover:bg-muted/30"
-                  )}
+                  className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
                     <div className={cn(
                       "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       webcamMonitoringRequired ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -658,8 +628,8 @@ export function ExamForm({
               </div>
 
               {/* Anomaly Review Threshold Row */}
-              <div className="p-4 sm:p-5 rounded-xl border border-border/70 bg-muted/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="space-y-1">
+              <div className="p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="space-y-0.5">
                   <Label htmlFor="violationReviewThreshold" className="text-sm sm:text-base font-bold text-foreground">
                     Anomaly Review Threshold
                   </Label>
@@ -687,48 +657,41 @@ export function ExamForm({
                   </Badge>
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* ── CARD 5: CANDIDATE ACCESS & PIN ── */}
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Globe className="size-5" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                      Candidate Access & Security
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Direct link participation and optional assessment passcode protection
-                    </CardDescription>
-                  </div>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Globe className="size-5" />
                 </div>
-
-                <Badge
-                  variant={allowGuestAccess ? "default" : "secondary"}
-                  className="text-xs sm:text-sm font-bold px-3 py-1"
-                >
-                  {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"}
-                </Badge>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Candidate Access & Security
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Direct link participation and optional assessment passcode protection
+                  </p>
+                </div>
               </div>
-            </CardHeader>
 
-            <CardContent className="p-6 sm:p-7 space-y-6">
+              <Badge
+                variant={allowGuestAccess ? "default" : "secondary"}
+                className="text-xs sm:text-sm font-bold px-3 py-1"
+              >
+                {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"}
+              </Badge>
+            </div>
+
+            <div className="p-6 sm:p-7 space-y-6">
               {/* Direct Link Switch Item */}
               <div
                 onClick={() => setAllowGuestAccess(!allowGuestAccess)}
-                className={cn(
-                  "flex items-start justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
-                  allowGuestAccess
-                    ? "border-primary/40 bg-primary/[0.03] shadow-xs"
-                    : "border-border/70 hover:bg-muted/30"
-                )}
+                className="flex items-start justify-between p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 hover:bg-muted/30 transition-colors cursor-pointer select-none"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3.5 sm:gap-4">
                   <div className={cn(
                     "size-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
                     allowGuestAccess ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -758,7 +721,7 @@ export function ExamForm({
               </div>
 
               {/* Passcode / Security PIN Field */}
-              <div className="p-4 sm:p-5 rounded-xl border border-border/70 bg-muted/10 space-y-3">
+              <div className="p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 space-y-3">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="accessCode" className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
                     <Lock className="size-4 text-muted-foreground" />
@@ -773,7 +736,7 @@ export function ExamForm({
                       const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                       setAccessCode(randomCode)
                     }}
-                    className="h-8 px-2.5 rounded-lg text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 gap-1.5"
+                    className="h-8 px-2.5 rounded-lg text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 gap-1.5 cursor-pointer"
                   >
                     <RefreshCw className="size-3.5" />
                     <span>Generate Random PIN</span>
@@ -796,7 +759,7 @@ export function ExamForm({
                       variant="ghost"
                       size="sm"
                       onClick={() => setAccessCode("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                     >
                       Clear
                     </Button>
@@ -809,14 +772,14 @@ export function ExamForm({
 
               {/* Hidden isPublic field for action parser */}
               <input type="hidden" name="isPublic" value={isPublic ? "on" : "off"} />
-            </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
-          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm overflow-hidden">
-            <CardHeader className="px-5 py-4.5 border-b border-border/60 bg-muted/20">
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
+            <div className="px-5 py-4.5 border-b border-border/50 bg-muted/20">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Assessment Overview
@@ -825,12 +788,12 @@ export function ExamForm({
                   Draft
                 </Badge>
               </div>
-              <CardTitle className="text-lg sm:text-xl font-extrabold text-foreground mt-1.5 line-clamp-2">
+              <h3 className="text-lg sm:text-xl font-extrabold text-foreground mt-1.5 line-clamp-2">
                 {title.trim() ? title : "Untitled Assessment"}
-              </CardTitle>
-            </CardHeader>
+              </h3>
+            </div>
 
-            <CardContent className="p-5 sm:p-6 space-y-5">
+            <div className="p-5 sm:p-6 space-y-5">
               {/* Specification List */}
               <div className="divide-y divide-border/60 text-sm sm:text-base">
                 <div className="flex items-center justify-between py-3 first:pt-0">
@@ -951,7 +914,7 @@ export function ExamForm({
                   </Link>
                 </Button>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
       </div>
