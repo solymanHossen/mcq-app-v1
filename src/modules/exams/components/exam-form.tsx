@@ -102,7 +102,7 @@ function InfoTip({ text, side = "top" }: { text: string; side?: "top" | "bottom"
 export function ExamForm({
   action,
   initialValues,
-  submitLabel = "Create Assessment & Add Questions",
+  submitLabel = "Create Assessment",
   cancelHref = "/teacher/exams",
 }: {
   action: (
@@ -814,22 +814,22 @@ export function ExamForm({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-52">
+                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-56">
                       <Input
                         id="accessCode"
                         name="accessCode"
                         placeholder="e.g. 2026EXAM"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
-                        className="h-9 font-mono text-sm font-semibold tracking-wider rounded-lg pr-12 bg-background"
+                        className="h-11 sm:h-11 font-mono text-sm sm:text-base font-semibold tracking-wider rounded-xl sm:rounded-xl pr-14 bg-background"
                         maxLength={50}
                       />
                       {accessCode && (
                         <button
                           type="button"
                           onClick={() => setAccessCode("")}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
                         >
                           Clear
                         </button>
@@ -838,15 +838,14 @@ export function ExamForm({
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
                       onClick={() => {
                         const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                         setAccessCode(randomCode)
                       }}
-                      className="h-9 px-3.5 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-lg gap-1.5"
+                      className="h-11 sm:h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl sm:rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
                       title="Generate random 6-digit PIN"
                     >
-                      <RefreshCw className="size-3.5" />
+                      <RefreshCw className="size-4" />
                       <span>Generate PIN</span>
                     </Button>
                   </div>
@@ -860,7 +859,7 @@ export function ExamForm({
           {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
           <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
-              <div className="px-5 py-4.5 border-b border-border/50 bg-muted/20">
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/20">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Assessment Overview
@@ -872,9 +871,6 @@ export function ExamForm({
                 <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground mt-1.5 line-clamp-2">
                   {title.trim() ? title : "Untitled Assessment"}
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                  Live summary & publishing readiness
-                </p>
               </div>
 
               <div className="p-5 sm:p-6 space-y-5">
@@ -961,7 +957,7 @@ export function ExamForm({
                 )}
 
                 {/* Actions Section */}
-                <div className="pt-2 flex flex-col gap-3 w-full">
+                <div className="pt-2 w-full">
                   <Button
                     type="submit"
                     size="lg"
@@ -984,18 +980,6 @@ export function ExamForm({
                         <ArrowRight className="ml-2 size-5" />
                       </>
                     )}
-                  </Button>
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="w-full h-11 rounded-xl text-sm font-semibold border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.99] shadow-2xs"
-                  >
-                    <Link href={cancelHref} className="flex items-center justify-center gap-2">
-                      <Trash2 className="size-4 shrink-0" />
-                      <span>Discard Assessment</span>
-                    </Link>
                   </Button>
                 </div>
               </div>
@@ -1231,20 +1215,20 @@ export function ExamForm({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-52">
+                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-56">
                       <Input
                         placeholder="e.g. 2026EXAM"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
-                        className="h-10 font-mono text-sm font-bold tracking-wider rounded-xl pr-14 bg-background"
+                        className="h-11 sm:h-11 font-mono text-sm sm:text-base font-bold tracking-wider rounded-xl sm:rounded-xl pr-14 bg-background"
                         maxLength={50}
                       />
                       {accessCode && (
                         <button
                           type="button"
                           onClick={() => setAccessCode("")}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
                         >
                           Clear
                         </button>
@@ -1253,15 +1237,14 @@ export function ExamForm({
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
                       onClick={() => {
                         const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                         setAccessCode(randomCode)
                       }}
-                      className="h-10 px-3.5 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-1.5"
+                      className="h-11 sm:h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl sm:rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
                       title="Generate random 6-digit PIN"
                     >
-                      <RefreshCw className="size-3.5" />
+                      <RefreshCw className="size-4" />
                       <span>Generate PIN</span>
                     </Button>
                   </div>
