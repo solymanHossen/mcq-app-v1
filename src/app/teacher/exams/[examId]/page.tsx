@@ -297,30 +297,56 @@ export default async function ExamDetailPage({
         {/* ─── TAB 1: QUESTIONS MANAGEMENT ─── */}
         <TabsContent value="questions" className="space-y-6 outline-none">
           {/* Action Bar Above Questions */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-card border border-border/70 shadow-2xs">
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <span>Assessment Questions</span>
-                <Badge variant="outline" className="text-xs bg-muted/40 font-semibold px-2.5 py-0.5">
-                  {exam.examQuestions.length} Questions · {totalMarks} Marks
-                </Badge>
-              </h2>
-              <p className="text-xs text-muted-foreground">
-                Reorder, inspect option choices, or remove questions from this examination.
-              </p>
+          <div className="p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl bg-card border border-border/70 shadow-2xs hover:shadow-xs transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="size-10 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20 mt-0.5 sm:mt-0">
+                <Layers className="size-5 sm:size-5.5" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                  <h2 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-foreground">
+                    Assessment Questions
+                  </h2>
+                  <Badge
+                    variant="secondary"
+                    className="rounded-full px-2.5 py-0.5 text-[11px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5 border border-border/60 shrink-0"
+                  >
+                    <span>{exam.examQuestions.length} Questions</span>
+                    <span className="size-1 rounded-full bg-muted-foreground/40" />
+                    <span>{totalMarks} Marks</span>
+                  </Badge>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+                  Reorder, inspect option choices, or remove questions from this examination.
+                </p>
+              </div>
             </div>
 
             {isDraft && (
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0 pt-1 lg:pt-0">
                 {/* Instant Modal Trigger: Add Questions from Bank */}
                 <AddQuestionsModal
                   examId={examId}
                   availableQuestions={unusedQuestionsData.items}
+                  trigger={
+                    <Button
+                      type="button"
+                      className="gap-2 rounded-xl font-bold text-xs sm:text-sm h-10 sm:h-10.5 px-3.5 sm:px-4.5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex-1 sm:flex-initial"
+                    >
+                      <Plus className="size-4 shrink-0" />
+                      <span>Add from Question Bank</span>
+                    </Button>
+                  }
                 />
 
-                <Button asChild variant="outline" size="sm" className="gap-2 rounded-xl font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 rounded-xl font-bold text-xs sm:text-sm h-10 sm:h-10.5 px-3 sm:px-4 border-border/70 bg-card hover:bg-muted text-foreground active:scale-95 transition-all shadow-2xs cursor-pointer whitespace-nowrap flex-1 sm:flex-initial"
+                >
                   <Link href="/teacher/questions/new">
-                    <FilePlus2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <FilePlus2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>Create New Question</span>
                   </Link>
                 </Button>
