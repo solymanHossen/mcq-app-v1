@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { LatexText } from "@/components/shared/latex-text"
+import { cn } from "@/lib/utils"
 import {
   Eye,
   Clock,
@@ -71,7 +72,7 @@ export function StudentPreviewModal({
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className="gap-2 rounded-xl text-xs sm:text-sm h-10 px-4 shadow-2xs font-semibold cursor-pointer"
+            className="gap-2 rounded-xl text-xs sm:text-sm h-10 px-4 shadow-2xs font-semibold cursor-pointer border-border/70 hover:bg-muted"
           >
             <Eye className="size-4 text-primary" />
             <span>Preview</span>
@@ -79,15 +80,18 @@ export function StudentPreviewModal({
         </DialogTrigger>
       )}
 
-      <DialogContent className="w-[96vw] sm:w-[94vw] md:w-[92vw] lg:w-[90vw] sm:max-w-5xl md:max-w-6xl lg:max-w-7xl xl:max-w-[1340px] max-h-[92vh] overflow-y-auto rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-border/80">
-        <DialogHeader className="space-y-3 text-left border-b border-border/60 pb-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20 font-bold px-3 py-1 rounded-full">
-                <Eye className="size-3.5 mr-1.5" />
-                Preview Mode
+      <DialogContent className="w-[96vw] sm:w-[94vw] md:w-[92vw] lg:w-[90vw] sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl max-h-[92vh] overflow-y-auto rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-border/80 bg-background space-y-6 sm:space-y-7">
+        <DialogHeader className="space-y-3.5 text-left p-0">
+          <div className="flex flex-wrap items-center justify-between gap-3 pr-8 sm:pr-10">
+            <div className="flex items-center gap-2.5">
+              <Badge
+                variant="outline"
+                className="rounded-full bg-primary/10 text-primary border-primary/20 font-bold px-3 py-1 text-xs gap-1.5 shadow-2xs"
+              >
+                <Eye className="size-3.5" />
+                <span>Preview Mode</span>
               </Badge>
-              <span className="text-xs text-muted-foreground font-medium hidden sm:inline">
+              <span className="text-xs font-semibold text-muted-foreground hidden sm:inline">
                 Simulated Candidate View
               </span>
             </div>
@@ -97,7 +101,7 @@ export function StudentPreviewModal({
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-muted/60 hover:bg-muted text-foreground border border-border/80 hover:border-primary/40 transition-all cursor-pointer shadow-2xs group"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-card hover:bg-muted text-foreground border border-border/70 transition-all cursor-pointer shadow-2xs group"
                 >
                   <Info className="size-3.5 text-primary group-hover:scale-110 transition-transform" />
                   <span>Instructions & Rules</span>
@@ -105,7 +109,7 @@ export function StudentPreviewModal({
               </PopoverTrigger>
               <PopoverContent
                 align="end"
-                className="w-80 sm:w-96 p-4 rounded-2xl shadow-xl border-border/80 text-xs space-y-3 bg-popover"
+                className="w-80 sm:w-96 p-4 rounded-2xl shadow-xl border-border/80 text-xs space-y-3 bg-popover z-50"
               >
                 <div className="flex items-center gap-2 font-bold text-foreground text-sm border-b border-border/60 pb-2">
                   <AlertCircle className="size-4 text-primary" />
@@ -130,45 +134,49 @@ export function StudentPreviewModal({
             </Popover>
           </div>
 
-          <DialogTitle className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+          <DialogTitle className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
             {exam.title}
           </DialogTitle>
 
           {exam.description && (
-            <DialogDescription className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+            <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {exam.description}
             </DialogDescription>
           )}
 
           {/* Quick Metrics Bar */}
-          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
-            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-2.5 py-1 rounded-lg bg-muted/40 border border-border/50">
+          <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-3 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
               <Clock className="size-3.5 text-primary" />
-              {exam.durationMinutes} Minutes Allotted
+              <span>{exam.durationMinutes} Minutes Allotted</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-2.5 py-1 rounded-lg bg-muted/40 border border-border/50">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-3 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
               <HelpCircle className="size-3.5 text-primary" />
-              {exam.examQuestions.length} Questions
+              <span>{exam.examQuestions.length} Questions</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-2.5 py-1 rounded-lg bg-muted/40 border border-border/50">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-3 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
               <Award className="size-3.5 text-primary" />
-              {totalMarks} Total Marks
+              <span>{totalMarks} Total Marks</span>
             </span>
             {Boolean(exam.passingMarks && exam.passingMarks > 0) && (
-              <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-2.5 py-1 rounded-lg bg-muted/40 border border-border/50">
-                Pass Threshold: {exam.passingMarks}
+              <span className="inline-flex items-center gap-1.5 font-semibold text-foreground px-3 py-1 rounded-full bg-card border border-border/70 shadow-2xs">
+                <span>Pass Threshold: {exam.passingMarks}</span>
               </span>
             )}
           </div>
         </DialogHeader>
 
         {/* Clean Questions Container */}
-        <div className="space-y-6 pt-4">
+        <div className="space-y-5 sm:space-y-6">
           {exam.examQuestions.length === 0 ? (
-            <div className="py-16 text-center text-muted-foreground text-sm space-y-2">
-              <HelpCircle className="size-12 mx-auto text-muted-foreground/40" />
-              <p className="font-semibold text-foreground text-base">No questions added yet.</p>
-              <p className="text-xs">Add questions from your bank to see them in this preview.</p>
+            <div className="py-16 text-center text-muted-foreground text-sm space-y-3 rounded-2xl border border-dashed border-border/80 bg-muted/10 p-8">
+              <div className="size-12 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center ring-1 ring-primary/20">
+                <HelpCircle className="size-6 text-primary" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-bold text-foreground text-base">No questions added yet</p>
+                <p className="text-xs text-muted-foreground">Add questions from your bank to see them in this preview.</p>
+              </div>
             </div>
           ) : (
             exam.examQuestions.map((q, idx) => {
@@ -182,46 +190,53 @@ export function StudentPreviewModal({
               return (
                 <div
                   key={q.id}
-                  className="rounded-2xl border border-border/80 bg-card p-5 sm:p-7 space-y-5 shadow-xs"
+                  className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-7 space-y-4 sm:space-y-5 shadow-2xs transition-all"
                 >
-                  <div className="flex items-center justify-between gap-3 pb-1 border-b border-border/40">
-                    <span className="text-xs font-bold text-primary px-3 py-1 rounded-lg bg-primary/10">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="inline-flex items-center text-xs font-bold text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
                       Question {idx + 1} of {exam.examQuestions.length}
                     </span>
-                    <span className="text-xs font-bold text-muted-foreground px-2.5 py-1 rounded-lg bg-muted/50 border border-border/50">
+                    <span className="inline-flex items-center text-xs font-semibold text-muted-foreground px-3 py-1 rounded-full bg-muted/30 border border-border/60">
                       {q.marks} {q.marks === 1 ? "Mark" : "Marks"}
                     </span>
                   </div>
 
-                  <div className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
+                  <div className="font-heading text-lg sm:text-xl font-bold text-foreground leading-snug">
                     <LatexText text={q.questionTextSnapshot} />
                   </div>
 
                   {options.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5 pt-0.5">
                       {options.map((opt) => {
                         const isCorrect = q.correctOptionSnapshot === opt.key
 
                         return (
                           <div
                             key={opt.key}
-                            className={`flex items-start justify-between gap-3 p-4 rounded-xl border text-sm transition-all ${
+                            className={cn(
+                              "flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl border text-sm transition-all min-h-[52px]",
                               isCorrect
-                                ? "bg-emerald-500/10 border-emerald-500/40 text-foreground font-medium shadow-xs ring-1 ring-emerald-500/20"
-                                : "bg-muted/20 border-border/70 text-foreground hover:bg-muted/30"
-                            }`}
+                                ? "border-emerald-500/40 bg-emerald-500/10 dark:bg-emerald-950/20 ring-1 ring-emerald-500/20 text-foreground shadow-2xs"
+                                : "border-border/70 bg-card hover:bg-muted/30 text-foreground"
+                            )}
                           >
-                            <div className="flex items-start gap-3 min-w-0 flex-1">
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
                               <div
-                                className={`size-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 select-none ${
+                                className={cn(
+                                  "size-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 select-none",
                                   isCorrect
                                     ? "bg-emerald-600 text-white shadow-2xs"
-                                    : "bg-muted text-muted-foreground border border-border/60"
-                                }`}
+                                    : "bg-muted/70 text-muted-foreground border border-border/60"
+                                )}
                               >
                                 {opt.key}
                               </div>
-                              <div className="min-w-0 flex-1 pt-0.5 leading-relaxed break-words">
+                              <div
+                                className={cn(
+                                  "min-w-0 flex-1 text-sm leading-relaxed break-words",
+                                  isCorrect ? "font-semibold text-foreground" : "font-medium text-foreground"
+                                )}
+                              >
                                 <LatexText text={opt.text!} />
                               </div>
                             </div>
@@ -239,8 +254,8 @@ export function StudentPreviewModal({
                   )}
 
                   {q.explanationSnapshot && (
-                    <div className="p-4 rounded-xl bg-primary/5 border border-primary/15 text-xs sm:text-sm text-foreground/90 leading-relaxed flex items-start gap-2.5">
-                      <Lightbulb className="size-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="p-3.5 sm:p-4 rounded-xl bg-muted/20 border border-border/70 text-xs sm:text-sm text-foreground/90 leading-relaxed flex items-center gap-2.5">
+                      <Lightbulb className="size-4 text-amber-500 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <strong className="text-foreground font-semibold">Explanation: </strong>
                         <LatexText text={q.explanationSnapshot} />
@@ -253,10 +268,12 @@ export function StudentPreviewModal({
           )}
         </div>
 
-        <div className="pt-5 border-t border-border/60 flex justify-end">
+        <div className="pt-2 flex items-center justify-end">
           <Button
             type="button"
-            className="rounded-xl px-6 font-semibold text-xs sm:text-sm h-10 shadow-sm cursor-pointer"
+            variant="outline"
+            size="sm"
+            className="rounded-xl px-5 font-semibold text-xs h-9 border-border/70 shadow-2xs hover:bg-muted cursor-pointer"
             onClick={() => setOpen(false)}
           >
             Close Preview
