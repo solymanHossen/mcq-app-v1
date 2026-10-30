@@ -9,12 +9,10 @@ import {
   Camera,
   AlertTriangle,
   ArrowRight,
-  BookOpen,
   Trophy,
   ShieldCheck,
   Calendar,
   Trash2,
-  Plus,
   Globe,
   Lock,
   Users,
@@ -52,7 +50,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
 import type { ExamFormState } from "@/modules/exams/actions"
 import { cn } from "@/lib/utils"
 
@@ -117,16 +114,10 @@ export function ExamForm({
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [titleTouched, setTitleTouched] = useState(false)
-  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
 
   // Advanced Configuration Modals State
   const [isProctoringModalOpen, setIsProctoringModalOpen] = useState(false)
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
-
-  function handleSelectPresetTitle(presetTitle: string) {
-    setTitle(presetTitle)
-    setTitleTouched(true)
-  }
 
   const [durationMinutes, setDurationMinutes] = useState<number>(
     initialValues?.durationMinutes ?? 60
@@ -231,7 +222,7 @@ export function ExamForm({
                       <InfoTip text="General information, subject naming conventions, and candidate instructions that will appear on test entry." />
                     </div>
                     <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                      General title, subject presets, and candidate instructions
+                      General title and candidate instructions
                     </p>
                   </div>
                 </div>
@@ -241,27 +232,14 @@ export function ExamForm({
               </div>
 
               <div className="p-6 sm:p-7 space-y-6">
-                {/* Title Field with Presets Tool */}
+                {/* Title Field */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <Label htmlFor="title" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
-                        <span>Assessment Title</span>
-                        <span className="text-destructive">*</span>
-                        <InfoTip text="The official title students see on their dashboard and certificate. Minimum 3 characters." />
-                      </Label>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsTemplateModalOpen(true)}
-                        className="h-7 px-2.5 rounded-lg border-primary/30 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all gap-1.5 shadow-2xs active:scale-95 cursor-pointer"
-                        title="Open Title Presets & Auto Generator"
-                      >
-                        <BookOpen className="size-3.5 shrink-0" />
-                        <span>Title Presets</span>
-                      </Button>
-                    </div>
+                    <Label htmlFor="title" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Assessment Title</span>
+                      <span className="text-destructive">*</span>
+                      <InfoTip text="The official title students see on their dashboard and certificate. Minimum 3 characters." />
+                    </Label>
                     <span
                       className={cn(
                         "text-xs sm:text-sm transition-colors font-medium",
@@ -274,32 +252,20 @@ export function ExamForm({
                     </span>
                   </div>
 
-                  <div className="relative">
-                    <Input
-                      id="title"
-                      name="title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      onBlur={() => setTitleTouched(true)}
-                      placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
-                      maxLength={200}
-                      className={cn(
-                        "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl pr-12 transition-all",
-                        titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
-                      )}
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsTemplateModalOpen(true)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
-                      title="Choose from presets"
-                    >
-                      <Plus className="size-5" />
-                    </Button>
-                  </div>
+                  <Input
+                    id="title"
+                    name="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setTitleTouched(true)}
+                    placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
+                    maxLength={200}
+                    className={cn(
+                      "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all",
+                      titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
+                    )}
+                    required
+                  />
 
                   {titleTouched && !isTitleValid && (
                     <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
@@ -604,7 +570,7 @@ export function ExamForm({
                       <Shuffle className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Shuffle Questions</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Questions</span>
                       <InfoTip text="Display exam questions in completely randomized order for each candidate." />
                     </div>
                   </div>
@@ -636,7 +602,7 @@ export function ExamForm({
                       <Shuffle className="size-5 rotate-90" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Shuffle Options</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Options</span>
                       <InfoTip text="Randomize multiple-choice option positions (A, B, C, D) within every question." />
                     </div>
                   </div>
@@ -668,7 +634,7 @@ export function ExamForm({
                       <Camera className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Webcam Surveillance & Consent</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Webcam Surveillance & Consent</span>
                       <InfoTip text="Require student camera permission and capture periodic audit snapshots during the test." />
                     </div>
                   </div>
@@ -694,7 +660,7 @@ export function ExamForm({
                       <ShieldAlert className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Anomaly Review Threshold</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Anomaly Review Threshold</span>
                       <InfoTip text="Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits)." />
                     </div>
                   </div>
@@ -777,7 +743,7 @@ export function ExamForm({
                       <Users className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">
+                      <span className="text-sm sm:text-base font-semibold text-foreground">
                         Direct Link Participation (No Registration Required)
                       </span>
                       <InfoTip text="Students can begin test immediately via link by entering their Full Name & Email. Registered students can also log in seamlessly." />
@@ -806,7 +772,7 @@ export function ExamForm({
                       <Lock className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">
+                      <span className="text-sm sm:text-base font-semibold text-foreground">
                         Access Passcode / Security PIN
                       </span>
                       <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
@@ -1026,7 +992,7 @@ export function ExamForm({
                       <Shuffle className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Shuffle Questions</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Questions</span>
                       <InfoTip text="Generates a unique randomized question order for each candidate attempt to prevent looking at neighbors' screens." />
                     </div>
                   </div>
@@ -1055,7 +1021,7 @@ export function ExamForm({
                       <Shuffle className="size-5 rotate-90" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Shuffle Options</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Options</span>
                       <InfoTip text="Scrambles multiple-choice choices (A, B, C, D) inside each question to prevent candidates from sharing answer keys like (1-A, 2-C)." />
                     </div>
                   </div>
@@ -1084,7 +1050,7 @@ export function ExamForm({
                       <Camera className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Webcam Surveillance & Consent</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Webcam Surveillance & Consent</span>
                       <InfoTip text="Candidate must grant camera permission before opening questions. Periodic silent audit snapshots verify student identity and detect unpermitted persons." />
                     </div>
                   </div>
@@ -1102,7 +1068,7 @@ export function ExamForm({
                       <ShieldAlert className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">Anomaly Review Threshold</span>
+                      <span className="text-sm sm:text-base font-semibold text-foreground">Anomaly Review Threshold</span>
                       <InfoTip text="Cumulative score triggering teacher review (Tab switch: +2, Window blur: +3, Face absent: +2). Reaching threshold flags the assessment." />
                     </div>
                   </div>
@@ -1184,7 +1150,7 @@ export function ExamForm({
                       <Users className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">
+                      <span className="text-sm sm:text-base font-semibold text-foreground">
                         Direct Link (No Registration Required)
                       </span>
                       <InfoTip text="Candidates can enter via link with just their Name & Email. No password or registration needed. (Registered students can also log in seamlessly)." />
@@ -1207,7 +1173,7 @@ export function ExamForm({
                       <Lock className="size-5" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-bold text-foreground">
+                      <span className="text-sm sm:text-base font-semibold text-foreground">
                         Access Passcode / Security PIN
                       </span>
                       <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
@@ -1264,13 +1230,6 @@ export function ExamForm({
             </div>
           </DialogContent>
         </Dialog>
-
-        {/* Title Presets & Dropdown Generator Modal */}
-        <TitleTemplateModal
-          open={isTemplateModalOpen}
-          onOpenChange={setIsTemplateModalOpen}
-          onSelectTitle={handleSelectPresetTitle}
-        />
       </form>
     </TooltipProvider>
   )
