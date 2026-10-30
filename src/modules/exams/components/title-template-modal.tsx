@@ -291,17 +291,17 @@ export function TitleTemplateModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100vw-1rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 rounded-2xl shadow-2xl border border-border/80 bg-background overflow-hidden gap-0 duration-0 animate-none data-[state=open]:animate-none data-[state=closed]:animate-none data-open:animate-none data-closed:animate-none transition-none">
-        <DialogHeader className="px-5 py-3.5 sm:px-6 sm:py-4 border-b border-border/50 bg-muted/10 shrink-0 text-left">
-          <div className="flex items-center gap-3">
-            <div className="size-9 sm:size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <BookOpen className="size-4.5 sm:size-5" />
+      <DialogContent className="w-[calc(100vw-1rem)] sm:w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 rounded-2xl shadow-2xl border border-border/80 bg-background overflow-hidden gap-0 duration-0 animate-none data-[state=open]:animate-none data-[state=closed]:animate-none data-open:animate-none data-closed:animate-none transition-none">
+        <DialogHeader className="px-4 py-3 sm:px-6 sm:py-4 pr-10 sm:pr-10 border-b border-border/50 bg-muted/10 shrink-0 text-left">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="size-8.5 sm:size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <BookOpen className="size-4 sm:size-5" />
             </div>
-            <div>
-              <DialogTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+            <div className="min-w-0">
+              <DialogTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight truncate sm:text-wrap">
                 Assessment Title Presets
               </DialogTitle>
-              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5 truncate sm:text-wrap">
                 Generate or choose an assessment title
               </DialogDescription>
             </div>
@@ -314,13 +314,13 @@ export function TitleTemplateModal({
           onValueChange={(val) => setActiveTab(val as "generator" | "my-saved" | "all-presets")}
           className="flex-1 flex flex-col min-h-0 overflow-hidden"
         >
-          <div className="px-4 sm:px-6 py-3 border-b border-border/50 bg-muted/5 shrink-0">
-            <TabsList className="grid grid-cols-3 w-full h-12 sm:h-13 p-1.5 bg-muted/70 rounded-xl">
+          <div className="px-3 sm:px-6 py-2.5 sm:py-3 border-b border-border/50 bg-muted/5 shrink-0">
+            <TabsList className="grid grid-cols-3 w-full h-11 sm:h-13 p-1 sm:p-1.5 bg-muted/70 rounded-xl">
               <TabsTrigger
                 value="generator"
-                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
+                className="h-full rounded-lg text-xs sm:text-base font-bold gap-1.5 sm:gap-2 px-1 sm:px-3 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
               >
-                <SlidersHorizontal className="size-4 sm:size-4.5 shrink-0" />
+                <SlidersHorizontal className="size-3.5 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">Smart </span>Generator
                 </span>
@@ -328,9 +328,9 @@ export function TitleTemplateModal({
 
               <TabsTrigger
                 value="my-saved"
-                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
+                className="h-full rounded-lg text-xs sm:text-base font-bold gap-1.5 sm:gap-2 px-1 sm:px-3 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
               >
-                <Bookmark className="size-4 sm:size-4.5 shrink-0" />
+                <Bookmark className="size-3.5 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">My </span>Saved ({mySavedTemplates.length})
                 </span>
@@ -338,9 +338,9 @@ export function TitleTemplateModal({
 
               <TabsTrigger
                 value="all-presets"
-                className="h-full rounded-lg text-sm sm:text-base font-bold gap-2 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
+                className="h-full rounded-lg text-xs sm:text-base font-bold gap-1.5 sm:gap-2 px-1 sm:px-3 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs transition-none duration-0"
               >
-                <Library className="size-4 sm:size-4.5 shrink-0" />
+                <Library className="size-3.5 sm:size-4.5 shrink-0" />
                 <span className="truncate">
                   <span className="hidden sm:inline">All </span>Presets ({dbTemplates.length})
                 </span>
@@ -348,7 +348,7 @@ export function TitleTemplateModal({
             </TabsList>
           </div>
 
-          <div className="flex-1 p-4 sm:p-6 overflow-y-auto min-h-0">
+          <div className="flex-1 p-3.5 sm:p-6 pb-6 sm:pb-6 overflow-y-auto min-h-0">
             {/* TAB 1: SMART GENERATOR */}
             <TabsContent value="generator" className="m-0 space-y-4 sm:space-y-5 outline-none">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -562,21 +562,21 @@ export function TitleTemplateModal({
                     <div
                       key={t.id}
                       onClick={() => handleApply(t.title)}
-                      className="group flex items-center justify-between p-3 sm:p-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted/40 cursor-pointer shadow-2xs transition-none duration-0 active:scale-100"
+                      className="group flex items-center justify-between p-2.5 sm:p-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted/40 cursor-pointer shadow-2xs transition-none duration-0 active:scale-100"
                     >
-                      <div className="flex items-center gap-3 min-w-0 pr-2">
+                      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
                         <div className="size-8 sm:size-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
                           <BookmarkCheck className="size-4" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary truncate">
+                          <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary line-clamp-2 sm:truncate leading-tight sm:leading-normal">
                             {t.title}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground">
+                            <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground truncate">
                               {t.category || "Custom"}
                             </span>
-                            <span className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                            <span className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-semibold shrink-0">
                               • Saved in DB
                             </span>
                           </div>
@@ -635,7 +635,7 @@ export function TitleTemplateModal({
               </div>
 
               {/* Category Filter Pills using Shadcn Buttons */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 pt-0.5 -mx-1 px-1 sm:mx-0 sm:px-0">
                 {CATEGORY_FILTERS.map((cat) => (
                   <Button
                     key={cat}
@@ -643,7 +643,7 @@ export function TitleTemplateModal({
                     variant={categoryFilter === cat ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCategoryFilter(cat)}
-                    className="h-7.5 px-3 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-none duration-0"
+                    className="h-7 sm:h-7.5 px-2.5 sm:px-3 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-none duration-0 shrink-0"
                   >
                     {cat}
                   </Button>
@@ -656,33 +656,33 @@ export function TitleTemplateModal({
                   <div
                     key={preset.id}
                     onClick={() => handleApply(preset.title)}
-                    className="group flex items-center justify-between p-3 sm:p-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted/40 cursor-pointer text-left shadow-2xs transition-none duration-0 active:scale-100"
+                    className="group flex items-center justify-between p-2.5 sm:p-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted/40 cursor-pointer text-left shadow-2xs transition-none duration-0 active:scale-100"
                   >
-                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
                       <div className="size-8 sm:size-9 rounded-xl bg-muted group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center text-muted-foreground shrink-0 transition-none duration-0">
                         <BookOpen className="size-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary truncate">
+                        <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary line-clamp-2 sm:truncate leading-tight sm:leading-normal">
                           {preset.title}
                         </p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground">
+                        <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5">
+                          <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground truncate">
                             {preset.category}
                           </span>
                           {preset.isSystem ? (
-                            <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/80">
+                            <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/80 shrink-0">
                               System Preset
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="text-[9px] px-1.5 py-0 font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
+                            <Badge variant="secondary" className="text-[9px] px-1.5 py-0 font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 shrink-0">
                               My DB
                             </Badge>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="size-8 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground shrink-0 transition-none duration-0">
+                    <div className="size-7.5 sm:size-8 rounded-lg bg-muted/60 group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center text-muted-foreground shrink-0 transition-none duration-0">
                       <ArrowRight className="size-3.5" />
                     </div>
                   </div>

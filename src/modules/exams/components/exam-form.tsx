@@ -992,15 +992,15 @@ export function ExamForm({
         <Dialog open={isProctoringModalOpen} onOpenChange={setIsProctoringModalOpen}>
           <DialogContent
             onOpenAutoFocus={(e) => e.preventDefault()}
-            className="w-[calc(100vw-1.5rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+            className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
           >
-            <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
-              <div className="flex items-center gap-3 sm:gap-3.5 pr-8">
-                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
-                  <ShieldCheck className="size-5 sm:size-6" />
+            <DialogHeader className="p-3.5 sm:p-6 pb-2.5 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 pr-8">
+                <div className="size-9 sm:size-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
+                  <ShieldCheck className="size-4.5 sm:size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
+                  <DialogTitle className="text-base sm:text-2xl font-bold tracking-tight text-foreground leading-snug">
                     Proctoring & Anti-Cheat Governance
                   </DialogTitle>
                   <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
@@ -1010,28 +1010,28 @@ export function ExamForm({
               </div>
             </DialogHeader>
 
-            <div className="p-4 sm:p-6 space-y-4 text-sm overflow-y-auto flex-1">
-              <div className="space-y-3">
+            <div className="p-3.5 sm:p-6 space-y-3 sm:space-y-4 text-sm overflow-y-auto flex-1">
+              <div className="space-y-2.5 sm:space-y-3">
                 {/* Row 1: Shuffle Questions */}
                 <div
                   onClick={() => setShuffleQuestions(!shuffleQuestions)}
                   className={cn(
-                    "flex items-center justify-between p-4.5 rounded-2xl border transition-all cursor-pointer select-none",
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
                     shuffleQuestions
                       ? "border-emerald-500/40 bg-emerald-500/5 shadow-2xs"
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleQuestions ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Shuffle className="size-5" />
+                      <Shuffle className="size-4 sm:size-5" />
                     </div>
-                    <div>
-                      <span className="text-sm sm:text-base font-semibold text-foreground block">Shuffle Questions</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Shuffle Questions</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
                         Randomizes question sequence for each candidate attempt
                       </p>
                     </div>
@@ -1040,6 +1040,7 @@ export function ExamForm({
                     checked={shuffleQuestions}
                     onCheckedChange={setShuffleQuestions}
                     onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
                   />
                 </div>
 
@@ -1047,22 +1048,22 @@ export function ExamForm({
                 <div
                   onClick={() => setShuffleOptions(!shuffleOptions)}
                   className={cn(
-                    "flex items-center justify-between p-4.5 rounded-2xl border transition-all cursor-pointer select-none",
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
                     shuffleOptions
                       ? "border-indigo-500/40 bg-indigo-500/5 shadow-2xs"
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleOptions ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Shuffle className="size-5 rotate-90" />
+                      <Shuffle className="size-4 sm:size-5 rotate-90" />
                     </div>
-                    <div>
-                      <span className="text-sm sm:text-base font-semibold text-foreground block">Shuffle Options</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Shuffle Options</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
                         Scrambles multiple-choice options (A, B, C, D) inside each question
                       </p>
                     </div>
@@ -1071,6 +1072,7 @@ export function ExamForm({
                     checked={shuffleOptions}
                     onCheckedChange={setShuffleOptions}
                     onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
                   />
                 </div>
 
@@ -1078,22 +1080,22 @@ export function ExamForm({
                 <div
                   onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
                   className={cn(
-                    "flex items-center justify-between p-4.5 rounded-2xl border transition-all cursor-pointer select-none",
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
                     webcamMonitoringRequired
                       ? "border-blue-500/40 bg-blue-500/5 shadow-2xs"
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       webcamMonitoringRequired ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Camera className="size-5" />
+                      <Camera className="size-4 sm:size-5" />
                     </div>
-                    <div>
-                      <span className="text-sm sm:text-base font-semibold text-foreground block">Webcam Surveillance & Consent</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Webcam Surveillance & Consent</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
                         Periodic silent audit snapshots verify student identity and presence
                       </p>
                     </div>
@@ -1102,24 +1104,25 @@ export function ExamForm({
                     checked={webcamMonitoringRequired}
                     onCheckedChange={setWebcamMonitoringRequired}
                     onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
                   />
                 </div>
 
                 {/* Row 4: Anomaly Sensitivity */}
-                <div className="p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-3">
-                  <div className="flex items-center gap-3.5">
-                    <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                      <ShieldAlert className="size-5" />
+                <div className="p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-2.5 sm:space-y-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5">
+                    <div className="size-8.5 sm:size-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="size-4 sm:size-5" />
                     </div>
                     <div>
-                      <span className="text-sm sm:text-base font-semibold text-foreground block">Anomaly Review Threshold</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block">Anomaly Review Threshold</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-tight sm:leading-normal">
                         Cumulative score triggering teacher review and cheating alerts
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 pt-0.5">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-0.5">
                     {[
                       { label: "Strict (3 pts)", val: 3 },
                       { label: "Balanced (5 pts)", val: 5 },
@@ -1130,7 +1133,7 @@ export function ExamForm({
                         type="button"
                         onClick={() => setViolationThreshold(val)}
                         className={cn(
-                          "h-10 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center text-center",
+                          "h-9 sm:h-10 px-1 sm:px-3 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center text-center",
                           violationThreshold === val
                             ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/40"
                             : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border/50"
@@ -1143,13 +1146,13 @@ export function ExamForm({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-1 sm:pt-2">
                 <Button
                   type="button"
                   onClick={() => setIsProctoringModalOpen(false)}
-                  className="w-full h-12 text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
                 >
-                  <CheckCircle2 className="size-5" />
+                  <CheckCircle2 className="size-4.5 sm:size-5" />
                   <span>Save & Apply Proctoring Rules</span>
                 </Button>
               </div>
@@ -1161,15 +1164,15 @@ export function ExamForm({
         <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
           <DialogContent
             onOpenAutoFocus={(e) => e.preventDefault()}
-            className="w-[calc(100vw-1.5rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+            className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
           >
-            <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
-              <div className="flex items-center gap-3 sm:gap-3.5 pr-8">
-                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
-                  <Globe className="size-5 sm:size-6" />
+            <DialogHeader className="p-3.5 sm:p-6 pb-2.5 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 pr-8">
+                <div className="size-9 sm:size-12 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
+                  <Globe className="size-4.5 sm:size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
+                  <DialogTitle className="text-base sm:text-2xl font-bold tracking-tight text-foreground leading-snug">
                     Candidate Access & Security Governance
                   </DialogTitle>
                   <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
@@ -1179,30 +1182,30 @@ export function ExamForm({
               </div>
             </DialogHeader>
 
-            <div className="p-4 sm:p-6 space-y-4 text-sm overflow-y-auto flex-1">
-              <div className="space-y-3">
+            <div className="p-3.5 sm:p-6 space-y-3 sm:space-y-4 text-sm overflow-y-auto flex-1">
+              <div className="space-y-2.5 sm:space-y-3">
                 {/* Row 1: Direct Link Participation */}
                 <div
                   onClick={() => setAllowGuestAccess(!allowGuestAccess)}
                   className={cn(
-                    "flex items-center justify-between p-4.5 rounded-2xl border transition-all cursor-pointer select-none",
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
                     allowGuestAccess
                       ? "border-sky-500/40 bg-sky-500/5 shadow-2xs"
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       allowGuestAccess ? "bg-sky-500/20 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Users className="size-5" />
+                      <Users className="size-4 sm:size-5" />
                     </div>
-                    <div>
-                      <span className="text-sm sm:text-base font-semibold text-foreground block">
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">
                         Direct Link (No Registration Required)
                       </span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
                         Candidates can start with Name & Email without account registration
                       </p>
                     </div>
@@ -1211,38 +1214,39 @@ export function ExamForm({
                     checked={allowGuestAccess}
                     onCheckedChange={setAllowGuestAccess}
                     onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
                   />
                 </div>
 
                 {/* Row 2: Security PIN Passcode */}
-                <div className="p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-3">
-                  <div className="flex items-center gap-3.5">
+                <div className="p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-2.5 sm:space-y-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Lock className="size-5" />
+                      <Lock className="size-4 sm:size-5" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm sm:text-base font-semibold text-foreground">
+                        <span className="text-xs sm:text-base font-semibold text-foreground">
                           Access Passcode / Security PIN
                         </span>
-                        <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground font-normal">(Optional)</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-tight sm:leading-normal">
                         Require candidates to enter this secret PIN before the test commences
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 pt-0.5">
+                  <div className="flex items-center gap-2 sm:gap-2.5 pt-0.5">
                     <div className="relative flex-1">
                       <Input
                         placeholder="e.g. 2026EXAM"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
-                        className="h-11 font-mono text-sm sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
+                        className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
                         maxLength={50}
                       />
                       {accessCode && (
@@ -1262,23 +1266,23 @@ export function ExamForm({
                         const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                         setAccessCode(randomCode)
                       }}
-                      className="h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
+                      className="h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-1.5 sm:gap-2 shadow-2xs active:scale-95 transition-all"
                       title="Generate random 6-digit PIN"
                     >
-                      <RefreshCw className="size-4" />
+                      <RefreshCw className="size-3.5 sm:size-4" />
                       <span>Generate PIN</span>
                     </Button>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-1 sm:pt-2">
                 <Button
                   type="button"
                   onClick={() => setIsAccessModalOpen(false)}
-                  className="w-full h-12 text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
                 >
-                  <CheckCircle2 className="size-5" />
+                  <CheckCircle2 className="size-4.5 sm:size-5" />
                   <span>Save Access Settings</span>
                 </Button>
               </div>
