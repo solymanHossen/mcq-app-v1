@@ -270,7 +270,7 @@ export function ExamForm({
                       placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
                       maxLength={200}
                       className={cn(
-                        "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all pr-12",
+                        "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all pr-14",
                         titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
                       )}
                       required
@@ -279,9 +279,15 @@ export function ExamForm({
                       type="button"
                       variant="ghost"
                       size="icon"
-                      onClick={() => setIsTemplateModalOpen(true)}
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 cursor-pointer"
-                      title="Open Title Presets & Generator"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setIsTemplateModalOpen(true)
+                      }}
+                      className="absolute right-2 top-0 bottom-0 my-auto size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 cursor-pointer transition-none duration-0 select-none z-10"
                       aria-label="Open Title Presets & Generator"
                     >
                       <Plus className="size-5" />
