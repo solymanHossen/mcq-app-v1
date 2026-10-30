@@ -82,12 +82,12 @@ export function ExamQuestionList({
 
   if (questions.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed border-border/80 bg-gradient-to-b from-card via-muted/10 to-card p-8 sm:p-12 text-center space-y-8 shadow-xs">
+      <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-muted/10 p-6 sm:p-10 text-center space-y-6 sm:space-y-8 shadow-2xs">
         <div className="max-w-md mx-auto space-y-2">
-          <div className="size-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center shadow-xs">
-            <HelpCircle className="size-7" />
+          <div className="size-12 sm:size-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center shadow-2xs">
+            <HelpCircle className="size-6 sm:size-7" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-foreground">
             Build Your Assessment Questions
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -96,14 +96,14 @@ export function ExamQuestionList({
         </div>
 
         {editable && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 max-w-2xl mx-auto text-left">
             {/* Option 1: Add from Bank */}
-            <div className="group relative rounded-2xl border border-border/80 bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
+            <div className="group relative rounded-2xl border border-border/70 bg-card p-4 sm:p-5 hover:border-primary/50 shadow-2xs transition-all flex flex-col justify-between space-y-4">
               <div className="space-y-2">
                 <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <FolderPlus className="size-5" />
                 </div>
-                <h4 className="font-bold text-foreground text-base">
+                <h4 className="font-bold text-foreground text-sm sm:text-base">
                   Import from Question Bank
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -111,7 +111,7 @@ export function ExamQuestionList({
                 </p>
               </div>
 
-              <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-10 text-xs">
+              <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-10 text-xs sm:text-sm cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
                 <Link href={`/teacher/exams/${examId}/add-questions`}>
                   <span>Browse Question Bank</span>
                   <ArrowRight className="size-3.5" />
@@ -120,12 +120,12 @@ export function ExamQuestionList({
             </div>
 
             {/* Option 2: Create Brand New */}
-            <div className="group relative rounded-2xl border border-border/80 bg-card p-5 hover:border-emerald-500/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
+            <div className="group relative rounded-2xl border border-border/70 bg-card p-4 sm:p-5 hover:border-emerald-500/50 shadow-2xs transition-all flex flex-col justify-between space-y-4">
               <div className="space-y-2">
                 <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                   <FilePlus2 className="size-5" />
                 </div>
-                <h4 className="font-bold text-foreground text-base">
+                <h4 className="font-bold text-foreground text-sm sm:text-base">
                   Create New Question
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -133,7 +133,7 @@ export function ExamQuestionList({
                 </p>
               </div>
 
-              <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-10 text-xs">
+              <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-10 text-xs sm:text-sm cursor-pointer shadow-2xs">
                 <Link href="/teacher/questions/new">
                   <span>Create New Question</span>
                   <ArrowRight className="size-3.5" />
