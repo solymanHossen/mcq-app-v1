@@ -80,10 +80,10 @@ function InfoTip({ text, side = "top" }: { text: string; side?: "top" | "bottom"
     <Tooltip>
       <TooltipTrigger asChild>
         <span
-          tabIndex={0}
+          tabIndex={-1}
           role="button"
           aria-label="More information"
-          className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors cursor-help outline-none focus-visible:ring-2 focus-visible:ring-primary/40 shrink-0"
+          className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors cursor-help outline-none shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           <HelpCircle className="size-3.5" />
@@ -955,9 +955,12 @@ export function ExamForm({
 
         {/* ── MODAL 1: PROCTORING & ANTI-CHEAT GOVERNANCE MODAL ── */}
         <Dialog open={isProctoringModalOpen} onOpenChange={setIsProctoringModalOpen}>
-          <DialogContent className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden">
+          <DialogContent
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+          >
             <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3.5">
+              <div className="flex items-center gap-3.5 pr-8">
                 <div className="size-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
                   <ShieldCheck className="size-6" />
                 </div>
@@ -984,16 +987,18 @@ export function ExamForm({
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5">
                     <div className={cn(
-                      "size-11 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleQuestions ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
                     )}>
                       <Shuffle className="size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Questions</span>
-                      <InfoTip text="Generates a unique randomized question order for each candidate attempt to prevent looking at neighbors' screens." />
+                    <div>
+                      <span className="text-sm sm:text-base font-semibold text-foreground block">Shuffle Questions</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Randomizes question sequence for each candidate attempt
+                      </p>
                     </div>
                   </div>
                   <Switch
@@ -1013,16 +1018,18 @@ export function ExamForm({
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5">
                     <div className={cn(
-                      "size-11 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleOptions ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
                     )}>
                       <Shuffle className="size-5 rotate-90" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Options</span>
-                      <InfoTip text="Scrambles multiple-choice choices (A, B, C, D) inside each question to prevent candidates from sharing answer keys like (1-A, 2-C)." />
+                    <div>
+                      <span className="text-sm sm:text-base font-semibold text-foreground block">Shuffle Options</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Scrambles multiple-choice options (A, B, C, D) inside each question
+                      </p>
                     </div>
                   </div>
                   <Switch
@@ -1042,16 +1049,18 @@ export function ExamForm({
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5">
                     <div className={cn(
-                      "size-11 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       webcamMonitoringRequired ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
                     )}>
                       <Camera className="size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Webcam Surveillance & Consent</span>
-                      <InfoTip text="Candidate must grant camera permission before opening questions. Periodic silent audit snapshots verify student identity and detect unpermitted persons." />
+                    <div>
+                      <span className="text-sm sm:text-base font-semibold text-foreground block">Webcam Surveillance & Consent</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Periodic silent audit snapshots verify student identity and presence
+                      </p>
                     </div>
                   </div>
                   <Switch
@@ -1062,18 +1071,20 @@ export function ExamForm({
                 </div>
 
                 {/* Row 4: Anomaly Sensitivity */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all gap-3">
-                  <div className="flex items-center gap-4">
-                    <div className="size-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <div className="p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-3">
+                  <div className="flex items-center gap-3.5">
+                    <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                       <ShieldAlert className="size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Anomaly Review Threshold</span>
-                      <InfoTip text="Cumulative score triggering teacher review (Tab switch: +2, Window blur: +3, Face absent: +2). Reaching threshold flags the assessment." />
+                    <div>
+                      <span className="text-sm sm:text-base font-semibold text-foreground block">Anomaly Review Threshold</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Cumulative score triggering teacher review and cheating alerts
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 self-end sm:self-auto">
+                  <div className="grid grid-cols-3 gap-2 pt-0.5">
                     {[
                       { label: "Strict (3 pts)", val: 3 },
                       { label: "Balanced (5 pts)", val: 5 },
@@ -1084,7 +1095,7 @@ export function ExamForm({
                         type="button"
                         onClick={() => setViolationThreshold(val)}
                         className={cn(
-                          "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer",
+                          "h-10 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center text-center",
                           violationThreshold === val
                             ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/40"
                             : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border/50"
@@ -1113,9 +1124,12 @@ export function ExamForm({
 
         {/* ── MODAL 2: CANDIDATE ACCESS & PARTICIPATION MODAL ── */}
         <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
-          <DialogContent className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden">
+          <DialogContent
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+          >
             <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3.5">
+              <div className="flex items-center gap-3.5 pr-8">
                 <div className="size-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
                   <Globe className="size-6" />
                 </div>
@@ -1142,18 +1156,20 @@ export function ExamForm({
                       : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3.5">
                     <div className={cn(
-                      "size-11 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       allowGuestAccess ? "bg-sky-500/20 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
                     )}>
                       <Users className="size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">
+                    <div>
+                      <span className="text-sm sm:text-base font-semibold text-foreground block">
                         Direct Link (No Registration Required)
                       </span>
-                      <InfoTip text="Candidates can enter via link with just their Name & Email. No password or registration needed. (Registered students can also log in seamlessly)." />
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Candidates can start with Name & Email without account registration
+                      </p>
                     </div>
                   </div>
                   <Switch
@@ -1164,30 +1180,34 @@ export function ExamForm({
                 </div>
 
                 {/* Row 2: Security PIN Passcode */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all gap-3">
-                  <div className="flex items-center gap-4 shrink-0">
+                <div className="p-4.5 rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-3">
+                  <div className="flex items-center gap-3.5">
                     <div className={cn(
-                      "size-11 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
                     )}>
                       <Lock className="size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">
-                        Access Passcode / Security PIN
-                      </span>
-                      <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
-                      <InfoTip text="If set, candidates must input this passcode along with their credentials before the test commences." />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm sm:text-base font-semibold text-foreground">
+                          Access Passcode / Security PIN
+                        </span>
+                        <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Require candidates to enter this secret PIN before the test commences
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-56">
+                  <div className="flex items-center gap-2.5 pt-0.5">
+                    <div className="relative flex-1">
                       <Input
                         placeholder="e.g. 2026EXAM"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
-                        className="h-11 sm:h-11 font-mono text-sm sm:text-base font-bold tracking-wider rounded-xl sm:rounded-xl pr-14 bg-background"
+                        className="h-11 font-mono text-sm sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
                         maxLength={50}
                       />
                       {accessCode && (
@@ -1207,7 +1227,7 @@ export function ExamForm({
                         const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                         setAccessCode(randomCode)
                       }}
-                      className="h-11 sm:h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl sm:rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
+                      className="h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
                       title="Generate random 6-digit PIN"
                     >
                       <RefreshCw className="size-4" />
