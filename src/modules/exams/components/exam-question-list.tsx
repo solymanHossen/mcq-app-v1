@@ -9,6 +9,12 @@ import {
 } from "@/modules/exams/exam-question-actions"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { LatexText } from "@/components/shared/latex-text"
 import {
   ArrowUp,
@@ -24,6 +30,9 @@ import {
   ChevronUp,
   ArrowRight,
   Lightbulb,
+  Check,
+  Info,
+  Sparkles,
 } from "lucide-react"
 
 export type ListedQuestion = {
@@ -82,67 +91,285 @@ export function ExamQuestionList({
 
   if (questions.length === 0) {
     return (
-      <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-muted/10 p-6 sm:p-10 text-center space-y-6 sm:space-y-8 shadow-2xs">
-        <div className="max-w-md mx-auto space-y-2">
-          <div className="size-12 sm:size-14 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center shadow-2xs">
-            <HelpCircle className="size-6 sm:size-7" />
+      <TooltipProvider delayDuration={150}>
+        <div className="rounded-3xl border border-dashed border-border/80 bg-linear-to-b from-card via-card/70 to-muted/20 p-6 sm:p-10 md:p-12 text-center space-y-7 sm:space-y-8 shadow-xs">
+          {/* Header Section */}
+          <div className="max-w-xl mx-auto space-y-3.5">
+            <div className="size-14 sm:size-16 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center ring-4 ring-primary/5 shadow-2xs">
+              <HelpCircle className="size-7 sm:size-8" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
+                Build Your Assessment Questions
+              </h3>
+
+              {/* Subtitle placed inside a sleek interactive Tooltip as requested */}
+              <div className="flex items-center justify-center pt-0.5">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="group/sub inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/60 hover:bg-muted border border-border/70 hover:border-border text-xs font-medium text-muted-foreground hover:text-foreground transition-all cursor-help"
+                    >
+                      <Info className="size-3.5 text-primary group-hover/sub:scale-110 transition-transform" />
+                      <span>Setup instructions &amp; overview</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-xs text-xs p-3 space-y-1 shadow-lg bg-popover text-popover-foreground border border-border">
+                    <p className="font-semibold text-foreground">Assessment Notice</p>
+                    <p className="text-muted-foreground leading-relaxed">
+                      This examination currently has no questions. Choose one of the quick start methods below to populate this test.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+
+            {/* Small interaction feature tags with tooltips */}
+            <div className="flex items-center justify-center gap-2 flex-wrap pt-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/80 text-[11px] sm:text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors cursor-help">
+                    <Sparkles className="size-3 text-primary" />
+                    <span>Instant Snapshotting</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs max-w-xs">
+                  Questions are safely cloned into this exam so future question bank edits will not change published exam results.
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/80 text-[11px] sm:text-xs font-medium text-muted-foreground hover:text-foreground hover:border-emerald-500/50 transition-colors cursor-help">
+                    <CheckCircle2 className="size-3 text-emerald-500" />
+                    <span>LaTeX &amp; Formula Ready</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs max-w-xs">
+                  Full KaTeX rendering support for math equations, chemical formulas, and scientific notations.
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-card border border-border/80 text-[11px] sm:text-xs font-medium text-muted-foreground hover:text-foreground hover:border-amber-500/50 transition-colors cursor-help">
+                    <Award className="size-3 text-amber-500" />
+                    <span>Custom Scoring &amp; Penalties</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs max-w-xs">
+                  Set custom marks per question and optional negative marking penalties per wrong answer.
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-foreground">
-            Build Your Assessment Questions
-          </h3>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            This examination currently has no questions. Choose one of the quick start methods below to populate this test.
-          </p>
+
+          {/* Cards Section */}
+          {editable && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto text-left">
+                {/* Option 1: Import from Question Bank */}
+                <div className="group relative rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 hover:border-primary/50 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+                  <div className="space-y-3.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="size-11 sm:size-12 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20">
+                        <FolderPlus className="size-5 sm:size-6" />
+                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div>
+                            <Badge variant="secondary" className="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-help">
+                              Fast Setup
+                            </Badge>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs">
+                          Fastest method: pull existing verified questions from your repository
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-foreground text-base sm:text-lg">
+                        Import from Question Bank
+                      </h4>
+                      {/* Sub title placed inside interactive Tooltip */}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-help">
+                            <span className="font-medium">Snapshot pre-verified questions</span>
+                            <Info className="size-3.5 text-primary shrink-0" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs p-2.5 text-xs bg-popover text-popover-foreground border border-border shadow-md">
+                          <p className="font-semibold text-foreground mb-0.5">Question Bank Workflow</p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            Select and snapshot multiple-choice questions you have already verified and stored in your question bank.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    {/* Small interaction feature checklist with tooltips */}
+                    <div className="space-y-2 pt-1 border-t border-border/50">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <Check className="size-3.5 text-primary" />
+                          <span>Bulk selection from repository</span>
+                        </span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
+                              <Info className="size-3" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="text-xs">
+                            Select 10, 20, or all questions at once with 1-click filters
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <Check className="size-3.5 text-primary" />
+                          <span>Isolated snapshot protection</span>
+                        </span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
+                              <Info className="size-3" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="text-xs">
+                            Questions remain unchanged even if the master bank is modified later
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-11 text-xs sm:text-sm cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
+                        <Link href={`/teacher/exams/${examId}/add-questions`}>
+                          <span>Browse Question Bank</span>
+                          <ArrowRight className="size-4" />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">
+                      Open question repository to search, filter, and import questions
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+
+                {/* Option 2: Create New Question */}
+                <div className="group relative rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-5 sm:p-6 hover:border-emerald-500/50 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between space-y-5">
+                  <div className="space-y-3.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="size-11 sm:size-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center ring-1 ring-emerald-500/20">
+                        <FilePlus2 className="size-5 sm:size-6" />
+                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div>
+                            <Badge variant="secondary" className="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 cursor-help">
+                              Custom Authoring
+                            </Badge>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs">
+                          Author a dedicated question tailored specifically for this exam
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-foreground text-base sm:text-lg">
+                        Create New Question
+                      </h4>
+                      {/* Sub title placed inside interactive Tooltip */}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-help">
+                            <span className="font-medium">Draft dedicated question directly</span>
+                            <Info className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs p-2.5 text-xs bg-popover text-popover-foreground border border-border shadow-md">
+                          <p className="font-semibold text-foreground mb-0.5">Direct Authoring Workflow</p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            Draft a brand new question with 4 multiple choice options, LaTeX math formulas, and answer explanations.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    {/* Small interaction feature checklist with tooltips */}
+                    <div className="space-y-2 pt-1 border-t border-border/50">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                          <span>4 Options MCQ with Answer Key</span>
+                        </span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
+                              <Info className="size-3" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="text-xs">
+                            Define options A, B, C, D with clear single-select answer key
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                          <span>LaTeX math &amp; answer explanation</span>
+                        </span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
+                              <Info className="size-3" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="text-xs">
+                            Format equations with KaTeX and provide solution hints for students
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-11 text-xs sm:text-sm cursor-pointer border-border hover:border-emerald-500/50 hover:bg-emerald-500/5">
+                        <Link href="/teacher/questions/new">
+                          <span>Create New Question</span>
+                          <ArrowRight className="size-4" />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">
+                      Open full question creation form with math editor &amp; options
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+
+              {/* Guidance Banner */}
+              <div className="flex items-center justify-center gap-2 p-3 rounded-2xl bg-muted/40 border border-border/60 text-xs text-muted-foreground max-w-xl mx-auto">
+                <Lightbulb className="size-4 text-amber-500 shrink-0" />
+                <span>Tip: You can reorder questions, modify marks, and set negative marking anytime after adding.</span>
+              </div>
+            </div>
+          )}
         </div>
-
-        {editable && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 max-w-2xl mx-auto text-left">
-            {/* Option 1: Add from Bank */}
-            <div className="group relative rounded-2xl border border-border/70 bg-card p-4 sm:p-5 hover:border-primary/50 shadow-2xs transition-all flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                  <FolderPlus className="size-5" />
-                </div>
-                <h4 className="font-bold text-foreground text-sm sm:text-base">
-                  Import from Question Bank
-                </h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Select and snapshot multiple-choice questions you have already verified and stored in your question bank.
-                </p>
-              </div>
-
-              <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-10 text-xs sm:text-sm cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link href={`/teacher/exams/${examId}/add-questions`}>
-                  <span>Browse Question Bank</span>
-                  <ArrowRight className="size-3.5" />
-                </Link>
-              </Button>
-            </div>
-
-            {/* Option 2: Create Brand New */}
-            <div className="group relative rounded-2xl border border-border/70 bg-card p-4 sm:p-5 hover:border-emerald-500/50 shadow-2xs transition-all flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <FilePlus2 className="size-5" />
-                </div>
-                <h4 className="font-bold text-foreground text-sm sm:text-base">
-                  Create New Question
-                </h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Draft a brand new question with 4 multiple choice options, LaTeX math formulas, and answer explanations.
-                </p>
-              </div>
-
-              <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-10 text-xs sm:text-sm cursor-pointer shadow-2xs">
-                <Link href="/teacher/questions/new">
-                  <span>Create New Question</span>
-                  <ArrowRight className="size-3.5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      </TooltipProvider>
     )
   }
 
