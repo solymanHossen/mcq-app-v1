@@ -504,7 +504,7 @@ export function TitleTemplateModal({
                   <Plus className="size-4 text-primary" />
                   <span>Create & Save Custom Title</span>
                 </Label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-stretch gap-2">
                   <Input
                     id="custom-title-input"
                     value={customTitleInput}
@@ -516,14 +516,13 @@ export function TitleTemplateModal({
                       }
                     }}
                     placeholder="e.g. Cambridge A-Levels Physics Mock 2026..."
-                    className="h-10 text-xs sm:text-sm rounded-xl bg-background border-border/80 px-3"
+                    className="h-11 sm:h-11 text-xs sm:text-sm rounded-xl bg-background border-border/80 px-3.5"
                   />
                   <Button
                     type="button"
-                    size="sm"
                     disabled={!customTitleInput.trim() || isSaving}
                     onClick={handleDirectSaveCustom}
-                    className="h-10 px-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer shrink-0"
+                    className="h-11 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-bold cursor-pointer shrink-0 transition-none duration-0"
                   >
                     {isSaving ? <Loader2 className="size-4 animate-spin" /> : "Save"}
                   </Button>
