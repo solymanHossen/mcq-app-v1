@@ -26,7 +26,6 @@ import {
   Eye,
   KeyRound,
   ShieldAlert,
-  Info,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -87,7 +86,7 @@ function InfoTip({ text, side = "top" }: { text: string; side?: "top" | "bottom"
           tabIndex={0}
           role="button"
           aria-label="More information"
-          className="inline-flex size-4.5 items-center justify-center rounded-full text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors cursor-help outline-none focus-visible:ring-2 focus-visible:ring-primary/40 shrink-0"
+          className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors cursor-help outline-none focus-visible:ring-2 focus-visible:ring-primary/40 shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           <HelpCircle className="size-3.5" />
@@ -219,19 +218,19 @@ export function ExamForm({
           <div className="space-y-8 lg:col-span-8 min-w-0">
             {/* ── CARD 1: EXAM DETAILS ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
+              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
                     <FileText className="size-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                         Assessment Details
                       </h2>
                       <InfoTip text="General information, subject naming conventions, and candidate instructions that will appear on test entry." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       General title, subject presets, and candidate instructions
                     </p>
                   </div>
@@ -339,19 +338,19 @@ export function ExamForm({
 
             {/* ── CARD 2: TIMING & LIMITS ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="size-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
                     <Clock className="size-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                         Timing & Scoring Limits
                       </h2>
                       <InfoTip text="Enforces total test countdown timer, retry constraints, and grading threshold." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       Test duration, maximum attempts, and passing threshold
                     </p>
                   </div>
@@ -493,19 +492,19 @@ export function ExamForm({
 
             {/* ── CARD 3: SCHEDULE WINDOW ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="size-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
                     <Calendar className="size-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                         Schedule Window
                       </h2>
                       <InfoTip text="Define precise opening and closing times. Candidates cannot take the assessment outside of this window." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       Restrict exam accessibility within a specified date & time range
                     </p>
                   </div>
@@ -556,40 +555,33 @@ export function ExamForm({
               </div>
             </Card>
 
-            {/* ── CARD 4: PROCTORING & INTEGRITY ── */}
+            {/* ── CARD 4: PROCTORING & INTEGRITY (Google UI Clean Design: Minimal text, rich modal) ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="px-6 py-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-emerald-500/20">
                     <ShieldCheck className="size-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                         Proctoring & Anti-Cheating
                       </h2>
-                      <InfoTip text="Automated integrity controls including question order randomization, MCQ option shuffling, camera checks, and anomaly scoring." />
+                      <InfoTip text="Automated integrity controls. Configure question randomization, camera verification, and anomaly sensitivity." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Question randomization, webcam consent, and AI violation monitoring
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {activeProctoringCount} of 3 active • {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"} sensitivity
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5">
-                  <Badge
-                    variant="outline"
-                    className="text-xs sm:text-sm font-bold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 px-3 py-1 bg-emerald-500/5 shrink-0"
-                  >
-                    {activeProctoringCount} of 3 active
-                  </Badge>
-                  {/* Dedicated Proctoring Settings Modal Trigger */}
+                <div className="flex items-center gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setIsProctoringModalOpen(true)}
-                    className="h-8 px-3 rounded-lg border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10 text-xs font-semibold gap-1.5 shadow-2xs active:scale-95 cursor-pointer"
+                    className="h-8.5 px-3.5 rounded-full border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 text-xs font-semibold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
                   >
                     <SlidersHorizontal className="size-3.5" />
                     <span>Configure Rules</span>
@@ -597,31 +589,24 @@ export function ExamForm({
                 </div>
               </div>
 
-              <div className="p-6 sm:p-7 space-y-6">
-                {/* Clean Grouped Settings List with Tooltips */}
-                <div className="divide-y divide-border/50 rounded-xl border border-border/60 bg-muted/15 overflow-hidden">
+              {/* Clean Google-Style Compact Settings List */}
+              <div className="p-4 sm:p-5">
+                <div className="divide-y divide-border/40 rounded-xl border border-border/50 bg-muted/10 overflow-hidden">
                   {/* 1. Shuffle Questions */}
                   <div
                     onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                    className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                    className="flex items-center justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                   >
-                    <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="flex items-center gap-3.5">
                       <div className={cn(
-                        "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                        shuffleQuestions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                        shuffleQuestions ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
                       )}>
-                        <Shuffle className="size-5" />
+                        <Shuffle className="size-4.5" />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h4 className="text-sm sm:text-base font-bold text-foreground">
-                            Shuffle Questions
-                          </h4>
-                          <InfoTip text="Randomizes the question sequence for every candidate so no two students have the same exam question order." />
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                          Display exam questions in completely randomized order for each candidate.
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">Shuffle Questions</span>
+                        <InfoTip text="Display exam questions in completely randomized order for each candidate." />
                       </div>
                     </div>
                     <Switch
@@ -642,25 +627,18 @@ export function ExamForm({
                   {/* 2. Shuffle Options */}
                   <div
                     onClick={() => setShuffleOptions(!shuffleOptions)}
-                    className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                    className="flex items-center justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                   >
-                    <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="flex items-center gap-3.5">
                       <div className={cn(
-                        "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                        shuffleOptions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                        shuffleOptions ? "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
                       )}>
-                        <Shuffle className="size-5 rotate-90" />
+                        <Shuffle className="size-4.5 rotate-90" />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h4 className="text-sm sm:text-base font-bold text-foreground">
-                            Shuffle Options
-                          </h4>
-                          <InfoTip text="Randomizes multiple-choice options (A, B, C, D) inside each question to prevent candidates from copying option keys." />
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                          Randomize multiple-choice option positions (A, B, C, D) within every question.
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">Shuffle Options</span>
+                        <InfoTip text="Randomize multiple-choice option positions (A, B, C, D) within every question." />
                       </div>
                     </div>
                     <Switch
@@ -678,28 +656,21 @@ export function ExamForm({
                     />
                   </div>
 
-                  {/* 3. Webcam Monitoring */}
+                  {/* 3. Webcam Surveillance */}
                   <div
                     onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
-                    className="flex items-center justify-between p-4 sm:p-5 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                    className="flex items-center justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors cursor-pointer select-none"
                   >
-                    <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="flex items-center gap-3.5">
                       <div className={cn(
-                        "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                        webcamMonitoringRequired ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                        webcamMonitoringRequired ? "bg-blue-500/15 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
                       )}>
-                        <Camera className="size-5" />
+                        <Camera className="size-4.5" />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h4 className="text-sm sm:text-base font-bold text-foreground">
-                            Webcam Surveillance & Consent
-                          </h4>
-                          <InfoTip text="Requires students to grant webcam permission. Takes intermittent security audit snapshots during the test to detect absence or multiple faces." />
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                          Require student camera permission and capture periodic audit snapshots during the test.
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">Webcam Surveillance & Consent</span>
+                        <InfoTip text="Require student camera permission and capture periodic audit snapshots during the test." />
                       </div>
                     </div>
                     <Switch
@@ -716,78 +687,76 @@ export function ExamForm({
                       className="sr-only"
                     />
                   </div>
-                </div>
 
-                {/* Anomaly Review Threshold Row */}
-                <div className="p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="space-y-0.5">
-                    <div className="flex items-center gap-1.5">
-                      <Label htmlFor="violationReviewThreshold" className="text-sm sm:text-base font-bold text-foreground">
-                        Anomaly Review Threshold
-                      </Label>
-                      <InfoTip text="When cumulative cheating events (tab switches, full-screen exits, webcam loss) reach this score, the attempt is flagged for teacher review." />
+                  {/* 4. Anomaly Review Sensitivity */}
+                  <div className="flex items-center justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-3.5">
+                      <div className="size-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <ShieldAlert className="size-4.5" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">Anomaly Review Threshold</span>
+                        <InfoTip text="Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits)." />
+                      </div>
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits).
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <Input
-                      id="violationReviewThreshold"
-                      name="violationReviewThreshold"
-                      type="number"
-                      min={1}
-                      max={100}
-                      value={violationThreshold}
-                      onChange={(e) => setViolationThreshold(Number(e.target.value))}
-                      className="w-24 h-11 text-center text-base font-bold rounded-xl"
-                      required
-                    />
-                    <Badge
-                      variant={violationThreshold <= 3 ? "destructive" : violationThreshold <= 7 ? "secondary" : "outline"}
-                      className="text-xs sm:text-sm font-bold px-3 py-1.5"
-                    >
-                      {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"}
-                    </Badge>
+                    <div className="flex items-center gap-1.5">
+                      {[
+                        { label: "Strict (3)", val: 3 },
+                        { label: "Balanced (5)", val: 5 },
+                        { label: "Lenient (10)", val: 10 },
+                      ].map(({ label, val }) => (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setViolationThreshold(val)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                            violationThreshold === val
+                              ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/30"
+                              : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                      <input
+                        type="hidden"
+                        name="violationReviewThreshold"
+                        value={violationThreshold}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </Card>
 
-            {/* ── CARD 5: CANDIDATE ACCESS & PIN ── */}
+            {/* ── CARD 5: CANDIDATE ACCESS & PIN (Google UI Clean Design: Minimal text, rich modal) ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="px-6 py-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-amber-500/20">
                     <Globe className="size-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                         Candidate Access & Security
                       </h2>
-                      <InfoTip text="Configure how candidates join this assessment: friction-free open link or registered accounts, with optional PIN code entry." />
+                      <InfoTip text="Control how candidates join: friction-free open link or registered account, with optional secret PIN." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                      Direct link participation and optional assessment passcode protection
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"} • {accessCode ? `PIN: ${accessCode}` : "Open Access"}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5">
-                  <Badge
-                    variant={allowGuestAccess ? "default" : "secondary"}
-                    className="text-xs sm:text-sm font-bold px-3 py-1"
-                  >
-                    {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"}
-                  </Badge>
-                  {/* Dedicated Access Modal Trigger */}
+                <div className="flex items-center gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setIsAccessModalOpen(true)}
-                    className="h-8 px-3 rounded-lg border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 text-xs font-semibold gap-1.5 shadow-2xs active:scale-95 cursor-pointer"
+                    className="h-8.5 px-3.5 rounded-full border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300 hover:bg-amber-500/15 text-xs font-semibold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
                   >
                     <KeyRound className="size-3.5" />
                     <span>Access Settings</span>
@@ -795,96 +764,98 @@ export function ExamForm({
                 </div>
               </div>
 
-              <div className="p-6 sm:p-7 space-y-6">
-                {/* Direct Link Switch Item */}
-                <div
-                  onClick={() => setAllowGuestAccess(!allowGuestAccess)}
-                  className="flex items-start justify-between p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 hover:bg-muted/30 transition-colors cursor-pointer select-none"
-                >
-                  <div className="flex items-start gap-3.5 sm:gap-4">
-                    <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
-                      allowGuestAccess ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    )}>
-                      <Users className="size-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h4 className="text-sm sm:text-base font-bold text-foreground">
-                          Direct Link Participation (No Registration Required)
-                        </h4>
-                        <InfoTip text="Candidates can enter via WhatsApp/Email link by simply typing their Name & Email. Perfect for quick quizzes and mock exams." />
+              {/* Clean Google-Style Compact Settings List */}
+              <div className="p-4 sm:p-5">
+                <div className="divide-y divide-border/40 rounded-xl border border-border/50 bg-muted/10 overflow-hidden">
+                  {/* Direct Link Access */}
+                  <div
+                    onClick={() => setAllowGuestAccess(!allowGuestAccess)}
+                    className="flex items-center justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className={cn(
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                        allowGuestAccess ? "bg-sky-500/15 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Users className="size-4.5" />
                       </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
-                        Students can begin test immediately via link by entering their <strong>Full Name & Email</strong>. Registered students can also log in seamlessly.
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">
+                          Direct Link Participation (No Registration Required)
+                        </span>
+                        <InfoTip text="Students can begin test immediately via link by entering their Full Name & Email. Registered students can also log in seamlessly." />
+                      </div>
                     </div>
-                  </div>
-                  <Switch
-                    id="allowGuestAccessSwitch"
-                    checked={allowGuestAccess}
-                    onCheckedChange={setAllowGuestAccess}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <input
-                    type="hidden"
-                    name="allowGuestAccess"
-                    value={allowGuestAccess ? "on" : "off"}
-                  />
-                </div>
-
-                {/* Passcode / Security PIN Field */}
-                <div className="p-4 sm:p-5 rounded-xl border border-border/60 bg-muted/15 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="accessCode" className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                      <Lock className="size-4 text-muted-foreground" />
-                      <span>Access Passcode / Security PIN</span>
-                      <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                      <InfoTip text="If set, students must enter this secret code before their exam begins. Distribute this in your physical classroom or live session." />
-                    </Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
-                        setAccessCode(randomCode)
-                      }}
-                      className="h-8 px-2.5 rounded-lg text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 gap-1.5 cursor-pointer"
-                    >
-                      <RefreshCw className="size-3.5" />
-                      <span>Generate Random PIN</span>
-                    </Button>
-                  </div>
-
-                  <div className="relative">
-                    <Input
-                      id="accessCode"
-                      name="accessCode"
-                      placeholder="e.g. 2026EXAM or leave empty for open access"
-                      value={accessCode}
-                      onChange={(e) => setAccessCode(e.target.value)}
-                      className="h-12 text-base font-mono tracking-wider rounded-xl pr-16"
-                      maxLength={50}
+                    <Switch
+                      id="allowGuestAccessSwitch"
+                      checked={allowGuestAccess}
+                      onCheckedChange={setAllowGuestAccess}
+                      onClick={(e) => e.stopPropagation()}
                     />
-                    {accessCode && (
+                    <input
+                      type="hidden"
+                      name="allowGuestAccess"
+                      value={allowGuestAccess ? "on" : "off"}
+                    />
+                  </div>
+
+                  {/* Access PIN Code */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 px-4 hover:bg-muted/30 transition-colors gap-3">
+                    <div className="flex items-center gap-3.5 shrink-0">
+                      <div className={cn(
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                        accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Lock className="size-4.5" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-foreground">
+                          Access Passcode / Security PIN
+                        </span>
+                        <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                        <InfoTip text="If set, candidates must input this passcode along with their credentials before the test commences." />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <div className="relative flex-1 sm:w-48">
+                        <Input
+                          id="accessCode"
+                          name="accessCode"
+                          placeholder="e.g. 2026EXAM"
+                          value={accessCode}
+                          onChange={(e) => setAccessCode(e.target.value)}
+                          className="h-8.5 font-mono text-xs tracking-wider rounded-lg pr-12 bg-background"
+                          maxLength={50}
+                        />
+                        {accessCode && (
+                          <button
+                            type="button"
+                            onClick={() => setAccessCode("")}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground cursor-pointer"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
-                        onClick={() => setAccessCode("")}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                        onClick={() => {
+                          const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
+                          setAccessCode(randomCode)
+                        }}
+                        className="h-8.5 px-3 text-xs font-semibold shrink-0 cursor-pointer rounded-lg gap-1.5"
+                        title="Generate random 6-digit PIN"
                       >
-                        Clear
+                        <RefreshCw className="size-3" />
+                        <span>Generate PIN</span>
                       </Button>
-                    )}
+                    </div>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    If set, candidates must input this passcode along with their credentials before the test commences.
-                  </p>
                 </div>
 
-                {/* Hidden isPublic field for action parser */}
                 <input type="hidden" name="isPublic" value={isPublic ? "on" : "off"} />
               </div>
             </Card>
@@ -893,7 +864,7 @@ export function ExamForm({
           {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
           <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
-              <div className="px-5 py-4.5 border-b border-border/50 bg-muted/20">
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/20">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Assessment Overview
@@ -1035,88 +1006,156 @@ export function ExamForm({
 
         {/* ── MODAL 1: PROCTORING & ANTI-CHEAT GOVERNANCE MODAL ── */}
         <Dialog open={isProctoringModalOpen} onOpenChange={setIsProctoringModalOpen}>
-          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-2xl">
+          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-3xl border-border/80 shadow-2xl">
             <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="size-5" />
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
+                  <ShieldCheck className="size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold text-foreground">
+                  <DialogTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                     Proctoring & Anti-Cheat Governance
                   </DialogTitle>
                   <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                    Configure automated cheating deterrents, live camera monitoring, and anomaly thresholds.
+                    Configure automated cheating deterrents, live camera monitoring, and anomaly review thresholds.
                   </DialogDescription>
                 </div>
               </div>
             </DialogHeader>
 
             <div className="p-6 space-y-6 text-sm">
-              {/* Section 1: Randomization */}
+              {/* Section 1: Randomization Controls */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Randomization Controls
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Randomization & Anti-Collision
+                  </h4>
+                  <span className="text-[11px] text-muted-foreground font-medium">Automatic per candidate</span>
+                </div>
+
                 <div className="space-y-3">
+                  {/* Card 1: Shuffle Questions */}
                   <div
                     onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-border/70 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                    className={cn(
+                      "p-4 rounded-2xl border transition-all cursor-pointer select-none",
+                      shuffleQuestions
+                        ? "border-emerald-500/40 bg-emerald-500/5 shadow-2xs"
+                        : "border-border/60 bg-card hover:bg-muted/30"
+                    )}
                   >
-                    <div className="flex items-center gap-3">
-                      <Shuffle className="size-4 text-primary shrink-0" />
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <p className="font-semibold text-foreground text-sm">Shuffle Question Order</p>
-                          <InfoTip text="Candidates receive questions in different random sequences, preventing side-by-side cheating." />
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3.5">
+                        <div className={cn(
+                          "size-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                          shuffleQuestions ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
+                        )}>
+                          <Shuffle className="size-4.5" />
                         </div>
-                        <p className="text-xs text-muted-foreground">Unique order generated per attempt.</p>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-bold text-foreground text-sm sm:text-base">Shuffle Question Sequence</p>
+                            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border/50">
+                              [Q1, Q2, Q3] ➔ [Q3, Q1, Q2]
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            Generates a unique randomized question order for each candidate attempt to prevent looking at neighbors&apos; screens.
+                          </p>
+                        </div>
                       </div>
+                      <Switch
+                        checked={shuffleQuestions}
+                        onCheckedChange={setShuffleQuestions}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1"
+                      />
                     </div>
-                    <Switch checked={shuffleQuestions} onCheckedChange={setShuffleQuestions} onClick={(e) => e.stopPropagation()} />
                   </div>
 
+                  {/* Card 2: Shuffle Choices */}
                   <div
                     onClick={() => setShuffleOptions(!shuffleOptions)}
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-border/70 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                    className={cn(
+                      "p-4 rounded-2xl border transition-all cursor-pointer select-none",
+                      shuffleOptions
+                        ? "border-indigo-500/40 bg-indigo-500/5 shadow-2xs"
+                        : "border-border/60 bg-card hover:bg-muted/30"
+                    )}
                   >
-                    <div className="flex items-center gap-3">
-                      <Shuffle className="size-4 rotate-90 text-primary shrink-0" />
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <p className="font-semibold text-foreground text-sm">Shuffle MCQ Answer Choices</p>
-                          <InfoTip text="Scrambles the ABCD positions of options for each question." />
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3.5">
+                        <div className={cn(
+                          "size-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                          shuffleOptions ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
+                        )}>
+                          <Shuffle className="size-4.5 rotate-90" />
                         </div>
-                        <p className="text-xs text-muted-foreground">Prevents sharing answer keys like (1-A, 2-C).</p>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-bold text-foreground text-sm sm:text-base">Shuffle MCQ Answer Choices</p>
+                            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border/50">
+                              [A, B, C, D] ➔ [C, A, D, B]
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            Scrambles multiple-choice choices inside each question to prevent candidates from sharing answers like (1-A, 2-C).
+                          </p>
+                        </div>
                       </div>
+                      <Switch
+                        checked={shuffleOptions}
+                        onCheckedChange={setShuffleOptions}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-1"
+                      />
                     </div>
-                    <Switch checked={shuffleOptions} onCheckedChange={setShuffleOptions} onClick={(e) => e.stopPropagation()} />
                   </div>
                 </div>
               </div>
 
-              {/* Section 2: Webcam */}
+              {/* Section 2: Webcam Surveillance */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Video Surveillance & Verification
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Video Surveillance & Verification
+                  </h4>
+                  <Badge variant="outline" className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 border-blue-500/30">
+                    Live Camera Snapshots
+                  </Badge>
+                </div>
+
                 <div
                   onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
-                  className="flex items-start justify-between p-3.5 rounded-xl border border-border/70 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                  className={cn(
+                    "p-4 rounded-2xl border transition-all cursor-pointer select-none",
+                    webcamMonitoringRequired
+                      ? "border-blue-500/40 bg-blue-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
+                  )}
                 >
-                  <div className="flex items-start gap-3">
-                    <Camera className="size-4 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="font-semibold text-foreground text-sm">Mandatory Webcam Consent</p>
-                        <InfoTip text="Browser will request camera permission before allowing the student to click start. Snapshots are recorded during the test." />
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3.5">
+                      <div className={cn(
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                        webcamMonitoringRequired ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Camera className="size-4.5" />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                        Periodic audit snapshots captured to detect candidate absence or unauthorized assistance.
-                      </p>
+                      <div className="space-y-1">
+                        <p className="font-bold text-foreground text-sm sm:text-base">Mandatory Webcam Consent</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Candidate must grant camera permission before opening questions. Periodic silent audit snapshots verify student identity and detect unpermitted persons.
+                        </p>
+                      </div>
                     </div>
+                    <Switch
+                      checked={webcamMonitoringRequired}
+                      onCheckedChange={setWebcamMonitoringRequired}
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-1"
+                    />
                   </div>
-                  <Switch checked={webcamMonitoringRequired} onCheckedChange={setWebcamMonitoringRequired} onClick={(e) => e.stopPropagation()} />
                 </div>
               </div>
 
@@ -1126,44 +1165,51 @@ export function ExamForm({
                   <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Anomaly Review Threshold
                   </h4>
-                  <Badge variant="outline" className="font-bold text-xs">
+                  <Badge variant="secondary" className="font-bold text-xs">
                     Current: {violationThreshold} ({violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"})
                   </Badge>
                 </div>
-                <div className="p-4 rounded-xl border border-border/70 bg-muted/20 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant={violationThreshold === 3 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setViolationThreshold(3)}
-                      className="text-xs h-8 flex-1"
-                    >
-                      Strict (3 pts)
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={violationThreshold === 5 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setViolationThreshold(5)}
-                      className="text-xs h-8 flex-1"
-                    >
-                      Balanced (5 pts)
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={violationThreshold === 10 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setViolationThreshold(10)}
-                      className="text-xs h-8 flex-1"
-                    >
-                      Lenient (10 pts)
-                    </Button>
+
+                <div className="p-4 rounded-2xl border border-border/70 bg-muted/20 space-y-4">
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {[
+                      { label: "Strict (3 pts)", desc: "High-stakes certification & finals", val: 3 },
+                      { label: "Balanced (5 pts)", desc: "Standard class tests (Recommended)", val: 5 },
+                      { label: "Lenient (10 pts)", desc: "Practice & open-book quizzes", val: 10 },
+                    ].map(({ label, desc, val }) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setViolationThreshold(val)}
+                        className={cn(
+                          "p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1",
+                          violationThreshold === val
+                            ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/40 font-bold shadow-2xs"
+                            : "border-border/60 bg-card hover:bg-muted text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <span className="text-xs font-bold block">{label}</span>
+                        <span className="text-[10px] text-muted-foreground leading-tight block">{desc}</span>
+                      </button>
+                    ))}
                   </div>
-                  <div className="text-xs text-muted-foreground space-y-1 pt-1">
-                    <p>• <strong>Tab Switch:</strong> +2 violation score per occurrence</p>
-                    <p>• <strong>Window Unfocus / Minimized:</strong> +3 violation score</p>
-                    <p>• <strong>Face Not Detected (Webcam):</strong> +2 violation score</p>
+
+                  <div className="p-3 rounded-xl border border-border/50 bg-background/80 text-xs text-muted-foreground space-y-1.5">
+                    <p className="font-semibold text-foreground text-[11px] uppercase tracking-wider">Violation Point Weights:</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
+                      <div className="p-2 rounded-lg bg-muted/50 flex items-center justify-between">
+                        <span>Tab Switch</span>
+                        <strong className="text-destructive font-mono">+2 pts</strong>
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/50 flex items-center justify-between">
+                        <span>Window Unfocus</span>
+                        <strong className="text-destructive font-mono">+3 pts</strong>
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/50 flex items-center justify-between">
+                        <span>No Face / Multi</span>
+                        <strong className="text-destructive font-mono">+2 pts</strong>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1172,9 +1218,10 @@ export function ExamForm({
                 <Button
                   type="button"
                   onClick={() => setIsProctoringModalOpen(false)}
-                  className="w-full h-11 text-sm font-bold rounded-xl"
+                  className="w-full h-11 text-sm font-bold rounded-xl cursor-pointer gap-2 shadow-xs"
                 >
-                  Save & Apply Proctoring Rules
+                  <CheckCircle2 className="size-4" />
+                  <span>Save & Apply Proctoring Rules</span>
                 </Button>
               </div>
             </div>
@@ -1183,14 +1230,14 @@ export function ExamForm({
 
         {/* ── MODAL 2: CANDIDATE ACCESS & PARTICIPATION MODAL ── */}
         <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
-          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-2xl">
+          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-3xl border-border/80 shadow-2xl">
             <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                  <Globe className="size-5" />
+              <div className="flex items-center gap-3.5">
+                <div className="size-11 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
+                  <Globe className="size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold text-foreground">
+                  <DialogTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                     Candidate Access & Security Governance
                   </DialogTitle>
                   <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
@@ -1203,26 +1250,48 @@ export function ExamForm({
             <div className="p-6 space-y-6 text-sm">
               {/* Participation Mode */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Participation Mode
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Participation & Authentication Mode
+                  </h4>
+                  <Badge variant="outline" className="text-[10px] font-semibold text-sky-600 dark:text-sky-400 border-sky-500/30">
+                    Fast 1-Click Join
+                  </Badge>
+                </div>
+
                 <div
                   onClick={() => setAllowGuestAccess(!allowGuestAccess)}
-                  className="flex items-start justify-between p-4 rounded-xl border border-border/70 hover:bg-muted/30 transition-colors cursor-pointer select-none"
+                  className={cn(
+                    "p-4 rounded-2xl border transition-all cursor-pointer select-none",
+                    allowGuestAccess
+                      ? "border-sky-500/40 bg-sky-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
+                  )}
                 >
-                  <div className="flex items-start gap-3">
-                    <Users className="size-4 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="font-semibold text-foreground text-sm">Direct Link (No Registration Required)</p>
-                        <InfoTip text="Candidates can enter via link with just their Name & Email. Highly recommended for external evaluations." />
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3.5">
+                      <div className={cn(
+                        "size-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                        allowGuestAccess ? "bg-sky-500/20 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
+                      )}>
+                        <Users className="size-4.5" />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                        Students can participate instantly without an account password. Their identity is verified by Name and Email.
-                      </p>
+                      <div className="space-y-1">
+                        <p className="font-bold text-foreground text-sm sm:text-base">
+                          Direct Link (No Registration Required)
+                        </p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Candidates simply click the exam URL, enter their Full Name & Email Address, and begin immediately. No password or prior account registration needed. (Registered students can also log in seamlessly).
+                        </p>
+                      </div>
                     </div>
+                    <Switch
+                      checked={allowGuestAccess}
+                      onCheckedChange={setAllowGuestAccess}
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-1"
+                    />
                   </div>
-                  <Switch checked={allowGuestAccess} onCheckedChange={setAllowGuestAccess} onClick={(e) => e.stopPropagation()} />
                 </div>
               </div>
 
@@ -1240,64 +1309,90 @@ export function ExamForm({
                       const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                       setAccessCode(randomCode)
                     }}
-                    className="h-7 text-xs font-semibold text-primary hover:bg-primary/10 gap-1.5"
+                    className="h-7 text-xs font-semibold text-primary hover:bg-primary/10 gap-1.5 cursor-pointer rounded-lg"
                   >
                     <RefreshCw className="size-3" />
                     <span>Generate Random PIN</span>
                   </Button>
                 </div>
 
-                <div className="relative">
-                  <Input
-                    placeholder="e.g. 2026EXAM or leave empty for open access"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value)}
-                    className="h-11 font-mono text-base tracking-wider rounded-xl pr-16"
-                  />
-                  {accessCode && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setAccessCode("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-                    >
-                      Clear
-                    </Button>
-                  )}
+                <div className="p-4 rounded-2xl border border-border/60 bg-card space-y-3">
+                  <div className="relative">
+                    <Input
+                      placeholder="e.g. 2026EXAM or leave empty for open access"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value)}
+                      className="h-11 font-mono text-base tracking-wider rounded-xl pr-16 bg-background"
+                      maxLength={50}
+                    />
+                    {accessCode && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setAccessCode("")}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer rounded-lg"
+                      >
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {accessCode ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                        <Lock className="size-3.5" />
+                        PIN Active: Candidates must input &ldquo;{accessCode}&rdquo; before they can access the exam questions.
+                      </span>
+                    ) : (
+                      "Open access: Anyone with the direct exam link can participate without a passcode."
+                    )}
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {accessCode ? (
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                      <Lock className="size-3.5" />
-                      PIN active: Candidates must enter this secret PIN to start the exam.
-                    </span>
-                  ) : (
-                    "Open access: Anyone with the direct exam link can participate without a passcode."
-                  )}
-                </p>
               </div>
 
               {/* Student Experience Mockup */}
-              <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-primary">
-                  <Eye className="size-4" />
-                  <span>Student Joining Experience Preview</span>
+              <div className="p-4 rounded-2xl border border-primary/20 bg-primary/5 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-primary">
+                  <div className="flex items-center gap-2">
+                    <Eye className="size-4" />
+                    <span>Candidate Joining Experience Live Preview</span>
+                  </div>
+                  <span className="text-[10px] font-semibold bg-primary/10 px-2 py-0.5 rounded-md">Simulated View</span>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  When a candidate opens your link, they will see a branded portal asking for:
-                  <strong> Full Name</strong>, <strong>Email Address</strong>
-                  {accessCode ? <span>, and the <strong>Access PIN ({accessCode})</strong></span> : ""}.
-                </p>
+                <div className="p-3.5 rounded-xl border border-border/50 bg-background/90 space-y-2 text-xs">
+                  <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                    <span className="font-bold text-foreground">ExamHub Assessment Portal</span>
+                    <span className="text-[10px] text-muted-foreground">Candidate Check-in</span>
+                  </div>
+                  <div className="space-y-1.5 text-muted-foreground text-[11px]">
+                    <div className="flex items-center gap-2 p-1.5 rounded-md bg-muted/40">
+                      <span className="font-semibold text-foreground w-20">Full Name:</span>
+                      <span className="text-muted-foreground">Required for identification</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-1.5 rounded-md bg-muted/40">
+                      <span className="font-semibold text-foreground w-20">Email:</span>
+                      <span className="text-muted-foreground">Used for score reports</span>
+                    </div>
+                    {accessCode && (
+                      <div className="flex items-center gap-2 p-1.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300">
+                        <span className="font-semibold w-20 flex items-center gap-1">
+                          <Lock className="size-3" /> PIN:
+                        </span>
+                        <span className="font-mono font-bold">{accessCode}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div className="pt-2">
                 <Button
                   type="button"
                   onClick={() => setIsAccessModalOpen(false)}
-                  className="w-full h-11 text-sm font-bold rounded-xl"
+                  className="w-full h-11 text-sm font-bold rounded-xl cursor-pointer gap-2 shadow-xs"
                 >
-                  Save Access Settings
+                  <CheckCircle2 className="size-4" />
+                  <span>Save Access Settings</span>
                 </Button>
               </div>
             </div>
