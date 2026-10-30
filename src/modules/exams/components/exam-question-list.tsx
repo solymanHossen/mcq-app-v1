@@ -119,18 +119,9 @@ export function ExamQuestionList({
                     <div className="size-12 sm:size-13 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20">
                       <FolderPlus className="size-6" />
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Badge variant="secondary" className="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-help">
-                            Fast Setup
-                          </Badge>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" className="text-xs">
-                        Fastest method: pull existing verified questions from your repository
-                      </TooltipContent>
-                    </Tooltip>
+                    <Badge variant="secondary" className="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                      Fast Setup
+                    </Badge>
                   </div>
 
                   <div className="space-y-1.5">
@@ -141,58 +132,14 @@ export function ExamQuestionList({
                       Select and snapshot multiple-choice questions you have already verified and stored in your question bank.
                     </p>
                   </div>
-
-                  {/* Feature checklist with clean tooltips */}
-                  <div className="space-y-2.5 pt-2 border-t border-border/60">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span className="flex items-center gap-2">
-                        <Check className="size-4 text-primary shrink-0" />
-                        <span>Bulk selection from repository</span>
-                      </span>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
-                            <Info className="size-3.5" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent side="left" className="text-xs">
-                          Select 10, 20, or all questions at once with 1-click filters
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span className="flex items-center gap-2">
-                        <Check className="size-4 text-primary shrink-0" />
-                        <span>Isolated snapshot protection</span>
-                      </span>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
-                            <Info className="size-3.5" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent side="left" className="text-xs">
-                          Questions remain unchanged even if the master bank is modified later
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </div>
                 </div>
 
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-11 sm:h-12 text-sm sm:text-base cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
-                      <Link href={`/teacher/exams/${examId}/add-questions`}>
-                        <span>Browse Question Bank</span>
-                        <ArrowRight className="size-4" />
-                      </Link>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
-                    Open question repository to search, filter, and import questions
-                  </TooltipContent>
-                </Tooltip>
+                <Button asChild className="w-full gap-2 font-semibold shadow-xs rounded-xl h-11 sm:h-12 text-sm sm:text-base cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Link href={`/teacher/exams/${examId}/add-questions`}>
+                    <span>Browse Question Bank</span>
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
               </div>
 
               {/* Option 2: Create New Question */}
@@ -202,18 +149,9 @@ export function ExamQuestionList({
                     <div className="size-12 sm:size-13 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center ring-1 ring-emerald-500/20">
                       <FilePlus2 className="size-6" />
                     </div>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div>
-                          <Badge variant="secondary" className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 cursor-help">
-                            Custom Authoring
-                          </Badge>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" className="text-xs">
-                        Author a dedicated question tailored specifically for this exam
-                      </TooltipContent>
-                    </Tooltip>
+                    <Badge variant="secondary" className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      Custom Authoring
+                    </Badge>
                   </div>
 
                   <div className="space-y-1.5">
@@ -224,58 +162,14 @@ export function ExamQuestionList({
                       Draft a brand new question with 4 multiple choice options, LaTeX math formulas, and answer explanations.
                     </p>
                   </div>
-
-                  {/* Feature checklist with clean tooltips */}
-                  <div className="space-y-2.5 pt-2 border-t border-border/60">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span className="flex items-center gap-2">
-                        <Check className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                        <span>4 Options MCQ with Answer Key</span>
-                      </span>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
-                            <Info className="size-3.5" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent side="left" className="text-xs">
-                          Define options A, B, C, D with clear single-select answer key
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span className="flex items-center gap-2">
-                        <Check className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                        <span>LaTeX math &amp; answer explanation</span>
-                      </span>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="cursor-help text-muted-foreground/80 hover:text-foreground">
-                            <Info className="size-3.5" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent side="left" className="text-xs">
-                          Format equations with KaTeX and provide solution hints for students
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </div>
                 </div>
 
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-11 sm:h-12 text-sm sm:text-base cursor-pointer border-border hover:border-emerald-500/50 hover:bg-emerald-500/5">
-                      <Link href="/teacher/questions/new">
-                        <span>Create New Question</span>
-                        <ArrowRight className="size-4" />
-                      </Link>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
-                    Open full question creation form with math editor &amp; options
-                  </TooltipContent>
-                </Tooltip>
+                <Button asChild variant="outline" className="w-full gap-2 font-semibold rounded-xl h-11 sm:h-12 text-sm sm:text-base cursor-pointer border-border hover:border-emerald-500/50 hover:bg-emerald-500/5">
+                  <Link href="/teacher/questions/new">
+                    <span>Create New Question</span>
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
               </div>
             </div>
           )}
