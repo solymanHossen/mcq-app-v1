@@ -16,6 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import { Users, BookOpen, PieChartIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 
 interface UserDistributionData {
@@ -26,6 +27,7 @@ interface UserDistributionData {
 }
 
 interface DashboardDonutChartProps {
+  className?: string
   title?: string
   description?: string
   data: UserDistributionData[]
@@ -60,6 +62,7 @@ export function DashboardDonutChart({
   totalUsers,
   centerLabel = "Total Users",
   iconName = "users",
+  className,
 }: DashboardDonutChartProps) {
   const HeaderIcon = iconName === "book" || iconName === "exams" ? BookOpen : Users
   const chartData = React.useMemo(() => {
@@ -71,7 +74,12 @@ export function DashboardDonutChart({
   }, [data])
 
   return (
-    <Card className="flex flex-col rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md">
+    <Card
+      className={cn(
+        "flex flex-col rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md",
+        className
+      )}
+    >
       <CardHeader className="flex flex-row items-center justify-between p-5 pb-2 sm:p-6 sm:pb-2">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">

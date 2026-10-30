@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BookOpen,
   BookOpenCheck,
-  Clock,
   Plus,
   ShieldCheck,
   ShieldAlert,
@@ -31,6 +30,16 @@ import { DashboardKpiCard } from "@/components/shared/dashboard-kpi-card"
 import { DashboardAreaChart } from "@/components/shared/dashboard-area-chart"
 import { DashboardDonutChart } from "@/components/shared/dashboard-donut-chart"
 import { DashboardBarChart } from "@/components/shared/dashboard-bar-chart"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent,
+} from "@/components/ui/empty"
+import { cn } from "@/lib/utils"
 import { generateDashboardChartData } from "@/lib/chart-data-utils"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -43,6 +52,18 @@ export const metadata = {
   description:
     "Author assessments, manage questions, inspect student attempts, and review academic performance.",
 }
+
+const dashboardCardClassName =
+  "min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs"
+const dashboardCardHeaderClassName =
+  "min-w-0 gap-1 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5"
+const dashboardCardContentClassName = "min-w-0 p-4 sm:p-6 lg:p-7"
+const dashboardChartClassName =
+  "min-w-0 gap-4 py-0 hover:shadow-sm [&_[data-slot=card-header]]:min-w-0 [&_[data-slot=card-header]]:border-b [&_[data-slot=card-header]]:border-border/50 [&_[data-slot=card-header]]:bg-muted/20 [&_[data-slot=card-header]]:px-4 [&_[data-slot=card-header]]:py-3.5 [&_[data-slot=card-header]>div]:min-w-0 [&_[data-slot=card-title]]:text-base [&_[data-slot=card-description]]:text-xs [&_.truncate]:whitespace-normal sm:[&_[data-slot=card-header]]:px-6 sm:[&_[data-slot=card-header]]:py-4.5 sm:[&_[data-slot=card-title]]:text-xl sm:[&_[data-slot=card-description]]:text-sm"
+const dashboardKpiClassName =
+  "h-full min-w-0 justify-start gap-3 hover:translate-y-0 hover:shadow-sm [&_.truncate]:whitespace-normal [&_.items-baseline]:flex-wrap [&>div:first-child]:flex-wrap"
+const dashboardTabClassName =
+  "group h-10 shrink-0 gap-2 rounded-lg px-3 text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:px-4 sm:text-sm"
 
 export default async function TeacherDashboardPage() {
   const teacher = await requireRole(...TEACHER_ROLES)
@@ -84,15 +105,26 @@ export default async function TeacherDashboardPage() {
       },
     }),
     prisma.exam.count({ where: { teacherId: teacher.id } }),
-    prisma.exam.count({ where: { teacherId: teacher.id, status: "PUBLISHED" } }),
+    prisma.exam.count({
+      where: { teacherId: teacher.id, status: "PUBLISHED" },
+    }),
     prisma.exam.count({ where: { teacherId: teacher.id, status: "DRAFT" } }),
     prisma.exam.count({ where: { teacherId: teacher.id, status: "ARCHIVED" } }),
     prisma.question.count({ where: { teacherId: teacher.id } }),
-    prisma.question.count({ where: { teacherId: teacher.id, difficulty: "EASY" } }),
-    prisma.question.count({ where: { teacherId: teacher.id, difficulty: "MEDIUM" } }),
-    prisma.question.count({ where: { teacherId: teacher.id, difficulty: "HARD" } }),
+    prisma.question.count({
+      where: { teacherId: teacher.id, difficulty: "EASY" },
+    }),
+    prisma.question.count({
+      where: { teacherId: teacher.id, difficulty: "MEDIUM" },
+    }),
+    prisma.question.count({
+      where: { teacherId: teacher.id, difficulty: "HARD" },
+    }),
     prisma.violationEvent.count({
-      where: { reviewStatus: "OPEN", attempt: { exam: { teacherId: teacher.id } } },
+      where: {
+        reviewStatus: "OPEN",
+        attempt: { exam: { teacherId: teacher.id } },
+      },
     }),
     prisma.examAttempt.count({
       where: { exam: { teacherId: teacher.id } },
@@ -209,17 +241,17 @@ export default async function TeacherDashboardPage() {
   ]
 
   return (
-    <div className="w-full min-w-0 flex flex-col gap-6 sm:gap-8">
+    <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
       {/* ================= CLEAN WORLD-CLASS HEADER (IN SYNC WITH ADMIN) ================= */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+      <div className="flex min-w-0 flex-col gap-4 border-b border-border/60 pb-3 sm:gap-5 sm:pb-4 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
               Teacher Dashboard
             </h1>
             <Badge
               variant="outline"
-              className="text-xs font-semibold bg-primary/10 text-primary border-primary/20 gap-1.5 py-0.5"
+              className="gap-1.5 border-primary/20 bg-primary/10 py-0.5 text-xs font-semibold text-primary"
             >
               <GraduationCap className="size-3.5" />
               <span>Faculty</span>
@@ -227,7 +259,7 @@ export default async function TeacherDashboardPage() {
             {teacherUser.teacherVerificationStatus === "VERIFIED" ? (
               <Badge
                 variant="outline"
-                className="text-xs font-medium text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10 gap-1 py-0.5"
+                className="gap-1 border-emerald-500/30 bg-emerald-500/10 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400"
               >
                 <CheckCircle2 className="size-3" />
                 <span>Verified</span>
@@ -235,28 +267,38 @@ export default async function TeacherDashboardPage() {
             ) : (
               <Badge
                 variant="outline"
-                className="text-xs font-medium text-amber-600 dark:text-amber-400 border-amber-500/30 bg-amber-500/10 gap-1 py-0.5"
+                className="gap-1 border-amber-500/30 bg-amber-500/10 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400"
               >
                 <span>Pending Verification</span>
               </Badge>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            Academic examination telemetry, question vault analytics, and student submission oversight.
+          <p className="text-xs text-muted-foreground sm:text-sm">
+            Academic examination telemetry, question vault analytics, and
+            student submission oversight.
           </p>
         </div>
 
         {/* Quick Actions matching Admin Dashboard */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Button asChild variant="outline" size="sm" className="h-10 rounded-xl px-4 text-xs font-semibold shadow-2xs">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5 xl:shrink-0">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="h-10 gap-2 rounded-xl border-border/70 px-4 text-sm font-semibold shadow-2xs"
+          >
             <Link href="/teacher/questions/new">
-              <BookOpen className="mr-1.5 size-4" />
+              <BookOpen data-icon="inline-start" />
               <span>New Question</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="h-10 rounded-xl px-4 text-xs font-semibold shadow-xs">
+          <Button
+            asChild
+            size="sm"
+            className="h-10 gap-2 rounded-xl px-4 text-sm font-semibold shadow-xs"
+          >
             <Link href="/teacher/exams/new">
-              <Plus className="mr-1.5 size-4" />
+              <Plus data-icon="inline-start" />
               <span>Create Exam</span>
             </Link>
           </Button>
@@ -267,15 +309,17 @@ export default async function TeacherDashboardPage() {
       {teacherUser.role === "TEACHER" &&
         teacherUser.teacherVerificationStatus !== "VERIFIED" && (
           <VerificationStatusCard
+            className="rounded-2xl border border-border/70 shadow-xs backdrop-blur-none sm:rounded-2xl dark:shadow-xs"
             status={teacherUser.teacherVerificationStatus}
             note={teacherUser.teacherVerificationNote}
           />
         )}
 
       {/* ================= 5-TILE GRAND KPI METRICS ROW (IN SYNC WITH ADMIN) ================= */}
-      <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 sm:gap-4.5">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-5">
         {/* KPI 1: Authored Assessments */}
         <DashboardKpiCard
+          className={dashboardKpiClassName}
           title="Authored Exams"
           value={totalExams}
           badgeText={`${published} Live`}
@@ -294,11 +338,12 @@ export default async function TeacherDashboardPage() {
             totalExams,
           ]}
           sparklineType="bar"
-          sparklineColor="#3b82f6"
+          sparklineColor="var(--chart-1)"
         />
 
         {/* KPI 2: Question Bank */}
         <DashboardKpiCard
+          className={dashboardKpiClassName}
           title="Question Bank"
           value={questionCount}
           badgeText={`${subjects.length} Subjects`}
@@ -315,11 +360,12 @@ export default async function TeacherDashboardPage() {
             questionCount,
           ]}
           sparklineType="area"
-          sparklineColor="#8b5cf6"
+          sparklineColor="var(--chart-2)"
         />
 
         {/* KPI 3: Student Submissions */}
         <DashboardKpiCard
+          className={dashboardKpiClassName}
           title="Student Takers"
           value={totalAttempts}
           badgeText={`${completedAttempts} Graded`}
@@ -340,11 +386,12 @@ export default async function TeacherDashboardPage() {
             totalAttempts,
           ]}
           sparklineType="area"
-          sparklineColor="#10b981"
+          sparklineColor="var(--chart-3)"
         />
 
         {/* KPI 4: Disciplines & Coverage */}
         <DashboardKpiCard
+          className={dashboardKpiClassName}
           title="Disciplines"
           value={subjects.length}
           badgeText={`${questionCount} Qs`}
@@ -352,7 +399,10 @@ export default async function TeacherDashboardPage() {
           trendLabel="Disciplinary breadth"
           subtext={
             subjects.length > 0
-              ? `${subjects.slice(0, 2).map((s) => s.subject).join(", ")}${subjects.length > 2 ? "..." : ""}`
+              ? `${subjects
+                  .slice(0, 2)
+                  .map((s) => s.subject)
+                  .join(", ")}${subjects.length > 2 ? "..." : ""}`
               : "Across curriculum subjects"
           }
           icon={GraduationCap}
@@ -364,13 +414,18 @@ export default async function TeacherDashboardPage() {
             subjects.length,
           ]}
           sparklineType="bar"
-          sparklineColor="#f59e0b"
+          sparklineColor="var(--chart-4)"
         />
 
         {/* KPI 5: Academic Integrity */}
         <DashboardKpiCard
+          className={dashboardKpiClassName}
           title="Integrity Health"
-          value={openViolations === 0 ? "Optimal" : `${openViolations} Alert${openViolations === 1 ? "" : "s"}`}
+          value={
+            openViolations === 0
+              ? "Optimal"
+              : `${openViolations} Alert${openViolations === 1 ? "" : "s"}`
+          }
           badgeText={openViolations > 0 ? "Review" : "Clean"}
           trend={openViolations > 0 ? "down" : "up"}
           trendLabel={
@@ -386,14 +441,27 @@ export default async function TeacherDashboardPage() {
           icon={openViolations > 0 ? AlertTriangle : ShieldCheck}
           highlight={openViolations > 0}
           href="/teacher/exams"
-          sparklineData={[100, 100, 99.8, 100, 100, openViolations > 0 ? 94 : 100]}
+          sparklineData={[
+            100,
+            100,
+            99.8,
+            100,
+            100,
+            openViolations > 0 ? 94 : 100,
+          ]}
           sparklineType="line"
-          sparklineColor={openViolations > 0 ? "#f43f5e" : "#10b981"}
+          sparklineColor={
+            openViolations > 0 ? "var(--destructive)" : "var(--chart-3)"
+          }
         />
       </div>
 
       {/* ================= PRIMARY TIME-SERIES INTERACTIVE CHART (IN SYNC WITH ADMIN) ================= */}
       <DashboardAreaChart
+        className={cn(
+          dashboardChartClassName,
+          "[&_[data-slot=card-header]]:flex-col xl:[&_[data-slot=card-header]]:flex-row [&_[data-slot=card-header]>div]:max-w-full [&_[data-slot=card-header]>div:last-child]:flex-wrap"
+        )}
         title="Student Submissions & Exam Velocity"
         description="Comprehensive volume of student test submissions and candidate participation over time"
         data90d={data90d}
@@ -404,9 +472,13 @@ export default async function TeacherDashboardPage() {
       />
 
       {/* ================= SECONDARY SHADCN CHARTS ROW (IN SYNC WITH ADMIN) ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid min-w-0 grid-cols-1 gap-6 sm:gap-8 xl:grid-cols-2">
         {/* Chart A: Exam Lifecycle Status Distribution */}
         <DashboardDonutChart
+          className={cn(
+            dashboardChartClassName,
+            "[&_[data-slot=card-content]>div:last-child]:grid-cols-1 sm:[&_[data-slot=card-content]>div:last-child]:grid-cols-2"
+          )}
           title="Exam Portfolio Breakdown"
           description="Lifecycle distribution across all your authored assessments"
           data={examStatusData}
@@ -415,9 +487,9 @@ export default async function TeacherDashboardPage() {
           iconName="exams"
         />
 
-
         {/* Chart B: Question Difficulty Distribution */}
         <DashboardBarChart
+          className={dashboardChartClassName}
           title="Question Bank Telemetry"
           description="Curriculum item breakdown categorized by difficulty tier"
           data={questionDifficultyData}
@@ -427,65 +499,70 @@ export default async function TeacherDashboardPage() {
       </div>
 
       {/* ================= TABS DATA OPERATIONS HUB (IN SYNC WITH ADMIN) ================= */}
-      <Tabs defaultValue="exams" className="flex flex-col gap-4 pt-2">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <TabsList className="group-data-horizontal/tabs:!h-auto !h-auto flex w-fit items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 sm:p-2 min-h-12 sm:min-h-14">
-            <TabsTrigger
-              value="exams"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+      <Tabs defaultValue="exams" className="flex min-w-0 flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
+          <div className="max-w-full min-w-0 overflow-x-auto pb-1">
+            <TabsList
+              aria-label="Teacher dashboard records"
+              className="h-auto min-h-12 w-max gap-1 rounded-xl border border-border/60 bg-muted/40 p-1 group-data-horizontal/tabs:h-auto"
             >
-              <BookOpen className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
-              <span className="whitespace-nowrap">Authored Exams</span>
-              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
-                {recentExams.length}
-              </span>
-            </TabsTrigger>
+              <TabsTrigger value="exams" className={dashboardTabClassName}>
+                <BookOpen data-icon="inline-start" />
+                <span className="whitespace-nowrap">Authored Exams</span>
+                <Badge
+                  variant="secondary"
+                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                >
+                  {recentExams.length}
+                </Badge>
+              </TabsTrigger>
 
-            <TabsTrigger
-              value="attempts"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
-            >
-              <Activity className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
-              <span className="whitespace-nowrap">Recent Submissions</span>
-              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
-                {recentAttempts.length}
-              </span>
-            </TabsTrigger>
+              <TabsTrigger value="attempts" className={dashboardTabClassName}>
+                <Activity data-icon="inline-start" />
+                <span className="whitespace-nowrap">Recent Submissions</span>
+                <Badge
+                  variant="secondary"
+                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                >
+                  {recentAttempts.length}
+                </Badge>
+              </TabsTrigger>
 
-            <TabsTrigger
-              value="proctoring"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
-            >
-              <ShieldAlert className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
-              <span className="whitespace-nowrap">Proctoring Alerts</span>
-              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
-                {openViolations}
-              </span>
-            </TabsTrigger>
+              <TabsTrigger value="proctoring" className={dashboardTabClassName}>
+                <ShieldAlert data-icon="inline-start" />
+                <span className="whitespace-nowrap">Proctoring Alerts</span>
+                <Badge
+                  variant="secondary"
+                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                >
+                  {openViolations}
+                </Badge>
+              </TabsTrigger>
 
-            <TabsTrigger
-              value="subjects"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
-            >
-              <GraduationCap className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
-              <span className="whitespace-nowrap">Disciplines</span>
-              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
-                {subjects.length}
-              </span>
-            </TabsTrigger>
-          </TabsList>
+              <TabsTrigger value="subjects" className={dashboardTabClassName}>
+                <GraduationCap data-icon="inline-start" />
+                <span className="whitespace-nowrap">Disciplines</span>
+                <Badge
+                  variant="secondary"
+                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                >
+                  {subjects.length}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Quick Actions & Navigation Link */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="h-11 sm:h-12 rounded-xl border border-border/70 bg-card px-4 sm:px-5 text-xs sm:text-sm font-semibold shadow-2xs hover:bg-muted/70 cursor-pointer"
+              className="h-10 w-full gap-2 rounded-xl border-border/70 bg-card px-4 text-sm font-semibold shadow-2xs hover:bg-muted sm:w-auto"
             >
               <Link href="/teacher/exams">
                 <span>Manage Exams</span>
-                <ArrowRight className="ml-1.5 size-4" />
+                <ArrowRight data-icon="inline-end" />
               </Link>
             </Button>
           </div>
@@ -493,50 +570,71 @@ export default async function TeacherDashboardPage() {
 
         {/* Tab 1: Authored Exams */}
         <TabsContent value="exams" className="mt-0">
-          <Card className="rounded-2xl border border-border/70 bg-card shadow-xs">
-            <CardHeader className="p-5 pb-3 sm:p-6 sm:pb-3">
-              <div className="flex items-center justify-between">
+          <Card className={dashboardCardClassName}>
+            <CardHeader className={dashboardCardHeaderClassName}>
+              <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <CardTitle className="font-heading text-lg sm:text-xl font-bold text-foreground">
+                  <CardTitle
+                    role="heading"
+                    aria-level={2}
+                    className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl"
+                  >
                     Authored Assessments
                   </CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">
-                    Your scheduled examination tracks, durations, question items, and student participation.
+                  <CardDescription className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    Your scheduled examination tracks, durations, question
+                    items, and student participation.
                   </CardDescription>
                 </div>
-                <Button asChild size="sm" variant="ghost" className="text-xs font-semibold text-primary">
+                <Button
+                  asChild
+                  size="sm"
+                  variant="ghost"
+                  className="text-xs font-semibold text-primary"
+                >
                   <Link href="/teacher/exams">View all</Link>
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+            <CardContent className={dashboardCardContentClassName}>
               {recentExams.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-border/70 bg-muted/20 p-6">
-                  <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-                    <BookOpenCheck className="size-6" />
-                  </div>
-                  <p className="text-base font-bold text-foreground">No exams created yet</p>
-                  <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-                    Start authoring assessments to publish tests to students and review performance.
-                  </p>
-                  <Button asChild size="sm" className="mt-4 rounded-xl px-5 text-xs font-semibold shadow-xs">
-                    <Link href="/teacher/exams/new">Create First Exam</Link>
-                  </Button>
-                </div>
+                <Empty className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-10 sm:py-12">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <BookOpenCheck />
+                    </EmptyMedia>
+                    <EmptyTitle className="text-base font-bold">
+                      No exams created yet
+                    </EmptyTitle>
+                    <EmptyDescription>
+                      Start authoring assessments to publish tests to students
+                      and review performance.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                  <EmptyContent>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="h-10 rounded-xl px-5 text-sm font-semibold shadow-xs"
+                    >
+                      <Link href="/teacher/exams/new">Create First Exam</Link>
+                    </Button>
+                  </EmptyContent>
+                </Empty>
               ) : (
-                <div className="flex flex-col divide-y divide-border/60 rounded-xl border border-border/70 bg-card overflow-hidden shadow-2xs">
+                <div className="flex min-w-0 flex-col divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-card shadow-2xs">
                   {recentExams.map((exam) => (
                     <div
                       key={exam.id}
-                      className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center hover:bg-muted/30 transition-colors"
+                      className="flex min-w-0 flex-col justify-between gap-3 p-4 transition-colors hover:bg-muted/30 xl:flex-row xl:items-center"
                     >
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-foreground text-xs font-bold shadow-2xs border border-border/70">
+                      <div className="flex min-w-0 items-center gap-3.5">
+                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-muted/60 text-xs font-bold text-foreground shadow-2xs">
                           <BookOpen className="size-4 text-primary" />
                         </span>
-                        <div className="min-w-0 space-y-0.5">
-                          <div className="flex items-center gap-2">
-                            <p className="font-heading text-sm font-bold text-foreground truncate">
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-heading text-sm font-semibold break-words text-foreground">
                               {exam.title}
                             </p>
                             <Badge
@@ -547,7 +645,7 @@ export default async function TeacherDashboardPage() {
                                     ? "secondary"
                                     : "outline"
                               }
-                              className="text-[10px] font-semibold px-2 py-0.2"
+                              className="py-0.2 px-2 text-[10px] font-semibold"
                             >
                               {exam.status === "PUBLISHED"
                                 ? "Published"
@@ -556,7 +654,7 @@ export default async function TeacherDashboardPage() {
                                   : "Archived"}
                             </Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground truncate flex items-center gap-2">
+                          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                             <span>{exam.durationMinutes} min</span>
                             <span>•</span>
                             <span>{exam._count.examQuestions} questions</span>
@@ -568,8 +666,8 @@ export default async function TeacherDashboardPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                        <span className="text-xs text-muted-foreground">
+                      <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
+                        <span className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                           {new Intl.DateTimeFormat("en-US", {
                             month: "short",
                             day: "numeric",
@@ -580,7 +678,7 @@ export default async function TeacherDashboardPage() {
                           asChild
                           variant="outline"
                           size="sm"
-                          className="h-8.5 rounded-lg px-3.5 text-xs font-semibold shadow-2xs hover:border-primary/40"
+                          className="h-10 gap-2 rounded-xl px-3.5 text-xs font-semibold shadow-2xs hover:border-primary/40 sm:text-sm"
                         >
                           <Link href={`/teacher/exams/${exam.id}`}>
                             <span>Manage Exam</span>
@@ -598,58 +696,71 @@ export default async function TeacherDashboardPage() {
 
         {/* Tab 2: Recent Submissions */}
         <TabsContent value="attempts" className="mt-0">
-          <Card className="rounded-2xl border border-border/70 bg-card shadow-xs">
-            <CardHeader className="p-5 pb-3 sm:p-6 sm:pb-3">
-              <div className="flex items-center justify-between">
+          <Card className={dashboardCardClassName}>
+            <CardHeader className={dashboardCardHeaderClassName}>
+              <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <CardTitle className="font-heading text-lg sm:text-xl font-bold text-foreground">
+                  <CardTitle
+                    role="heading"
+                    aria-level={2}
+                    className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl"
+                  >
                     Candidate Submissions
                   </CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">
-                    Real-time student attempt logs and graded scores across your examinations.
+                  <CardDescription className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    Real-time student attempt logs and graded scores across your
+                    examinations.
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+            <CardContent className={dashboardCardContentClassName}>
               {recentAttempts.length === 0 ? (
-                <div className="rounded-xl border border-border/70 bg-muted/20 p-8 text-center text-xs text-muted-foreground">
-                  No candidate submissions recorded yet.
-                </div>
+                <Empty className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-10">
+                  <EmptyDescription>
+                    No candidate submissions recorded yet.
+                  </EmptyDescription>
+                </Empty>
               ) : (
-                <div className="flex flex-col divide-y divide-border/60 rounded-xl border border-border/70 bg-card overflow-hidden shadow-2xs">
+                <div className="flex min-w-0 flex-col divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-card shadow-2xs">
                   {recentAttempts.map((att) => (
                     <div
                       key={att.id}
-                      className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center hover:bg-muted/30 transition-colors"
+                      className="flex min-w-0 flex-col justify-between gap-3 p-4 transition-colors hover:bg-muted/30 xl:flex-row xl:items-center"
                     >
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-foreground text-xs font-bold shadow-2xs border border-border/70">
+                      <div className="flex min-w-0 items-center gap-3.5">
+                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-muted/60 text-xs font-bold text-foreground shadow-2xs">
                           {att.student.name.slice(0, 2).toUpperCase()}
                         </span>
-                        <div className="min-w-0 space-y-0.5">
-                          <p className="font-heading text-sm font-bold text-foreground truncate">
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <p className="font-heading text-sm font-semibold break-words text-foreground">
                             {att.exam.title}
                           </p>
-                          <p className="text-xs text-muted-foreground truncate">
+                          <p className="text-xs leading-relaxed [overflow-wrap:anywhere] break-words text-muted-foreground">
                             Candidate: {att.student.name} ({att.student.email})
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 xl:shrink-0">
                         {att.result && (
-                          <span className="text-xs font-bold text-foreground tabular-nums px-2.5 py-1 rounded-lg bg-muted/50 border border-border/60">
-                            Score: {Math.round(att.result.obtainedMarks)} / {Math.round(att.result.totalMarks)}
-                          </span>
+                          <Badge
+                            variant="outline"
+                            className="h-auto rounded-lg bg-muted/50 px-2.5 py-1 text-xs font-semibold tabular-nums"
+                          >
+                            Score: {Math.round(att.result.obtainedMarks)} /{" "}
+                            {Math.round(att.result.totalMarks)}
+                          </Badge>
                         )}
                         <Badge
-                          variant={att.status === "COMPLETED" ? "default" : "outline"}
-                          className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.2 border-border/70"
+                          variant={
+                            att.status === "COMPLETED" ? "default" : "outline"
+                          }
+                          className="py-0.2 border-border/70 px-2 text-[10px] font-bold tracking-wider uppercase"
                         >
                           {att.status}
                         </Badge>
-                        <span className="text-xs text-muted-foreground font-normal">
+                        <span className="text-xs font-normal text-muted-foreground">
                           {new Intl.DateTimeFormat("en-US", {
                             hour: "numeric",
                             minute: "numeric",
@@ -668,48 +779,57 @@ export default async function TeacherDashboardPage() {
 
         {/* Tab 3: Proctoring Alerts */}
         <TabsContent value="proctoring" className="mt-0">
-          <Card className="rounded-2xl border border-border/70 bg-card shadow-xs">
-            <CardHeader className="p-5 pb-3 sm:p-6 sm:pb-3">
-              <div className="flex items-center justify-between">
+          <Card className={dashboardCardClassName}>
+            <CardHeader className={dashboardCardHeaderClassName}>
+              <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <CardTitle className="font-heading text-lg sm:text-xl font-bold text-foreground">
+                  <CardTitle
+                    role="heading"
+                    aria-level={2}
+                    className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl"
+                  >
                     Proctoring &amp; Academic Integrity
                   </CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">
-                    Flagged examination security anomalies and tab blur thresholds awaiting teacher review.
+                  <CardDescription className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    Flagged examination security anomalies and tab blur
+                    thresholds awaiting teacher review.
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+            <CardContent className={dashboardCardContentClassName}>
               {openViolations > 0 && recentViolations.length > 0 ? (
-                <div className="flex flex-col divide-y divide-border/60 rounded-xl border border-border/70 bg-card overflow-hidden shadow-2xs">
+                <div className="flex min-w-0 flex-col divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-card shadow-2xs">
                   {recentViolations.map((v) => (
                     <div
                       key={v.id}
-                      className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center hover:bg-muted/30 transition-colors"
+                      className="flex min-w-0 flex-col justify-between gap-3 p-4 transition-colors hover:bg-muted/30 xl:flex-row xl:items-center"
                     >
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive text-xs font-bold shadow-2xs border border-destructive/20">
+                      <div className="flex min-w-0 items-center gap-3.5">
+                        <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl border border-destructive/20 bg-destructive/10 text-xs font-bold text-destructive shadow-2xs">
                           <AlertTriangle className="size-4" />
                         </span>
-                        <div className="min-w-0 space-y-0.5">
-                          <div className="flex items-center gap-2">
-                            <p className="font-heading text-sm font-bold text-foreground truncate">
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-heading text-sm font-semibold break-words text-foreground">
                               {v.attempt.exam.title}
                             </p>
-                            <Badge variant="destructive" className="text-[10px] font-semibold">
+                            <Badge
+                              variant="destructive"
+                              className="text-[10px] font-semibold"
+                            >
                               {v.type.replace(/_/g, " ")}
                             </Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground truncate">
-                            Student: {v.attempt.student.name} ({v.attempt.student.email})
+                          <p className="text-xs leading-relaxed [overflow-wrap:anywhere] break-words text-muted-foreground">
+                            Student: {v.attempt.student.name} (
+                            {v.attempt.student.email})
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="text-xs text-muted-foreground font-normal">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 xl:shrink-0">
+                        <span className="text-xs font-normal text-muted-foreground">
                           {new Intl.DateTimeFormat("en-US", {
                             hour: "numeric",
                             minute: "numeric",
@@ -721,7 +841,7 @@ export default async function TeacherDashboardPage() {
                           asChild
                           size="sm"
                           variant="destructive"
-                          className="h-8.5 rounded-lg px-3 text-xs font-semibold shadow-xs"
+                          className="h-10 rounded-xl px-3 text-xs font-semibold shadow-xs sm:text-sm"
                         >
                           <Link href="/teacher/exams">Review Incident</Link>
                         </Button>
@@ -730,15 +850,19 @@ export default async function TeacherDashboardPage() {
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center gap-3.5 rounded-xl border border-border/70 bg-muted/20 p-5 text-foreground shadow-2xs">
-                  <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <div>
-                    <p className="text-sm font-bold sm:text-base">Academic Integrity Clean</p>
-                    <p className="text-xs text-muted-foreground">
-                      All ongoing and recent examinations are running without integrity warnings.
-                    </p>
-                  </div>
-                </div>
+                <Alert
+                  role="status"
+                  className="gap-x-3 rounded-xl border-border/70 bg-muted/20 p-4 sm:p-5"
+                >
+                  <CheckCircle2 />
+                  <AlertTitle className="text-sm font-semibold sm:text-base">
+                    Academic Integrity Clean
+                  </AlertTitle>
+                  <AlertDescription className="text-xs leading-relaxed sm:text-sm">
+                    All ongoing and recent examinations are running without
+                    integrity warnings.
+                  </AlertDescription>
+                </Alert>
               )}
             </CardContent>
           </Card>
@@ -746,41 +870,59 @@ export default async function TeacherDashboardPage() {
 
         {/* Tab 4: Disciplines */}
         <TabsContent value="subjects" className="mt-0">
-          <Card className="rounded-2xl border border-border/70 bg-card shadow-xs">
-            <CardHeader className="p-5 pb-3 sm:p-6 sm:pb-3">
-              <div className="flex items-center justify-between">
+          <Card className={dashboardCardClassName}>
+            <CardHeader className={dashboardCardHeaderClassName}>
+              <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <CardTitle className="font-heading text-lg sm:text-xl font-bold text-foreground">
+                  <CardTitle
+                    role="heading"
+                    aria-level={2}
+                    className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl"
+                  >
                     Academic Disciplines
                   </CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">
-                    Subjects registered across your question bank and examination tracks.
+                  <CardDescription className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    Subjects registered across your question bank and
+                    examination tracks.
                   </CardDescription>
                 </div>
-                <Button asChild size="sm" variant="ghost" className="text-xs font-semibold text-primary">
+                <Button
+                  asChild
+                  size="sm"
+                  variant="ghost"
+                  className="text-xs font-semibold text-primary"
+                >
                   <Link href="/teacher/questions">View Question Vault</Link>
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+            <CardContent className={dashboardCardContentClassName}>
               {subjects.length === 0 ? (
-                <div className="rounded-xl border border-border/70 bg-muted/20 p-8 text-center text-xs text-muted-foreground">
-                  No academic disciplines registered yet. Create questions to tag subjects.
-                </div>
+                <Empty className="rounded-xl border border-dashed border-border/70 bg-muted/20 px-4 py-10">
+                  <EmptyDescription>
+                    No academic disciplines registered yet. Create questions to
+                    tag subjects.
+                  </EmptyDescription>
+                </Empty>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                <div className="grid min-w-0 grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-2 2xl:grid-cols-3">
                   {subjects.map((item) => (
                     <div
                       key={item.subject}
-                      className="flex items-center justify-between p-3.5 rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/50 transition-colors"
+                      className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 bg-muted/20 p-4 transition-colors hover:bg-muted/40"
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex min-w-0 items-center gap-2.5">
                         <GraduationCap className="size-4 text-primary" />
-                        <span className="font-heading text-sm font-bold text-foreground">
+                        <span className="font-heading text-sm font-semibold break-words text-foreground">
                           {item.subject}
                         </span>
                       </div>
-                      <Button asChild variant="ghost" size="sm" className="h-7 text-xs font-semibold text-primary p-0">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 p-0 text-xs font-semibold text-primary"
+                      >
                         <Link href="/teacher/questions">
                           <span>Browse</span>
                           <ArrowRight className="ml-1 size-3" />

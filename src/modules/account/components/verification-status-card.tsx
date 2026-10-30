@@ -1,15 +1,23 @@
 import { Clock, ShieldAlert, ShieldCheck } from "lucide-react"
 import type { TeacherVerificationStatus } from "@/prisma/generated/prisma/client"
+import { cn } from "@/lib/utils"
 
 export function VerificationStatusCard({
   status,
   note,
+  className,
 }: {
   status: TeacherVerificationStatus
   note: string | null
+  className?: string
 }) {
   return (
-    <div className="flex flex-col justify-between gap-3.5 rounded-2xl bg-card p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md sm:flex-row sm:items-center sm:rounded-3xl sm:p-5 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "flex flex-col justify-between gap-3.5 rounded-2xl bg-card p-4 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-md sm:flex-row sm:items-center sm:rounded-3xl sm:p-5 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       <div className="flex items-center gap-3.5">
         <span
           className={`flex size-10 shrink-0 items-center justify-center rounded-xl sm:size-11 sm:rounded-2xl ${
