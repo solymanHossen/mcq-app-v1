@@ -292,11 +292,21 @@ export function TitleTemplateModal({
           Select or generate standardized exam titles
         </DialogDescription>
 
-        {/* Minimal Header: Title only, compact on mobile */}
-        <div className="px-3.5 py-2.5 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10 flex items-center justify-between shrink-0">
-          <DialogTitle className="text-xs sm:text-lg font-bold text-foreground tracking-tight">
-            Exam Title Presets
-          </DialogTitle>
+        {/* Modal Header */}
+        <div className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3.5">
+            <div className="size-10 sm:size-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+              <BookOpen className="size-5 sm:size-5.5" />
+            </div>
+            <div>
+              <DialogTitle className="text-base sm:text-xl font-bold text-foreground tracking-tight">
+                Exam Title Presets & Generator
+              </DialogTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden xs:block">
+                Choose standardized academic templates or generate your own subject title
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Segmented Control Navigation: compact 3-column grid */}

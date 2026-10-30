@@ -220,17 +220,17 @@ export function ExamForm({
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
               <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
-                    <FileText className="size-5" />
+                  <div className="size-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                    <FileText className="size-5.5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
+                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                         Assessment Details
                       </h2>
                       <InfoTip text="General information, subject naming conventions, and candidate instructions that will appear on test entry." />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
                       General title, subject presets, and candidate instructions
                     </p>
                   </div>
@@ -340,17 +340,17 @@ export function ExamForm({
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
               <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Clock className="size-5" />
+                  <div className="size-11 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-blue-500/20">
+                    <Clock className="size-5.5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
+                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                         Timing & Scoring Limits
                       </h2>
                       <InfoTip text="Enforces total test countdown timer, retry constraints, and grading threshold." />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
                       Test duration, maximum attempts, and passing threshold
                     </p>
                   </div>
@@ -494,17 +494,17 @@ export function ExamForm({
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
               <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
-                  <div className="size-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
-                    <Calendar className="size-5" />
+                  <div className="size-11 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-purple-500/20">
+                    <Calendar className="size-5.5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
+                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                         Schedule Window
                       </h2>
                       <InfoTip text="Define precise opening and closing times. Candidates cannot take the assessment outside of this window." />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
                       Restrict exam accessibility within a specified date & time range
                     </p>
                   </div>
@@ -864,7 +864,7 @@ export function ExamForm({
           {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
           <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
-              <div className="px-5 py-4 border-b border-border/50 bg-muted/20">
+              <div className="px-5 py-4.5 border-b border-border/50 bg-muted/20">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Assessment Overview
@@ -873,9 +873,12 @@ export function ExamForm({
                     Draft
                   </Badge>
                 </div>
-                <h3 className="text-lg sm:text-xl font-extrabold text-foreground mt-1.5 line-clamp-2">
+                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground mt-1.5 line-clamp-2">
                   {title.trim() ? title : "Untitled Assessment"}
                 </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                  Live summary & publishing readiness
+                </p>
               </div>
 
               <div className="p-5 sm:p-6 space-y-5">
