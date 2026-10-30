@@ -217,29 +217,29 @@ export function ExamForm({
           <div className="space-y-8 lg:col-span-8 min-w-0">
             {/* ── CARD 1: EXAM DETAILS ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
-                    <FileText className="size-5.5" />
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                    <FileText className="size-4.5 sm:size-5.5" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                         Assessment Details
                       </h2>
                       <InfoTip text="General information, subject naming conventions, and candidate instructions that will appear on test entry." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                       General title and candidate instructions
                     </p>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1 border-border/70 shrink-0">
+                <Badge variant="outline" className="text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border-border/70 shrink-0">
                   Required
                 </Badge>
               </div>
 
-              <div className="p-6 sm:p-7 space-y-6">
+              <div className="p-4 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
                 {/* Title Field */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
@@ -331,19 +331,19 @@ export function ExamForm({
 
             {/* ── CARD 2: TIMING & LIMITS ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-blue-500/20">
-                    <Clock className="size-5.5" />
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-blue-500/20">
+                    <Clock className="size-4.5 sm:size-5.5" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                         Timing & Scoring Limits
                       </h2>
                       <InfoTip text="Enforces total test countdown timer, retry constraints, and grading threshold." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                       Test duration, maximum attempts, and passing threshold
                     </p>
                   </div>
@@ -363,7 +363,7 @@ export function ExamForm({
                         setDurationTouched(true)
                       }}
                       className={cn(
-                        "h-8 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer active:scale-95",
+                        "h-8 px-2.5 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer active:scale-95",
                         durationMinutes === mins
                           ? "shadow-sm font-bold"
                           : "text-muted-foreground hover:text-foreground"
@@ -375,8 +375,8 @@ export function ExamForm({
                 </div>
               </div>
 
-              <div className="p-6 sm:p-7">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div className="p-4 sm:p-6 lg:p-7">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
                   {/* Duration */}
                   <div className="space-y-2">
                     <Label htmlFor="durationMinutes" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
@@ -485,30 +485,30 @@ export function ExamForm({
 
             {/* ── CARD 3: SCHEDULE WINDOW ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-purple-500/20">
-                    <Calendar className="size-5.5" />
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-purple-500/20">
+                    <Calendar className="size-4.5 sm:size-5.5" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                         Schedule Window
                       </h2>
                       <InfoTip text="Define precise opening and closing times. Candidates cannot take the assessment outside of this window." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                       Restrict exam accessibility within a specified date & time range
                     </p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 shrink-0 self-start sm:self-auto">
+                <Badge variant="secondary" className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 shrink-0 self-start sm:self-auto">
                   Leave empty for 24/7 access
                 </Badge>
               </div>
 
-              <div className="p-6 sm:p-7 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="p-4 sm:p-6 lg:p-7 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div className="space-y-2">
                     <Label htmlFor="startTime" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
                       <span>Opens At (Start Time)</span>
@@ -550,33 +550,33 @@ export function ExamForm({
 
             {/* ── CARD 4: PROCTORING & INTEGRITY (Google UI Clean Design: Minimal text, rich modal) ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-emerald-500/20">
-                    <ShieldCheck className="size-5.5" />
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-emerald-500/20">
+                    <ShieldCheck className="size-4.5 sm:size-5.5" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                         Proctoring & Anti-Cheating
                       </h2>
                       <InfoTip text="Automated integrity controls. Configure question randomization, camera verification, and anomaly sensitivity." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                       {activeProctoringCount} of 3 active • {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"} sensitivity
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-start sm:self-auto">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setIsProctoringModalOpen(true)}
-                    className="h-9 px-4 rounded-full border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
+                    className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
                   >
-                    <SlidersHorizontal className="size-4" />
+                    <SlidersHorizontal className="size-3.5 sm:size-4" />
                     <span>Configure Rules</span>
                   </Button>
                 </div>
@@ -587,18 +587,20 @@ export function ExamForm({
                 {/* 1. Shuffle Questions */}
                 <div
                   onClick={() => setShuffleQuestions(!shuffleQuestions)}
-                  className="flex items-center justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none"
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleQuestions ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Shuffle className="size-5" />
+                      <Shuffle className="size-4 sm:size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Questions</span>
-                      <InfoTip text="Display exam questions in completely randomized order for each candidate." />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Shuffle Questions</span>
+                        <InfoTip text="Display exam questions in completely randomized order for each candidate." />
+                      </div>
                     </div>
                   </div>
                   <Switch
@@ -619,18 +621,20 @@ export function ExamForm({
                 {/* 2. Shuffle Options */}
                 <div
                   onClick={() => setShuffleOptions(!shuffleOptions)}
-                  className="flex items-center justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none"
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       shuffleOptions ? "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Shuffle className="size-5 rotate-90" />
+                      <Shuffle className="size-4 sm:size-5 rotate-90" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Shuffle Options</span>
-                      <InfoTip text="Randomize multiple-choice option positions (A, B, C, D) within every question." />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Shuffle Options</span>
+                        <InfoTip text="Randomize multiple-choice option positions (A, B, C, D) within every question." />
+                      </div>
                     </div>
                   </div>
                   <Switch
@@ -651,18 +655,20 @@ export function ExamForm({
                 {/* 3. Webcam Surveillance */}
                 <div
                   onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
-                  className="flex items-center justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none"
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       webcamMonitoringRequired ? "bg-blue-500/15 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Camera className="size-5" />
+                      <Camera className="size-4 sm:size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Webcam Surveillance & Consent</span>
-                      <InfoTip text="Require student camera permission and capture periodic audit snapshots during the test." />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Webcam Surveillance</span>
+                        <InfoTip text="Require student camera permission and capture periodic audit snapshots during the test." />
+                      </div>
                     </div>
                   </div>
                   <Switch
@@ -681,17 +687,17 @@ export function ExamForm({
                 </div>
 
                 {/* 4. Anomaly Review Sensitivity */}
-                <div className="flex items-center justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors">
-                  <div className="flex items-center gap-3.5">
-                    <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                      <ShieldAlert className="size-5" />
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors gap-3">
+                  <div className="flex items-center gap-3 sm:gap-3.5">
+                    <div className="size-8.5 sm:size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="size-4 sm:size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">Anomaly Review Threshold</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-base font-semibold text-foreground">Review Threshold</span>
                       <InfoTip text="Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits)." />
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 self-start sm:self-auto overflow-x-auto no-scrollbar w-full sm:w-auto">
                     {[
                       { label: "Strict (3)", val: 3 },
                       { label: "Balanced (5)", val: 5 },
@@ -702,7 +708,7 @@ export function ExamForm({
                         type="button"
                         onClick={() => setViolationThreshold(val)}
                         className={cn(
-                          "px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer",
+                          "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap",
                           violationThreshold === val
                             ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/30"
                             : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -723,33 +729,33 @@ export function ExamForm({
 
             {/* ── CARD 5: CANDIDATE ACCESS & PIN (Google UI Clean Design: Minimal text, rich modal) ── */}
             <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-              <div className="px-6 py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5">
-                  <div className="size-11 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-amber-500/20">
-                    <Globe className="size-5.5" />
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-amber-500/20">
+                    <Globe className="size-4.5 sm:size-5.5" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                         Candidate Access & Security
                       </h2>
                       <InfoTip text="Control how candidates join: friction-free open link or registered account, with optional secret PIN." />
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                       {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"} • {accessCode ? `PIN: ${accessCode}` : "Open Access"}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 self-start sm:self-auto">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => setIsAccessModalOpen(true)}
-                    className="h-9 px-4 rounded-full border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300 hover:bg-amber-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
+                    className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300 hover:bg-amber-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
                   >
-                    <KeyRound className="size-4" />
+                    <KeyRound className="size-3.5 sm:size-4" />
                     <span>Access Settings</span>
                   </Button>
                 </div>
@@ -760,20 +766,22 @@ export function ExamForm({
                 {/* Direct Link Access */}
                 <div
                   onClick={() => setAllowGuestAccess(!allowGuestAccess)}
-                  className="flex items-center justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none"
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       allowGuestAccess ? "bg-sky-500/15 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Users className="size-5" />
+                      <Users className="size-4 sm:size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">
-                        Direct Link Participation (No Registration Required)
-                      </span>
-                      <InfoTip text="Students can begin test immediately via link by entering their Full Name & Email. Registered students can also log in seamlessly." />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">
+                          Direct Link (Open Access)
+                        </span>
+                        <InfoTip text="Students can begin test immediately via link by entering their Full Name & Email. Registered students can also log in seamlessly." />
+                      </div>
                     </div>
                   </div>
                   <Switch
@@ -790,32 +798,32 @@ export function ExamForm({
                 </div>
 
                 {/* Access PIN Code */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4.5 px-6 hover:bg-muted/20 transition-colors gap-3">
-                  <div className="flex items-center gap-3.5 shrink-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors gap-3">
+                  <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
                     <div className={cn(
-                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
                       accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
                     )}>
-                      <Lock className="size-5" />
+                      <Lock className="size-4 sm:size-5" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-semibold text-foreground">
-                        Access Passcode / Security PIN
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-base font-semibold text-foreground">
+                        Passcode / PIN
                       </span>
-                      <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                      <span className="text-[11px] text-muted-foreground font-normal">(Optional)</span>
                       <InfoTip text="If set, candidates must input this passcode along with their credentials before the test commences." />
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-56">
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-48 lg:w-56">
                       <Input
                         id="accessCode"
                         name="accessCode"
                         placeholder="e.g. 2026EXAM"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
-                        className="h-11 sm:h-11 font-mono text-sm sm:text-base font-semibold tracking-wider rounded-xl sm:rounded-xl pr-14 bg-background"
+                        className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
                         maxLength={50}
                       />
                       {accessCode && (
@@ -835,10 +843,10 @@ export function ExamForm({
                         const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                         setAccessCode(randomCode)
                       }}
-                      className="h-11 sm:h-11 px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl sm:rounded-xl gap-2 shadow-2xs active:scale-95 transition-all"
+                      className="h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-1.5 shadow-2xs active:scale-95 transition-all"
                       title="Generate random 6-digit PIN"
                     >
-                      <RefreshCw className="size-4" />
+                      <RefreshCw className="size-3.5 sm:size-4" />
                       <span>Generate PIN</span>
                     </Button>
                   </div>
@@ -866,9 +874,9 @@ export function ExamForm({
                 </h3>
               </div>
 
-              <div className="p-5 sm:p-6 space-y-5">
-                {/* Specification List */}
-                <div className="divide-y divide-border/60 text-sm sm:text-base">
+              <div className="p-4 sm:p-5 lg:p-6 space-y-4 sm:space-y-5">
+                {/* Specification List: Shown on Desktop, hidden on Mobile to remove redundant duplicate clutter as requested */}
+                <div className="hidden lg:block divide-y divide-border/60 text-sm sm:text-base">
                   <div className="flex items-center justify-between py-3 first:pt-0">
                     <span className="text-muted-foreground font-medium flex items-center gap-2">
                       <Clock className="size-4 text-blue-500" />
@@ -922,12 +930,12 @@ export function ExamForm({
                   </div>
                 </div>
 
-                <Separator className="my-2" />
+                <Separator className="my-2 hidden lg:block" />
 
                 {/* Live Form Readiness Status Alert */}
                 {!isFormValid ? (
-                  <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3.5 text-xs sm:text-sm text-amber-800 dark:text-amber-300 font-semibold">
-                    <AlertTriangle className="size-4.5 shrink-0 text-amber-500 mt-0.5" />
+                  <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 sm:p-3.5 text-xs sm:text-sm text-amber-800 dark:text-amber-300 font-semibold">
+                    <AlertTriangle className="size-4 sm:size-4.5 shrink-0 text-amber-500 mt-0.5" />
                     <span>
                       {!isTitleValid
                         ? "Enter exam title (minimum 3 characters)"
@@ -943,20 +951,20 @@ export function ExamForm({
                     </span>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 font-bold animate-in fade-in-50 duration-200">
-                    <CheckCircle2 className="size-4.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <div className="flex items-center gap-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 sm:p-3.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 font-bold animate-in fade-in-50 duration-200">
+                    <CheckCircle2 className="size-4 sm:size-4.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
                     <span>All fields valid — ready to save!</span>
                   </div>
                 )}
 
                 {/* Actions Section */}
-                <div className="pt-2 w-full">
+                <div className="pt-1 sm:pt-2 w-full">
                   <Button
                     type="submit"
                     size="lg"
                     disabled={!isFormValid || isPending}
                     className={cn(
-                      "w-full h-13 rounded-xl text-base sm:text-lg font-bold shadow-md transition-all cursor-pointer",
+                      "w-full h-12 sm:h-13 rounded-xl text-sm sm:text-lg font-bold shadow-md transition-all cursor-pointer",
                       isFormValid && !isPending
                         ? "hover:shadow-lg active:scale-[0.99] text-primary-foreground"
                         : "opacity-50 cursor-not-allowed pointer-events-auto"
@@ -970,7 +978,7 @@ export function ExamForm({
                     ) : (
                       <>
                         <span>{submitLabel}</span>
-                        <ArrowRight className="ml-2 size-5" />
+                        <ArrowRight className="ml-2 size-4 sm:size-5" />
                       </>
                     )}
                   </Button>
@@ -984,25 +992,25 @@ export function ExamForm({
         <Dialog open={isProctoringModalOpen} onOpenChange={setIsProctoringModalOpen}>
           <DialogContent
             onOpenAutoFocus={(e) => e.preventDefault()}
-            className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+            className="w-[calc(100vw-1.5rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
           >
-            <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3.5 pr-8">
-                <div className="size-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
-                  <ShieldCheck className="size-6" />
+            <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-3 sm:gap-3.5 pr-8">
+                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
+                  <ShieldCheck className="size-5 sm:size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                  <DialogTitle className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
                     Proctoring & Anti-Cheat Governance
                   </DialogTitle>
-                  <DialogDescription className="text-sm text-muted-foreground mt-0.5">
+                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                     Automated cheating deterrents, live camera monitoring, and integrity rules
                   </DialogDescription>
                 </div>
               </div>
             </DialogHeader>
 
-            <div className="p-6 space-y-4 text-sm">
+            <div className="p-4 sm:p-6 space-y-4 text-sm overflow-y-auto flex-1">
               <div className="space-y-3">
                 {/* Row 1: Shuffle Questions */}
                 <div
@@ -1153,25 +1161,25 @@ export function ExamForm({
         <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
           <DialogContent
             onOpenAutoFocus={(e) => e.preventDefault()}
-            className="sm:max-w-2xl p-0 gap-0 rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+            className="w-[calc(100vw-1.5rem)] sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
           >
-            <DialogHeader className="p-6 pb-4 border-b border-border/60 bg-muted/20">
-              <div className="flex items-center gap-3.5 pr-8">
-                <div className="size-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
-                  <Globe className="size-6" />
+            <DialogHeader className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-3 sm:gap-3.5 pr-8">
+                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
+                  <Globe className="size-5 sm:size-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                  <DialogTitle className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
                     Candidate Access & Security Governance
                   </DialogTitle>
-                  <DialogDescription className="text-sm text-muted-foreground mt-0.5">
+                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                     Define student joining permissions, registration requirements, and secret passcodes
                   </DialogDescription>
                 </div>
               </div>
             </DialogHeader>
 
-            <div className="p-6 space-y-4 text-sm">
+            <div className="p-4 sm:p-6 space-y-4 text-sm overflow-y-auto flex-1">
               <div className="space-y-3">
                 {/* Row 1: Direct Link Participation */}
                 <div
