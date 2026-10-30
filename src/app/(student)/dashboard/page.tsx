@@ -9,7 +9,7 @@ import {
   BookOpen,
   ArrowRight,
   Clock,
-  Sparkles,
+  Play,
   ChevronRight,
   Target,
   Search,
@@ -288,7 +288,7 @@ export default async function DashboardPage({
             </Button>
             <Button asChild size="sm" className="h-10 rounded-xl px-4 text-xs font-semibold shadow-xs">
               <Link href="/exams">
-                <Sparkles className="mr-1 size-3.5" />
+                <Play className="mr-1 size-3.5" />
                 <span>Practice Now</span>
               </Link>
             </Button>

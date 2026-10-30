@@ -18,7 +18,7 @@ import {
   Search,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
+  FileText,
   Users,
 } from "lucide-react"
 import { toast } from "sonner"
@@ -166,7 +166,7 @@ export function TeacherDirectoryClient({
             {/* Published Exams */}
             <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                <Sparkles className="size-4" />
+                <FileText className="size-4" />
               </span>
               <div className="leading-tight">
                 <span className="block font-heading text-base font-black text-foreground sm:text-lg">

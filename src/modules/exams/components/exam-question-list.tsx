@@ -23,7 +23,7 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
-  Sparkles,
+  Lightbulb,
 } from "lucide-react"
 
 export type ListedQuestion = {
@@ -285,7 +285,7 @@ export function ExamQuestionList({
                   onClick={() => toggleExplanation(q.id)}
                   className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Sparkles className="size-3 text-primary" />
+                  <Lightbulb className="size-3 text-amber-500" />
                   <span>{isExplanationOpen ? "Hide Explanation" : "View Explanation"}</span>
                   {isExplanationOpen ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
                 </button>

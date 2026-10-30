@@ -14,7 +14,8 @@ import {
   LogOut,
   Menu,
   Moon,
-  Sparkles,
+  Layers,
+  GraduationCap,
   Sun,
   User as UserIcon,
   Users,
@@ -44,7 +45,7 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { href: "/#features", label: "Features", icon: Sparkles },
+  { href: "/#features", label: "Features", icon: Layers },
   { href: "/#how-it-works", label: "How it works", icon: Zap },
   { href: "/teachers", label: "Teachers", icon: Users },
   { href: "/#enterprise", label: "Enterprise", icon: Building2 },
@@ -136,7 +137,7 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
               </div>
             ) : (
               <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-                <Sparkles className="size-5" />
+                <GraduationCap className="size-5" />
               </span>
             )}
             <span className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-[22px]">

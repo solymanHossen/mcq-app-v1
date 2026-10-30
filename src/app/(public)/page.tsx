@@ -11,7 +11,7 @@ import {
   Lock,
   Server,
   ShieldCheck,
-  Sparkles,
+  Brain,
   Timer,
   Trophy,
 } from "lucide-react"
@@ -55,7 +55,7 @@ const FEATURES = [
       "Tab switches and timing anomalies are detected, rate-limited, and reviewable by teachers.",
   },
   {
-    icon: Sparkles,
+    icon: Brain,
     title: "AI-powered explanations",
     description:
       "Students get an instant explanation for every mistake, with a path to appeal disputed answers.",

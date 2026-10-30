@@ -14,7 +14,7 @@ import {
   Settings,
   User as UserIcon,
   PlusCircle,
-  Sparkles,
+  Compass,
   Command,
   ArrowRight,
   X,
@@ -482,7 +482,7 @@ export function GlobalSearchDialog({
           {showPages && filteredPages.length > 0 && (
             <div className="space-y-1">
               <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                <Sparkles className="size-3.5 text-primary" />
+                <Compass className="size-3.5 text-primary" />
                 <span>Console Navigation</span>
               </div>
               {filteredPages.map((page) => {

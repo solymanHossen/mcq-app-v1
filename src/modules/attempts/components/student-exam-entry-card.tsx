@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  Sparkles,
+  Zap,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -241,7 +241,7 @@ export function StudentExamEntryCard({
         <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
           <div className="flex items-center justify-between">
             <Badge className="bg-primary/10 text-primary border-primary/30 text-xs font-bold gap-1 py-1">
-              <Sparkles className="size-3" />
+              <Zap className="size-3" />
               <span>Instant Entry (No Password Needed)</span>
             </Badge>
             <span className="text-xs text-muted-foreground font-medium">

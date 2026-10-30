@@ -8,7 +8,7 @@ import {
   ChevronRight,
   Clock,
   RotateCcw,
-  Sparkles,
+  GraduationCap,
   Trophy,
   XCircle,
 } from "lucide-react"
@@ -140,7 +140,7 @@ export function StudentActivityCard({
           {recentAttempts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-14 text-center">
               <div className="mb-4 flex size-16 items-center justify-center rounded-3xl bg-muted text-muted-foreground">
-                <Sparkles className="size-8" />
+                <GraduationCap className="size-8" />
               </div>
               <p className="text-lg font-bold text-foreground">
                 No exam attempts yet

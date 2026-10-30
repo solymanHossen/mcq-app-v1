@@ -13,7 +13,6 @@ import {
   Activity,
   CheckCircle2,
   GraduationCap,
-  Sparkles,
 } from "lucide-react"
 import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { prisma } from "@/lib/prisma"

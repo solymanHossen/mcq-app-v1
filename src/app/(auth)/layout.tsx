@@ -1,7 +1,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Sparkles } from "lucide-react"
+import { ArrowLeft, GraduationCap } from "lucide-react"
 import { APP_NAME } from "@/lib/config"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { Button } from "@/components/ui/button"
@@ -44,7 +44,7 @@ export default async function AuthLayout({
               </div>
             ) : (
               <div className="flex size-9 sm:size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs transition-transform duration-200 group-hover:scale-105">
-                <Sparkles className="size-5" />
+                <GraduationCap className="size-5" />
               </div>
             )}
             <div className="flex flex-col">

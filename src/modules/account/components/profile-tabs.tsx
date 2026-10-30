@@ -21,7 +21,6 @@ import {
   Plus,
   ScrollText,
   ShieldCheck,
-  Sparkles,
   Trophy,
   User as UserIcon,
   Users,

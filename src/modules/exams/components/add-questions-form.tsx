@@ -22,7 +22,6 @@ import {
   Plus,
   BookOpen,
   SearchX,
-  Sparkles,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 

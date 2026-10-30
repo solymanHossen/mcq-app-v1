@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { Sparkles } from "lucide-react"
+import { Gift } from "lucide-react"
 import { requireUser } from "@/lib/authorization"
 import { getCurrentSubscription } from "@/modules/payments/entitlements"
 import { getPaymentHistoryForUser, listActivePlans } from "@/modules/payments/queries"
@@ -45,7 +45,7 @@ export default async function BillingPage() {
 
       {!billingEnabled && (
         <Alert>
-          <Sparkles />
+          <Gift className="size-4" />
           <AlertTitle>{APP_NAME} is currently free to use</AlertTitle>
           <AlertDescription>
             An admin has turned off billing platform-wide — every feature is available at no

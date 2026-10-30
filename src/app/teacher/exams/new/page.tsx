@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowLeft, Sparkles, PlusCircle } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { createExamAction } from "@/modules/exams/actions"
 import { ExamForm } from "@/modules/exams/components/exam-form"
 import { Button } from "@/components/ui/button"

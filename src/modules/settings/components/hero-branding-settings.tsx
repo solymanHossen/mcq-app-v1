@@ -7,7 +7,6 @@ import { toast } from "sonner"
 import {
   Film,
   Shapes,
-  Sparkles,
   Type,
   Upload,
   Check,

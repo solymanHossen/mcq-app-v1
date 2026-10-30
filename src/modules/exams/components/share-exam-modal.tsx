@@ -15,7 +15,7 @@ import {
   Mail,
   Lock,
   Globe,
-  Sparkles,
+  MessageSquare,
 } from "lucide-react"
 import {
   Dialog,
@@ -301,7 +301,7 @@ ${exam.accessCode ? `🔑 Access PIN: ${exam.accessCode}\n` : ""}
               <div className="rounded-xl border border-border/70 bg-muted/20 p-3 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <Sparkles className="size-3.5 text-primary" />
+                    <MessageSquare className="size-3.5 text-primary" />
                     <span>Formatted Invite Message</span>
                   </span>
                   <Button

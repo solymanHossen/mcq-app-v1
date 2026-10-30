@@ -28,7 +28,6 @@ import {
   BarChart3,
   Calendar,
   ShieldAlert,
-  Sparkles,
   Users,
   CheckCircle2,
   Layers,

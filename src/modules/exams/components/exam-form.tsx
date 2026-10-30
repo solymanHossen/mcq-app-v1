@@ -9,7 +9,7 @@ import {
   Camera,
   AlertTriangle,
   ArrowRight,
-  Sparkles,
+  BookOpen,
   Trophy,
   ShieldCheck,
   Calendar,
@@ -207,7 +207,7 @@ export function ExamForm({
                       className="h-7 px-2.5 rounded-lg border-primary/30 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all gap-1.5 shadow-2xs active:scale-95"
                       title="Open Title Presets & Auto Generator"
                     >
-                      <Sparkles className="size-3.5 shrink-0" />
+                      <BookOpen className="size-3.5 shrink-0" />
                       <span>Title Presets</span>
                     </Button>
                   </div>

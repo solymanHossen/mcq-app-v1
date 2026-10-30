@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
-import { SparklesIcon } from "lucide-react"
+import { Brain } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
@@ -138,7 +138,7 @@ export function MistakeReviewCard({
                   {isExplaining ? (
                     <Spinner data-icon="inline-start" />
                   ) : (
-                    <SparklesIcon data-icon="inline-start" className="size-3.5" />
+                    <Brain data-icon="inline-start" className="size-3.5" />
                   )}
                   Explain with AI
                 </Button>

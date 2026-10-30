@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useActionState } from "react"
 import { useRouter } from "next/navigation"
-import { Sparkles, Lock, CheckCircle2, AlertCircle, Loader2, ArrowRight } from "lucide-react"
+import { UserCheck, Lock, CheckCircle2, AlertCircle, Loader2, ArrowRight } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -55,7 +55,7 @@ export function UpgradeGuestModal({
         <DialogHeader className="text-left space-y-2">
           <div className="flex items-center gap-2">
             <div className="size-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-              <Sparkles className="size-5 text-primary" />
+              <UserCheck className="size-5 text-primary" />
             </div>
             <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/30">
               Guest Candidate

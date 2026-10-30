@@ -24,7 +24,7 @@ import {
   Award,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
+  Lightbulb,
   Info,
 } from "lucide-react"
 
@@ -240,7 +240,7 @@ export function StudentPreviewModal({
 
                   {q.explanationSnapshot && (
                     <div className="p-4 rounded-xl bg-primary/5 border border-primary/15 text-xs sm:text-sm text-foreground/90 leading-relaxed flex items-start gap-2.5">
-                      <Sparkles className="size-4 text-primary shrink-0 mt-0.5" />
+                      <Lightbulb className="size-4 text-amber-500 shrink-0 mt-0.5" />
                       <div className="min-w-0 flex-1">
                         <strong className="text-foreground font-semibold">Explanation: </strong>
                         <LatexText text={q.explanationSnapshot} />

@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import {
   Ticket,
   Plus,
-  Sparkles,
+  RefreshCw,
   Percent,
   DollarSign,
   Calendar,
@@ -179,7 +179,7 @@ export function CreateCouponDialog() {
                   onClick={generateRandomCode}
                   className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
-                  <Sparkles className="size-3" />
+                  <RefreshCw className="size-3" />
                   <span>Generate Code</span>
                 </button>
               </div>

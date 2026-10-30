@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Sparkles } from "lucide-react"
+import { Code2 } from "lucide-react"
 import { SwaggerUIClient } from "./swagger-ui-client"
 import { APP_NAME } from "@/lib/config"
 
@@ -12,7 +12,7 @@ export default function ApiDocsPage() {
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-6">
           <Link href="/" className="flex items-center gap-2">
             <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Sparkles className="size-4" />
+              <Code2 className="size-4" />
             </span>
             <span className="font-heading text-base font-semibold tracking-tight text-foreground">
               {APP_NAME} API

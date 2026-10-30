@@ -11,7 +11,7 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
+  GraduationCap,
 } from "lucide-react"
 
 import { APP_NAME } from "@/lib/config"
@@ -263,7 +263,7 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
                 </div>
               ) : (
                 <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105">
-                  <Sparkles className="size-5" />
+                  <GraduationCap className="size-5" />
                 </span>
               )}
               <span className="font-heading text-xl sm:text-[22px] font-bold tracking-tight text-foreground">

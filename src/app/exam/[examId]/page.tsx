@@ -15,7 +15,6 @@ import {
   CheckCircle2,
   BookOpen,
   User,
-  Sparkles,
   ArrowLeft,
 } from "lucide-react"
 

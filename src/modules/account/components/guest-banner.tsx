@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Sparkles, ShieldAlert, ArrowRight } from "lucide-react"
+import { UserCheck, ShieldAlert, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { UpgradeGuestModal } from "./upgrade-guest-modal"
 
@@ -39,7 +39,7 @@ export function GuestBanner({ name, email }: GuestBannerProps) {
             email={email}
             trigger={
               <Button size="sm" className="w-full sm:w-auto gap-1.5 shadow-sm font-semibold rounded-xl text-xs h-9">
-                <Sparkles className="size-3.5" />
+                <UserCheck className="size-3.5" />
                 <span>Activate Full Account</span>
                 <ArrowRight className="size-3.5" />
               </Button>
