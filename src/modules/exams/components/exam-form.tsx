@@ -9,12 +9,10 @@ import {
   Camera,
   AlertTriangle,
   ArrowRight,
-  ArrowLeft,
   Sparkles,
   Trophy,
-  Shield,
+  ShieldCheck,
   Calendar,
-  Layers,
   Check,
   Trash2,
   Plus,
@@ -22,6 +20,9 @@ import {
   Lock,
   Users,
   RefreshCw,
+  FileText,
+  SlidersHorizontal,
+  CheckCircle2,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -29,9 +30,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator"
 import { Spinner } from "@/components/ui/spinner"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
@@ -60,7 +68,7 @@ const DURATION_PRESETS = [30, 45, 60, 90, 120] as const
 export function ExamForm({
   action,
   initialValues,
-  submitLabel = "Create Exam",
+  submitLabel = "Create Assessment & Add Questions",
   cancelHref = "/teacher/exams",
 }: {
   action: (
@@ -158,57 +166,72 @@ export function ExamForm({
   return (
     <form action={formAction} className="w-full">
       {state && "error" in state && (
-        <Alert variant="destructive" className="mb-6 rounded-xl border-destructive/30">
-          <AlertTriangle className="size-4" />
-          <AlertTitle className="text-sm font-semibold">Error saving exam</AlertTitle>
-          <AlertDescription className="text-xs mt-0.5">{state.error}</AlertDescription>
+        <Alert variant="destructive" className="mb-6 rounded-2xl border-destructive/30 shadow-xs">
+          <AlertTriangle className="size-5" />
+          <AlertTitle className="text-base font-bold">Error saving assessment</AlertTitle>
+          <AlertDescription className="text-sm mt-1">{state.error}</AlertDescription>
         </Alert>
       )}
 
-      {/* Main 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+      {/* Main 2-Column Responsive Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
         {/* Left Form Canvas (8 Columns on lg/xl) */}
-        <div className="space-y-6 lg:col-span-8 min-w-0">
-          {/* Card 1: Details */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground">
-                  Exam Details
-                </CardTitle>
-                <Badge variant="secondary" className="text-xs font-medium px-2 py-0.5">
-                  General
+        <div className="space-y-8 lg:col-span-8 min-w-0">
+          {/* ── CARD 1: EXAM DETAILS ── */}
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs">
+                    <FileText className="size-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      Assessment Details
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      General title, subject presets, and candidate instructions
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1 border-border/70 shrink-0">
+                  Required
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-              <div className="space-y-1.5 sm:space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <Label htmlFor="title" className="text-xs sm:text-sm font-semibold text-foreground">
-                      Title <span className="text-destructive">*</span>
+
+            <CardContent className="p-6 sm:p-7 space-y-6">
+              {/* Title Field with Presets Tool */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Label htmlFor="title" className="text-sm sm:text-base font-semibold text-foreground">
+                      Assessment Title <span className="text-destructive">*</span>
                     </Label>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       onClick={() => setIsTemplateModalOpen(true)}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-[11px] sm:text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
-                      title="Open Title Presets & Dropdown Generator"
+                      className="h-7 px-2.5 rounded-lg border-primary/30 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all gap-1.5 shadow-2xs active:scale-95"
+                      title="Open Title Presets & Auto Generator"
                     >
-                      <Plus className="size-3.5 shrink-0" />
+                      <Sparkles className="size-3.5 shrink-0" />
                       <span>Title Presets</span>
-                    </button>
+                    </Button>
                   </div>
                   <span
                     className={cn(
-                      "text-xs transition-colors",
+                      "text-xs sm:text-sm transition-colors font-medium",
                       titleTouched && !isTitleValid
-                        ? "text-destructive font-semibold"
+                        ? "text-destructive font-bold"
                         : "text-muted-foreground"
                     )}
                   >
                     {title.length}/200
                   </span>
                 </div>
+
                 <div className="relative">
                   <Input
                     id="title"
@@ -216,82 +239,110 @@ export function ExamForm({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     onBlur={() => setTitleTouched(true)}
-                    placeholder="e.g. Mathematics Mid-Term 2026"
+                    placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
                     maxLength={200}
                     className={cn(
-                      "h-10 sm:h-12 text-sm sm:text-base font-medium rounded-xl pr-11 transition-colors",
+                      "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl pr-12 transition-all",
                       titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
                     )}
                     required
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setIsTemplateModalOpen(true)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
-                    title="Open Title Presets & Dropdown Generator"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                    title="Choose from presets"
                   >
-                    <Plus className="size-4" />
-                  </button>
+                    <Plus className="size-5" />
+                  </Button>
                 </div>
+
                 {titleTouched && !isTitleValid && (
-                  <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                    <AlertTriangle className="size-3.5 shrink-0" />
+                  <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                    <AlertTriangle className="size-4 shrink-0" />
                     <span>
                       {title.trim().length === 0
-                        ? "Exam title is required"
-                        : "Title must be at least 3 characters"}
+                        ? "Exam title is required (minimum 3 characters)."
+                        : "Title must be at least 3 characters."}
                     </span>
                   </p>
                 )}
               </div>
 
-              <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="description" className="text-xs sm:text-sm font-semibold text-foreground">
-                  Description <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                </Label>
+              {/* Description Field */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="description" className="text-sm sm:text-base font-semibold text-foreground">
+                    Description & Instructions
+                  </Label>
+                  <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+                    Optional
+                  </span>
+                </div>
                 <Textarea
                   id="description"
                   name="description"
-                  rows={3}
+                  rows={4}
                   defaultValue={initialValues?.description}
-                  placeholder="Instructions, syllabus topics, or candidate rules..."
-                  className="rounded-xl text-xs sm:text-sm min-h-[80px] sm:min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
+                  placeholder="Provide syllabus chapters, negative marking notices, or candidate guidelines..."
+                  className="rounded-xl text-sm sm:text-base min-h-[105px] resize-y p-4 leading-relaxed"
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Card 2: Timing & Scoring */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-2">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Clock className="size-4 text-primary shrink-0" />
-                  <span>Timing & Limits</span>
-                </CardTitle>
-                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
+          {/* ── CARD 2: TIMING & LIMITS ── */}
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3.5">
+                  <div className="size-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs">
+                    <Clock className="size-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      Timing & Scoring Limits
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Test duration, maximum attempts, and passing threshold
+                    </CardDescription>
+                  </div>
+                </div>
+
+                {/* Duration Presets as Shadcn Buttons */}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
+                  <span className="text-xs font-semibold text-muted-foreground mr-1 hidden md:inline">Presets:</span>
                   {DURATION_PRESETS.map((mins) => (
-                    <button
+                    <Button
                       key={mins}
                       type="button"
-                      onClick={() => setDurationMinutes(mins)}
+                      variant={durationMinutes === mins ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => {
+                        setDurationMinutes(mins)
+                        setDurationTouched(true)
+                      }}
                       className={cn(
-                        "text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
+                        "h-8 px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0",
                         durationMinutes === mins
-                          ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
-                          : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
+                          ? "shadow-sm font-bold"
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {mins}m
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+            <CardContent className="p-6 sm:p-7">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {/* Duration */}
                 <div className="space-y-2">
-                  <Label htmlFor="durationMinutes" className="text-sm font-semibold text-foreground">
+                  <Label htmlFor="durationMinutes" className="text-sm sm:text-base font-semibold text-foreground">
                     Duration (Minutes) <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
@@ -308,25 +359,26 @@ export function ExamForm({
                       }}
                       onBlur={() => setDurationTouched(true)}
                       className={cn(
-                        "h-11 sm:h-12 text-base font-semibold rounded-xl pr-12 transition-colors",
+                        "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl pr-14 transition-all",
                         durationTouched && !isDurationValid && "border-destructive focus-visible:ring-destructive/30"
                       )}
                       required
                     />
-                    <span className="absolute inset-y-0 right-3.5 flex items-center text-xs font-semibold text-muted-foreground pointer-events-none">
-                      min
+                    <span className="absolute inset-y-0 right-4 flex items-center text-xs sm:text-sm font-semibold text-muted-foreground pointer-events-none">
+                      mins
                     </span>
                   </div>
                   {durationTouched && !isDurationValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Duration must be 1-600 mins</span>
+                    <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-4 shrink-0" />
+                      <span>Duration must be between 1 and 600 minutes.</span>
                     </p>
                   )}
                 </div>
 
+                {/* Max Attempts */}
                 <div className="space-y-2">
-                  <Label htmlFor="maxAttempts" className="text-sm font-semibold text-foreground">
+                  <Label htmlFor="maxAttempts" className="text-sm sm:text-base font-semibold text-foreground">
                     Max Attempts <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -342,23 +394,27 @@ export function ExamForm({
                     }}
                     onBlur={() => setAttemptsTouched(true)}
                     className={cn(
-                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
+                      "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl transition-all",
                       attemptsTouched && !isAttemptsValid && "border-destructive focus-visible:ring-destructive/30"
                     )}
                     required
                   />
                   {attemptsTouched && !isAttemptsValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Attempts must be 1-10</span>
+                    <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-4 shrink-0" />
+                      <span>Attempts must be between 1 and 10.</span>
                     </p>
                   )}
                 </div>
 
+                {/* Passing Marks */}
                 <div className="space-y-2">
-                  <Label htmlFor="passingMarks" className="text-sm font-semibold text-foreground">
-                    Passing Marks <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                  </Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="passingMarks" className="text-sm sm:text-base font-semibold text-foreground">
+                      Passing Marks
+                    </Label>
+                    <span className="text-xs text-muted-foreground font-medium">Optional</span>
+                  </div>
                   <Input
                     id="passingMarks"
                     name="passingMarks"
@@ -370,14 +426,14 @@ export function ExamForm({
                     onBlur={() => setPassingMarksTouched(true)}
                     placeholder="e.g. 40"
                     className={cn(
-                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
+                      "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl transition-all",
                       passingMarksTouched && !isPassingMarksValid && "border-destructive focus-visible:ring-destructive/30"
                     )}
                   />
                   {passingMarksTouched && !isPassingMarksValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Must be 0 or higher</span>
+                    <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-4 shrink-0" />
+                      <span>Passing marks must be 0 or greater.</span>
                     </p>
                   )}
                 </div>
@@ -385,24 +441,34 @@ export function ExamForm({
             </CardContent>
           </Card>
 
-          {/* Card 3: Schedule */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Calendar className="size-4 text-purple-500 shrink-0" />
-                  <span>Schedule Window</span>
-                </CardTitle>
-                <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
-                  Leave empty for anytime access
-                </span>
+          {/* ── CARD 3: SCHEDULE WINDOW ── */}
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3.5">
+                  <div className="size-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs">
+                    <Calendar className="size-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      Schedule Window
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Restrict exam accessibility within a specified date & time range
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="text-xs font-semibold px-2.5 py-1 shrink-0 self-start sm:self-auto">
+                  Leave empty for 24/7 access
+                </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                <div className="space-y-1.5 sm:space-y-2">
-                  <Label htmlFor="startTime" className="text-xs sm:text-sm font-semibold text-foreground">
-                    Opens At
+
+            <CardContent className="p-6 sm:p-7 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <Label htmlFor="startTime" className="text-sm sm:text-base font-semibold text-foreground">
+                    Opens At (Start Time)
                   </Label>
                   <DateTimePicker
                     id="startTime"
@@ -413,9 +479,9 @@ export function ExamForm({
                   />
                 </div>
 
-                <div className="space-y-1.5 sm:space-y-2">
-                  <Label htmlFor="endTime" className="text-xs sm:text-sm font-semibold text-foreground">
-                    Closes At
+                <div className="space-y-2">
+                  <Label htmlFor="endTime" className="text-sm sm:text-base font-semibold text-foreground">
+                    Closes At (End Time)
                   </Label>
                   <DateTimePicker
                     id="endTime"
@@ -427,46 +493,77 @@ export function ExamForm({
                   />
                 </div>
               </div>
+
               {!isScheduleValid && (
-                <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-2.5 animate-in fade-in-50 duration-200">
-                  <AlertTriangle className="size-3.5 shrink-0" />
-                  <span>Closing date & time must be strictly after the opening date & time.</span>
+                <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-2 animate-in fade-in-50 duration-200">
+                  <AlertTriangle className="size-4 shrink-0" />
+                  <span>Closing date & time must be strictly later than opening date & time.</span>
                 </p>
               )}
             </CardContent>
           </Card>
 
-          {/* Card 4: Proctoring & Integrity */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Shield className="size-4 text-emerald-500" />
-                  Proctoring & Integrity
-                </CardTitle>
-                <Badge variant="outline" className="text-[11px] sm:text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+          {/* ── CARD 4: PROCTORING & INTEGRITY ── */}
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs">
+                    <ShieldCheck className="size-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      Proctoring & Anti-Cheating
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Question randomization, webcam consent, and AI violation monitoring
+                    </CardDescription>
+                  </div>
+                </div>
+
+                <Badge
+                  variant="outline"
+                  className="text-xs sm:text-sm font-bold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 px-3 py-1 bg-emerald-500/5 shrink-0"
+                >
                   {activeProctoringCount} of 3 active
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-              {/* Clean 3-Item Toggle Rows */}
-              <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden bg-card">
-                <label
-                  htmlFor="shuffleQuestionsSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+
+            <CardContent className="p-6 sm:p-7 space-y-6">
+              {/* 3 Modern Feature Toggle Cards */}
+              <div className="space-y-3">
+                {/* 1. Shuffle Questions */}
+                <div
+                  onClick={() => setShuffleQuestions(!shuffleQuestions)}
+                  className={cn(
+                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
+                    shuffleQuestions
+                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
+                      : "border-border/70 hover:bg-muted/30"
+                  )}
                 >
-                  <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 text-primary shrink-0" />
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleQuestions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-5" />
+                    </div>
                     <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Questions</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Randomize question order per student</p>
+                      <h4 className="text-sm sm:text-base font-bold text-foreground">
+                        Shuffle Questions
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                        Display exam questions in completely randomized order for each candidate.
+                      </p>
                     </div>
                   </div>
                   <Switch
                     id="shuffleQuestionsSwitch"
                     checked={shuffleQuestions}
                     onCheckedChange={setShuffleQuestions}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -475,23 +572,39 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
+                </div>
 
-                <label
-                  htmlFor="shuffleOptionsSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                {/* 2. Shuffle Options */}
+                <div
+                  onClick={() => setShuffleOptions(!shuffleOptions)}
+                  className={cn(
+                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
+                    shuffleOptions
+                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
+                      : "border-border/70 hover:bg-muted/30"
+                  )}
                 >
-                  <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 rotate-90 text-primary shrink-0" />
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleOptions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-5 rotate-90" />
+                    </div>
                     <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Options</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Randomize choices (A, B, C, D) inside MCQs</p>
+                      <h4 className="text-sm sm:text-base font-bold text-foreground">
+                        Shuffle Options
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                        Randomize multiple-choice option positions (A, B, C, D) within every question.
+                      </p>
                     </div>
                   </div>
                   <Switch
                     id="shuffleOptionsSwitch"
                     checked={shuffleOptions}
                     onCheckedChange={setShuffleOptions}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -500,23 +613,39 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
+                </div>
 
-                <label
-                  htmlFor="webcamMonitoringSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                {/* 3. Webcam Monitoring */}
+                <div
+                  onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
+                  className={cn(
+                    "flex items-center justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
+                    webcamMonitoringRequired
+                      ? "border-primary/40 bg-primary/[0.03] shadow-xs"
+                      : "border-border/70 hover:bg-muted/30"
+                  )}
                 >
-                  <div className="flex items-center gap-3">
-                    <Camera className="size-4 text-primary shrink-0" />
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      webcamMonitoringRequired ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Camera className="size-5" />
+                    </div>
                     <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Webcam Consent</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Require camera permission to start</p>
+                      <h4 className="text-sm sm:text-base font-bold text-foreground">
+                        Webcam Surveillance & Consent
+                      </h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                        Require student camera permission and capture periodic audit snapshots during the test.
+                      </p>
                     </div>
                   </div>
                   <Switch
                     id="webcamMonitoringSwitch"
                     checked={webcamMonitoringRequired}
                     onCheckedChange={setWebcamMonitoringRequired}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -525,20 +654,20 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
+                </div>
               </div>
 
-              {/* Review Threshold */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
-                <div>
-                  <Label htmlFor="violationReviewThreshold" className="text-sm font-semibold text-foreground">
-                    Review Threshold Score
+              {/* Anomaly Review Threshold Row */}
+              <div className="p-4 sm:p-5 rounded-xl border border-border/70 bg-muted/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="violationReviewThreshold" className="text-sm sm:text-base font-bold text-foreground">
+                    Anomaly Review Threshold
                   </Label>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Cumulative anomaly score that flags attempt for review.
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits).
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5 shrink-0">
                   <Input
                     id="violationReviewThreshold"
                     name="violationReviewThreshold"
@@ -547,10 +676,13 @@ export function ExamForm({
                     max={100}
                     value={violationThreshold}
                     onChange={(e) => setViolationThreshold(Number(e.target.value))}
-                    className="w-20 h-10 text-center font-bold rounded-xl"
+                    className="w-24 h-11 text-center text-base font-bold rounded-xl"
                     required
                   />
-                  <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1">
+                  <Badge
+                    variant={violationThreshold <= 3 ? "destructive" : violationThreshold <= 7 ? "secondary" : "outline"}
+                    className="text-xs sm:text-sm font-bold px-3 py-1.5"
+                  >
                     {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"}
                   </Badge>
                 </div>
@@ -558,73 +690,96 @@ export function ExamForm({
             </CardContent>
           </Card>
 
-          {/* Card 5: Link Access & Student Participation */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Globe className="size-4 text-primary" />
-                  Link Sharing & Student Access
-                </CardTitle>
-                <Badge variant={allowGuestAccess ? "default" : "secondary"} className="text-xs font-semibold">
-                  {allowGuestAccess ? "Open Link Enabled" : "Registered Only"}
+          {/* ── CARD 5: CANDIDATE ACCESS & PIN ── */}
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="px-6 py-5 border-b border-border/60 bg-muted/20">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs">
+                    <Globe className="size-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                      Candidate Access & Security
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Direct link participation and optional assessment passcode protection
+                    </CardDescription>
+                  </div>
+                </div>
+
+                <Badge
+                  variant={allowGuestAccess ? "default" : "secondary"}
+                  className="text-xs sm:text-sm font-bold px-3 py-1"
+                >
+                  {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"}
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-4">
-              {/* Participation Mode */}
-              <div className="space-y-3">
-                <label
-                  htmlFor="allowGuestAccessSwitch"
-                  className="flex items-start justify-between gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                      <Users className="size-4" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        Direct Link Participation (No Registration Required)
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Students can start instantly via link by entering their <strong>Name & Email</strong>. Registered students can also participate with their logged-in account.
-                      </p>
-                    </div>
+
+            <CardContent className="p-6 sm:p-7 space-y-6">
+              {/* Direct Link Switch Item */}
+              <div
+                onClick={() => setAllowGuestAccess(!allowGuestAccess)}
+                className={cn(
+                  "flex items-start justify-between p-4 sm:p-5 rounded-xl border transition-all cursor-pointer select-none",
+                  allowGuestAccess
+                    ? "border-primary/40 bg-primary/[0.03] shadow-xs"
+                    : "border-border/70 hover:bg-muted/30"
+                )}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={cn(
+                    "size-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                    allowGuestAccess ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  )}>
+                    <Users className="size-5" />
                   </div>
-                  <Switch
-                    id="allowGuestAccessSwitch"
-                    checked={allowGuestAccess}
-                    onCheckedChange={setAllowGuestAccess}
-                  />
-                  <input
-                    type="checkbox"
-                    name="allowGuestAccess"
-                    checked={allowGuestAccess}
-                    readOnly
-                    className="sr-only"
-                  />
-                </label>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-bold text-foreground">
+                      Direct Link Participation (No Registration Required)
+                    </h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+                      Students can begin test immediately via link by entering their <strong>Full Name & Email</strong>. Registered students can also log in seamlessly.
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  id="allowGuestAccessSwitch"
+                  checked={allowGuestAccess}
+                  onCheckedChange={setAllowGuestAccess}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <input
+                  type="hidden"
+                  name="allowGuestAccess"
+                  value={allowGuestAccess ? "on" : "off"}
+                />
               </div>
 
-              {/* Optional Passcode / Security PIN */}
-              <div className="rounded-xl border border-border/60 bg-card p-3.5 space-y-2">
+              {/* Passcode / Security PIN Field */}
+              <div className="p-4 sm:p-5 rounded-xl border border-border/70 bg-muted/10 space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="accessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
-                    <Lock className="size-3.5 text-muted-foreground" />
-                    <span>Access Passcode / PIN (Optional)</span>
+                  <Label htmlFor="accessCode" className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
+                    <Lock className="size-4 text-muted-foreground" />
+                    <span>Access Passcode / Security PIN</span>
+                    <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
                   </Label>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => {
                       const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
                       setAccessCode(randomCode)
                     }}
-                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                    className="h-8 px-2.5 rounded-lg text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 gap-1.5"
                   >
-                    <RefreshCw className="size-3" />
-                    <span>Generate PIN</span>
-                  </button>
+                    <RefreshCw className="size-3.5" />
+                    <span>Generate Random PIN</span>
+                  </Button>
                 </div>
+
                 <div className="relative">
                   <Input
                     id="accessCode"
@@ -632,91 +787,114 @@ export function ExamForm({
                     placeholder="e.g. 2026EXAM or leave empty for open access"
                     value={accessCode}
                     onChange={(e) => setAccessCode(e.target.value)}
-                    className="h-10 text-sm font-mono rounded-xl pr-14"
+                    className="h-12 text-base font-mono tracking-wider rounded-xl pr-16"
                     maxLength={50}
                   />
                   {accessCode && (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setAccessCode("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer px-1 py-0.5"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground"
                     >
                       Clear
-                    </button>
+                    </Button>
                   )}
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  If set, students must enter this passcode along with their Name & Email before starting the test.
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  If set, candidates must input this passcode along with their credentials before the test commences.
                 </p>
               </div>
 
-              {/* Hidden isPublic field */}
-              <input type="checkbox" name="isPublic" checked={isPublic} readOnly className="sr-only" />
+              {/* Hidden isPublic field for action parser */}
+              <input type="hidden" name="isPublic" value={isPublic ? "on" : "off"} />
             </CardContent>
           </Card>
         </div>
 
-        {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
+        {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <div className="px-4 py-3 sm:px-5 sm:py-4 border-b border-border/50 bg-muted/10">
+          <Card className="rounded-2xl border border-border/80 bg-card shadow-sm overflow-hidden">
+            <CardHeader className="px-5 py-4.5 border-b border-border/60 bg-muted/20">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Overview
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Assessment Overview
                 </span>
-                <Badge variant="secondary" className="font-semibold text-xs px-2 py-0.5">
+                <Badge variant="secondary" className="font-bold text-xs px-2.5 py-0.5 rounded-full">
                   Draft
                 </Badge>
               </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground mt-1 truncate">
-                {title.trim() ? title : "Untitled Exam"}
-              </h3>
-            </div>
+              <CardTitle className="text-lg sm:text-xl font-extrabold text-foreground mt-1.5 line-clamp-2">
+                {title.trim() ? title : "Untitled Assessment"}
+              </CardTitle>
+            </CardHeader>
 
-            <CardContent className="p-4 sm:p-5 space-y-4 sm:space-y-5">
-              {/* Clean Specs List (No cut-offs on any resolution!) */}
-              <div className="divide-y divide-border/50 text-sm">
-                <div className="flex items-center justify-between py-2.5 first:pt-0">
-                  <span className="text-muted-foreground font-medium">Duration</span>
+            <CardContent className="p-5 sm:p-6 space-y-5">
+              {/* Specification List */}
+              <div className="divide-y divide-border/60 text-sm sm:text-base">
+                <div className="flex items-center justify-between py-3 first:pt-0">
+                  <span className="text-muted-foreground font-medium flex items-center gap-2">
+                    <Clock className="size-4 text-blue-500" />
+                    <span>Duration</span>
+                  </span>
                   <span className={cn("font-bold", isDurationValid ? "text-foreground" : "text-destructive")}>
                     {durationMinutes > 0 ? `${durationMinutes} mins` : "Required"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Max Attempts</span>
+
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-muted-foreground font-medium flex items-center gap-2">
+                    <RefreshCw className="size-4 text-amber-500" />
+                    <span>Max Attempts</span>
+                  </span>
                   <span className={cn("font-bold", isAttemptsValid ? "text-foreground" : "text-destructive")}>
                     {maxAttempts > 0
                       ? `${maxAttempts} ${maxAttempts === 1 ? "attempt" : "attempts"}`
                       : "Required"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Passing Marks</span>
+
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-muted-foreground font-medium flex items-center gap-2">
+                    <Trophy className="size-4 text-yellow-500" />
+                    <span>Passing Score</span>
+                  </span>
                   <span className={cn("font-bold", isPassingMarksValid ? "text-foreground" : "text-destructive")}>
                     {passingMarks ? passingMarks : "None"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Proctoring</span>
+
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-muted-foreground font-medium flex items-center gap-2">
+                    <ShieldCheck className="size-4 text-emerald-500" />
+                    <span>Proctoring</span>
+                  </span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400">
                     {activeProctoringCount} of 3 active
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-2.5 last:pb-0">
-                  <span className="text-muted-foreground font-medium">Student Access</span>
-                  <span className="font-bold text-primary text-xs">
-                    {allowGuestAccess ? "Direct Link (No Reg.)" : "Registered Only"}
+
+                <div className="flex items-center justify-between py-3 last:pb-0">
+                  <span className="text-muted-foreground font-medium flex items-center gap-2">
+                    <Globe className="size-4 text-primary" />
+                    <span>Candidate Access</span>
+                  </span>
+                  <span className="font-bold text-primary text-xs sm:text-sm">
+                    {allowGuestAccess ? "Direct Link (Open)" : "Registered Only"}
                   </span>
                 </div>
               </div>
 
-              {/* Form Readiness Indicator */}
+              <Separator className="my-2" />
+
+              {/* Live Form Readiness Status Alert */}
               {!isFormValid ? (
-                <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 px-3.5 py-2.5 text-xs text-amber-700 dark:text-amber-400 font-medium">
-                  <AlertTriangle className="size-4 shrink-0 text-amber-500" />
+                <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3.5 text-xs sm:text-sm text-amber-800 dark:text-amber-300 font-semibold">
+                  <AlertTriangle className="size-4.5 shrink-0 text-amber-500 mt-0.5" />
                   <span>
                     {!isTitleValid
-                      ? "Enter exam title (min 3 chars)"
+                      ? "Enter exam title (minimum 3 characters)"
                       : !isDurationValid
                       ? "Enter valid duration (1-600 mins)"
                       : !isAttemptsValid
@@ -725,51 +903,51 @@ export function ExamForm({
                       ? "Passing marks must be ≥ 0"
                       : !isScheduleValid
                       ? "Closing time must be after opening time"
-                      : "Fill required fields to activate"}
+                      : "Please fill required fields to activate"}
                   </span>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-2.5 text-xs text-emerald-700 dark:text-emerald-400 font-semibold animate-in fade-in-50 duration-200">
-                  <Check className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                  <span>All fields valid — ready to submit!</span>
+                <div className="flex items-center gap-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 font-bold animate-in fade-in-50 duration-200">
+                  <CheckCircle2 className="size-4.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <span>All fields valid — ready to save!</span>
                 </div>
               )}
 
-              {/* Action Buttons: Stacked vertically so button text has full width and never truncates */}
-              <div className="pt-2 flex flex-col gap-2.5 w-full">
+              {/* Actions Section */}
+              <div className="pt-2 flex flex-col gap-3 w-full">
                 <Button
                   type="submit"
                   size="lg"
                   disabled={!isFormValid || isPending}
                   className={cn(
-                    "w-full h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
+                    "w-full h-13 rounded-xl text-base sm:text-lg font-bold shadow-md transition-all cursor-pointer",
                     isFormValid && !isPending
-                      ? "cursor-pointer hover:shadow-md active:scale-[0.99] text-primary-foreground"
-                      : "opacity-45 cursor-not-allowed pointer-events-auto"
+                      ? "hover:shadow-lg active:scale-[0.99] text-primary-foreground"
+                      : "opacity-50 cursor-not-allowed pointer-events-auto"
                   )}
                 >
                   {isPending ? (
                     <>
                       <Spinner className="mr-2" />
-                      <span>Saving...</span>
+                      <span>Saving Assessment...</span>
                     </>
                   ) : (
                     <>
                       <span>{submitLabel}</span>
-                      <ArrowRight className="ml-1.5 size-4" />
+                      <ArrowRight className="ml-2 size-5" />
                     </>
                   )}
                 </Button>
 
                 <Button
                   asChild
-                  variant="destructive"
+                  variant="outline"
                   size="lg"
-                  className="w-full h-11 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs whitespace-nowrap"
+                  className="w-full h-11 rounded-xl text-sm font-semibold border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.99] shadow-2xs"
                 >
-                  <Link href={cancelHref} className="flex items-center justify-center gap-2 whitespace-nowrap">
+                  <Link href={cancelHref} className="flex items-center justify-center gap-2">
                     <Trash2 className="size-4 shrink-0" />
-                    <span>Discard Exam</span>
+                    <span>Discard Assessment</span>
                   </Link>
                 </Button>
               </div>
