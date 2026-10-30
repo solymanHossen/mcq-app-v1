@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -142,7 +143,7 @@ const SOCIAL_LINKS = [
   },
 ] as const
 
-export function Footer() {
+export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
   const [email, setEmail] = React.useState("")
   const [isSubscribed, setIsSubscribed] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
@@ -249,9 +250,22 @@ export function Footer() {
               href="/"
               className="group inline-flex items-center gap-3 transition-opacity hover:opacity-95"
             >
-              <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105">
-                <Sparkles className="size-5" />
-              </span>
+              {logoUrl ? (
+                <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+                  <Image
+                    src={logoUrl}
+                    alt={APP_NAME}
+                    width={40}
+                    height={40}
+                    className="size-full object-contain"
+                    unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                  />
+                </div>
+              ) : (
+                <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105">
+                  <Sparkles className="size-5" />
+                </span>
+              )}
               <span className="font-heading text-xl sm:text-[22px] font-bold tracking-tight text-foreground">
                 {APP_NAME}
               </span>

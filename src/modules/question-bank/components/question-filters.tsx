@@ -1,8 +1,7 @@
 "use client"
 
-import { useRef } from "react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
-import { Input } from "@/components/ui/input"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import {
   Select,
   SelectContent,
@@ -24,9 +23,6 @@ export function QuestionFilters({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const searchDebounce = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  )
 
   function setParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())
@@ -41,18 +37,11 @@ export function QuestionFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Input
+      <DebouncedSearchInput
+        paramKey="search"
         placeholder="Search question text…"
-        defaultValue={searchParams.get("search") ?? ""}
-        className="w-56"
-        onChange={(e) => {
-          const value = e.target.value
-          clearTimeout(searchDebounce.current)
-          searchDebounce.current = setTimeout(
-            () => setParam("search", value),
-            400
-          )
-        }}
+        className="w-56 sm:w-64"
+        size="sm"
       />
 
       <Select

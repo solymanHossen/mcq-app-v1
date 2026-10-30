@@ -5,6 +5,11 @@ export type SystemSettings = {
   requireEmailVerification: boolean
   requireTeacherVerification: boolean
   billingEnabled: boolean
+  logoUrl: string | null
+  heroImageUrl: string | null
+  heroVideoUrl: string | null
+  heroTitle: string | null
+  heroSubtitle: string | null
 }
 
 // Mirrors the SystemSettings model's own column defaults — what the
@@ -14,6 +19,11 @@ const DEFAULT_SETTINGS: SystemSettings = {
   requireEmailVerification: true,
   requireTeacherVerification: true,
   billingEnabled: true,
+  logoUrl: null,
+  heroImageUrl: null,
+  heroVideoUrl: null,
+  heroTitle: null,
+  heroSubtitle: null,
 }
 
 // Memoized per request: a layout, a page, and a server action can all ask
@@ -27,5 +37,11 @@ export const getSystemSettings = cache(async (): Promise<SystemSettings> => {
     requireEmailVerification: row.requireEmailVerification,
     requireTeacherVerification: row.requireTeacherVerification,
     billingEnabled: row.billingEnabled,
+    logoUrl: row.logoUrl ?? null,
+    heroImageUrl: row.heroImageUrl ?? null,
+    heroVideoUrl: row.heroVideoUrl ?? null,
+    heroTitle: row.heroTitle ?? null,
+    heroSubtitle: row.heroSubtitle ?? null,
   }
 })
+

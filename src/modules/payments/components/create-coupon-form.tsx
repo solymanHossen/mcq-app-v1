@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
+import { DatePicker } from "@/components/ui/date-picker"
 import { createCouponAction } from "@/modules/payments/admin-actions"
+
 
 const selectClassName =
   "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
@@ -14,8 +16,11 @@ export function CreateCouponForm() {
   const [state, formAction, isPending] = useActionState(createCouponAction, undefined)
 
   return (
-    <form action={formAction} className="space-y-3 rounded-md border p-4">
-      <h2 className="font-medium">New coupon</h2>
+    <form action={formAction} className="space-y-5 rounded-2xl sm:rounded-3xl bg-card p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)] border-none">
+      <div>
+        <h2 className="font-heading text-lg font-bold text-foreground">Create New Coupon</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Issue promotional discounts with optional redemption limits.</p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="code">Code</FieldLabel>
@@ -38,8 +43,9 @@ export function CreateCouponForm() {
         </Field>
         <Field>
           <FieldLabel htmlFor="expiresAt">Expires at (optional)</FieldLabel>
-          <Input id="expiresAt" name="expiresAt" type="date" />
+          <DatePicker id="expiresAt" name="expiresAt" placeholder="Pick expiry date" minDate={new Date()} />
         </Field>
+
       </div>
       {state && "error" in state && <FieldError>{state.error}</FieldError>}
       <Button type="submit" size="sm" disabled={isPending}>

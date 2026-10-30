@@ -25,26 +25,34 @@ export default async function StudentLayout({
   const user = await requireUser()
   const { billingEnabled } = await getSystemSettings()
 
-  const navItems: SidebarNavItem[] = [
-    { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard />, exact: true },
-    { href: "/exams", label: "Exams", icon: <BookOpen /> },
-    { href: "/mistakes", label: "Mistake notebook", icon: <RotateCcw /> },
-    { href: "/progress", label: "Progress", icon: <TrendingUp /> },
-    { href: "/leaderboard", label: "Leaderboard", icon: <Trophy /> },
-    ...(billingEnabled
-      ? [{ href: "/billing", label: "Billing", icon: <CreditCard /> }]
-      : []),
-  ]
+  const navItems: SidebarNavItem[] = user.isGuest
+    ? [
+        { href: "/dashboard", label: "My Assessment", icon: <LayoutDashboard />, exact: true },
+        { href: "/exams", label: "My Exams", icon: <BookOpen /> },
+      ]
+    : [
+        { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard />, exact: true },
+        { href: "/exams", label: "Exams", icon: <BookOpen /> },
+        { href: "/mistakes", label: "Mistake notebook", icon: <RotateCcw /> },
+        { href: "/progress", label: "Progress", icon: <TrendingUp /> },
+        { href: "/leaderboard", label: "Leaderboard", icon: <Trophy /> },
+        ...(billingEnabled
+          ? [{ href: "/billing", label: "Billing", icon: <CreditCard /> }]
+          : []),
+      ]
 
   return (
     <DashboardShell
       icon={GraduationCap}
-      badgeLabel="Student"
+      badgeLabel={user.isGuest ? "Guest Candidate" : "Student"}
       mobileLabel={APP_NAME}
       navItems={navItems}
       user={user}
+      breadcrumb={user.isGuest ? "Guest Assessment" : "Student Workspace"}
     >
-      {children}
+      <div className="p-4 sm:p-6 lg:p-8">
+        {children}
+      </div>
     </DashboardShell>
   )
 }

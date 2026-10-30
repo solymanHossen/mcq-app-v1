@@ -1,86 +1,116 @@
+import * as React from "react"
 import type { LucideIcon } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { LogoutButton } from "@/components/shared/logout-button"
-import { SidebarNav, type SidebarNavItem } from "@/components/shared/sidebar-nav"
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/shared/app-sidebar"
+import { UserNav } from "@/components/shared/user-nav"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
+import {
+  GlobalSearchTrigger,
+  GlobalSearchMobileButton,
+  GlobalSearchDialog,
+} from "@/components/shared/global-search-dialog"
+import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
+import type { Role } from "@/prisma/generated/prisma/client"
 import { APP_NAME } from "@/lib/config"
 
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("")
-}
+import { getSystemSettings } from "@/modules/settings/queries"
 
 /**
- * The shared chrome for every signed-in area (admin/teacher/student): a
- * fixed sidebar with branding, nav, and an account footer on desktop, and a
- * compact header + horizontally-scrollable pill nav on mobile — no drawer
- * component exists in this project, so mobile gets a strip instead of an
- * off-canvas panel.
+ * World-Class Official shadcn/ui Dashboard Shell:
+ * Features modern trendy icons, interactive spotlight search command palette,
+ * system health indicator, theme toggle, and spacious luxury layout.
+ *
+ * Runs as a React Server Component to seamlessly bridge Server Layouts
+ * with rich Client interactive triggers.
  */
-export function DashboardShell({
+export async function DashboardShell({
   icon: Icon,
   badgeLabel,
   mobileLabel,
   navItems,
   user,
+  breadcrumb,
   children,
 }: {
   icon: LucideIcon
   badgeLabel: string
-  mobileLabel: string
+  mobileLabel?: string
   navItems: readonly SidebarNavItem[]
-  user: { name: string; email: string }
+  user: { name: string; email: string; role?: Role; id?: string; isGuest?: boolean }
+  quickAction?: unknown
+  breadcrumb?: string
   children: React.ReactNode
 }) {
+  const settings = await getSystemSettings()
+  const resolvedRole =
+    user.role ??
+    (badgeLabel.toUpperCase().includes("SUPER")
+      ? "SUPER_ADMIN"
+      : badgeLabel.toUpperCase().includes("ADMIN")
+      ? "ADMIN"
+      : badgeLabel.toUpperCase().includes("TEACHER")
+      ? "TEACHER"
+      : "STUDENT")
+
   return (
-    <div className="flex min-h-svh">
-      <aside className="hidden w-64 shrink-0 flex-col border-r bg-muted/30 md:flex">
-        <div className="flex h-16 items-center gap-2 border-b px-5">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Icon className="size-4" />
-          </span>
-          <span className="font-heading text-sm font-semibold tracking-tight">{APP_NAME}</span>
-          <Badge variant="secondary" className="ml-auto">
-            {badgeLabel}
-          </Badge>
-        </div>
-
-        <SidebarNav items={navItems} className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3" />
-
-        <div className="border-t p-3">
-          <div className="flex items-center gap-2.5 px-2 py-1.5">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
-              {initials(user.name)}
+    <SidebarProvider>
+      <AppSidebar
+        brandIcon={<Icon className="size-4.5" />}
+        brandName={APP_NAME}
+        badgeLabel={badgeLabel}
+        logoUrl={settings.logoUrl}
+        navItems={navItems}
+        user={user}
+      />
+      <SidebarInset className="min-w-0 flex-1 w-full bg-background">
+        {/* World-Class Header: Clean border, unified with Sidebar, subtle backdrop blur */}
+        <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-b border-sidebar-border bg-sidebar/95 backdrop-blur-md text-sidebar-foreground px-4 sm:px-6 lg:px-8">
+          {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <SidebarTrigger className="size-9 rounded-lg border-none bg-sidebar-accent/50 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground" />
+            <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
+              {breadcrumb ?? `${badgeLabel} Workspace`}
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{user.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-            </div>
           </div>
-          <LogoutButton className="w-full justify-start" />
-        </div>
-      </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-2 border-b p-3 md:hidden">
-          <span className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Icon className="size-3.5" />
-          </span>
-          <span className="font-heading text-sm font-semibold">{mobileLabel}</span>
-          <LogoutButton className="ml-auto" />
+          {/* Center section: World-Class Interactive Spotlight Search Trigger */}
+          <div className="mx-4 hidden max-w-md flex-1 md:block">
+            <GlobalSearchTrigger />
+          </div>
+
+          {/* Right section: Mobile Search Icon, System Status, Theme Toggle, User Menu */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile Search Button */}
+            <GlobalSearchMobileButton />
+
+
+            {/* Quick Dark/Light Theme Toggle */}
+            <ThemeToggle />
+
+            {/* World-Class User Nav Profile with Dropdown & Sign Out */}
+            <UserNav
+              user={{
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: resolvedRole as Role,
+                isGuest: user.isGuest,
+              }}
+              showDashboardButton={false}
+            />
+          </div>
         </header>
-        <div className="border-b md:hidden">
-          <SidebarNav
-            items={navItems}
-            variant="mobile"
-            className="flex gap-1.5 overflow-x-auto p-2.5"
-          />
-        </div>
-        <main className="flex-1 p-6">{children}</main>
-      </div>
-    </div>
+
+        {/* Global Spotlight Search Dialog */}
+        <GlobalSearchDialog />
+
+        {/* Full-width inner dashboard canvas */}
+        <main className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

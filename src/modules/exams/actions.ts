@@ -23,6 +23,9 @@ function parseExamFormData(formData: FormData) {
     shuffleQuestions: formData.get("shuffleQuestions") === "on",
     shuffleOptions: formData.get("shuffleOptions") === "on",
     webcamMonitoringRequired: formData.get("webcamMonitoringRequired") === "on",
+    isPublic: formData.has("isPublic") ? formData.get("isPublic") === "on" : true,
+    allowGuestAccess: formData.has("allowGuestAccess") ? formData.get("allowGuestAccess") === "on" : true,
+    accessCode: formData.get("accessCode") || undefined,
   })
 }
 
@@ -54,6 +57,9 @@ export async function createExamAction(
       shuffleOptions: parsed.data.shuffleOptions,
       webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
       violationReviewThreshold: parsed.data.violationReviewThreshold,
+      isPublic: parsed.data.isPublic,
+      allowGuestAccess: parsed.data.allowGuestAccess,
+      accessCode: parsed.data.accessCode,
     },
   })
 
@@ -96,6 +102,9 @@ export async function updateExamAction(
       shuffleOptions: parsed.data.shuffleOptions,
       webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
       violationReviewThreshold: parsed.data.violationReviewThreshold,
+      isPublic: parsed.data.isPublic,
+      allowGuestAccess: parsed.data.allowGuestAccess,
+      accessCode: parsed.data.accessCode,
     },
   })
 

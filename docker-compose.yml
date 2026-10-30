@@ -1,3 +1,5 @@
+name: mcq-platform
+
 services:
   # Tuned for a small (1-2GB RAM) deployment target running Postgres,
   # Redis, and the Next.js app together on one host — see

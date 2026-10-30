@@ -7,54 +7,75 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Card, CardContent, CardDescription,
-  CardFooter, CardHeader, CardTitle
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { AuthHeader } from '@/components/auth/auth-header';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function ForgotPasswordPage() {
   const [state, action, isPending] = useActionState(forgotPasswordAction, undefined);
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Reset password</CardTitle>
-        <CardDescription>
-          Enter your email and we&apos;ll send a reset link
-        </CardDescription>
-      </CardHeader>
+    <Card className="w-full max-w-[420px] rounded-2xl border-border/80 bg-card p-6 sm:p-8 shadow-sm">
+      <AuthHeader
+        title="Reset your password"
+        description="Enter your email to recover your ExamHub account"
+      />
 
-      <form action={action}>
-        <CardContent className="space-y-4">
-          {state?.error && (
-            <Alert variant="destructive">
-              <AlertDescription>{state.error}</AlertDescription>
-            </Alert>
-          )}
-          {state?.success && (
-            <Alert>
-              <AlertDescription>
-                Check your email for a reset link.
-              </AlertDescription>
-            </Alert>
-          )}
-          <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email"
-              type="email" placeholder="you@example.com" required />
-          </div>
-        </CardContent>
+      <form action={action} className="flex flex-col gap-4">
+        {state?.error && (
+          <Alert variant="destructive">
+            <AlertDescription>{state.error}</AlertDescription>
+          </Alert>
+        )}
+        {state?.success && (
+          <Alert>
+            <AlertDescription>
+              Check your email for the reset link instructions.
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <CardFooter className="flex-col gap-3">
-          <Button type="submit" className="w-full"
-            disabled={isPending}>
-            {isPending ? 'Sending...' : 'Send reset link'}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="email" className="text-base font-semibold text-foreground">
+            Email address
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-4 pt-2">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full text-base sm:text-lg font-semibold shadow-xs"
+            disabled={isPending}
+          >
+            {isPending ? (
+              <>
+                <Spinner className="mr-2" />
+                <span>Sending link...</span>
+              </>
+            ) : (
+              'Send reset link'
+            )}
           </Button>
-          <Link href="/login"
-            className="text-sm text-muted-foreground hover:underline">
-            Back to login
-          </Link>
-        </CardFooter>
+
+          <p className="text-center text-base text-muted-foreground">
+            Remember your password?{' '}
+            <Link
+              href="/login"
+              className="font-semibold text-foreground underline-offset-4 hover:underline hover:text-primary transition-colors"
+            >
+              Back to sign in
+            </Link>
+          </p>
+        </div>
       </form>
     </Card>
   );

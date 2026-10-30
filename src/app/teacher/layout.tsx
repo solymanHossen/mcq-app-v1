@@ -35,6 +35,7 @@ export default async function TeacherLayout({
       mobileLabel={`${APP_NAME} Teacher`}
       navItems={navItems}
       user={teacher}
+      breadcrumb="Teacher Portal"
     >
       {children}
     </DashboardShell>

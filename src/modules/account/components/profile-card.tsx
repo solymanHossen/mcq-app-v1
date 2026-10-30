@@ -2,36 +2,16 @@
 
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Lock } from "lucide-react"
+
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 import { updateProfileNameAction } from "@/modules/account/actions"
-
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("")
-}
 
 export function ProfileCard({
   name,
   email,
-  role,
-  joinedAt,
-  lastLoginAt,
 }: {
   name: string
   email: string
@@ -47,57 +27,91 @@ export function ProfileCard({
     event.preventDefault()
     startTransition(async () => {
       const result = await updateProfileNameAction(value.trim())
-      if ("error" in result) toast.error(result.error)
-      else toast.success("Profile updated")
+      if ("error" in result) {
+        toast.error(result.error)
+      } else {
+        toast.success("Profile updated successfully")
+      }
     })
   }
 
   return (
-    <Card>
-      <CardHeader className="flex-row items-center gap-3 space-y-0">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-medium text-primary">
-          {initials(name)}
-        </span>
-        <div className="min-w-0 flex-1 space-y-1">
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>
-            Your name is shown to students on exams and leaderboards.
-          </CardDescription>
+    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+      <div>
+        <div className="pb-6">
+          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+            Personal Information
+          </h3>
         </div>
-        <Badge variant="secondary" className="shrink-0 capitalize">
-          {role.toLowerCase()}
-        </Badge>
-      </CardHeader>
 
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-1">
-            <Label htmlFor="name">Full name</Label>
-            <Input
-              id="name"
-              value={value}
-              onChange={(event) => setValue(event.target.value)}
-              minLength={2}
-              maxLength={100}
-              required
-            />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-5">
+            {/* Display Name Input (Teacher Directory style, soft bg, smooth focus, no hard border) */}
+            <div className="space-y-2">
+              <Label
+                htmlFor="name"
+                className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm"
+              >
+                Full Name
+              </Label>
+              <input
+                id="name"
+                value={value}
+                onChange={(event) => setValue(event.target.value)}
+                minLength={2}
+                maxLength={100}
+                required
+                placeholder="Your full name"
+                className="h-13.5 w-full rounded-2xl bg-muted/60 px-5 text-base font-medium text-foreground transition-all placeholder:text-muted-foreground/50 hover:bg-muted/80 focus:bg-background focus:ring-2 focus:ring-primary/25 focus:outline-none sm:h-14"
+              />
+            </div>
+
+            {/* Email Address Input (Teacher Directory style, read-only) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label
+                  htmlFor="email"
+                  className="text-xs font-bold tracking-wider text-muted-foreground uppercase sm:text-sm"
+                >
+                  Email Address
+                </Label>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                  <Lock className="size-3.5" />
+                  Immutable
+                </span>
+              </div>
+              <input
+                id="email"
+                value={email}
+                disabled
+                readOnly
+                className="h-13.5 w-full cursor-not-allowed rounded-2xl bg-muted/40 px-5 font-medium text-muted-foreground select-all sm:h-14"
+              />
+            </div>
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={email} disabled readOnly />
+
+          {/* Seamless Integrated Footer Bar */}
+          <div className="flex items-center justify-between border-t border-border/50 pt-6">
+            <span className="text-xs font-medium text-muted-foreground">
+              {dirty ? (
+                <span className="font-semibold text-primary">Unsaved changes</span>
+              ) : (
+                "Up to date"
+              )}
+            </span>
+
+            <Button
+              type="submit"
+              disabled={!dirty || isPending}
+              className="h-11 rounded-xl px-7 text-sm font-bold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-95 transition-all cursor-pointer sm:h-12"
+            >
+              {isPending && <Spinner data-icon="inline-start" />}
+              Save Changes
+            </Button>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Member since {joinedAt}
-            {lastLoginAt && <> · Last login {lastLoginAt}</>}
-          </p>
-        </CardContent>
-        <CardFooter className="justify-end">
-          <Button type="submit" disabled={!dirty || isPending}>
-            {isPending && <Spinner data-icon="inline-start" />}
-            Save changes
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+        </form>
+      </div>
+    </div>
   )
 }
+

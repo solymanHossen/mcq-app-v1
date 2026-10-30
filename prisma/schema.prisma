@@ -35,6 +35,7 @@ model User {
   passwordHash    String
   role            Role      @default(STUDENT)
   isActive        Boolean   @default(true)
+  isGuest         Boolean   @default(false)
   isEmailVerified Boolean   @default(false)
   lastLoginAt     DateTime?
 
@@ -100,6 +101,7 @@ model User {
   adminAuditLogsActed  AdminAuditLog[]      @relation("AdminAuditActor")
   adminAuditLogsTarget AdminAuditLog[]      @relation("AdminAuditTarget")
   systemSettingsUpdates SystemSettings[]    @relation("SystemSettingsUpdatedBy")
+  titleTemplates        ExamTitleTemplate[] @relation("TeacherTitleTemplates")
 
   @@index([role, isActive])
   @@index([teacherVerificationStatus])
@@ -295,6 +297,11 @@ model Exam {
   shuffleOptions   Boolean    @default(false)
   passingMarks     Float?
 
+  // Access and participation rules
+  isPublic         Boolean    @default(true)
+  allowGuestAccess Boolean    @default(true)
+  accessCode       String?
+
   // Scheduling window. "Is this exam currently open" is derived from
   // (status == PUBLISHED && now within [startTime, endTime]) rather than
   // stored as its own status, so the two can never disagree.
@@ -378,6 +385,25 @@ model ExamQuestion {
 
   @@unique([examId, questionId])
   @@index([examId, order])
+}
+
+model ExamTitleTemplate {
+  id        String   @id @default(uuid())
+  title     String
+  category  String   @default("General")
+  subject   String?
+  examType  String?
+  year      String?
+  isSystem  Boolean  @default(false)
+
+  teacherId String?
+  teacher   User?    @relation("TeacherTitleTemplates", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teacherId, createdAt])
+  @@index([category])
 }
 
 enum ReportStatus {
@@ -1189,6 +1215,13 @@ model SystemSettings {
   // (/admin/subscriptions, /admin/payments, /admin/coupons) and canceling an
   // existing subscription are never gated by this — only *new* subscribing.
   billingEnabled Boolean @default(true)
+
+  // Branding & Hero Section Customization
+  logoUrl      String?
+  heroImageUrl String?
+  heroVideoUrl String?
+  heroTitle    String?
+  heroSubtitle String?
 
   updatedAt   DateTime @updatedAt
   updatedById String?

@@ -4,11 +4,29 @@ import * as React from "react"
 import Link from "next/link"
 import {
   ArrowRight,
+  BookOpen,
+  BookOpenCheck,
+  Calendar,
+  Check,
+  CheckCircle2,
   Clock,
+  Copy,
+  FileSpreadsheet,
+  GraduationCap,
+  HelpCircle,
+  Mail,
   Search,
+  ShieldAlert,
   ShieldCheck,
+  Sparkles,
   Users,
 } from "lucide-react"
+import { toast } from "sonner"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
+import { cn } from "@/lib/utils"
 
 export interface PublishedExamData {
   id: string
@@ -48,9 +66,22 @@ interface TeacherDirectoryClientProps {
   stats: DirectoryStats
 }
 
-export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClientProps) {
+export function TeacherDirectoryClient({
+  teachers,
+  stats,
+}: TeacherDirectoryClientProps) {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState<"ALL" | "VERIFIED" | "PENDING">("ALL")
+  const [statusFilter, setStatusFilter] = React.useState<
+    "ALL" | "VERIFIED" | "PENDING"
+  >("ALL")
+  const [copiedEmailId, setCopiedEmailId] = React.useState<string | null>(null)
+
+  function handleCopyEmail(email: string, id: string) {
+    navigator.clipboard.writeText(email)
+    setCopiedEmailId(id)
+    toast.success("Email copied to clipboard")
+    setTimeout(() => setCopiedEmailId(null), 2000)
+  }
 
   const filteredTeachers = React.useMemo(() => {
     return teachers.filter((teacher) => {
@@ -62,261 +93,449 @@ export function TeacherDirectoryClient({ teachers, stats }: TeacherDirectoryClie
 
       const nameMatch = teacher.name.toLowerCase().includes(query)
       const emailMatch = teacher.email.toLowerCase().includes(query)
-      const subjectMatch = teacher.subjects.some((s) => s.toLowerCase().includes(query))
-      const examMatch = teacher.publishedExams.some((e) => e.title.toLowerCase().includes(query))
+      const subjectMatch = teacher.subjects.some((s) =>
+        s.toLowerCase().includes(query)
+      )
+      const examMatch = teacher.publishedExams.some((e) =>
+        e.title.toLowerCase().includes(query)
+      )
 
       return nameMatch || emailMatch || subjectMatch || examMatch
     })
   }, [teachers, searchTerm, statusFilter])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-      {/* ================= CLEAN HEADER WITH REAL INLINE METRICS ================= */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6 pb-6 sm:pb-8 border-b border-border">
-        <div>
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground">
-            Teacher Directory
-          </h1>
-          <p className="mt-2 text-sm sm:text-base md:text-lg text-muted-foreground font-medium">
-            Browse verified academic examiners and explore active examination tracks.
-          </p>
-        </div>
+    <div className="w-full space-y-8">
+      {/* ================= HERO BANNER: MATCHING PROFILE HERO ================= */}
+      <div className="relative overflow-hidden rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+        {/* Subtle Radiant Top Accent */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent"
+        />
 
-        {/* Compact real metric summary pills with fluid mobile/tablet sizing */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs sm:text-sm md:text-base font-semibold">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 sm:px-4.5 py-1.5 sm:py-2 text-foreground shadow-2xs">
-            <strong className="font-black text-foreground">{stats.totalTeachers}</strong> Teachers
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3.5 sm:px-4.5 py-1.5 sm:py-2 text-primary shadow-2xs font-bold">
-            <strong className="font-black">{stats.verifiedTeachers}</strong> Verified
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3.5 sm:px-4.5 py-1.5 sm:py-2 text-secondary-foreground shadow-2xs font-bold">
-            <strong className="font-black">{stats.totalPublishedExams}</strong> Published Exams
-          </span>
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+          {/* Left: Heading & Narrative */}
+          <div className="space-y-2 sm:space-y-2.5">
+            <div className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+              <GraduationCap className="size-3.5" />
+              <span>Academic Faculty &amp; Examination Board</span>
+            </div>
+
+            <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+              Teacher Directory
+            </h1>
+
+            <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Browse verified academic examiners, inspect question bank repositories, and explore official timed examination tracks.
+            </p>
+          </div>
+
+          {/* Right: Executive Metric Chips (Same style as Profile Hero) */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            {/* Faculty */}
+            <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Users className="size-4" />
+              </span>
+              <div className="leading-tight">
+                <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                  {stats.totalTeachers}
+                </span>
+                <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Faculty
+                </span>
+              </div>
+            </div>
+
+            {/* Accredited */}
+            <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <ShieldCheck className="size-4" />
+              </span>
+              <div className="leading-tight">
+                <span className="block font-heading text-base font-black text-emerald-600 sm:text-lg dark:text-emerald-400">
+                  {stats.verifiedTeachers}
+                </span>
+                <span className="block text-[10px] font-bold tracking-wider text-emerald-600 uppercase dark:text-emerald-400">
+                  Accredited
+                </span>
+              </div>
+            </div>
+
+            {/* Published Exams */}
+            <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
+                <Sparkles className="size-4" />
+              </span>
+              <div className="leading-tight">
+                <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                  {stats.totalPublishedExams}
+                </span>
+                <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Exams
+                </span>
+              </div>
+            </div>
+
+            {/* Questions */}
+            <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400">
+                <HelpCircle className="size-4" />
+              </span>
+              <div className="leading-tight">
+                <span className="block font-heading text-base font-black text-foreground sm:text-lg">
+                  {stats.totalQuestions}
+                </span>
+                <span className="block text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Bank
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ================= SEARCH & STATUS FILTER TOOLBAR ================= */}
-      <div className="mt-6 sm:mt-8 mb-8 sm:mb-10">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
-          {/* Big Clean Search Input */}
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4.5 sm:size-5 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by teacher name, email, subject, or exam title..."
-              className="w-full rounded-2xl border border-input bg-card py-3 sm:py-3.5 md:py-4 pl-11 sm:pl-12 pr-12 text-sm sm:text-base font-medium text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-3 focus:ring-ring/40 shadow-xs transition-colors"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-              >
-                Clear
-              </button>
-            )}
-          </div>
+      {/* ================= FLOATING SEARCH & FILTER TOOLBAR ================= */}
+      <div className="flex flex-col gap-3 rounded-2xl bg-card p-3 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl sm:rounded-3xl sm:p-3.5 md:flex-row md:items-center dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+        {/* Debounced Search Input */}
+        <div className="flex-1">
+          <DebouncedSearchInput
+            syncUrl={false}
+            defaultValue={searchTerm}
+            onSearch={setSearchTerm}
+            placeholder="Search faculty, exams, subjects..."
+            className="w-full"
+            inputClassName="sm:h-12 sm:rounded-2xl sm:text-base bg-muted/40 focus-visible:bg-background"
+          />
+        </div>
 
-          {/* Status Filter Tabs using Theme Tokens - Segmented control on mobile */}
-          <div className="grid grid-cols-3 sm:flex items-center gap-1 p-1 sm:p-1.5 rounded-2xl border border-border bg-muted/40 shrink-0 w-full md:w-auto">
-            <button
-              type="button"
-              onClick={() => setStatusFilter("ALL")}
-              className={`rounded-xl px-2.5 sm:px-4 md:px-5 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base font-bold transition-all text-center justify-center cursor-pointer ${
-                statusFilter === "ALL"
-                  ? "bg-card text-foreground shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              All ({teachers.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("VERIFIED")}
-              className={`rounded-xl px-2.5 sm:px-4 md:px-5 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base font-bold transition-all text-center justify-center cursor-pointer ${
-                statusFilter === "VERIFIED"
-                  ? "bg-card text-foreground shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Verified ({stats.verifiedTeachers})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("PENDING")}
-              className={`rounded-xl px-2.5 sm:px-4 md:px-5 py-2 sm:py-2.5 text-xs sm:text-sm md:text-base font-bold transition-all text-center justify-center cursor-pointer ${
-                statusFilter === "PENDING"
-                  ? "bg-card text-foreground shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Pending ({stats.totalTeachers - stats.verifiedTeachers})
-            </button>
-          </div>
+        {/* Filter Segmented Control (Matching ProfileTabs segmented pill dock) */}
+        <div className="flex w-full shrink-0 items-center gap-1.5 rounded-xl bg-muted/60 p-1 sm:rounded-2xl sm:p-1.5 md:w-auto">
+          <button
+            type="button"
+            onClick={() => setStatusFilter("ALL")}
+            className={cn(
+              "flex-1 cursor-pointer rounded-lg px-3.5 py-2 text-center text-xs font-semibold transition-all duration-200 select-none sm:rounded-xl sm:px-5 sm:text-sm md:flex-none",
+              statusFilter === "ALL"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
+            )}
+          >
+            All ({teachers.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setStatusFilter("VERIFIED")}
+            className={cn(
+              "flex-1 cursor-pointer rounded-lg px-3.5 py-2 text-center text-xs font-semibold transition-all duration-200 select-none sm:rounded-xl sm:px-5 sm:text-sm md:flex-none",
+              statusFilter === "VERIFIED"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
+            )}
+          >
+            Verified ({stats.verifiedTeachers})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setStatusFilter("PENDING")}
+            className={cn(
+              "flex-1 cursor-pointer rounded-lg px-3.5 py-2 text-center text-xs font-semibold transition-all duration-200 select-none sm:rounded-xl sm:px-5 sm:text-sm md:flex-none",
+              statusFilter === "PENDING"
+                ? "bg-amber-600 text-white shadow-sm"
+                : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
+            )}
+          >
+            Pending ({stats.totalTeachers - stats.verifiedTeachers})
+          </button>
         </div>
       </div>
 
       {/* ================= TEACHERS LIST GRID ================= */}
       <div>
         {filteredTeachers.length === 0 ? (
-          <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border p-10 sm:p-16 text-center bg-card">
-            <Users className="mx-auto size-12 sm:size-16 text-muted-foreground mb-4" />
-            <h3 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
+          <div className="rounded-3xl bg-card p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:p-14 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+            <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-muted/40 text-muted-foreground">
+              <Users className="size-7" />
+            </div>
+            <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
               No teachers found
             </h3>
-            <p className="mt-2 text-sm sm:text-base text-muted-foreground max-w-md mx-auto">
-              No registered teachers match &ldquo;{searchTerm}&rdquo; with the current filter.
+            <p className="mx-auto mt-1.5 max-w-md text-xs text-muted-foreground sm:text-sm">
+              No registered faculty match &ldquo;{searchTerm}&rdquo; with the current filter criteria.
             </p>
-            <button
+            <Button
               type="button"
               onClick={() => {
                 setSearchTerm("")
                 setStatusFilter("ALL")
               }}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-primary px-6 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-primary-foreground hover:bg-primary/90 transition-colors shadow-xs cursor-pointer"
+              className="mt-6 rounded-xl px-6 text-sm font-semibold shadow-xs"
             >
               Reset Search &amp; Filters
-            </button>
+            </Button>
           </div>
         ) : (
-          <div className="grid gap-6 sm:gap-7 lg:gap-8 lg:grid-cols-2">
-            {filteredTeachers.map((teacher) => (
-              <div
-                key={teacher.id}
-                className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl border border-border bg-card p-5 sm:p-7 md:p-8 shadow-xs transition-all duration-300 hover:border-primary/50 hover:shadow-lg text-card-foreground"
-              >
-                <div>
-                  {/* Card Header: Avatar, Name, Email, Status */}
-                  <div className="flex items-start justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                      <div className="flex size-13 sm:size-15 md:size-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-primary/10 text-primary font-heading text-lg sm:text-2xl md:text-3xl font-black shadow-2xs">
-                        {teacher.initials}
-                      </div>
-                      <div className="min-w-0">
-                        <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-black text-foreground group-hover:text-primary transition-colors truncate">
-                          {teacher.name}
-                        </h2>
-                        <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-0.5 font-medium truncate">
-                          {teacher.email}
-                        </p>
-                      </div>
-                    </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            {filteredTeachers.map((teacher) => {
+              const joinedFormatted = new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                year: "numeric",
+              }).format(new Date(teacher.createdAt))
 
-                    {/* Verification Badges strictly styled with Theme Palette */}
-                    {teacher.isVerified ? (
-                      <span className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs sm:text-sm font-bold text-primary shrink-0">
-                        <ShieldCheck className="size-3.5 sm:size-4 stroke-[2.5]" />
-                        <span>Verified</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs sm:text-sm font-bold text-secondary-foreground shrink-0">
-                        <Clock className="size-3.5 sm:size-4 stroke-[2.5]" />
-                        <span>Pending</span>
-                      </span>
-                    )}
-                  </div>
+              const isEmailCopied = copiedEmailId === teacher.id
 
-                  {/* Authored Subjects */}
-                  {teacher.subjects.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-                      {teacher.subjects.map((subject) => (
-                        <span
-                          key={subject}
-                          className="rounded-lg sm:rounded-xl border border-border bg-muted/50 px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-semibold text-foreground"
-                        >
-                          {subject}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+              return (
+                <div
+                  key={teacher.id}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-7 lg:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]"
+                >
+                  {/* Subtle radiant ambient top highlight */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  />
 
-                  {/* Real Stats Metrics Strip using Theme Tokens */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3 rounded-xl sm:rounded-2xl border border-border bg-muted/30 p-3 sm:p-4 md:p-5 text-center mb-5 sm:mb-6">
-                    <div>
-                      <span className="block font-heading text-xl sm:text-2xl md:text-3xl font-black text-foreground leading-none">
-                        {teacher.publishedExamsCount}
-                      </span>
-                      <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-muted-foreground mt-1.5 block leading-tight">
-                        Published Exams
-                      </span>
-                    </div>
+                  <div className="space-y-6">
+                    {/* ================= 1. CARD HEADER: AVATAR, NAME, CREDENTIALS & STATUS ================= */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex min-w-0 items-center gap-4">
+                        {/* Avatar matching Profile Hero with active beacon */}
+                        <div className="relative shrink-0">
+                          <Avatar className="size-14 ring-2 ring-primary/15 sm:size-16">
+                            <AvatarFallback className="bg-primary/10 font-heading text-lg font-extrabold tracking-tight text-primary sm:text-xl">
+                              {teacher.initials}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span
+                            className={cn(
+                              "absolute right-0 bottom-0 size-3 rounded-full border-2 border-card shadow-xs",
+                              teacher.isVerified ? "bg-emerald-500" : "bg-amber-500"
+                            )}
+                            title={
+                              teacher.isVerified
+                                ? "Verified Faculty"
+                                : "Pending Verification"
+                            }
+                          />
+                        </div>
 
-                    <div>
-                      <span className="block font-heading text-xl sm:text-2xl md:text-3xl font-black text-foreground leading-none">
-                        {teacher.totalQuestions}
-                      </span>
-                      <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-muted-foreground mt-1.5 block leading-tight">
-                        Questions Authored
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="block font-heading text-xl sm:text-2xl md:text-3xl font-black text-foreground leading-none">
-                        {teacher.totalAttempts}
-                      </span>
-                      <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-muted-foreground mt-1.5 block leading-tight">
-                        Test Takers
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Real Published Exams List */}
-                  <div>
-                    <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted-foreground block mb-2 sm:mb-3">
-                      Published Exams ({teacher.publishedExams.length})
-                    </span>
-
-                    {teacher.publishedExams.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-border p-3.5 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground bg-muted/20">
-                        No published exams at this moment.
-                      </div>
-                    ) : (
-                      <div className="space-y-2 sm:space-y-2.5 max-h-48 sm:max-h-56 overflow-y-auto pr-1">
-                        {teacher.publishedExams.map((exam) => (
-                          <div
-                            key={exam.id}
-                            className="flex items-center justify-between rounded-xl border border-border bg-card p-3 sm:p-3.5 transition-colors hover:border-primary/50"
-                          >
-                            <div className="pr-2 sm:pr-3 min-w-0 flex-1">
-                              <h4 className="text-sm sm:text-base font-bold text-foreground truncate">
-                                {exam.title}
-                              </h4>
-                              <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground mt-0.5 truncate">
-                                {exam.durationMinutes} min · {exam.questionsCount} questions · {exam.attemptsCount} attempts
-                              </p>
-                            </div>
-                            <Link
-                              href={`/login?callbackUrl=/exams`}
-                              className="shrink-0 inline-flex items-center gap-1 sm:gap-1.5 rounded-lg border border-primary/20 bg-primary/10 hover:bg-primary px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-bold text-primary hover:text-primary-foreground transition-all"
+                        {/* Name, Email Pill & Joined */}
+                        <div className="min-w-0 space-y-1.5">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h2 className="truncate font-heading text-lg font-extrabold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-xl">
+                              {teacher.name}
+                            </h2>
+                            <Badge
+                              variant="secondary"
+                              className="rounded-lg px-2 py-0.5 text-xs font-semibold"
                             >
-                              <span>Enter</span>
-                              <ArrowRight className="size-3 sm:size-3.5" />
-                            </Link>
+                              Faculty
+                            </Badge>
                           </div>
+
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+                            <button
+                              type="button"
+                              onClick={() => handleCopyEmail(teacher.email, teacher.id)}
+                              className="group/copy inline-flex items-center gap-1.5 rounded-lg bg-muted/40 px-2.5 py-1 font-medium transition-colors hover:bg-muted/70 hover:text-foreground"
+                              title="Click to copy email address"
+                            >
+                              <Mail className="size-3.5 text-muted-foreground transition-colors group-hover/copy:text-primary" />
+                              <span className="truncate max-w-[150px] sm:max-w-none">{teacher.email}</span>
+                              {isEmailCopied ? (
+                                <Check className="size-3 text-emerald-500" />
+                              ) : (
+                                <Copy className="size-3 opacity-0 transition-opacity group-hover/copy:opacity-70" />
+                              )}
+                            </button>
+
+                            <span className="text-muted-foreground/30">•</span>
+
+                            <span className="inline-flex items-center gap-1 font-medium text-xs text-muted-foreground">
+                              <Calendar className="size-3 text-muted-foreground" />
+                              <span>Joined {joinedFormatted}</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Distinctive Status Pill */}
+                      <div className="shrink-0">
+                        {teacher.isVerified ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 shadow-2xs sm:px-3.5 sm:py-1.5 sm:text-sm dark:bg-emerald-500/15 dark:text-emerald-400">
+                            <ShieldCheck className="size-3.5 stroke-[2.5]" />
+                            <span>Verified</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600 shadow-2xs sm:px-3.5 sm:py-1.5 sm:text-sm dark:bg-amber-500/15 dark:text-amber-400">
+                            <Clock className="size-3.5 stroke-[2.5]" />
+                            <span>Pending</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ================= 2. ACADEMIC SPECIALIZATION SUBJECTS ================= */}
+                    {teacher.subjects.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-2">
+                        {teacher.subjects.map((subject) => (
+                          <span
+                            key={subject}
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-muted/60 px-3 py-1.5 text-xs font-semibold text-foreground/90 transition-colors hover:bg-muted/90"
+                          >
+                            <BookOpen className="size-3 text-primary" />
+                            <span>{subject}</span>
+                          </span>
                         ))}
                       </div>
                     )}
+
+                    {/* ================= 3. SCULPTED 3-TILE KPI METRICS SYSTEM ================= */}
+                    <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5">
+                      {/* Tile 1: Published Exams */}
+                      <div className="flex flex-col justify-between rounded-2xl bg-muted/30 p-3.5 sm:p-4 transition-all duration-200 hover:bg-muted/50">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                            Exams
+                          </span>
+                          <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <FileSpreadsheet className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-2.5">
+                          <p className="font-heading text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground">
+                            {teacher.publishedExamsCount}
+                          </p>
+                          <p className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                            Scheduled
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tile 2: Question Vault */}
+                      <div className="flex flex-col justify-between rounded-2xl bg-muted/30 p-3.5 sm:p-4 transition-all duration-200 hover:bg-muted/50">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                            Questions
+                          </span>
+                          <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400">
+                            <HelpCircle className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-2.5">
+                          <p className="font-heading text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground">
+                            {teacher.totalQuestions}
+                          </p>
+                          <p className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                            Bank Vault
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tile 3: Student Submissions */}
+                      <div className="flex flex-col justify-between rounded-2xl bg-muted/30 p-3.5 sm:p-4 transition-all duration-200 hover:bg-muted/50">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                            Takers
+                          </span>
+                          <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+                            <Users className="size-3.5 sm:size-4" />
+                          </span>
+                        </div>
+                        <div className="mt-2.5">
+                          <p className="font-heading text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground">
+                            {teacher.totalAttempts}
+                          </p>
+                          <p className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                            Submissions
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ================= 4. PUBLISHED EXAMS ACCREDITED TRACKS ================= */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                        <span className="flex items-center gap-1.5">
+                          <BookOpenCheck className="size-3.5 text-primary" />
+                          <span>Published Assessment Tracks</span>
+                        </span>
+                        <span className="rounded-full bg-muted/80 px-2 py-0.5 text-xs font-semibold text-foreground">
+                          {teacher.publishedExams.length}
+                        </span>
+                      </div>
+
+                      {teacher.publishedExams.length === 0 ? (
+                        <div className="rounded-2xl bg-muted/20 p-4 text-center text-xs sm:text-sm text-muted-foreground">
+                          No public examination tracks scheduled at this moment.
+                        </div>
+                      ) : (
+                        <div className="max-h-56 scrollbar-none space-y-2.5 overflow-y-auto pr-0.5">
+                          {teacher.publishedExams.map((exam) => (
+                            <div
+                              key={exam.id}
+                              className="group/exam flex flex-col gap-2 rounded-2xl bg-muted/30 p-3.5 transition-all duration-200 hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
+                            >
+                              <div className="min-w-0 flex-1">
+                                <h4 className="truncate text-sm font-bold text-foreground transition-colors group-hover/exam:text-primary sm:text-base">
+                                  {exam.title}
+                                </h4>
+                                <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                  <span className="inline-flex items-center gap-1 font-medium">
+                                    <Clock className="size-3 text-primary" />
+                                    <span>{exam.durationMinutes} min</span>
+                                  </span>
+                                  <span>•</span>
+                                  <span className="font-medium">
+                                    {exam.questionsCount} questions
+                                  </span>
+                                  <span>•</span>
+                                  <span className="font-semibold text-foreground">
+                                    {exam.attemptsCount} takers
+                                  </span>
+                                </div>
+                              </div>
+                              <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                className="h-8 shrink-0 rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40"
+                              >
+                                <Link href="/login?callbackUrl=/exams">
+                                  <span>Take Exam</span>
+                                  <ArrowRight className="ml-1 size-3.5" />
+                                </Link>
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ================= 5. FOOTER ACTION: CLEAN BALANCED CTA ================= */}
+                  <div className="mt-6 pt-2 border-t border-border/40">
+                    <Button
+                      asChild
+                      size="lg"
+                      className="h-11 sm:h-12 w-full rounded-xl text-sm sm:text-base font-semibold shadow-xs"
+                    >
+                      <Link href="/register?role=student">
+                        <span>Register to Take Exams</span>
+                        <ArrowRight className="ml-2 size-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
-
-                {/* Footer Action using Theme Primary */}
-                <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-border">
-                  <Link
-                    href={`/register?role=student`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-primary hover:bg-primary/90 py-3 sm:py-3.5 px-4 sm:px-6 text-sm sm:text-base font-bold text-primary-foreground transition-all active:scale-95 shadow-xs"
-                  >
-                    <span>Register to Take Exams</span>
-                    <ArrowRight className="size-4 stroke-[2.5]" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
     </div>
   )
 }
+

@@ -1,12 +1,7 @@
 import { Suspense } from "react"
 import { ResetPasswordForm } from "./reset-password-form"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
+import { AuthHeader } from "@/components/auth/auth-header"
 
 export default function ResetPasswordPage({
   params,
@@ -31,14 +26,16 @@ async function ResetPasswordLoader({
 
 function ResetPasswordCardSkeleton() {
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>New password</CardTitle>
-        <CardDescription>Choose a strong password</CardDescription>
-      </CardHeader>
-      <CardContent className="text-sm text-muted-foreground">
-        Loading...
-      </CardContent>
+    <Card className="w-full max-w-[420px] rounded-2xl border-border/80 bg-card p-6 sm:p-8 shadow-sm">
+      <AuthHeader
+        title="Create new password"
+        description="Choose a strong password for your ExamHub account"
+      />
+      <div className="flex flex-col gap-4">
+        <div className="h-11 rounded-xl bg-muted/40 animate-pulse" />
+        <div className="h-11 rounded-xl bg-muted/40 animate-pulse" />
+        <div className="h-11 rounded-xl bg-muted/60 animate-pulse mt-2" />
+      </div>
     </Card>
   )
 }
