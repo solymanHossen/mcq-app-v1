@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
 import { requireUser } from "@/lib/authorization"
 import { getFullProfileData } from "@/modules/account/queries"
@@ -22,14 +23,14 @@ export default async function ProfilePage() {
   const { billingEnabled } = await getSystemSettings()
 
   return (
-    <div className="space-y-8">
+    <div className="w-full min-w-0 space-y-6 pb-12 sm:space-y-8 sm:pb-16">
       {/* World-Class Hero Banner */}
-      <ProfileHero user={profile} />
+      <ProfileHero user={profile} className="rounded-2xl border border-solid border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&_button]:max-w-full [&_button_span]:break-all [&>div[aria-hidden]]:hidden" />
 
       {/* Ultra-Smooth Large-Size Tabs System */}
       <Suspense
         fallback={
-          <div className="h-48 w-full animate-pulse rounded-3xl bg-card shadow-[0_8px_30px_rgba(0,0,0,0.04)]" />
+          <Skeleton className="h-48 w-full rounded-2xl" />
         }
       >
         <ProfileTabs profile={profile} billingEnabled={billingEnabled} />

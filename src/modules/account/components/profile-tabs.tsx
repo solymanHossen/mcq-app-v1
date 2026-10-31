@@ -8,13 +8,11 @@ import {
   Award,
   BookOpen,
   BookOpenCheck,
-  CheckCircle2,
   ChevronRight,
   ClipboardList,
   Clock,
   CreditCard,
   FileSpreadsheet,
-  GraduationCap,
   HelpCircle,
   KeyRound,
   Palette,
@@ -26,6 +24,7 @@ import {
   Users,
 } from "lucide-react"
 
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 import { ProfileCard } from "./profile-card"
 import { AccountDetailsCard } from "./account-details-card"
@@ -52,13 +51,16 @@ interface ProfileTabsProps {
 
 type TabKey = "profile" | "security" | "activity" | "appearance" | "billing"
 
+const profileCardClassName =
+  "min-w-0 rounded-2xl border border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_h3]:text-base [&_h3]:tracking-tight sm:[&_h3]:text-xl [&_label]:text-sm [&_label]:font-semibold [&_label]:tracking-normal [&_label]:normal-case sm:[&_label]:text-base [&_input]:h-11 [&_input]:rounded-xl [&_input]:border [&_input]:border-input/60 [&_input]:bg-muted/20 [&_input]:px-4 sm:[&_input]:h-12 sm:[&_input]:rounded-2xl md:[&_input]:text-sm [&_button[type=submit]]:min-h-10 [&_button[type=submit]]:h-auto [&_button[type=submit]]:whitespace-normal [&_button[type=submit]]:py-2.5 [&_button[type=submit]]:font-semibold"
+
 export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const queryTab = searchParams.get("tab") as TabKey | null
-  const initialTab: TabKey =
+  const activeTab: TabKey =
     queryTab &&
     ["profile", "security", "activity", "appearance", "billing"].includes(
       queryTab
@@ -66,22 +68,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
       ? queryTab
       : "profile"
 
-  const [activeTab, setActiveTab] = React.useState<TabKey>(initialTab)
-
-  // Keep state in sync if URL search param changes
-  React.useEffect(() => {
-    if (
-      queryTab &&
-      ["profile", "security", "activity", "appearance", "billing"].includes(
-        queryTab
-      )
-    ) {
-      setActiveTab(queryTab)
-    }
-  }, [queryTab])
-
   function handleSelectTab(tab: TabKey) {
-    setActiveTab(tab)
     const params = new URLSearchParams(searchParams.toString())
     if (tab === "profile") {
       params.delete("tab")
@@ -156,31 +143,28 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
   }
 
   return (
-    <div className="w-full space-y-8">
+    <Tabs value={activeTab} onValueChange={(value) => handleSelectTab(value as TabKey)} className="w-full min-w-0 gap-6 sm:gap-8">
       {/* ================= GORGEOUS MODERN SEGMENTED PILL DOCK ================= */}
       <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-        <nav
-          role="tablist"
+        <TabsList
           aria-label="Profile navigation sections"
-          className="flex w-full min-w-fit items-center gap-1.5 rounded-2xl bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2"
+          className="group-data-horizontal/tabs:h-auto flex w-max min-w-full items-center gap-1 rounded-xl border border-border/60 bg-muted/20 p-1 shadow-2xs"
         >
           {tabsConfig.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.key
 
             return (
-              <button
+              <TabsTrigger
                 key={tab.key}
-                role="tab"
-                type="button"
+                value={tab.key}
                 aria-selected={isActive}
                 aria-controls={`panel-${tab.key}`}
                 id={`tab-${tab.key}`}
-                onClick={() => handleSelectTab(tab.key)}
                 className={cn(
-                  "group relative flex flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-4 sm:py-2.5 sm:text-[14px]",
+                  "group relative flex min-h-10 flex-1 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors select-none sm:px-5",
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-2xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                     : "text-muted-foreground hover:bg-background/80 hover:text-foreground"
                 )}
               >
@@ -206,10 +190,10 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                     {tab.badge}
                   </span>
                 )}
-              </button>
+              </TabsTrigger>
             )
           })}
-        </nav>
+        </TabsList>
       </div>
 
       {/* ================= TAB PANELS WITH SMOOTH TRANSITIONS ================= */}
@@ -224,13 +208,16 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
           >
             {profile.role === "TEACHER" && (
               <VerificationStatusCard
+                className="rounded-2xl border border-border/70 shadow-xs backdrop-blur-none sm:rounded-2xl dark:shadow-xs"
                 status={profile.teacherVerificationStatus}
                 note={profile.teacherVerificationNote}
               />
             )}
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-2 sm:gap-8">
               <ProfileCard
+                variant="outlined"
+                className={profileCardClassName}
                 name={profile.name}
                 email={profile.email}
                 role={profile.role}
@@ -239,6 +226,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
               />
 
               <AccountDetailsCard
+                className="min-w-0 rounded-2xl border border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_h3]:text-base [&_h3]:tracking-tight sm:[&_h3]:text-xl [&_label]:text-sm [&_label]:font-semibold [&_label]:tracking-normal [&_label]:normal-case sm:[&_label]:text-base [&_[data-slot=account-value]]:h-auto [&_[data-slot=account-value]]:min-h-11 [&_[data-slot=account-value]]:flex-wrap [&_[data-slot=account-value]]:gap-2 [&_[data-slot=account-value]]:rounded-xl [&_[data-slot=account-value]]:border [&_[data-slot=account-value]]:border-input/60 [&_[data-slot=account-value]]:bg-muted/20 [&_[data-slot=account-value]]:px-4 [&_[data-slot=account-value]]:py-2.5 sm:[&_[data-slot=account-value]]:min-h-12 sm:[&_[data-slot=account-value]]:rounded-2xl [&_code]:min-w-0 [&_code]:flex-1 [&_code]:break-all [&_code]:whitespace-normal [&_code]:overflow-visible"
                 id={profile.id}
                 role={profile.role}
                 createdAt={profile.createdAt}
@@ -755,7 +743,7 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
           </div>
         )}
       </div>
-    </div>
+    </Tabs>
   )
 }
 
