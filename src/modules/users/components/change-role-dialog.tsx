@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -121,7 +122,7 @@ export function ChangeRoleDialog({
         <span>Change Role</span>
       </Button>
 
-      {/* ================= REFINED, PROPORTIONAL WORLD-CLASS MODAL ================= */}
+      {/* ================= MASTER REFERENCE COMPLIANT MODAL ================= */}
       <Dialog
         open={open}
         onOpenChange={(next) => {
@@ -129,94 +130,106 @@ export function ChangeRoleDialog({
           if (next) setRole(currentRole)
         }}
       >
-        <DialogContent className="sm:max-w-md rounded-3xl border border-border/80 bg-background/95 backdrop-blur-2xl p-6 shadow-2xl">
-          {/* Proportional Header */}
-          <DialogHeader className="p-0 text-left">
-            <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Update Role
-            </DialogTitle>
-            <p className="mt-0.5 text-xs text-muted-foreground font-medium">
-              {userName} · <span className="font-semibold text-foreground">{currentRole}</span>
-            </p>
+        <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-md max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border border-border/80 shadow-2xl overflow-hidden bg-background"
+        >
+          {/* Header with Icon Badge */}
+          <DialogHeader className="p-4 sm:p-5 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0 text-left">
+            <div className="flex items-center gap-3 pr-6">
+              <div className="size-10 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/20 shadow-xs">
+                <ShieldCheck className="size-5 sm:size-5.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle className="font-heading text-base sm:text-xl font-bold tracking-tight text-foreground leading-snug">
+                  Update User Role
+                </DialogTitle>
+                <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5 truncate">
+                  {userName} · <span className="font-semibold text-foreground">{currentRole}</span>
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <form action={formAction} className="flex flex-col gap-3.5 pt-1">
-            <input type="hidden" name="role" value={role} />
+          <form action={formAction} className="flex flex-col flex-1 overflow-hidden">
+            <div className="p-4 sm:p-5 space-y-3.5 text-sm overflow-y-auto flex-1">
+              <input type="hidden" name="role" value={role} />
 
-            {/* Proportional Role Selection Tiles */}
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-              {roleOptions.map((r) => {
-                const tile = ROLE_TILES[r]
-                const Icon = tile.icon
-                const isSelected = role === r
-                const isCurrent = currentRole === r
+              {/* Role Selection Tiles */}
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                {roleOptions.map((r) => {
+                  const tile = ROLE_TILES[r]
+                  const Icon = tile.icon
+                  const isSelected = role === r
+                  const isCurrent = currentRole === r
 
-                return (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r)}
-                    className={cn(
-                      "group relative flex items-center justify-between rounded-xl border p-3 sm:p-3.5 transition-all duration-200 cursor-pointer select-none",
-                      isSelected
-                        ? "border-primary bg-primary/10 shadow-xs ring-1 ring-primary/30"
-                        : "border-border/70 bg-card/70 hover:bg-muted/50 hover:border-border"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={cn(
-                          "flex size-9 sm:size-9.5 shrink-0 items-center justify-center rounded-xl border transition-transform duration-200 group-hover:scale-105",
-                          tile.color
-                        )}
-                      >
-                        <Icon className="size-4.5" />
-                      </span>
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className={cn(
+                        "group relative flex items-center justify-between rounded-xl border p-3 sm:p-3.5 transition-all duration-200 cursor-pointer select-none",
+                        isSelected
+                          ? "border-primary bg-primary/10 shadow-xs ring-1 ring-primary/30"
+                          : "border-border/70 bg-card hover:bg-muted/50 hover:border-border"
+                      )}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          className={cn(
+                            "flex size-9 sm:size-9.5 shrink-0 items-center justify-center rounded-xl border transition-transform duration-200 group-hover:scale-105",
+                            tile.color
+                          )}
+                        >
+                          <Icon className="size-4.5" />
+                        </span>
 
-                      <div className="text-left">
-                        <p className="font-heading text-sm sm:text-[15px] font-bold text-foreground leading-snug">
-                          {tile.label}
-                        </p>
-                        {isCurrent && (
-                          <span className="text-[10.5px] font-medium text-muted-foreground">
-                            Current
-                          </span>
-                        )}
+                        <div className="text-left min-w-0">
+                          <p className="font-heading text-sm sm:text-[15px] font-bold text-foreground leading-snug truncate">
+                            {tile.label}
+                          </p>
+                          {isCurrent && (
+                            <span className="text-[10.5px] font-medium text-muted-foreground">
+                              Current
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {isSelected ? (
-                      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xs">
-                        <Check className="size-3 stroke-[3]" />
-                      </span>
-                    ) : (
-                      <span className="size-4.5 shrink-0 rounded-full border border-border/80 group-hover:border-foreground/40 transition-colors" />
-                    )}
-                  </button>
-                )
-              })}
+                      {isSelected ? (
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-2xs ml-2">
+                          <Check className="size-3 stroke-[3]" />
+                        </span>
+                      ) : (
+                        <span className="size-4.5 shrink-0 rounded-full border border-border/80 group-hover:border-foreground/40 transition-colors ml-2" />
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Reason Field */}
+              <Field className="space-y-1.5 pt-0.5">
+                <Textarea
+                  id="change-reason"
+                  name="reason"
+                  rows={2}
+                  required
+                  placeholder="Reason for role change (min 5 characters)..."
+                  className="min-h-16 rounded-xl border border-border/70 bg-muted/20 focus-visible:bg-background text-xs sm:text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
+                />
+              </Field>
+
+              {state && "error" in state && (
+                <FieldError className="text-xs font-semibold text-destructive">
+                  {state.error}
+                </FieldError>
+              )}
             </div>
 
-            {/* Reason Field */}
-            <Field className="space-y-1 pt-0.5">
-              <Textarea
-                id="change-reason"
-                name="reason"
-                rows={2}
-                required
-                placeholder="Reason for role change (min 5 characters)..."
-                className="h-14 rounded-xl border border-border/70 bg-muted/30 focus-visible:bg-background text-xs sm:text-sm font-medium resize-none shadow-2xs placeholder:text-muted-foreground/60 transition-all"
-              />
-            </Field>
-
-            {state && "error" in state && (
-              <FieldError className="text-xs font-semibold text-destructive">
-                {state.error}
-              </FieldError>
-            )}
-
-            {/* Action Buttons */}
-            <DialogFooter className="mt-1 flex items-center justify-end gap-2.5 border-t border-border/40 pt-3.5 -mx-6 -mb-6 px-6 pb-6 bg-muted/20 rounded-b-3xl">
+            {/* Action Buttons Footer */}
+            <DialogFooter className="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-border/60 bg-muted/20 shrink-0 flex items-center justify-end gap-2.5">
               <Button
                 type="button"
                 variant="outline"
@@ -241,3 +254,4 @@ export function ChangeRoleDialog({
     </>
   )
 }
+

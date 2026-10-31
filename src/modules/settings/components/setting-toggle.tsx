@@ -58,15 +58,15 @@ export function SettingToggle({
     <div
       id={id}
       className={cn(
-        "flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 sm:p-6 transition-colors duration-150 hover:bg-muted/30 w-full",
+        "flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-5 p-5 sm:p-6 transition-colors duration-150 hover:bg-muted/20 w-full",
         isPending && "opacity-70 pointer-events-none"
       )}
     >
-      <div className="flex items-start sm:items-center gap-4 sm:gap-5 min-w-0 flex-1">
+      <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
         {icon && (
           <div
             className={cn(
-              "size-12 sm:size-13 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-200",
+              "size-11 sm:size-12 rounded-xl flex items-center justify-center shrink-0 shadow-2xs border border-border/40",
               iconClass
             )}
           >
@@ -75,18 +75,18 @@ export function SettingToggle({
         )}
 
         <div className="space-y-1 min-w-0 flex-1">
-          <h3 className="font-heading text-base sm:text-lg font-semibold text-foreground tracking-tight">
+          <h3 className="font-heading text-sm sm:text-base font-bold text-foreground tracking-tight">
             {title}
           </h3>
 
-          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             {description}
             {extraLink && (
               <>
                 {" · "}
                 <Link
                   href={extraLink.href}
-                  className="text-primary hover:underline font-medium inline-flex items-center gap-1"
+                  className="text-primary hover:underline font-semibold inline-flex items-center gap-1"
                 >
                   <span>{extraLink.label}</span>
                   <ArrowUpRight className="size-3.5" />
@@ -104,7 +104,7 @@ export function SettingToggle({
           onCheckedChange={handleChange}
           disabled={isPending}
           aria-label={title}
-          className="data-[state=checked]:bg-primary scale-110 sm:scale-115 origin-right"
+          className="data-[state=checked]:bg-primary cursor-pointer"
         />
       </div>
     </div>
