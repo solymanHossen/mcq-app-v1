@@ -18,7 +18,13 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty"
-import { ClipboardListIcon, Clock, Award, CheckCircle2, AlertCircle, ArrowRight, BookOpen } from "lucide-react"
+import {
+  ClipboardListIcon,
+  Clock,
+  Award,
+  ArrowRight,
+  BookOpen,
+} from "lucide-react"
 import { GuestBanner } from "@/modules/account/components/guest-banner"
 import { UpgradeGuestModal } from "@/modules/account/components/upgrade-guest-modal"
 
@@ -47,25 +53,32 @@ export default async function AvailableExamsPage() {
 
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight">My Assessment Exams</h1>
-            <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-xs">
+            <h1 className="text-2xl font-bold tracking-tight">
+              My Assessment Exams
+            </h1>
+            <Badge
+              variant="secondary"
+              className="border-amber-500/30 bg-amber-500/10 text-xs text-amber-600 dark:text-amber-400"
+            >
               Candidate Restricted
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            You are in isolated candidate mode. Only exams shared directly with you via private link appear here.
+            You are in isolated candidate mode. Only exams shared directly with
+            you via private link appear here.
           </p>
         </div>
 
         {attempts.length === 0 ? (
-          <Empty className="border border-dashed rounded-2xl p-8 bg-muted/10">
+          <Empty className="rounded-2xl border border-dashed bg-muted/10 p-8">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <ClipboardListIcon className="size-10 text-muted-foreground" />
               </EmptyMedia>
               <EmptyTitle>No Shared Exams Found</EmptyTitle>
               <EmptyDescription>
-                You haven&apos;t started any exams yet. Please use the direct exam link shared by your teacher.
+                You haven&apos;t started any exams yet. Please use the direct
+                exam link shared by your teacher.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -73,40 +86,62 @@ export default async function AvailableExamsPage() {
           <div className="grid gap-4">
             {attempts.map((attempt) => {
               const exam = attempt.exam
-              const isCompleted = attempt.status === "COMPLETED" || attempt.status === "TIMEOUT"
+              const isCompleted =
+                attempt.status === "COMPLETED" || attempt.status === "TIMEOUT"
               const isInProgress = attempt.status === "IN_PROGRESS"
 
               return (
-                <Card key={attempt.id} className="relative overflow-hidden border-border/60 hover:border-primary/40 transition-colors shadow-sm">
+                <Card
+                  key={attempt.id}
+                  className="relative overflow-hidden border-border/60 shadow-sm transition-colors hover:border-primary/40"
+                >
                   <div
-                    className={`absolute top-0 left-0 bottom-0 w-1 ${
-                      isInProgress ? "bg-amber-500" : isCompleted ? "bg-emerald-500" : "bg-muted"
+                    className={`absolute top-0 bottom-0 left-0 w-1 ${
+                      isInProgress
+                        ? "bg-amber-500"
+                        : isCompleted
+                          ? "bg-emerald-500"
+                          : "bg-muted"
                     }`}
                   />
                   <CardHeader className="pl-6">
-                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold">{exam.title}</CardTitle>
+                        <CardTitle className="text-lg font-bold">
+                          {exam.title}
+                        </CardTitle>
                         {exam.description && (
-                          <CardDescription className="line-clamp-2">{exam.description}</CardDescription>
+                          <CardDescription className="line-clamp-2">
+                            {exam.description}
+                          </CardDescription>
                         )}
                       </div>
                       <Badge
-                        variant={isInProgress ? "default" : isCompleted ? "secondary" : "outline"}
+                        variant={
+                          isInProgress
+                            ? "default"
+                            : isCompleted
+                              ? "secondary"
+                              : "outline"
+                        }
                         className={
                           isInProgress
-                            ? "bg-amber-500 hover:bg-amber-600 text-white"
+                            ? "bg-amber-500 text-white hover:bg-amber-600"
                             : isCompleted
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                            : ""
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                              : ""
                         }
                       >
-                        {isInProgress ? "In Progress" : isCompleted ? "Completed" : attempt.status}
+                        {isInProgress
+                          ? "In Progress"
+                          : isCompleted
+                            ? "Completed"
+                            : attempt.status}
                       </Badge>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="pl-6 pt-0 pb-4">
+                  <CardContent className="pt-0 pb-4 pl-6">
                     <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                       <div className="flex items-center gap-1.5">
                         <Clock className="size-3.5" />
@@ -116,7 +151,8 @@ export default async function AvailableExamsPage() {
                         <div className="flex items-center gap-1.5 font-semibold text-foreground">
                           <Award className="size-3.5 text-primary" />
                           <span>
-                            Score: {attempt.result.obtainedMarks} / {attempt.result.totalMarks} (
+                            Score: {attempt.result.obtainedMarks} /{" "}
+                            {attempt.result.totalMarks} (
                             {Math.round(attempt.result.accuracy)}% accuracy)
                           </span>
                         </div>
@@ -124,9 +160,10 @@ export default async function AvailableExamsPage() {
                     </div>
                   </CardContent>
 
-                  <CardFooter className="pl-6 pt-0 pb-5 border-t border-border/40 flex items-center justify-between gap-3">
+                  <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-0 pb-5 pl-6">
                     <span className="text-xs text-muted-foreground">
-                      Started: {new Date(attempt.startedAt).toLocaleDateString()}
+                      Started:{" "}
+                      {new Date(attempt.startedAt).toLocaleDateString()}
                     </span>
                     {isInProgress ? (
                       <Button asChild size="sm" className="gap-1.5 shadow-sm">
@@ -136,7 +173,12 @@ export default async function AvailableExamsPage() {
                         </Link>
                       </Button>
                     ) : (
-                      <Button asChild variant="outline" size="sm" className="gap-1.5">
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5"
+                      >
                         <Link href={`/exam/${exam.id}`}>
                           <span>Exam Details</span>
                         </Link>
@@ -150,22 +192,24 @@ export default async function AvailableExamsPage() {
         )}
 
         {/* Upgrade Card to discover other exams */}
-        <Card className="border-dashed border-primary/30 bg-primary/5 p-6 rounded-2xl">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <Card className="rounded-2xl border-dashed border-primary/30 bg-primary/5 p-6">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="space-y-1">
-              <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <BookOpen className="size-4 text-primary" />
                 Want to access other public practice exams?
               </h3>
               <p className="text-xs text-muted-foreground">
-                Set a password to upgrade your guest session into a permanent student account with full access to mistake reviews and open contests.
+                Set a password to upgrade your guest session into a permanent
+                student account with full access to mistake reviews and open
+                contests.
               </p>
             </div>
             <UpgradeGuestModal
               name={user.name}
               email={user.email}
               trigger={
-                <Button size="sm" className="shrink-0 font-semibold text-xs">
+                <Button size="sm" className="shrink-0 text-xs font-semibold">
                   Upgrade Account
                 </Button>
               }
@@ -188,8 +232,10 @@ export default async function AvailableExamsPage() {
   })
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 p-6">
-      <h1 className="text-2xl font-semibold">Available exams</h1>
+    <div className="w-full min-w-0 space-y-6 pb-12 sm:space-y-8 sm:pb-16">
+      <h1 className="border-b border-border/60 pb-3 font-heading text-2xl font-extrabold tracking-tight text-foreground sm:pb-4 sm:text-3xl lg:text-4xl">
+        Available exams
+      </h1>
 
       {exams.length === 0 ? (
         <Empty>
@@ -202,18 +248,27 @@ export default async function AvailableExamsPage() {
           </EmptyHeader>
         </Empty>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {exams.map((exam) => (
-            <Card key={exam.id}>
-              <CardHeader>
-                <CardTitle>{exam.title}</CardTitle>
+            <Card
+              key={exam.id}
+              className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs ring-0 transition-shadow hover:shadow-sm"
+            >
+              <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+                <CardTitle className="text-base font-bold tracking-tight sm:text-xl">
+                  {exam.title}
+                </CardTitle>
                 <CardDescription>
                   {exam.durationMinutes} minutes · {exam.maxAttempts} attempt
                   {exam.maxAttempts === 1 ? "" : "s"}
                 </CardDescription>
               </CardHeader>
-              <CardFooter>
-                <Button asChild size="sm">
+              <CardFooter className="mt-auto border-border/50 bg-muted/20 p-4 sm:px-6">
+                <Button
+                  asChild
+                  size="sm"
+                  className="h-10 rounded-xl text-sm font-semibold shadow-2xs"
+                >
                   <Link href={`/exams/${exam.id}`}>View</Link>
                 </Button>
               </CardFooter>

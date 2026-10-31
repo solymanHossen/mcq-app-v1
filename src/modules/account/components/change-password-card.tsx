@@ -1,24 +1,23 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 import { useState, useTransition } from "react"
 import { signOut } from "next-auth/react"
 import { toast } from "sonner"
-import {
-  Check,
-  Eye,
-  EyeOff,
-  KeyRound,
-  Lock,
-  ShieldAlert,
-  ShieldCheck,
-} from "lucide-react"
+import { Eye, EyeOff, KeyRound, ShieldAlert } from "lucide-react"
 
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { changePasswordAction } from "@/modules/account/actions"
 
-export function ChangePasswordCard() {
+export function ChangePasswordCard({
+  className,
+  variant = "default",
+}: { className?: string; variant?: "default" | "outlined" } = {}) {
+  const FormInput = variant === "outlined" ? Input : "input"
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -54,7 +53,12 @@ export function ChangePasswordCard() {
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       <div>
         <div className="flex items-center justify-between pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -76,7 +80,7 @@ export function ChangePasswordCard() {
                 Current Password
               </Label>
               <div className="relative">
-                <input
+                <FormInput
                   id="currentPassword"
                   type={showCurrent ? "text" : "password"}
                   autoComplete="current-password"
@@ -110,7 +114,7 @@ export function ChangePasswordCard() {
                 New Password
               </Label>
               <div className="relative">
-                <input
+                <FormInput
                   id="newPassword"
                   type={showNew ? "text" : "password"}
                   autoComplete="new-password"
@@ -145,7 +149,7 @@ export function ChangePasswordCard() {
                 Confirm New Password
               </Label>
               <div className="relative">
-                <input
+                <FormInput
                   id="confirmPassword"
                   type={showConfirm ? "text" : "password"}
                   autoComplete="new-password"
@@ -213,7 +217,7 @@ export function ChangePasswordCard() {
             <Button
               type="submit"
               disabled={!passwordsMatch || !isLongEnough || isPending}
-              className="h-11 rounded-xl px-7 text-sm font-semibold shadow-none transition-all duration-200 active:scale-95 cursor-pointer sm:h-12"
+              className="h-11 cursor-pointer rounded-xl px-7 text-sm font-semibold shadow-none transition-all duration-200 active:scale-95 sm:h-12"
             >
               {isPending && <Spinner data-icon="inline-start" />}
               Update Password & Sign Out Everywhere

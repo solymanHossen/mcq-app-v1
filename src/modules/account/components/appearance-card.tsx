@@ -33,7 +33,7 @@ const THEME_OPTIONS: ThemeOption[] = [
   },
 ]
 
-export function AppearanceCard() {
+export function AppearanceCard({ className }: { className?: string } = {}) {
   const { theme, setTheme } = useTheme()
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -42,7 +42,12 @@ export function AppearanceCard() {
   )
 
   return (
-    <div className="rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       <div className="pb-6">
         <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
           Theme & Appearance
@@ -61,9 +66,9 @@ export function AppearanceCard() {
                   type="button"
                   onClick={() => setTheme(value)}
                   className={cn(
-                    "group flex items-center justify-between rounded-2xl p-4 text-left transition-all duration-200 cursor-pointer sm:p-5",
+                    "group flex cursor-pointer items-center justify-between rounded-2xl p-4 text-left transition-all duration-200 sm:p-5",
                     active
-                      ? "bg-primary/10 text-primary ring-2 ring-primary/30 shadow-xs"
+                      ? "bg-primary/10 text-primary shadow-xs ring-2 ring-primary/30"
                       : "bg-muted/50 text-foreground hover:bg-muted/70"
                   )}
                   aria-pressed={active}
@@ -108,7 +113,7 @@ export function AppearanceCard() {
         )}
 
         {/* Minimal 1-Line Shortcut */}
-        <div className="flex items-center justify-between pt-4 border-t border-border/50 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-border/50 pt-4 text-xs text-muted-foreground">
           <span>Quick theme toggle</span>
           <div className="inline-flex items-center gap-1.5">
             <kbd className="rounded-md bg-muted px-2 py-0.5 font-mono text-[11px] font-bold text-foreground">

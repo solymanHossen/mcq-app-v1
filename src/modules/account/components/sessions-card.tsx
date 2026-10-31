@@ -1,5 +1,7 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 import { useTransition } from "react"
 import { signOut } from "next-auth/react"
 import { toast } from "sonner"
@@ -9,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { signOutAllDevicesAction } from "@/modules/account/actions"
 
-export function SessionsCard() {
+export function SessionsCard({ className }: { className?: string } = {}) {
   const [isPending, startTransition] = useTransition()
 
   function handleClick() {
@@ -21,7 +23,12 @@ export function SessionsCard() {
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       <div>
         <div className="flex items-center justify-between pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -57,13 +64,13 @@ export function SessionsCard() {
         </div>
 
         {/* Seamless Integrated Action Bar */}
-        <div className="flex items-center justify-end pt-6 mt-6">
+        <div className="mt-6 flex items-center justify-end pt-6">
           <Button
             type="button"
             variant="destructive"
             onClick={handleClick}
             disabled={isPending}
-            className="h-11 rounded-xl px-6 text-sm font-semibold shadow-none transition-all duration-200 active:scale-95 cursor-pointer sm:h-12"
+            className="h-11 cursor-pointer rounded-xl px-6 text-sm font-semibold shadow-none transition-all duration-200 active:scale-95 sm:h-12"
           >
             {isPending ? (
               <Spinner data-icon="inline-start" />
