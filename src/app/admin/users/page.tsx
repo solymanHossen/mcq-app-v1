@@ -29,6 +29,7 @@ import { UserRowActions } from "@/modules/users/components/user-row-actions"
 import { ChangeRoleDialog } from "@/modules/users/components/change-role-dialog"
 import { cn } from "@/lib/utils"
 import type { Role } from "@/prisma/generated/prisma/client"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -89,27 +90,23 @@ export default async function AdminUsersPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & GLOBAL SEARCH BAR ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            User Management
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="User Management"
+        description={
+          <>
             {totalCount} total account{totalCount === 1 ? "" : "s"}
             {role ? ` · filtered by ${role.toLowerCase()}` : ""}
             {search ? ` matching "${search}"` : ""}
             {" · Platform access credentials & role controls"}
-          </p>
-        </div>
-
-        <div className="w-full max-w-sm">
+          </>
+        }
+        actions={
           <DebouncedSearchInput
             placeholder="Search by name or email…"
-            className="w-full"
+            className="w-full sm:w-80"
           />
-        </div>
-      </div>
+        }
+      />
 
       {/* ================= MODERN SEGMENTED ROLE FILTER DOCK ================= */}
       <div className="w-full overflow-x-auto pb-1 scrollbar-none">

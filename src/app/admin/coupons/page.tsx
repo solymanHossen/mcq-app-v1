@@ -27,6 +27,7 @@ import { DeactivateCouponButton } from "@/modules/payments/components/deactivate
 import { CopyCouponButton } from "@/modules/payments/components/copy-coupon-button"
 import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { cn } from "@/lib/utils"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -96,25 +97,20 @@ export default async function AdminCouponsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & NEW COUPON BUTTON ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Discount Coupons
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Discount Coupons"
+        description={
+          <>
             <span className="font-semibold text-foreground">{activeCount}</span> of {allCoupons.length} active vouchers ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {totalRedemptions}
             </span>{" "}
             total claims applied ·{" "}
             <span className="font-semibold text-foreground">{maxPercent > 0 ? `Up to ${maxPercent}% off` : "Custom rates"}</span>
-          </p>
-        </div>
-
-        {/* Aligned Create Coupon Modal Trigger */}
-        <CreateCouponDialog />
-      </div>
+          </>
+        }
+        actions={<CreateCouponDialog />}
+      />
 
       {/* ================= 3-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">

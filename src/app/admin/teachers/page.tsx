@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/empty"
 import { Badge } from "@/components/ui/badge"
 import { UserCheckIcon, Clock, Mail, Calendar, GraduationCap } from "lucide-react"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -20,24 +21,23 @@ export default async function TeacherVerificationPage() {
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              Teacher Verification
-            </h1>
-            {pending.length > 0 && (
-              <Badge className="rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-0.5 font-bold gap-1.5 shadow-2xs">
-                <Clock className="size-3.5" />
-                <span>{pending.length} Pending</span>
-              </Badge>
-            )}
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Review pending faculty instructor accounts. An unverified teacher can draft exams, but cannot publish assessments until verified here.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Teacher Verification"
+        description={
+          <>
+            Review pending faculty instructor accounts. An unverified teacher can
+            draft exams, but cannot publish assessments until verified here.
+          </>
+        }
+        actions={
+          pending.length > 0 ? (
+            <Badge className="rounded-full border border-amber-500/30 bg-amber-500/15 px-3 py-0.5 text-xs font-bold text-amber-600 shadow-2xs dark:text-amber-400">
+              <Clock className="size-3.5" />
+              <span>{pending.length} Pending</span>
+            </Badge>
+          ) : null
+        }
+      />
 
       {pending.length === 0 ? (
         <div className="w-full rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-12 sm:p-16 text-center shadow-xs">

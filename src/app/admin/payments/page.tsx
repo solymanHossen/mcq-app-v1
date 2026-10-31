@@ -36,6 +36,7 @@ import { RefundForm } from "@/modules/payments/components/payment-transaction-ro
 import { ReconcileTransactionForm } from "@/modules/payments/components/reconcile-transaction-form"
 import { cn } from "@/lib/utils"
 import type { PaymentTransactionStatus } from "@/prisma/generated/prisma/client"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -118,13 +119,10 @@ export default async function AdminPaymentsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & GLOBAL SEARCH BAR ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Payment Transactions
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Payment Transactions"
+        description={
+          <>
             <span className="font-semibold text-foreground">{metrics.totalTransactions}</span> total transaction{metrics.totalTransactions === 1 ? "" : "s"} ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatAmount(metrics.totalVolumeCents, "usd")}
@@ -133,17 +131,15 @@ export default async function AdminPaymentsPage({
             <span className="font-semibold text-foreground">{metrics.succeededCount}</span> successful
             {status ? ` · filtered by ${status.toLowerCase()}` : ""}
             {search ? ` matching "${search}"` : ""}
-          </p>
-        </div>
-
-        {/* Global Debounced Search Bar */}
-        <div className="w-full max-w-sm">
+          </>
+        }
+        actions={
           <DebouncedSearchInput
             placeholder="Search by customer, email, or tx ID…"
-            className="w-full"
+            className="w-full sm:w-80"
           />
-        </div>
-      </div>
+        }
+      />
 
       {/* ================= 4-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">

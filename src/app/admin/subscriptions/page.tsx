@@ -14,6 +14,7 @@ import { listAllSubscriptionPlans } from "@/modules/payments/queries"
 import { CreatePlanDialog } from "@/modules/payments/components/create-plan-form"
 import { PlanActiveToggle } from "@/modules/payments/components/plan-active-toggle"
 import { cn } from "@/lib/utils"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -96,24 +97,20 @@ export default async function AdminSubscriptionsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & NEW PLAN BUTTON ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Subscription Plans
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Subscription Plans"
+        description={
+          <>
             <span className="font-semibold text-foreground">{totalActiveSubscribers}</span> active subscriber{totalActiveSubscribers === 1 ? "" : "s"} ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatPrice(totalRevenueCents, "usd")}
             </span>{" "}
             total billed ·{" "}
             <span className="font-semibold text-foreground">{activePlanCount}</span> of {allPlans.length} active tiers
-          </p>
-        </div>
-
-        <CreatePlanDialog />
-      </div>
+          </>
+        }
+        actions={<CreatePlanDialog />}
+      />
 
       {/* ================= 3-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
