@@ -187,22 +187,22 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button
                 asChild
-                className="h-12 rounded-full px-5 text-sm font-semibold shadow-xs"
+                className="h-12 rounded-full px-6 sm:px-7 text-sm font-semibold shadow-xs"
               >
-                <Link href="/teachers">
-                  <GraduationCap data-icon="inline-start" />
-                  Teacher List
-                  <ArrowRight data-icon="inline-end" />
+                <Link href="/teachers" className="inline-flex items-center gap-2">
+                  <GraduationCap className="size-4 shrink-0" />
+                  <span>Teacher List</span>
+                  <ArrowRight className="size-4 shrink-0" />
                 </Link>
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="h-12 rounded-full border-border/70 bg-card px-5 text-sm font-semibold shadow-xs"
+                    className="h-12 rounded-full border-border/70 bg-card px-6 sm:px-7 text-sm font-semibold shadow-xs gap-2"
                   >
-                    <Play data-icon="inline-start" />
-                    Tour Our Work Process
+                    <Play className="size-4 shrink-0" />
+                    <span>Tour Our Work Process</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent
