@@ -13,6 +13,9 @@ import {
 
 const ALL = "__all__"
 
+const filterTriggerClassName =
+  "w-full min-w-0 shrink-0 rounded-xl border-border/70 bg-card text-sm font-semibold shadow-2xs transition-colors hover:bg-muted/40 data-[size=default]:h-11 data-[size=default]:sm:h-12 sm:w-44 [&_[data-slot=select-value]]:min-w-0 [&_[data-slot=select-value]]:flex-1 [&_[data-slot=select-value]]:truncate [&_[data-slot=select-value]]:text-left [&_[data-slot=select-value]]:whitespace-nowrap"
+
 export function QuestionFilters({
   subjects,
   topics,
@@ -36,19 +39,19 @@ export function QuestionFilters({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+    <div className="flex min-w-0 flex-wrap items-center gap-3">
       <DebouncedSearchInput
         paramKey="search"
         placeholder="Search question text…"
-        className="w-full sm:w-64"
-        inputClassName="h-10 rounded-xl border-border/70 bg-card shadow-2xs text-xs sm:text-sm"
+        className="w-full min-w-0 sm:w-64 sm:shrink-0"
+        inputClassName="h-11 rounded-xl border-border/70 bg-card text-base shadow-2xs sm:h-12 sm:text-sm"
       />
 
       <Select
         value={searchParams.get("subject") ?? ALL}
         onValueChange={(v) => setParam("subject", v)}
       >
-        <SelectTrigger className="h-10 w-full sm:w-40 rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm hover:bg-muted/40 transition-colors">
+        <SelectTrigger aria-label="Subject" className={filterTriggerClassName}>
           <SelectValue placeholder="All subjects" />
         </SelectTrigger>
         <SelectContent position="popper" sideOffset={4} className="rounded-xl border-border/70 shadow-xl bg-popover z-50 p-1">
@@ -67,7 +70,7 @@ export function QuestionFilters({
         value={searchParams.get("topic") ?? ALL}
         onValueChange={(v) => setParam("topic", v)}
       >
-        <SelectTrigger className="h-10 w-full sm:w-40 rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm hover:bg-muted/40 transition-colors">
+        <SelectTrigger aria-label="Topic" className={filterTriggerClassName}>
           <SelectValue placeholder="All topics" />
         </SelectTrigger>
         <SelectContent position="popper" sideOffset={4} className="rounded-xl border-border/70 shadow-xl bg-popover z-50 p-1">
@@ -86,7 +89,7 @@ export function QuestionFilters({
         value={searchParams.get("difficulty") ?? ALL}
         onValueChange={(v) => setParam("difficulty", v)}
       >
-        <SelectTrigger className="h-10 w-full sm:w-36 rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm hover:bg-muted/40 transition-colors">
+        <SelectTrigger aria-label="Difficulty" className={filterTriggerClassName}>
           <SelectValue placeholder="Any difficulty" />
         </SelectTrigger>
         <SelectContent position="popper" sideOffset={4} className="rounded-xl border-border/70 shadow-xl bg-popover z-50 p-1">
@@ -103,7 +106,7 @@ export function QuestionFilters({
         value={searchParams.get("status") ?? ALL}
         onValueChange={(v) => setParam("status", v)}
       >
-        <SelectTrigger className="h-10 w-full sm:w-36 rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm hover:bg-muted/40 transition-colors">
+        <SelectTrigger aria-label="Status" className={filterTriggerClassName}>
           <SelectValue placeholder="Any status" />
         </SelectTrigger>
         <SelectContent position="popper" sideOffset={4} className="rounded-xl border-border/70 shadow-xl bg-popover z-50 p-1">
