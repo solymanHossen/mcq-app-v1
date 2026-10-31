@@ -229,7 +229,7 @@ export function ChangeRoleDialog({
             </div>
 
             {/* Action Buttons Footer */}
-            <DialogFooter className="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-border/60 bg-muted/20 shrink-0 flex items-center justify-end gap-2.5">
+            <DialogFooter className="px-5 sm:px-6 py-4 sm:py-4.5 border-t border-border/60 bg-muted/20 shrink-0 flex flex-row items-center justify-end gap-3">
               <Button
                 type="button"
                 variant="outline"
