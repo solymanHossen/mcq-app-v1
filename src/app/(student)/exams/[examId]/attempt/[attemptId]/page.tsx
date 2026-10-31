@@ -9,9 +9,8 @@ import { prisma } from "@/lib/prisma"
 import { ExamAttemptClient } from "@/modules/attempts/components/exam-attempt-client"
 import { ResultSummary } from "@/modules/grading/components/result-summary"
 import { AppealForm } from "@/modules/proctoring/components/appeal-form"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -58,19 +57,27 @@ export default async function AttemptPage({
           })
 
       return (
-        <div className="mx-auto max-w-2xl space-y-4 p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{titles.DISQUALIFIED}</CardTitle>
-              <CardDescription>{fullAttempt.disqualifiedReason}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Separator />
+        <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
+          <header className="flex flex-col gap-2 border-b border-border/60 pb-3 sm:pb-4">
+            <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+              {titles.DISQUALIFIED}
+            </h1>
+            <p className="text-xs leading-relaxed wrap-anywhere text-muted-foreground sm:text-sm">
+              {fullAttempt.disqualifiedReason}
+            </p>
+          </header>
+          <Card className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs">
+            <CardContent className="flex flex-col gap-5 p-4 sm:gap-6 sm:p-6 lg:p-7">
               <AppealForm
                 attemptId={attemptId}
                 existingAppeal={existingAppeal ?? resolvedAppeal}
               />
-              <Button asChild size="sm">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="w-full font-semibold sm:w-fit"
+              >
                 <Link href={`/exams/${examId}`}>Back to exam</Link>
               </Button>
             </CardContent>
@@ -81,17 +88,24 @@ export default async function AttemptPage({
 
     const result = await getResultForStudent(attemptId)
     return (
-      <div className="mx-auto max-w-2xl space-y-4 p-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{titles[current.status]}</CardTitle>
-            <CardDescription>
-              This attempt has ended and can no longer be changed.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
+        <header className="flex flex-col gap-2 border-b border-border/60 pb-3 sm:pb-4">
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+            {titles[current.status]}
+          </h1>
+          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            This attempt has ended and can no longer be changed.
+          </p>
+        </header>
+        <Card className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs">
+          <CardContent className="flex flex-col gap-5 p-4 sm:gap-6 sm:p-6 lg:p-7">
             {result && <ResultSummary result={result} />}
-            <Button asChild size="sm">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="w-full font-semibold sm:w-fit"
+            >
               <Link href={`/exams/${examId}`}>Back to exam</Link>
             </Button>
           </CardContent>

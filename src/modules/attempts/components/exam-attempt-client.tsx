@@ -6,6 +6,10 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
+import { Card, CardHeader, CardContent } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { LatexText } from "@/components/shared/latex-text"
 import { submitAttemptAction } from "@/modules/attempts/actions"
 import {
@@ -92,7 +96,8 @@ export function ExamAttemptClient({
   const disabled = ended || currentAnswer.syncStatus === "ended"
 
   const answeredCount = useMemo(
-    () => Object.values(answers).filter((a) => a.selectedOption !== null).length,
+    () =>
+      Object.values(answers).filter((a) => a.selectedOption !== null).length,
     [answers]
   )
 
@@ -132,22 +137,29 @@ export function ExamAttemptClient({
   }, [current, disabled, index, questions.length])
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-4 p-4 sm:p-6">
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
-        <div>
-          <h1 className="font-semibold">{examTitle}</h1>
-          <p className="text-sm text-muted-foreground">
+    <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
+      <header className="flex flex-col gap-3 border-b border-border/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pb-4">
+        <div className="flex min-w-0 flex-col gap-2">
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight wrap-anywhere text-foreground sm:text-3xl lg:text-4xl">
+            {examTitle}
+          </h1>
+          <p className="text-xs font-medium text-muted-foreground sm:text-sm">
             {answeredCount} of {questions.length} answered
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex w-full shrink-0 items-center justify-between gap-3 sm:w-auto">
           <Badge
             variant={remainingMs < 60_000 ? "destructive" : "secondary"}
-            className="font-mono text-sm"
+            className="rounded-full px-3 py-1 font-mono text-sm font-semibold sm:text-base"
           >
             {formatRemaining(remainingMs)}
           </Badge>
-          <Button onClick={submit} disabled={submitting || disabled} size="sm">
+          <Button
+            onClick={submit}
+            disabled={submitting || disabled}
+            size="lg"
+            className="h-12 rounded-xl font-bold shadow-md sm:h-13 sm:text-lg"
+          >
             {submitting && <Spinner data-icon="inline-start" />}
             Submit
           </Button>
@@ -156,38 +168,43 @@ export function ExamAttemptClient({
 
       <nav
         aria-label="Question navigator"
-        className="flex flex-wrap gap-2"
+        className="flex min-w-0 flex-wrap gap-2 rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:p-6"
       >
         {questions.map((q, i) => {
           const a = answers[q.examQuestionId]
           const isAnswered = (a?.selectedOption ?? q.selectedOption) !== null
           const isMarked = a?.isMarkedForReview ?? q.isMarkedForReview
           return (
-            <button
+            <Button
               key={q.examQuestionId}
               type="button"
+              variant="outline"
+              size="icon-lg"
               onClick={() => setIndex(i)}
               aria-current={i === index}
               aria-label={`Question ${i + 1}${isAnswered ? ", answered" : ", unanswered"}${isMarked ? ", marked for review" : ""}`}
               className={cn(
-                "flex size-9 items-center justify-center rounded-md border text-sm font-medium",
-                i === index && "ring-2 ring-primary ring-offset-1",
+                "rounded-xl text-sm font-semibold",
+                i === index && "border-primary/50 ring-4 ring-primary/15",
                 isMarked
-                  ? "border-amber-500 bg-amber-100 dark:bg-amber-950"
+                  ? "border-primary/40 bg-secondary text-secondary-foreground"
                   : isAnswered
-                    ? "border-primary bg-primary/10"
-                    : "bg-muted"
+                    ? "border-primary/30 bg-primary/10 text-primary"
+                    : "border-border/70 bg-muted/20"
               )}
             >
               {i + 1}
-            </button>
+            </Button>
           )
         })}
       </nav>
 
-      <section className="space-y-4 rounded-md border p-4" aria-live="polite">
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+      <Card
+        className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs"
+        aria-live="polite"
+      >
+        <CardHeader className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+          <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
             Question {index + 1} of {questions.length} · {current.marks} mark
             {current.marks === 1 ? "" : "s"}
           </p>
@@ -197,62 +214,90 @@ export function ExamAttemptClient({
             variant={currentAnswer.isMarkedForReview ? "default" : "outline"}
             onClick={toggleReview}
             disabled={disabled}
+            className="h-10 rounded-xl px-3 text-xs font-semibold sm:px-4 sm:text-sm"
           >
-            {currentAnswer.isMarkedForReview ? "Marked for review" : "Mark for review"}
+            {currentAnswer.isMarkedForReview
+              ? "Marked for review"
+              : "Mark for review"}
           </Button>
-        </div>
+        </CardHeader>
 
-        <LatexText text={current.questionText} className="font-medium" />
+        <CardContent className="flex min-w-0 flex-col gap-5 p-4 sm:gap-6 sm:p-6 lg:p-7">
+          <LatexText
+            text={current.questionText}
+            className="min-w-0 text-sm leading-relaxed font-semibold wrap-anywhere sm:text-base [&_.katex-display]:overflow-x-auto"
+          />
 
-        <div
-          role="radiogroup"
-          aria-label={`Options for question ${index + 1}`}
-          className="grid gap-2 sm:grid-cols-2"
-        >
-          {current.optionOrder.map((option, slot) => {
-            const selected = currentAnswer.selectedOption === option
-            return (
-              <button
-                key={option}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                disabled={disabled}
-                onClick={() => selectOption(option)}
-                className={cn(
-                  "flex items-start gap-2 rounded-md border p-3 text-left text-sm transition-colors",
-                  selected
-                    ? "border-primary bg-primary/5 font-medium"
-                    : "hover:bg-muted",
-                  disabled && "opacity-60"
-                )}
-              >
-                <span className="text-muted-foreground">
-                  {String.fromCharCode(65 + slot)}.
-                </span>
-                <LatexText text={current.optionText[option]} />
-              </button>
-            )
-          })}
-        </div>
+          <RadioGroup
+            key={current.examQuestionId}
+            value={currentAnswer.selectedOption ?? ""}
+            onValueChange={(value) => selectOption(value as OptionChoice)}
+            disabled={disabled}
+            aria-label={`Options for question ${index + 1}`}
+            className="grid min-w-0 gap-3 sm:grid-cols-2 sm:gap-4"
+          >
+            {current.optionOrder.map((option, slot) => {
+              const selected = currentAnswer.selectedOption === option
+              return (
+                <div key={option} className="relative min-w-0">
+                  <RadioGroupItem
+                    id={`${current.examQuestionId}-${option}`}
+                    value={option}
+                    className="peer sr-only"
+                  />
+                  <Label
+                    htmlFor={`${current.examQuestionId}-${option}`}
+                    className={cn(
+                      "flex min-h-12 w-full min-w-0 cursor-pointer items-start gap-3 rounded-xl border p-3 text-left text-sm leading-relaxed transition-colors peer-focus-visible:ring-4 peer-focus-visible:ring-primary/15 peer-focus-visible:outline-none sm:p-4 sm:text-base",
+                      selected
+                        ? "border-primary/50 bg-primary/5 font-semibold"
+                        : "border-border/70 bg-muted/20 hover:border-input/90 hover:bg-muted/40",
+                      disabled && "cursor-not-allowed opacity-60"
+                    )}
+                  >
+                    <span className="shrink-0 font-semibold text-muted-foreground">
+                      {String.fromCharCode(65 + slot)}.
+                    </span>
+                    <LatexText
+                      text={current.optionText[option]}
+                      className="min-w-0 wrap-anywhere [&_.katex-display]:overflow-x-auto"
+                    />
+                  </Label>
+                </div>
+              )
+            })}
+          </RadioGroup>
 
-        {currentAnswer.syncStatus === "error" && (
-          <p className="text-xs text-destructive">
-            Couldn&apos;t save — retrying automatically. Your answer is kept on
-            this device meanwhile.
-          </p>
-        )}
-        {currentAnswer.syncStatus === "ended" && (
-          <p className="text-xs text-destructive">
-            This attempt has ended — further changes can&apos;t be saved.
-          </p>
-        )}
-      </section>
+          {currentAnswer.syncStatus === "error" && (
+            <Alert
+              variant="destructive"
+              className="rounded-2xl border-destructive/30 shadow-xs"
+            >
+              <AlertDescription>
+                Couldn&apos;t save — retrying automatically. Your answer is kept
+                on this device meanwhile.
+              </AlertDescription>
+            </Alert>
+          )}
+          {currentAnswer.syncStatus === "ended" && (
+            <Alert
+              variant="destructive"
+              className="rounded-2xl border-destructive/30 shadow-xs"
+            >
+              <AlertDescription>
+                This attempt has ended — further changes can&apos;t be saved.
+              </AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
 
-      <div className="flex justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Button
           type="button"
           variant="outline"
+          size="lg"
+          className="flex-1 font-semibold sm:flex-none"
           disabled={index === 0}
           onClick={() => setIndex((i) => i - 1)}
         >
@@ -261,6 +306,8 @@ export function ExamAttemptClient({
         <Button
           type="button"
           variant="outline"
+          size="lg"
+          className="flex-1 font-semibold sm:flex-none"
           disabled={index === questions.length - 1}
           onClick={() => setIndex((i) => i + 1)}
         >
@@ -269,7 +316,8 @@ export function ExamAttemptClient({
       </div>
 
       <p className="text-center text-xs text-muted-foreground">
-        Shortcuts: A–D select an option, R marks for review, N/P moves next/previous.
+        Shortcuts: A–D select an option, R marks for review, N/P moves
+        next/previous.
       </p>
     </div>
   )

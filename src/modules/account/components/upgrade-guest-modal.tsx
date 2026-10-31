@@ -3,7 +3,14 @@
 import * as React from "react"
 import { useActionState } from "react"
 import { useRouter } from "next/navigation"
-import { UserCheck, Lock, CheckCircle2, AlertCircle, Loader2, ArrowRight } from "lucide-react"
+import {
+  UserCheck,
+  Lock,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  ArrowRight,
+} from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -14,9 +21,13 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { upgradeGuestAccountAction, type UpgradeGuestState } from "@/modules/auth/guest-actions"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import {
+  upgradeGuestAccountAction,
+  type UpgradeGuestState,
+} from "@/modules/auth/guest-actions"
 
 interface UpgradeGuestModalProps {
   email: string
@@ -33,10 +44,10 @@ export function UpgradeGuestModal({
 }: UpgradeGuestModalProps) {
   const [open, setOpen] = React.useState(defaultOpen)
   const router = useRouter()
-  const [state, formAction, isPending] = useActionState<UpgradeGuestState, FormData>(
-    upgradeGuestAccountAction,
-    {}
-  )
+  const [state, formAction, isPending] = useActionState<
+    UpgradeGuestState,
+    FormData
+  >(upgradeGuestAccountAction, {})
 
   React.useEffect(() => {
     if (state.success) {
@@ -51,109 +62,142 @@ export function UpgradeGuestModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="text-left space-y-2">
+      <DialogContent className="flex max-h-[92dvh] w-[calc(100vw-1.25rem)] flex-col gap-0 overflow-hidden rounded-2xl border border-border/80 p-0 shadow-2xl sm:max-h-[90dvh] sm:w-full sm:max-w-md sm:rounded-3xl">
+        <DialogHeader className="shrink-0 gap-3 border-b border-border/60 bg-muted/20 p-3.5 pr-10 text-left sm:p-6 sm:pr-12">
           <div className="flex items-center gap-2">
-            <div className="size-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <UserCheck className="size-5 text-primary" />
             </div>
-            <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/30">
+            <Badge
+              variant="outline"
+              className="border-amber-500/30 bg-amber-500/10 text-xs text-amber-600"
+            >
               Guest Candidate
             </Badge>
           </div>
-          <DialogTitle className="text-xl font-bold tracking-tight">
+          <DialogTitle className="text-base leading-snug font-bold tracking-tight sm:text-2xl">
             Activate Full Student Account
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
-            Hi <strong className="text-foreground">{name}</strong> ({email}), set a password to save your exam history permanently and unlock all practice tests, mistake notebook, and leaderboards.
+          <DialogDescription className="text-xs leading-relaxed wrap-anywhere text-muted-foreground sm:text-sm">
+            Hi <strong className="text-foreground">{name}</strong> ({email}),
+            set a password to save your exam history permanently and unlock all
+            practice tests, mistake notebook, and leaderboards.
           </DialogDescription>
         </DialogHeader>
 
-        {state.success ? (
-          <div className="py-6 flex flex-col items-center justify-center text-center space-y-3">
-            <div className="size-12 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-              <CheckCircle2 className="size-7" />
-            </div>
-            <div className="space-y-1">
-              <h4 className="font-semibold text-foreground text-base">Account Activated!</h4>
-              <p className="text-xs text-muted-foreground">
-                Your guest profile is now a permanent student account. Refreshing workspace...
-              </p>
-            </div>
-          </div>
-        ) : (
-          <form action={formAction} className="space-y-4 pt-2">
-            {state.error && (
-              <div className="flex items-center gap-2 p-3 text-xs rounded-xl bg-destructive/10 text-destructive border border-destructive/20">
-                <AlertCircle className="size-4 shrink-0" />
-                <span>{state.error}</span>
+        <div className="min-h-0 overflow-y-auto p-3.5 sm:p-6">
+          {state.success ? (
+            <div
+              role="status"
+              className="flex flex-col items-center justify-center gap-3 py-6 text-center"
+            >
+              <div className="flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+                <CheckCircle2 className="size-7" />
               </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="upgrade-password">New Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  id="upgrade-password"
-                  name="password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  className="pl-9 h-10"
-                  required
-                  minLength={8}
-                  disabled={isPending}
-                />
+              <div className="space-y-1">
+                <h4 className="text-base font-semibold text-foreground">
+                  Account Activated!
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  Your guest profile is now a permanent student account.
+                  Refreshing workspace...
+                </p>
               </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="upgrade-confirm-password">Confirm Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  id="upgrade-confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Re-enter your password"
-                  className="pl-9 h-10"
-                  required
-                  minLength={8}
-                  disabled={isPending}
-                />
-              </div>
-            </div>
-
-            <div className="pt-2 flex flex-col-reverse sm:flex-row gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full sm:w-auto"
-                onClick={() => setOpen(false)}
-                disabled={isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="w-full sm:flex-1 gap-2 shadow-sm font-semibold"
-                disabled={isPending}
-              >
-                {isPending ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" />
-                    <span>Activating...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Activate Account</span>
-                    <ArrowRight className="size-4" />
-                  </>
+          ) : (
+            <form action={formAction} aria-busy={isPending}>
+              <FieldGroup className="gap-5 sm:gap-6">
+                {state.error && (
+                  <Alert
+                    variant="destructive"
+                    className="rounded-2xl border-destructive/30 shadow-xs"
+                  >
+                    <AlertCircle />
+                    <AlertDescription>{state.error}</AlertDescription>
+                  </Alert>
                 )}
-              </Button>
-            </div>
-          </form>
-        )}
+
+                <Field>
+                  <FieldLabel
+                    htmlFor="upgrade-password"
+                    className="text-sm font-semibold text-foreground sm:text-base"
+                  >
+                    New Password
+                  </FieldLabel>
+                  <div className="relative">
+                    <Lock className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="upgrade-password"
+                      name="password"
+                      type="password"
+                      placeholder="At least 8 characters"
+                      className="pl-9"
+                      required
+                      minLength={8}
+                      disabled={isPending}
+                    />
+                  </div>
+                </Field>
+
+                <Field>
+                  <FieldLabel
+                    htmlFor="upgrade-confirm-password"
+                    className="text-sm font-semibold text-foreground sm:text-base"
+                  >
+                    Confirm Password
+                  </FieldLabel>
+                  <div className="relative">
+                    <Lock className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="upgrade-confirm-password"
+                      name="confirmPassword"
+                      type="password"
+                      placeholder="Re-enter your password"
+                      className="pl-9"
+                      required
+                      minLength={8}
+                      disabled={isPending}
+                    />
+                  </div>
+                </Field>
+
+                <div className="flex flex-col-reverse gap-3 border-t border-border/60 pt-4 sm:flex-row sm:pt-5">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="w-full rounded-xl font-semibold sm:w-auto"
+                    onClick={() => setOpen(false)}
+                    disabled={isPending}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full rounded-xl font-bold shadow-sm sm:flex-1"
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2
+                          data-icon="inline-start"
+                          className="animate-spin"
+                        />
+                        <span>Activating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Activate Account</span>
+                        <ArrowRight data-icon="inline-end" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </FieldGroup>
+            </form>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   )

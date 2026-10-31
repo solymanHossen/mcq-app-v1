@@ -4,7 +4,12 @@ import { useActionState } from "react"
 import { fileAppealAction } from "@/modules/proctoring/actions"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import { Badge } from "@/components/ui/badge"
 
@@ -27,8 +32,8 @@ export function AppealForm({
 
   if (existingAppeal) {
     return (
-      <div className="space-y-2 rounded-md border p-3 text-sm">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 text-xs sm:p-4 sm:text-sm">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="font-medium">Appeal status:</span>
           <Badge
             variant={
@@ -43,7 +48,9 @@ export function AppealForm({
           </Badge>
         </div>
         {existingAppeal.resolutionNote && (
-          <p className="text-muted-foreground">{existingAppeal.resolutionNote}</p>
+          <p className="text-muted-foreground">
+            {existingAppeal.resolutionNote}
+          </p>
         )}
       </div>
     )
@@ -58,19 +65,29 @@ export function AppealForm({
   }
 
   return (
-    <form action={formAction} className="space-y-2">
-      <Field>
-        <FieldLabel htmlFor="explanation">
-          This attempt was disqualified. If you believe this was a mistake,
-          explain why below.
-        </FieldLabel>
-        <Textarea id="explanation" name="explanation" rows={4} required />
-      </Field>
-      {state && "error" in state && <FieldError>{state.error}</FieldError>}
-      <Button type="submit" size="sm" disabled={isPending}>
-        {isPending && <Spinner data-icon="inline-start" />}
-        Submit appeal
-      </Button>
+    <form action={formAction} aria-busy={isPending}>
+      <FieldGroup className="gap-5 sm:gap-6">
+        <Field>
+          <FieldLabel
+            htmlFor="explanation"
+            className="text-sm leading-relaxed font-semibold sm:text-base"
+          >
+            This attempt was disqualified. If you believe this was a mistake,
+            explain why below.
+          </FieldLabel>
+          <Textarea id="explanation" name="explanation" rows={4} required />
+        </Field>
+        {state && "error" in state && <FieldError>{state.error}</FieldError>}
+        <Button
+          type="submit"
+          size="lg"
+          className="h-12 w-full rounded-xl font-bold shadow-md sm:h-13 sm:text-lg"
+          disabled={isPending}
+        >
+          {isPending && <Spinner data-icon="inline-start" />}
+          Submit appeal
+        </Button>
+      </FieldGroup>
     </form>
   )
 }

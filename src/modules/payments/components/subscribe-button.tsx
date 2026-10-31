@@ -1,13 +1,15 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useId, useState, useTransition } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import { createCheckoutSessionAction } from "@/modules/payments/actions"
 
 export function SubscribeButton({ planKey }: { planKey: string }) {
+  const couponId = useId()
   const [couponCode, setCouponCode] = useState("")
   const [isPending, startTransition] = useTransition()
 
@@ -28,17 +30,31 @@ export function SubscribeButton({ planKey }: { planKey: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-      <Input
-        value={couponCode}
-        onChange={(e) => setCouponCode(e.target.value)}
-        placeholder="Coupon code (optional)"
-        className="sm:w-40"
-      />
-      <Button type="button" size="sm" onClick={subscribe} disabled={isPending}>
+    <FieldGroup
+      className="flex-row flex-wrap items-end gap-3"
+      aria-busy={isPending}
+    >
+      <Field className="min-w-0 flex-1 basis-48">
+        <FieldLabel htmlFor={couponId} className="sr-only">
+          Coupon code (optional)
+        </FieldLabel>
+        <Input
+          id={couponId}
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+          placeholder="Coupon code (optional)"
+        />
+      </Field>
+      <Button
+        type="button"
+        size="lg"
+        className="h-12 w-full rounded-xl font-bold shadow-md sm:h-13 sm:w-auto sm:text-lg"
+        onClick={subscribe}
+        disabled={isPending}
+      >
         {isPending && <Spinner data-icon="inline-start" />}
         Subscribe
       </Button>
-    </div>
+    </FieldGroup>
   )
 }

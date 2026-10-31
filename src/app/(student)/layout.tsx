@@ -1,4 +1,12 @@
-import { GraduationCap, LayoutDashboard, BookOpen, RotateCcw, TrendingUp, Trophy, CreditCard } from "lucide-react"
+import {
+  GraduationCap,
+  LayoutDashboard,
+  BookOpen,
+  RotateCcw,
+  TrendingUp,
+  Trophy,
+  CreditCard,
+} from "lucide-react"
 import { requireUser } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
@@ -27,11 +35,21 @@ export default async function StudentLayout({
 
   const navItems: SidebarNavItem[] = user.isGuest
     ? [
-        { href: "/dashboard", label: "My Assessment", icon: <LayoutDashboard />, exact: true },
+        {
+          href: "/dashboard",
+          label: "My Assessment",
+          icon: <LayoutDashboard />,
+          exact: true,
+        },
         { href: "/exams", label: "My Exams", icon: <BookOpen /> },
       ]
     : [
-        { href: "/dashboard", label: "Dashboard", icon: <LayoutDashboard />, exact: true },
+        {
+          href: "/dashboard",
+          label: "Dashboard",
+          icon: <LayoutDashboard />,
+          exact: true,
+        },
         { href: "/exams", label: "Exams", icon: <BookOpen /> },
         { href: "/mistakes", label: "Mistake notebook", icon: <RotateCcw /> },
         { href: "/progress", label: "Progress", icon: <TrendingUp /> },
@@ -50,9 +68,7 @@ export default async function StudentLayout({
       user={user}
       breadcrumb={user.isGuest ? "Guest Assessment" : "Student Workspace"}
     >
-      <div className="p-4 sm:p-6 lg:p-8">
-        {children}
-      </div>
+      {children}
     </DashboardShell>
   )
 }

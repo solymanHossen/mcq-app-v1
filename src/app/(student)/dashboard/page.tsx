@@ -18,6 +18,15 @@ import { getLearningSummary } from "@/modules/learning/queries"
 import { getPracticeRecommendations } from "@/modules/learning/recommendations"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 import {
   Card,
   CardHeader,
@@ -134,69 +143,81 @@ export default async function DashboardPage({
       {/* ================= GRAND PROFILE HERO ================= */}
       <ProfileHero
         user={heroUser}
-        className="rounded-2xl border border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 dark:shadow-xs [&_button]:max-w-full [&_button_span]:break-all [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&>div[aria-hidden]]:hidden"
+        className="rounded-2xl border border-solid border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_button]:max-w-full [&_button_span]:break-all [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&>div:last-child]:min-w-0 lg:[&>div:last-child]:flex-col lg:[&>div:last-child]:items-stretch xl:[&>div:last-child]:flex-row xl:[&>div:last-child]:items-center [&>div:last-child>div:first-child]:min-w-0 [&>div[aria-hidden]]:hidden"
       />
 
       {/* ================= QUICK LEARNER ACTION HUB ================= */}
       <div className="grid w-full grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-3">
         <Link
           href="/exams"
-          className="group flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none sm:p-6"
+          className="group min-w-0 rounded-2xl focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none"
         >
-          <div className="flex items-center gap-4 sm:gap-5">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-2xs sm:size-11">
-              <BookOpen className="size-4 sm:size-5" />
-            </span>
-            <div>
-              <p className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl">
-                Take Exams
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Explore active assessments
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+          <Card className="h-full min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm sm:p-6 lg:p-7">
+            <CardContent className="flex min-w-0 items-center justify-between gap-3 p-0">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20 sm:size-11 sm:rounded-2xl">
+                  <BookOpen className="size-4 sm:size-5" />
+                </span>
+                <div className="min-w-0">
+                  <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
+                    Take Exams
+                  </CardTitle>
+                  <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                    Explore active assessments
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground sm:size-5" />
+            </CardContent>
+          </Card>
         </Link>
 
         <Link
           href="/mistakes"
-          className="group flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none sm:p-6"
+          className="group min-w-0 rounded-2xl focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none"
         >
-          <div className="flex items-center gap-4 sm:gap-5">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 shadow-2xs sm:size-11 dark:bg-amber-500/15 dark:text-amber-400">
-              <RotateCcw className="size-4 sm:size-5" />
-            </span>
-            <div>
-              <p className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl">
-                Mistake Notebook
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Spaced repetition reviews ({dueCount})
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+          <Card className="h-full min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm sm:p-6 lg:p-7">
+            <CardContent className="flex min-w-0 items-center justify-between gap-3 p-0">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 shadow-2xs ring-1 ring-amber-500/20 sm:size-11 sm:rounded-2xl dark:bg-amber-500/15 dark:text-amber-400">
+                  <RotateCcw className="size-4 sm:size-5" />
+                </span>
+                <div className="min-w-0">
+                  <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
+                    Mistake Notebook
+                  </CardTitle>
+                  <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                    Spaced repetition reviews ({dueCount})
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground sm:size-5" />
+            </CardContent>
+          </Card>
         </Link>
 
         <Link
           href="/leaderboard"
-          className="group flex min-w-0 items-center justify-between gap-3 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none sm:p-6"
+          className="group min-w-0 rounded-2xl focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none"
         >
-          <div className="flex items-center gap-4 sm:gap-5">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-2xs sm:size-11 dark:bg-emerald-500/15 dark:text-emerald-400">
-              <Trophy className="size-4 sm:size-5" />
-            </span>
-            <div>
-              <p className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl">
-                Leaderboard
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Rank among platform peers
-              </p>
-            </div>
-          </div>
-          <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-foreground sm:size-6" />
+          <Card className="h-full min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-4 shadow-xs transition-shadow hover:shadow-sm sm:p-6 lg:p-7">
+            <CardContent className="flex min-w-0 items-center justify-between gap-3 p-0">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 shadow-2xs ring-1 ring-emerald-500/20 sm:size-11 sm:rounded-2xl dark:bg-emerald-500/15 dark:text-emerald-400">
+                  <Trophy className="size-4 sm:size-5" />
+                </span>
+                <div className="min-w-0">
+                  <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
+                    Leaderboard
+                  </CardTitle>
+                  <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                    Rank among platform peers
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground sm:size-5" />
+            </CardContent>
+          </Card>
         </Link>
       </div>
 
@@ -204,7 +225,7 @@ export default async function DashboardPage({
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
         {/* KPI 1: Level */}
         <DashboardKpiCard
-          className="min-w-0 rounded-2xl border-border/70 shadow-xs ring-0 hover:translate-y-0 hover:shadow-sm [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
+          className="h-full min-w-0 rounded-2xl border-border/70 p-4 shadow-xs hover:translate-y-0 hover:shadow-sm sm:p-6 lg:p-7 [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
           title="Academic Rank"
           value={`Level ${summary.level}`}
           badgeText="+Rank"
@@ -216,7 +237,7 @@ export default async function DashboardPage({
 
         {/* KPI 2: Total XP */}
         <DashboardKpiCard
-          className="min-w-0 rounded-2xl border-border/70 shadow-xs ring-0 hover:translate-y-0 hover:shadow-sm [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
+          className="h-full min-w-0 rounded-2xl border-border/70 p-4 shadow-xs hover:translate-y-0 hover:shadow-sm sm:p-6 lg:p-7 [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
           title="Total Experience"
           value={`${summary.totalXP} XP`}
           badgeText="+XP"
@@ -228,7 +249,7 @@ export default async function DashboardPage({
 
         {/* KPI 3: Daily Streak */}
         <DashboardKpiCard
-          className="min-w-0 rounded-2xl border-border/70 shadow-xs ring-0 hover:translate-y-0 hover:shadow-sm [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
+          className="h-full min-w-0 rounded-2xl border-border/70 p-4 shadow-xs hover:translate-y-0 hover:shadow-sm sm:p-6 lg:p-7 [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
           title="Study Streak"
           value={`${summary.currentStreak} Days`}
           badgeText="+Streak"
@@ -240,7 +261,7 @@ export default async function DashboardPage({
 
         {/* KPI 4: Due for Review */}
         <DashboardKpiCard
-          className="min-w-0 rounded-2xl border-border/70 shadow-xs ring-0 hover:translate-y-0 hover:shadow-sm [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
+          className="h-full min-w-0 rounded-2xl border-border/70 p-4 shadow-xs hover:translate-y-0 hover:shadow-sm sm:p-6 lg:p-7 [&_.truncate]:overflow-visible [&_.truncate]:whitespace-normal"
           title="Spaced Review"
           value={`${dueCount} Item${dueCount === 1 ? "" : "s"}`}
           badgeText={dueCount > 0 ? "Due Now" : "All Clear"}
@@ -258,7 +279,7 @@ export default async function DashboardPage({
 
       {/* ================= GRAND DUAL-WAVE INTERACTIVE CHART ================= */}
       <DashboardAreaChart
-        className="min-w-0 rounded-2xl border-border/70 shadow-xs ring-0 [&_[data-slot=card-header]]:border-b [&_[data-slot=card-header]]:border-border/50 [&_[data-slot=card-header]]:bg-muted/20 [&_[data-slot=card-header]]:p-4 sm:[&_[data-slot=card-header]]:px-6 [&_[data-slot=card-title]]:text-base sm:[&_[data-slot=card-title]]:text-xl"
+        className="min-w-0 gap-0 rounded-2xl border-border/70 py-0 shadow-xs hover:shadow-sm [&_[data-slot=card-content]]:p-4 sm:[&_[data-slot=card-content]]:p-6 lg:[&_[data-slot=card-content]]:p-7 [&_[data-slot=card-header]]:min-w-0 [&_[data-slot=card-header]]:border-b [&_[data-slot=card-header]]:border-border/50 [&_[data-slot=card-header]]:bg-muted/20 [&_[data-slot=card-header]]:px-4 [&_[data-slot=card-header]]:py-3.5 sm:[&_[data-slot=card-header]]:flex-col sm:[&_[data-slot=card-header]]:items-stretch sm:[&_[data-slot=card-header]]:px-6 sm:[&_[data-slot=card-header]]:py-4.5 xl:[&_[data-slot=card-header]]:flex-row xl:[&_[data-slot=card-header]]:items-center [&_[data-slot=card-header]>div:last-child]:max-w-full [&_[data-slot=card-header]>div:last-child]:flex-wrap [&_[data-slot=card-title]]:text-base sm:[&_[data-slot=card-title]]:text-xl"
         title="Learning Velocity & Study Activity"
         description="Daily XP earnings and practice assessment volume for the last 3 months"
         data90d={data90d}
@@ -275,19 +296,19 @@ export default async function DashboardPage({
             <TabsList className="min-h-11 w-max rounded-xl border border-border/60 bg-muted/20 p-1 group-data-horizontal/tabs:h-auto">
               <TabsTrigger
                 value="attempts"
-                className="rounded-xl px-4 text-xs font-bold sm:text-sm"
+                className="min-h-10 rounded-xl px-4 text-xs font-bold sm:text-sm"
               >
                 Session History ({recentAttempts.length})
               </TabsTrigger>
               <TabsTrigger
                 value="reviews"
-                className="rounded-xl px-4 text-xs font-bold sm:text-sm"
+                className="min-h-10 rounded-xl px-4 text-xs font-bold sm:text-sm"
               >
                 Due Reviews ({dueCount})
               </TabsTrigger>
               <TabsTrigger
                 value="topics"
-                className="rounded-xl px-4 text-xs font-bold sm:text-sm"
+                className="min-h-10 rounded-xl px-4 text-xs font-bold sm:text-sm"
               >
                 Focus Topics ({recommendations.weakestTopics.length})
               </TabsTrigger>
@@ -298,27 +319,28 @@ export default async function DashboardPage({
           <div className="flex flex-wrap items-center gap-2.5">
             <DebouncedSearchInput
               placeholder="Filter exam attempts..."
-              size="sm"
-              className="w-full min-w-0 flex-1 sm:w-64 sm:min-w-48"
+              size="default"
+              className="w-full min-w-0 flex-1 basis-full sm:w-64 sm:min-w-48 sm:basis-auto"
+              inputClassName="h-11 rounded-xl bg-muted/20 text-base shadow-2xs focus-visible:ring-4 focus-visible:ring-primary/15 sm:h-12 sm:rounded-2xl md:text-sm"
             />
             <Button
               asChild
               variant="outline"
-              size="sm"
-              className="h-10 rounded-xl px-4 text-xs font-semibold shadow-2xs"
+              size="lg"
+              className="rounded-xl border-border/70 px-4 text-xs font-semibold shadow-2xs sm:text-sm"
             >
               <Link href="/exams">
                 <span>Browse All</span>
-                <ChevronRight className="ml-1 size-3.5" />
+                <ChevronRight data-icon="inline-end" />
               </Link>
             </Button>
             <Button
               asChild
-              size="sm"
-              className="h-10 rounded-xl px-4 text-xs font-semibold shadow-xs"
+              size="lg"
+              className="rounded-xl px-4 text-xs font-semibold shadow-xs sm:text-sm"
             >
               <Link href="/exams">
-                <Play className="mr-1 size-3.5" />
+                <Play data-icon="inline-start" />
                 <span>Practice Now</span>
               </Link>
             </Button>
@@ -327,11 +349,11 @@ export default async function DashboardPage({
 
         {/* Tab 1: Recent Exam Attempts */}
         <TabsContent value="attempts" className="mt-0">
-          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs ring-0 transition-shadow hover:shadow-sm">
+          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm">
             <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
               <div className="flex flex-col gap-1">
                 <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
-                  Exam Session History
+                  <h2>Exam Session History</h2>
                 </CardTitle>
                 <CardDescription className="text-xs text-muted-foreground sm:text-sm">
                   Your recent assessment submissions, timestamps, and active
@@ -341,37 +363,44 @@ export default async function DashboardPage({
             </CardHeader>
             <CardContent className="p-4 sm:p-6 lg:p-7">
               {recentAttempts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-14 text-center">
-                  <div className="mb-4 flex size-9 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
-                    <BookOpen className="size-7" />
-                  </div>
-                  <p className="text-lg font-bold text-foreground">
-                    No assessments taken yet
-                  </p>
-                  <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-                    Explore published examinations and start your first test to
-                    track performance.
-                  </p>
-                  <Button
-                    asChild
-                    size="sm"
-                    className="mt-6 rounded-xl px-6 text-xs font-semibold shadow-xs"
-                  >
-                    <Link href="/exams">Browse Exams</Link>
-                  </Button>
-                </div>
+                <Empty className="px-0 py-8 sm:py-12">
+                  <EmptyHeader>
+                    <EmptyMedia
+                      variant="icon"
+                      className="size-9 rounded-xl sm:size-11 sm:rounded-2xl"
+                    >
+                      <BookOpen />
+                    </EmptyMedia>
+                    <EmptyTitle className="text-base font-bold text-foreground sm:text-xl">
+                      No assessments taken yet
+                    </EmptyTitle>
+                    <EmptyDescription className="text-xs sm:text-sm">
+                      Explore published examinations and start your first test
+                      to track performance.
+                    </EmptyDescription>
+                  </EmptyHeader>
+                  <EmptyContent>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="w-full rounded-xl px-6 font-bold shadow-sm sm:w-auto"
+                    >
+                      <Link href="/exams">Browse Exams</Link>
+                    </Button>
+                  </EmptyContent>
+                </Empty>
               ) : (
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-3">
                   {recentAttempts.map((attempt) => (
                     <div
                       key={attempt.id}
-                      className="group flex flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/40 hover:bg-muted/40 hover:shadow-sm sm:p-6"
+                      className="group flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-border/70 bg-muted/20 p-4 transition-colors hover:border-primary/40 hover:bg-muted/40 sm:p-6"
                     >
-                      <div className="min-w-0 space-y-2.5">
-                        <div className="flex items-start justify-between gap-2.5">
-                          <h4 className="line-clamp-1 font-heading text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                      <div className="flex min-w-0 flex-col gap-2.5">
+                        <div className="flex min-w-0 flex-wrap items-start justify-between gap-2.5">
+                          <h3 className="min-w-0 flex-1 basis-40 font-heading text-sm font-bold wrap-anywhere text-foreground transition-colors group-hover:text-primary sm:text-base">
                             {attempt.exam.title}
-                          </h4>
+                          </h3>
                           <Badge
                             variant={
                               attempt.status === "COMPLETED"
@@ -380,7 +409,7 @@ export default async function DashboardPage({
                                   ? "secondary"
                                   : "outline"
                             }
-                            className="shrink-0 rounded-lg text-[11px] font-semibold"
+                            className="shrink-0 rounded-full border border-border/60 px-2.5 py-0.5 text-[11px] font-semibold sm:text-xs"
                           >
                             {attempt.status.replace("_", " ")}
                           </Badge>
@@ -398,7 +427,7 @@ export default async function DashboardPage({
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-border/40 pt-3.5">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
                         <span className="text-xs text-muted-foreground">
                           {new Intl.DateTimeFormat("en-US", {
                             month: "short",
@@ -409,11 +438,11 @@ export default async function DashboardPage({
                           asChild
                           variant="outline"
                           size="sm"
-                          className="h-8 rounded-xl text-xs font-semibold shadow-2xs hover:border-primary/40"
+                          className="h-10 rounded-xl border-border/70 px-3 text-xs font-semibold shadow-2xs hover:border-primary/40 sm:text-sm"
                         >
                           <Link href={`/exams/${attempt.examId}`}>
                             <span>View Test</span>
-                            <ArrowRight className="ml-1 size-3.5" />
+                            <ArrowRight data-icon="inline-end" />
                           </Link>
                         </Button>
                       </div>
@@ -427,10 +456,10 @@ export default async function DashboardPage({
 
         {/* Tab 2: Due Reviews */}
         <TabsContent value="reviews" className="mt-0">
-          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs ring-0 transition-shadow hover:shadow-sm">
+          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm">
             <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
               <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
-                Spaced Repetition Due Reviews
+                <h2>Spaced Repetition Due Reviews</h2>
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground sm:text-sm">
                 Questions flagged for recall based on spaced repetition
@@ -439,18 +468,16 @@ export default async function DashboardPage({
             </CardHeader>
             <CardContent className="p-4 sm:p-6 lg:p-7">
               {dueCount === 0 ? (
-                <div className="flex items-center gap-3.5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-emerald-700 dark:text-emerald-400">
-                  <Zap className="size-6 text-emerald-600 dark:text-emerald-400" />
-                  <div>
-                    <p className="text-sm font-bold sm:text-base">
-                      You&apos;re completely caught up!
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      No questions currently due for review. Take more exams to
-                      identify focus areas.
-                    </p>
-                  </div>
-                </div>
+                <Alert className="rounded-2xl border-border/70 bg-muted/20 p-4 shadow-xs sm:p-6">
+                  <Zap />
+                  <AlertTitle className="text-sm font-bold sm:text-base">
+                    You&apos;re completely caught up!
+                  </AlertTitle>
+                  <AlertDescription className="text-xs text-muted-foreground sm:text-sm">
+                    No questions currently due for review. Take more exams to
+                    identify focus areas.
+                  </AlertDescription>
+                </Alert>
               ) : (
                 <div className="flex flex-col gap-4">
                   <p className="text-xs text-muted-foreground sm:text-sm">
@@ -462,10 +489,11 @@ export default async function DashboardPage({
                   </p>
                   <Button
                     asChild
-                    className="self-start rounded-xl px-5 text-xs font-semibold shadow-xs"
+                    size="lg"
+                    className="h-12 w-full self-start rounded-xl px-5 font-bold shadow-md sm:h-13 sm:w-auto sm:text-lg"
                   >
                     <Link href="/mistakes">
-                      <RotateCcw className="mr-1.5 size-4" />
+                      <RotateCcw data-icon="inline-start" />
                       <span>Open Mistake Notebook</span>
                     </Link>
                   </Button>
@@ -477,10 +505,10 @@ export default async function DashboardPage({
 
         {/* Tab 3: Weak Topics */}
         <TabsContent value="topics" className="mt-0">
-          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs ring-0 transition-shadow hover:shadow-sm">
+          <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm">
             <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
               <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
-                Topic Mastery Recommendations
+                <h2>Topic Mastery Recommendations</h2>
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground sm:text-sm">
                 Academic subjects that have lower accuracy and benefit from
@@ -489,23 +517,26 @@ export default async function DashboardPage({
             </CardHeader>
             <CardContent className="p-4 sm:p-6 lg:p-7">
               {recommendations.weakestTopics.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  Complete more test sessions to calculate your topic mastery
-                  profile.
-                </p>
+                <Empty className="p-4 sm:p-6">
+                  <EmptyDescription className="text-xs sm:text-sm">
+                    Complete more test sessions to calculate your topic mastery
+                    profile.
+                  </EmptyDescription>
+                </Empty>
               ) : (
                 <div className="flex flex-wrap items-center gap-2.5">
                   {recommendations.weakestTopics.map((item) => (
-                    <span
+                    <Badge
                       key={`${item.subject}-${item.topic}`}
-                      className="inline-flex items-center gap-2 rounded-2xl border border-border/60 bg-muted/40 px-4 py-2 text-xs font-semibold text-foreground sm:text-sm"
+                      variant="outline"
+                      className="max-w-full gap-2 rounded-xl border-border/60 bg-muted/20 px-3 py-2 text-xs font-semibold whitespace-normal sm:rounded-2xl sm:px-4 sm:text-sm"
                     >
                       <Target className="size-4 text-primary" />
-                      <span>
+                      <span className="min-w-0 wrap-anywhere">
                         {item.subject} • {item.topic} (
                         {Math.round(item.accuracy * 100)}%)
                       </span>
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               )}

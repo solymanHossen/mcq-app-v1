@@ -3,6 +3,8 @@
 import * as React from "react"
 import { UserCheck, ShieldAlert, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Alert } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import { UpgradeGuestModal } from "./upgrade-guest-modal"
 
 interface GuestBannerProps {
@@ -12,41 +14,48 @@ interface GuestBannerProps {
 
 export function GuestBanner({ name, email }: GuestBannerProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-background p-4 sm:p-5 mb-6 shadow-sm">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="size-10 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+    <Alert className="rounded-2xl border-border/70 bg-card p-4 shadow-xs sm:p-6 lg:p-7">
+      <div className="flex min-w-0 flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 items-start gap-3 sm:gap-3.5">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 shadow-2xs ring-1 ring-amber-500/20 sm:size-11 sm:rounded-2xl dark:text-amber-400">
             <ShieldAlert className="size-5" />
           </div>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-foreground text-sm">
+          <div className="flex min-w-0 flex-col gap-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-base font-bold tracking-tight text-foreground sm:text-xl">
                 Guest Candidate Workspace
               </span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+              <Badge
+                variant="outline"
+                className="rounded-full border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 sm:text-xs dark:text-amber-400"
+              >
                 Direct Link Access
-              </span>
+              </Badge>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              You are signed in as <strong>{name}</strong> ({email}) via an exam link. You can only view assessments shared directly with you.
+            <p className="text-xs leading-relaxed wrap-anywhere text-muted-foreground sm:text-sm">
+              You are signed in as <strong>{name}</strong> ({email}) via an exam
+              link. You can only view assessments shared directly with you.
             </p>
           </div>
         </div>
 
-        <div className="shrink-0 w-full sm:w-auto">
+        <div className="w-full shrink-0 sm:w-auto">
           <UpgradeGuestModal
             name={name}
             email={email}
             trigger={
-              <Button size="sm" className="w-full sm:w-auto gap-1.5 shadow-sm font-semibold rounded-xl text-xs h-9">
-                <UserCheck className="size-3.5" />
+              <Button
+                size="lg"
+                className="w-full rounded-xl font-bold shadow-sm sm:w-auto"
+              >
+                <UserCheck data-icon="inline-start" />
                 <span>Activate Full Account</span>
-                <ArrowRight className="size-3.5" />
+                <ArrowRight data-icon="inline-end" />
               </Button>
             }
           />
         </div>
       </div>
-    </div>
+    </Alert>
   )
 }

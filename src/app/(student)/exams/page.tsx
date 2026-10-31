@@ -48,34 +48,36 @@ export default async function AvailableExamsPage() {
     })
 
     return (
-      <div className="mx-auto max-w-3xl space-y-6">
+      <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
         <GuestBanner name={user.name} email={user.email} />
 
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight">
+        <header className="flex flex-col gap-2 border-b border-border/60 pb-3 sm:pb-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
               My Assessment Exams
             </h1>
             <Badge
               variant="secondary"
-              className="border-amber-500/30 bg-amber-500/10 text-xs text-amber-600 dark:text-amber-400"
+              className="rounded-full border border-border/60 px-2.5 py-1 text-xs font-semibold"
             >
               Candidate Restricted
             </Badge>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
             You are in isolated candidate mode. Only exams shared directly with
             you via private link appear here.
           </p>
-        </div>
+        </header>
 
         {attempts.length === 0 ? (
-          <Empty className="rounded-2xl border border-dashed bg-muted/10 p-8">
+          <Empty className="rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:p-6 lg:p-7">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <ClipboardListIcon className="size-10 text-muted-foreground" />
+                <ClipboardListIcon />
               </EmptyMedia>
-              <EmptyTitle>No Shared Exams Found</EmptyTitle>
+              <EmptyTitle className="text-base font-bold sm:text-xl">
+                No Shared Exams Found
+              </EmptyTitle>
               <EmptyDescription>
                 You haven&apos;t started any exams yet. Please use the direct
                 exam link shared by your teacher.
@@ -83,7 +85,7 @@ export default async function AvailableExamsPage() {
             </EmptyHeader>
           </Empty>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid min-w-0 gap-6 sm:gap-8">
             {attempts.map((attempt) => {
               const exam = attempt.exam
               const isCompleted =
@@ -93,25 +95,16 @@ export default async function AvailableExamsPage() {
               return (
                 <Card
                   key={attempt.id}
-                  className="relative overflow-hidden border-border/60 shadow-sm transition-colors hover:border-primary/40"
+                  className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm"
                 >
-                  <div
-                    className={`absolute top-0 bottom-0 left-0 w-1 ${
-                      isInProgress
-                        ? "bg-amber-500"
-                        : isCompleted
-                          ? "bg-emerald-500"
-                          : "bg-muted"
-                    }`}
-                  />
-                  <CardHeader className="pl-6">
+                  <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
                     <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg font-bold">
+                      <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <CardTitle className="text-base font-bold tracking-tight wrap-anywhere sm:text-xl">
                           {exam.title}
                         </CardTitle>
                         {exam.description && (
-                          <CardDescription className="line-clamp-2">
+                          <CardDescription className="line-clamp-2 text-xs leading-relaxed wrap-anywhere sm:text-sm">
                             {exam.description}
                           </CardDescription>
                         )}
@@ -124,13 +117,7 @@ export default async function AvailableExamsPage() {
                               ? "secondary"
                               : "outline"
                         }
-                        className={
-                          isInProgress
-                            ? "bg-amber-500 text-white hover:bg-amber-600"
-                            : isCompleted
-                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                              : ""
-                        }
+                        className="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold"
                       >
                         {isInProgress
                           ? "In Progress"
@@ -141,8 +128,8 @@ export default async function AvailableExamsPage() {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="pt-0 pb-4 pl-6">
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                  <CardContent className="p-4 sm:p-6 lg:p-7">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:gap-4 sm:text-sm">
                       <div className="flex items-center gap-1.5">
                         <Clock className="size-3.5" />
                         <span>{exam.durationMinutes} minutes duration</span>
@@ -160,24 +147,28 @@ export default async function AvailableExamsPage() {
                     </div>
                   </CardContent>
 
-                  <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-0 pb-5 pl-6">
+                  <CardFooter className="flex flex-col items-stretch justify-between gap-3 border-border/50 bg-muted/20 p-4 sm:flex-row sm:items-center sm:px-6">
                     <span className="text-xs text-muted-foreground">
                       Started:{" "}
                       {new Date(attempt.startedAt).toLocaleDateString()}
                     </span>
                     {isInProgress ? (
-                      <Button asChild size="sm" className="gap-1.5 shadow-sm">
+                      <Button
+                        asChild
+                        size="lg"
+                        className="font-semibold shadow-sm sm:w-auto"
+                      >
                         <Link href={`/exams/${exam.id}/attempt/${attempt.id}`}>
                           <span>Resume Attempt</span>
-                          <ArrowRight className="size-3.5" />
+                          <ArrowRight data-icon="inline-end" />
                         </Link>
                       </Button>
                     ) : (
                       <Button
                         asChild
                         variant="outline"
-                        size="sm"
-                        className="gap-1.5"
+                        size="lg"
+                        className="font-semibold sm:w-auto"
                       >
                         <Link href={`/exam/${exam.id}`}>
                           <span>Exam Details</span>
@@ -192,14 +183,14 @@ export default async function AvailableExamsPage() {
         )}
 
         {/* Upgrade Card to discover other exams */}
-        <Card className="rounded-2xl border-dashed border-primary/30 bg-primary/5 p-6">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div className="space-y-1">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Card className="min-w-0 gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs">
+          <CardContent className="flex flex-col items-start justify-between gap-4 p-4 sm:flex-row sm:items-center sm:p-6 lg:p-7">
+            <div className="flex min-w-0 flex-col gap-2">
+              <h3 className="flex items-start gap-2 text-base font-bold tracking-tight text-foreground sm:text-xl">
                 <BookOpen className="size-4 text-primary" />
                 Want to access other public practice exams?
               </h3>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                 Set a password to upgrade your guest session into a permanent
                 student account with full access to mistake reviews and open
                 contests.
@@ -209,12 +200,15 @@ export default async function AvailableExamsPage() {
               name={user.name}
               email={user.email}
               trigger={
-                <Button size="sm" className="shrink-0 text-xs font-semibold">
+                <Button
+                  size="lg"
+                  className="w-full shrink-0 font-semibold shadow-sm sm:w-auto"
+                >
                   Upgrade Account
                 </Button>
               }
             />
-          </div>
+          </CardContent>
         </Card>
       </div>
     )
@@ -232,18 +226,20 @@ export default async function AvailableExamsPage() {
   })
 
   return (
-    <div className="w-full min-w-0 space-y-6 pb-12 sm:space-y-8 sm:pb-16">
+    <div className="flex w-full min-w-0 flex-col gap-6 pb-12 sm:gap-8 sm:pb-16">
       <h1 className="border-b border-border/60 pb-3 font-heading text-2xl font-extrabold tracking-tight text-foreground sm:pb-4 sm:text-3xl lg:text-4xl">
         Available exams
       </h1>
 
       {exams.length === 0 ? (
-        <Empty>
+        <Empty className="rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:p-6 lg:p-7">
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <ClipboardListIcon />
             </EmptyMedia>
-            <EmptyTitle>No exams open right now</EmptyTitle>
+            <EmptyTitle className="text-base font-bold sm:text-xl">
+              No exams open right now
+            </EmptyTitle>
             <EmptyDescription>Check back later.</EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -252,13 +248,13 @@ export default async function AvailableExamsPage() {
           {exams.map((exam) => (
             <Card
               key={exam.id}
-              className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs ring-0 transition-shadow hover:shadow-sm"
+              className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm"
             >
-              <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
-                <CardTitle className="text-base font-bold tracking-tight sm:text-xl">
+              <CardHeader className="min-w-0 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+                <CardTitle className="text-base font-bold tracking-tight wrap-anywhere sm:text-xl">
                   {exam.title}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs leading-relaxed sm:text-sm">
                   {exam.durationMinutes} minutes · {exam.maxAttempts} attempt
                   {exam.maxAttempts === 1 ? "" : "s"}
                 </CardDescription>
@@ -266,8 +262,8 @@ export default async function AvailableExamsPage() {
               <CardFooter className="mt-auto border-border/50 bg-muted/20 p-4 sm:px-6">
                 <Button
                   asChild
-                  size="sm"
-                  className="h-10 rounded-xl text-sm font-semibold shadow-2xs"
+                  size="lg"
+                  className="w-full font-semibold shadow-sm sm:w-auto"
                 >
                   <Link href={`/exams/${exam.id}`}>View</Link>
                 </Button>
