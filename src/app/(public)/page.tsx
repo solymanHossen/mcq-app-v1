@@ -3,30 +3,28 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
-  Building2,
   CheckCircle2,
-  ChevronRight,
   Flame,
-  Globe2,
-  Lock,
-  Server,
   ShieldCheck,
   Brain,
   Timer,
   Trophy,
+  Users,
+  ClipboardCheck,
+  KeyRound,
 } from "lucide-react"
-
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card"
 import { HeroSection } from "@/components/landing/hero-section"
-import { CapabilityStrip } from "@/components/landing/capability-strip"
 import { getSystemSettings } from "@/modules/settings/queries"
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false
 
 const FEATURES = [
@@ -85,7 +83,7 @@ const STEPS = [
     step: "03",
     title: "Results, instantly",
     description:
-      "Auto-grading, leaderboards, and AI explanations land the second the exam closes. No manual marking.",
+      "Grade submissions, review outcomes, and publish results with rankings and explanations for your students.",
   },
 ] as const
 
@@ -103,203 +101,224 @@ const STUDENT_POINTS = [
   "Build streaks and earn badges for consistent study",
 ] as const
 
-const ENTERPRISE_FEATURES = [
+const ASSESSMENT_CONTROLS = [
   {
-    icon: Building2,
-    title: "Unlimited Concurrent Test Takers",
+    icon: ShieldCheck,
+    title: "Verified educators",
     description:
-      "High-throughput architecture engineered to smoothly handle 50,000+ simultaneous candidates without latency spikes.",
+      "Teacher verification helps control who can publish assessments on the platform.",
   },
   {
-    icon: Lock,
-    title: "SOC 2 Type II & FERPA Compliant",
+    icon: KeyRound,
+    title: "Flexible exam access",
     description:
-      "End-to-end encrypted test delivery, student data isolation, and comprehensive audit logs built for university compliance.",
+      "Choose public or shared assessments and configure guest access for your candidates.",
   },
   {
-    icon: Server,
-    title: "Custom LMS & SSO Integration",
+    icon: ClipboardCheck,
+    title: "Review and corrections",
     description:
-      "Seamless single sign-on via SAML 2.0 / Okta / Azure AD and bidirectional grade sync with Canvas, Blackboard, and Moodle.",
+      "Review reported questions, correct answer keys, and update affected results.",
   },
   {
-    icon: Globe2,
-    title: "Dedicated Cloud or On-Premise",
+    icon: Users,
+    title: "Results on your terms",
     description:
-      "Flexible deployment choices including regional data residency, sovereign private cloud, or air-gapped on-premise clusters.",
+      "Review assessment outcomes and publish results when you are ready to share them.",
   },
 ] as const
+
+const containerClassName = "container mx-auto px-4 sm:px-6 lg:px-8"
+const cardClassName =
+  "min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0"
 
 export default async function LandingPage() {
   const settings = await getSystemSettings()
 
   return (
-    <>
-      {/* Hero Section matching design reference with dynamic settings */}
+    <main className="min-w-0">
       <HeroSection settings={settings} />
 
-      {/* World-Class Modern Capability Proof Strip */}
-      <CapabilityStrip />
-
-        {/* Features */}
-        <section id="features" className="border-t border-border/60 bg-muted/20 py-24 sm:py-28">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="mx-auto mb-16 max-w-2xl text-center">
-              <Badge variant="outline">Features</Badge>
-              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-                Everything an exam needs, nothing it doesn&apos;t
-              </h2>
-              <p className="mt-4 text-pretty text-muted-foreground">
-                One platform for building, running, and grading exams — built
-                for classrooms that want speed, integrity, and fairness.
+      <section
+        id="features"
+        className="scroll-mt-28 border-y border-border/60 bg-muted/20 py-8 sm:py-12 lg:py-16"
+      >
+        <div className={containerClassName}>
+          <div className="grid items-start gap-6 sm:gap-8 lg:grid-cols-12">
+            <div className="space-y-4 lg:col-span-4">
+              <SectionHeading
+                badge="Features"
+                title="Everything your next assessment needs"
+              />
+              <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Build, deliver, and review assessments in one place. Give
+                teachers clear controls and students a focused way to learn.
               </p>
             </div>
-
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {FEATURES.map(({ icon: Icon, title, description }) => (
-                <Card
-                  key={title}
-                  className="group gap-3 border-none p-2 shadow-none ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-primary/30"
-                >
-                  <CardHeader>
-                    <span className="mb-3 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                      <Icon className="size-5" />
+            <Card className={`${cardClassName} lg:col-span-8`}>
+              <CardContent className="grid grid-cols-1 p-0 sm:grid-cols-2">
+                {FEATURES.map(({ icon: Icon, title, description }) => (
+                  <div
+                    key={title}
+                    className="flex min-w-0 items-start gap-3 border-b border-border/50 p-4 last:border-b-0 sm:p-6 sm:odd:border-r lg:p-7 sm:[&:nth-last-child(2)]:border-b-0"
+                  >
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
+                      <Icon className="size-4 sm:size-5" />
                     </span>
-                    <CardTitle className="text-base">{title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-muted-foreground">
-                    {description}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    <div className="min-w-0 space-y-2">
+                      <h3 className="font-heading text-base font-bold tracking-tight text-foreground">
+                        {title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        {description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* How it works */}
-        <section id="how-it-works" className="py-24 sm:py-28">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="mx-auto mb-16 max-w-2xl text-center">
-              <Badge variant="outline">How it works</Badge>
-              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-                From question bank to results in three steps
-              </h2>
-            </div>
-
-            <div className="grid gap-10 sm:grid-cols-3">
-              {STEPS.map(({ step, title, description }, index) => (
-                <div key={step} className="relative flex flex-col gap-3">
-                  <span className="font-heading text-5xl font-semibold text-primary/15">
+      <section
+        id="how-it-works"
+        className="scroll-mt-28 py-8 sm:py-12 lg:py-16"
+      >
+        <div className={containerClassName}>
+          <SectionHeading
+            badge="How it works"
+            title="One connected assessment workflow"
+          />
+          <div className="mt-6 grid gap-4 sm:mt-8 sm:gap-6 lg:grid-cols-3">
+            {STEPS.map(({ step, title, description }) => (
+              <Card key={step} className={cardClassName}>
+                <CardHeader className="flex flex-row items-start gap-3 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 font-heading text-sm font-bold text-primary ring-1 ring-primary/20">
                     {step}
                   </span>
-                  <h3 className="font-heading text-xl font-semibold">
+                  <CardTitle className="self-center text-base font-bold tracking-tight sm:text-xl">
                     {title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {description}
-                  </p>
-                  {index < STEPS.length - 1 && (
-                    <ChevronRight className="absolute top-2 -right-7 hidden size-5 text-border sm:block" />
-                  )}
-                </div>
-              ))}
-            </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 text-sm leading-relaxed text-muted-foreground sm:p-6 lg:p-7">
+                  {description}
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Teachers & students */}
-        <section id="audiences" className="border-t border-border/60 bg-muted/20 py-24 sm:py-28">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="mx-auto mb-16 max-w-2xl text-center">
-              <Badge variant="outline">Audiences</Badge>
-              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-                Designed for both sides of the classroom
-              </h2>
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <AudiencePanel
-                badge="For teachers"
-                title="Spend time teaching, not grading"
-                points={TEACHER_POINTS}
-                icon={BookOpen}
-                accent="from-primary/10 via-primary/5"
-              />
-              <AudiencePanel
-                badge="For students"
-                title="Know where you stand, instantly"
-                points={STUDENT_POINTS}
-                icon={BarChart3}
-                accent="from-chart-2/15 via-chart-2/5"
-              />
-            </div>
+      <section
+        id="audiences"
+        className="scroll-mt-28 border-y border-border/60 bg-muted/20 py-8 sm:py-12 lg:py-16"
+      >
+        <div className={containerClassName}>
+          <SectionHeading
+            badge="Teachers & students"
+            title="Two perspectives. One learning experience."
+          />
+          <div className="mt-6 grid gap-6 sm:mt-8 lg:grid-cols-2">
+            <AudiencePanel
+              badge="For teachers"
+              title="More clarity in every assessment"
+              points={TEACHER_POINTS}
+              icon={BookOpen}
+            />
+            <AudiencePanel
+              badge="For students"
+              title="Turn every attempt into progress"
+              points={STUDENT_POINTS}
+              icon={BarChart3}
+            />
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Enterprise */}
-        <section id="enterprise" className="py-24 sm:py-28">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="mx-auto mb-16 max-w-2xl text-center">
-              <Badge variant="outline">Enterprise</Badge>
-              <h2 className="mt-4 text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-                Built for institution &amp; enterprise scale
-              </h2>
-              <p className="mt-4 text-pretty text-muted-foreground">
-                Robust infrastructure, compliant security, and dedicated SLA support trusted by large universities, certification bodies, and global enterprises.
-              </p>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {ENTERPRISE_FEATURES.map(({ icon: Icon, title, description }) => (
+      <section id="enterprise" className="scroll-mt-28 py-8 sm:py-12 lg:py-16">
+        <div className={containerClassName}>
+          <Card className={cardClassName}>
+            <CardHeader className="border-b border-border/50 bg-muted/20 p-4 sm:p-6 lg:p-7">
+              <SectionHeading
+                badge="For institutions"
+                title="A controlled workflow for your classroom"
+              />
+              <CardDescription className="mt-3 max-w-2xl text-sm leading-relaxed sm:text-base">
+                From educator verification to publishing results, keep the
+                important assessment decisions in your hands.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6 p-4 sm:grid-cols-2 sm:p-6 lg:gap-8 lg:p-7">
+              {ASSESSMENT_CONTROLS.map(({ icon: Icon, title, description }) => (
                 <div
                   key={title}
-                  className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:border-primary/40 hover:shadow-md"
+                  className="flex min-w-0 items-start gap-3 sm:gap-4"
                 >
-                  <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
-                    <Icon className="size-5" />
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
+                    <Icon className="size-4 sm:size-5" />
                   </span>
-                  <h3 className="font-heading font-semibold text-base mb-2 text-foreground">
-                    {title}
-                  </h3>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
-                    {description}
-                  </p>
+                  <div className="space-y-2">
+                    <h3 className="font-heading text-base font-bold tracking-tight">
+                      {title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {description}
+                    </p>
+                  </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
-        {/* CTA */}
-        <section className="px-6 pb-28">
-          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-foreground px-8 py-20 text-center text-background">
-            <div
-              aria-hidden
-              className="absolute left-1/2 top-0 -z-0 h-[24rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl"
-            />
-            <div className="relative flex flex-col items-center gap-6">
-              <Timer className="size-10 text-background/70" />
-              <h2 className="max-w-2xl text-balance font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-                Ready to run your first exam?
-              </h2>
-              <p className="max-w-md text-pretty text-background/70">
-                Free to start. No credit card required.
-              </p>
-              <Button
-                size="lg"
-                className="h-12 bg-background px-6 text-base text-foreground hover:bg-background/90"
-                asChild
-              >
-                <Link href="/register">
-                  Get started for free
-                  <ArrowRight data-icon="inline-end" />
-                </Link>
-              </Button>
+      <section className="pb-12 sm:pb-16">
+        <div className={containerClassName}>
+          <div className="flex flex-col gap-6 rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:p-7">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
+                <Timer className="size-4 sm:size-5" />
+              </span>
+              <div className="space-y-2">
+                <h2 className="font-heading text-base font-bold tracking-tight sm:text-xl">
+                  Ready to run your first exam?
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Free to start. No credit card required.
+                </p>
+              </div>
             </div>
+            <Button
+              asChild
+              className="h-11 w-full rounded-xl px-5 text-sm font-semibold shadow-2xs sm:h-10 sm:w-auto"
+            >
+              <Link href="/register">
+                Get started for free
+                <ArrowRight data-icon="inline-end" />
+              </Link>
+            </Button>
           </div>
-        </section>
-      </>
-    )
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function SectionHeading({ badge, title }: { badge: string; title: string }) {
+  return (
+    <div className="space-y-3">
+      <Badge
+        variant="outline"
+        className="rounded-full border-border/70 bg-card px-3 py-1 text-xs font-semibold text-muted-foreground"
+      >
+        {badge}
+      </Badge>
+      <h2 className="max-w-2xl font-heading text-2xl font-extrabold tracking-tight text-balance text-foreground sm:text-3xl lg:text-4xl">
+        {title}
+      </h2>
+    </div>
+  )
 }
 
 function AudiencePanel({
@@ -307,40 +326,40 @@ function AudiencePanel({
   title,
   points,
   icon: Icon,
-  accent,
 }: {
   badge: string
   title: string
   points: readonly string[]
   icon: React.ComponentType<{ className?: string }>
-  accent: string
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-6 rounded-3xl border border-border/60 bg-gradient-to-b to-transparent p-8 sm:p-10",
-        accent
-      )}
-    >
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-background text-primary ring-1 ring-foreground/10">
-        <Icon className="size-6" />
-      </span>
-      <div className="flex flex-col gap-2">
-        <Badge variant="secondary" className="w-fit">
-          {badge}
-        </Badge>
-        <h3 className="font-heading text-2xl font-semibold tracking-tight">
+    <Card className={cardClassName}>
+      <CardHeader className="gap-3 border-b border-border/50 bg-muted/20 p-4 sm:p-6 lg:p-7">
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
+            <Icon className="size-4 sm:size-5" />
+          </span>
+          <Badge variant="secondary" className="rounded-full">
+            {badge}
+          </Badge>
+        </div>
+        <CardTitle className="font-heading text-base font-bold tracking-tight sm:text-xl">
           {title}
-        </h3>
-      </div>
-      <ul className="flex flex-col gap-4">
-        {points.map((point) => (
-          <li key={point} className="flex items-start gap-3 text-sm">
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
-            <span className="text-muted-foreground">{point}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 sm:p-6 lg:p-7">
+        <ul className="flex flex-col gap-4">
+          {points.map((point) => (
+            <li
+              key={point}
+              className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground"
+            >
+              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>{point}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }

@@ -3,6 +3,7 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import {
@@ -61,14 +62,16 @@ function getInitials(name: string) {
 }
 
 export function Navbar({ user, logoUrl, className }: NavbarProps) {
+  const isHome = usePathname() === "/"
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   // Track scroll state for enhanced elevation
   React.useEffect(() => {
@@ -106,7 +109,12 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
       )}
     >
       {/* Mobile: 100% full-width flush to top. Desktop/Tablet: floating container */}
-      <div className="w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5">
+      <div
+        className={cn(
+          "w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5",
+          isHome && "mx-auto px-4 pt-3 lg:px-8"
+        )}
+      >
         <div
           className={cn(
             "relative flex h-16 w-full items-center justify-between px-4 transition-all duration-300 sm:h-[68px] sm:px-7",
@@ -114,6 +122,8 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             "rounded-none border-0 border-b border-border/80 bg-card/95 text-card-foreground shadow-none backdrop-blur-2xl",
             // Tablet/Desktop (sm+): Floating rounded pill with full border and subtle shadow
             "sm:rounded-[22px] sm:border sm:border-border/80 sm:bg-card/85 sm:shadow-xs",
+            isHome &&
+              "rounded-2xl border border-border/70 bg-card/95 shadow-xs sm:rounded-2xl sm:bg-card/95",
             // Scrolled states
             scrolled &&
               "border-border bg-card/98 shadow-sm sm:border-border sm:bg-card/95 sm:shadow-md"
@@ -125,14 +135,17 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             className="group flex items-center gap-3 transition-opacity hover:opacity-95"
           >
             {logoUrl ? (
-              <div className="relative size-9.5 sm:size-10 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+              <div className="relative flex size-9.5 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
                 <Image
                   src={logoUrl}
                   alt={APP_NAME}
                   width={40}
                   height={40}
                   className="size-full object-contain"
-                  unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                  unoptimized={
+                    logoUrl.startsWith("/uploads/") ||
+                    logoUrl.startsWith("http")
+                  }
                 />
               </div>
             ) : (
@@ -146,12 +159,22 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           </Link>
 
           {/* Center: Desktop Navigation Links */}
-          <nav className="hidden items-center gap-8 md:flex lg:gap-10">
+          <nav
+            aria-label="Main navigation"
+            className={cn(
+              "hidden items-center gap-8 md:flex lg:gap-10",
+              isHome && "gap-1 md:hidden lg:flex lg:gap-1"
+            )}
+          >
             {NAV_LINKS.map(({ href, label }) => (
               <a
                 key={href}
                 href={href}
-                className="text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base"
+                className={cn(
+                  "text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base",
+                  isHome &&
+                    "inline-flex h-10 items-center rounded-xl px-3 text-sm font-semibold hover:bg-muted/60 focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none lg:text-sm"
+                )}
               >
                 {label}
               </a>
@@ -159,11 +182,16 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           </nav>
 
           {/* Right: Desktop Actions */}
-          <div className="hidden items-center gap-4 md:flex">
+          <div
+            className={cn(
+              "hidden items-center gap-4 md:flex",
+              isHome && "gap-3 md:hidden lg:flex"
+            )}
+          >
             {user ? (
               <UserNav user={user} showDashboardButton={true} />
             ) : (
-              <div className="flex items-center gap-5">
+              <div className={cn("flex items-center gap-5", isHome && "gap-3")}>
                 <Link
                   href="/login"
                   className="px-2 py-1.5 text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base"
@@ -182,7 +210,12 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           </div>
 
           {/* Mobile Right Actions: Avatar (if logged in) + Mobile Menu Toggle */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div
+            className={cn(
+              "flex items-center gap-2 md:hidden",
+              isHome && "md:flex lg:hidden"
+            )}
+          >
             {user && <UserNav user={user} showDashboardButton={false} />}
 
             <button
@@ -208,14 +241,22 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             <div
               aria-hidden="true"
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden"
+              className={cn(
+                "fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden",
+                isHome && "top-20 sm:top-24 md:block lg:hidden"
+              )}
             />
 
             {/* Edge-to-edge flush drawer directly beneath the header */}
             <div
               role="dialog"
               aria-modal="true"
-              className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden"
+              aria-label="Mobile navigation"
+              className={cn(
+                "fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden",
+                isHome &&
+                  "inset-x-4 top-20 max-h-[calc(100dvh-7rem)] w-auto rounded-2xl border border-border/70 p-4 shadow-sm sm:top-24 md:block lg:hidden"
+              )}
             >
               {/* If Logged In: Prominent User Header Card */}
               {user && (
