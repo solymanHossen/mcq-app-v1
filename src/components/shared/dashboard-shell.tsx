@@ -5,6 +5,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
 import { AppSidebar } from "@/components/shared/app-sidebar"
 import { UserNav } from "@/components/shared/user-nav"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
@@ -67,26 +68,26 @@ export async function DashboardShell({
         user={user}
       />
       <SidebarInset className="min-w-0 flex-1 w-full bg-background">
-        {/* World-Class Header: Clean border, unified with Sidebar, subtle backdrop blur */}
-        <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between border-b border-sidebar-border bg-sidebar/95 backdrop-blur-md text-sidebar-foreground px-4 sm:px-6 lg:px-8">
-          {/* Left section: Trigger, Separator, Workspace Title & Live Pulse */}
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <SidebarTrigger className="size-9 rounded-lg border-none bg-sidebar-accent/50 text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground" />
-            <span className="font-heading text-base sm:text-lg font-extrabold tracking-tight text-foreground truncate">
+        {/* Modern Master Reference Header: h-16, clean border, subtle backdrop blur */}
+        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-background/80 backdrop-blur-md px-4 sm:px-6 lg:px-8">
+          {/* Left section: Trigger, Separator, Workspace Title */}
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <SidebarTrigger className="size-8.5 rounded-lg border border-border/60 bg-muted/30 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground cursor-pointer shadow-2xs" />
+            <Separator orientation="vertical" className="h-4 bg-border/60" />
+            <span className="font-heading text-sm sm:text-base font-bold tracking-tight text-foreground truncate">
               {breadcrumb ?? `${badgeLabel} Workspace`}
             </span>
           </div>
 
           {/* Center section: World-Class Interactive Spotlight Search Trigger */}
-          <div className="mx-4 hidden max-w-md flex-1 md:block">
+          <div className="hidden md:flex flex-1 justify-center max-w-md lg:max-w-lg mx-auto px-4">
             <GlobalSearchTrigger />
           </div>
 
-          {/* Right section: Mobile Search Icon, System Status, Theme Toggle, User Menu */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right section: Mobile Search Icon, Theme Toggle, User Menu */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Mobile Search Button */}
             <GlobalSearchMobileButton />
-
 
             {/* Quick Dark/Light Theme Toggle */}
             <ThemeToggle />

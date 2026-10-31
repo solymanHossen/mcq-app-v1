@@ -83,8 +83,8 @@ export function AppSidebar({
       className="z-30 border-r border-sidebar-border bg-sidebar"
       {...props}
     >
-      {/* Brand Header: Aligned height (h-20) with Dashboard Header */}
-      <SidebarHeader className="h-20 border-b border-sidebar-border p-0">
+      {/* Brand Header: Aligned height (h-16) with Dashboard Header */}
+      <SidebarHeader className="h-16 border-b border-sidebar-border p-0">
         <div
           className={cn(
             "flex size-full items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",

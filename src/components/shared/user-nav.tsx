@@ -108,11 +108,11 @@ export function UserNav({
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="group relative flex items-center gap-2 rounded-full p-1 ring-offset-background outline-hidden transition-all duration-200 hover:ring-3 hover:ring-primary/40 focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95"
+            className="group relative flex items-center rounded-full p-0.5 outline-hidden transition-all duration-150 hover:ring-2 hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
             aria-label="User account menu"
           >
-            <Avatar className="size-10 border-2 border-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-11">
-              <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary sm:text-sm">
+            <Avatar className="size-8.5 sm:size-9 border border-border/70 shadow-2xs transition-transform duration-150 group-hover:scale-105">
+              <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>

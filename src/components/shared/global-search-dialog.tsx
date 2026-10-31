@@ -146,19 +146,19 @@ export function GlobalSearchTrigger({ className }: { className?: string }) {
       type="button"
       onClick={openGlobalSearch}
       className={cn(
-        "group flex h-11 w-full items-center justify-between rounded-2xl border border-border/40 bg-muted/30 px-4 text-xs sm:text-sm text-muted-foreground shadow-2xs transition-all duration-200 hover:border-primary/30 hover:bg-muted/60 hover:shadow-xs cursor-pointer",
+        "group flex h-9.5 sm:h-10 w-full items-center justify-between rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/60 hover:border-border/90 px-3.5 text-xs sm:text-sm text-muted-foreground shadow-2xs transition-all duration-150 cursor-pointer",
         className
       )}
       title="Search anything (⌘K or Ctrl+K)"
     >
       <div className="flex items-center gap-2.5 min-w-0">
-        <Search className="size-4 text-primary/70 group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
-        <span className="truncate font-medium text-muted-foreground/80 group-hover:text-foreground">
+        <Search className="size-4 text-muted-foreground/70 group-hover:text-foreground shrink-0 transition-colors" />
+        <span className="truncate font-normal text-muted-foreground/70 group-hover:text-foreground text-xs sm:text-sm">
           Search assessments, users, records...
         </span>
       </div>
-      <kbd className="pointer-events-none inline-flex items-center gap-1 rounded-lg border border-border/40 bg-background/80 px-2 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground shadow-2xs transition-colors group-hover:text-foreground">
-        <Command className="size-3" />
+      <kbd className="pointer-events-none inline-flex items-center gap-0.5 rounded-md border border-border/70 bg-background/90 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-muted-foreground/80 shadow-2xs transition-colors group-hover:text-foreground">
+        <Command className="size-2.5" />
         <span>K</span>
       </kbd>
     </button>
@@ -171,12 +171,12 @@ export function GlobalSearchMobileButton({ className }: { className?: string }) 
       type="button"
       onClick={openGlobalSearch}
       className={cn(
-        "flex size-10 items-center justify-center rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95 md:hidden cursor-pointer",
+        "flex size-8.5 sm:size-9 items-center justify-center rounded-xl border border-border/60 bg-muted/30 text-muted-foreground shadow-2xs transition-all duration-150 hover:bg-muted/70 hover:text-foreground md:hidden cursor-pointer",
         className
       )}
       aria-label="Open search"
     >
-      <Search className="size-4.5" />
+      <Search className="size-4" />
     </button>
   )
 }
