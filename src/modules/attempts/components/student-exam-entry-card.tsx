@@ -131,31 +131,34 @@ export function StudentExamEntryCard({
   // Case 1: Logged In User
   if (user) {
     return (
-      <Card className="rounded-2xl border border-border/80 bg-card shadow-lg overflow-hidden">
-        <CardHeader className="bg-primary/5 border-b border-border/50 p-4 sm:p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">
-                {user.name.charAt(0).toUpperCase()}
+      <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md overflow-hidden">
+        <CardHeader className="p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="size-9 rounded-xl border border-border/60 bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shadow-2xs">
+                {user.name.slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground">
+                <CardTitle className="font-heading text-sm sm:text-base font-bold text-foreground">
                   Logged in as {user.name}
                 </CardTitle>
-                <CardDescription className="text-xs">
-                  {user.email} · {user.role}
+                <CardDescription className="text-xs text-muted-foreground">
+                  {user.email} · <span className="uppercase font-semibold tracking-wider">{user.role}</span>
                 </CardDescription>
               </div>
             </div>
-            <Badge variant="outline" className="text-xs font-semibold">
+            <Badge
+              variant="outline"
+              className="rounded-full px-2.5 py-0.5 text-xs font-semibold border-border/70"
+            >
               {attemptsLeft > 0 ? `${attemptsLeft} attempt(s) left` : "No attempts left"}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="p-4 sm:p-6 space-y-4">
+        <CardContent className="p-5 sm:p-6 space-y-4 sm:space-y-5">
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs font-semibold flex items-center gap-2">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
               <AlertTriangle className="size-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -163,7 +166,7 @@ export function StudentExamEntryCard({
 
           {exam.accessCode && (
             <div className="space-y-1.5">
-              <Label htmlFor="loggedInAccessCode" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Label htmlFor="loggedInAccessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
                 <Lock className="size-3.5 text-muted-foreground" />
                 <span>Exam Passcode (Required)</span>
               </Label>
@@ -172,13 +175,13 @@ export function StudentExamEntryCard({
                 placeholder="Enter passcode provided by teacher"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
-                className="h-10 text-sm font-mono rounded-xl"
+                className="h-10 sm:h-11 text-sm font-mono rounded-xl border border-border/70 bg-background"
               />
             </div>
           )}
 
           {exam.webcamMonitoringRequired && (
-            <label className="flex items-start gap-2.5 p-3 rounded-xl border border-border/70 bg-muted/20 cursor-pointer">
+            <label className="flex items-start gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 cursor-pointer hover:bg-muted/40 transition-colors">
               <input
                 type="checkbox"
                 checked={webcamConsent}
@@ -186,11 +189,11 @@ export function StudentExamEntryCard({
                 className="size-4 mt-0.5 rounded text-primary focus:ring-primary"
               />
               <div className="text-xs text-foreground">
-                <span className="font-bold flex items-center gap-1">
+                <span className="font-bold flex items-center gap-1.5">
                   <Camera className="size-3.5 text-primary" />
                   <span>Webcam Consent Required</span>
                 </span>
-                <p className="text-muted-foreground text-[11px] mt-0.5">
+                <p className="text-muted-foreground text-[11px] sm:text-xs mt-0.5">
                   I agree to webcam proctoring during this assessment.
                 </p>
               </div>
@@ -198,11 +201,11 @@ export function StudentExamEntryCard({
           )}
 
           {attemptsLeft <= 0 ? (
-            <div className="text-center py-2 space-y-2">
-              <p className="text-sm text-muted-foreground font-medium">
+            <div className="text-center py-3 space-y-2">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
                 You have reached the maximum allowed attempts for this exam.
               </p>
-              <Button asChild variant="outline" className="rounded-xl font-bold text-xs">
+              <Button asChild variant="outline" className="rounded-xl font-bold text-xs h-9">
                 <Link href={`/exams/${exam.id}`}>View Your Results & History</Link>
               </Button>
             </div>
@@ -212,7 +215,7 @@ export function StudentExamEntryCard({
               size="lg"
               onClick={handleStartForLoggedInUser}
               disabled={isPending || (exam.webcamMonitoringRequired && !webcamConsent)}
-              className="w-full h-11 sm:h-12 rounded-xl font-bold text-sm sm:text-base cursor-pointer shadow-md active:scale-98 transition-all gap-2"
+              className="w-full h-11 sm:h-12 rounded-xl font-heading font-bold text-sm sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group"
             >
               {isPending ? (
                 <>
@@ -221,9 +224,9 @@ export function StudentExamEntryCard({
                 </>
               ) : (
                 <>
-                  <Play className="size-4 fill-current" />
+                  <Play className="size-4 fill-current shrink-0" />
                   <span>{existingAttemptsCount > 0 ? "Start Next Attempt" : "Start Exam Now"}</span>
-                  <ArrowRight className="size-4 ml-auto" />
+                  <ArrowRight className="size-4 ml-auto shrink-0 transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
             </Button>
@@ -236,30 +239,32 @@ export function StudentExamEntryCard({
   // Case 2: Guest Participation Allowed (Frictionless Name & Email)
   if (exam.allowGuestAccess) {
     return (
-      <Card className="rounded-2xl border-2 border-primary/30 bg-card shadow-xl overflow-hidden relative">
-        <div className="h-1.5 w-full bg-gradient-to-r from-primary via-indigo-500 to-sky-400" />
-        <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
-          <div className="flex items-center justify-between">
-            <Badge className="bg-primary/10 text-primary border-primary/30 text-xs font-bold gap-1 py-1">
-              <Zap className="size-3" />
+      <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md overflow-hidden">
+        <CardHeader className="p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20 space-y-2">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <Badge variant="secondary" className="rounded-full px-2.5 py-0.5 text-xs font-bold gap-1.5 border border-border/60 bg-muted/60 text-foreground">
+              <Zap className="size-3 text-primary" />
               <span>Instant Entry (No Password Needed)</span>
             </Badge>
-            <span className="text-xs text-muted-foreground font-medium">
-              Duration: <strong className="text-foreground">{exam.durationMinutes}m</strong>
+            <span className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
+              <span>Duration:</span>
+              <strong className="text-foreground font-semibold">{exam.durationMinutes}m</strong>
             </span>
           </div>
-          <CardTitle className="text-base sm:text-lg font-bold text-foreground mt-2">
-            Enter Your Details to Begin
-          </CardTitle>
-          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
-            No registration or account creation required. Just provide your Name & Email so your teacher can identify your submission.
-          </CardDescription>
+          <div>
+            <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+              Enter Your Details to Begin
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-1 leading-normal">
+              No registration or account creation required. Just provide your Name & Email so your teacher can identify your submission.
+            </CardDescription>
+          </div>
         </CardHeader>
 
-        <CardContent className="p-4 sm:p-6 pt-3 space-y-4">
-          <form onSubmit={handleStartForGuest} className="space-y-3.5">
+        <CardContent className="p-5 sm:p-6 space-y-4 sm:space-y-5">
+          <form onSubmit={handleStartForGuest} className="space-y-4">
             {errorMessage && (
-              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs font-semibold flex items-center gap-2">
+              <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
                 <AlertTriangle className="size-4 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -268,7 +273,7 @@ export function StudentExamEntryCard({
             {/* Student Full Name */}
             <div className="space-y-1.5">
               <Label htmlFor="guestName" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
-                <User className="size-3.5 text-primary" />
+                <User className="size-3.5 text-muted-foreground" />
                 <span>Your Full Name <span className="text-destructive">*</span></span>
               </Label>
               <Input
@@ -278,7 +283,7 @@ export function StudentExamEntryCard({
                 placeholder="e.g. Solyman Hossen"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-11 rounded-xl text-sm bg-background border-border/80 focus-visible:ring-primary/20"
+                className="h-10 sm:h-11 rounded-xl text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
                 disabled={isPending}
                 autoFocus
               />
@@ -287,7 +292,7 @@ export function StudentExamEntryCard({
             {/* Student Email Address */}
             <div className="space-y-1.5">
               <Label htmlFor="guestEmail" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
-                <Mail className="size-3.5 text-primary" />
+                <Mail className="size-3.5 text-muted-foreground" />
                 <span>Your Email Address <span className="text-destructive">*</span></span>
               </Label>
               <Input
@@ -298,10 +303,10 @@ export function StudentExamEntryCard({
                 placeholder="e.g. solyman@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 rounded-xl text-sm bg-background border-border/80 focus-visible:ring-primary/20"
+                className="h-10 sm:h-11 rounded-xl text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
                 disabled={isPending}
               />
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
                 Your exam result and score summary will be linked to this email.
               </p>
             </div>
@@ -320,7 +325,7 @@ export function StudentExamEntryCard({
                   placeholder="Enter passcode provided by your teacher"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  className="h-11 rounded-xl text-sm font-mono bg-background border-border/80 focus-visible:ring-primary/20"
+                  className="h-10 sm:h-11 rounded-xl text-sm font-mono bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20"
                   disabled={isPending}
                 />
               </div>
@@ -328,7 +333,7 @@ export function StudentExamEntryCard({
 
             {/* Webcam consent if required */}
             {exam.webcamMonitoringRequired && (
-              <label className="flex items-start gap-2.5 p-3 rounded-xl border border-border/70 bg-muted/20 cursor-pointer">
+              <label className="flex items-start gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 cursor-pointer hover:bg-muted/40 transition-colors">
                 <input
                   type="checkbox"
                   checked={webcamConsent}
@@ -337,11 +342,11 @@ export function StudentExamEntryCard({
                   required
                 />
                 <div className="text-xs text-foreground">
-                  <span className="font-bold flex items-center gap-1">
+                  <span className="font-bold flex items-center gap-1.5">
                     <Camera className="size-3.5 text-primary" />
                     <span>Webcam Proctoring Required</span>
                   </span>
-                  <p className="text-muted-foreground text-[11px] mt-0.5">
+                  <p className="text-muted-foreground text-[11px] sm:text-xs mt-0.5">
                     I agree to camera proctoring during this assessment.
                   </p>
                 </div>
@@ -353,7 +358,7 @@ export function StudentExamEntryCard({
               type="submit"
               size="lg"
               disabled={isPending || (exam.webcamMonitoringRequired && !webcamConsent)}
-              className="w-full h-11 sm:h-12 rounded-xl font-bold text-sm sm:text-base cursor-pointer shadow-md hover:shadow-lg active:scale-98 transition-all gap-2 mt-2"
+              className="w-full h-11 sm:h-12 rounded-xl font-heading font-bold text-sm sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group mt-2"
             >
               {isPending ? (
                 <>
@@ -362,23 +367,23 @@ export function StudentExamEntryCard({
                 </>
               ) : (
                 <>
-                  <Play className="size-4 fill-current" />
+                  <Play className="size-4 fill-current shrink-0" />
                   <span>Start Exam Now</span>
-                  <ArrowRight className="size-4 ml-auto" />
+                  <ArrowRight className="size-4 ml-auto shrink-0 transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
             </Button>
           </form>
 
           {/* Alternative login link */}
-          <div className="pt-2 text-center border-t border-border/50">
+          <div className="pt-3 text-center border-t border-border/60">
             <p className="text-xs text-muted-foreground">
               Already have an ExamHub account?{" "}
               <Link
                 href={`/login?callbackUrl=/exam/${exam.id}`}
-                className="font-bold text-primary hover:underline"
+                className="font-semibold text-primary hover:underline"
               >
-                Sign in to save to your profile
+                Sign in to save to your profile →
               </Link>
             </p>
           </div>
@@ -389,25 +394,25 @@ export function StudentExamEntryCard({
 
   // Case 3: Registered Students Only (allowGuestAccess = false)
   return (
-    <Card className="rounded-2xl border border-border/80 bg-card shadow-lg p-6 text-center space-y-4">
-      <div className="size-12 rounded-2xl bg-muted/60 text-muted-foreground flex items-center justify-center mx-auto">
-        <Lock className="size-6" />
+    <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md p-6 sm:p-8 text-center space-y-4">
+      <div className="size-12 rounded-2xl border border-border/60 bg-muted/40 text-muted-foreground flex items-center justify-center mx-auto shadow-2xs">
+        <Lock className="size-5" />
       </div>
       <div className="space-y-1">
-        <h3 className="font-bold text-base text-foreground">
+        <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
           Student Account Required
         </h3>
-        <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
           The teacher has restricted this assessment to registered students. Please sign in or create an account to proceed.
         </p>
       </div>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
-        <Button asChild size="lg" className="w-full sm:w-auto h-10 rounded-xl font-bold text-xs">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+        <Button asChild size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm">
           <Link href={`/login?callbackUrl=/exam/${exam.id}`}>
             Sign In to Start
           </Link>
         </Button>
-        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-10 rounded-xl font-bold text-xs">
+        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm border-border/70">
           <Link href={`/register?callbackUrl=/exam/${exam.id}`}>
             Create Free Account
           </Link>
