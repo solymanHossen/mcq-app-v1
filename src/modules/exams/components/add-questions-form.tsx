@@ -20,7 +20,6 @@ import {
   CheckSquare,
   Square,
   Plus,
-  BookOpen,
   SearchX,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -94,7 +93,7 @@ export function AddQuestionsForm({
 
   if (questions.length === 0) {
     return (
-      <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-muted/20 p-8 sm:p-12 text-center">
+      <div className="rounded-2xl border border-dashed border-border/80 bg-muted/20 p-8 sm:p-12 text-center">
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -119,14 +118,14 @@ export function AddQuestionsForm({
   return (
     <div className="space-y-4">
       {/* Selection Control Bar */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl bg-muted/40 p-3 sm:p-4 border border-border/60">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-muted/20 p-4 sm:px-6 sm:py-4.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={allSelectedOnPage ? clearAll : selectAll}
-            className="h-8 rounded-xl text-xs font-semibold shadow-2xs hover:bg-background"
+            className="h-10 max-w-full rounded-xl text-xs font-semibold shadow-2xs hover:bg-background sm:text-sm"
           >
             {allSelectedOnPage ? (
               <>
@@ -147,7 +146,7 @@ export function AddQuestionsForm({
               variant="ghost"
               size="sm"
               onClick={clearAll}
-              className="h-8 text-xs text-muted-foreground hover:text-foreground"
+              className="h-10 rounded-xl text-sm text-muted-foreground hover:text-foreground"
             >
               Clear
             </Button>
@@ -171,29 +170,28 @@ export function AddQuestionsForm({
           }
 
           return (
-            <div
+            <label
               key={q.id}
-              onClick={() => toggle(q.id)}
-              role="checkbox"
-              aria-checked={isChecked}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === " " || e.key === "Enter") {
-                  e.preventDefault()
-                  toggle(q.id)
-                }
-              }}
+              htmlFor={`vault-question-${q.id}`}
               className={cn(
-                "group relative flex cursor-pointer items-start gap-4 rounded-2xl border p-4 sm:p-5 transition-all select-none",
+                "group relative flex min-w-0 cursor-pointer items-start gap-3 rounded-2xl border p-4 shadow-xs transition-colors select-none focus-within:ring-4 focus-within:ring-primary/15 sm:gap-4 sm:p-6",
                 isChecked
-                  ? "border-primary/60 bg-primary/[0.03] ring-1 ring-primary/20 shadow-xs"
-                  : "border-border/70 bg-card hover:border-border hover:bg-muted/30 shadow-2xs"
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-border/70 bg-card hover:border-primary/30 hover:bg-muted/20"
               )}
             >
-              <div className="pt-0.5" onClick={(e) => e.stopPropagation()}>
+              <div className="shrink-0 pt-0.5">
                 <Checkbox
+                  id={`vault-question-${q.id}`}
+                  aria-label={`Select question: ${q.questionText}`}
                   checked={isChecked}
                   onCheckedChange={() => toggle(q.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault()
+                      toggle(q.id)
+                    }
+                  }}
                   className="rounded-md"
                 />
               </div>
@@ -202,14 +200,14 @@ export function AddQuestionsForm({
                 <div className="flex flex-wrap items-center gap-1.5">
                   <Badge
                     variant="outline"
-                    className="rounded-lg px-2 py-0.5 text-xs font-semibold bg-muted/60 text-foreground border-border/70"
+                    className="max-w-full whitespace-normal break-words rounded-lg px-2 py-0.5 text-xs font-semibold bg-muted/60 text-foreground border-border/70"
                   >
                     {q.subject}
                   </Badge>
                   <span className="text-muted-foreground text-xs">/</span>
                   <Badge
                     variant="outline"
-                    className="rounded-lg px-2 py-0.5 text-xs font-medium bg-muted/40 text-muted-foreground border-border/60"
+                    className="max-w-full whitespace-normal break-words rounded-lg px-2 py-0.5 text-xs font-medium bg-muted/40 text-muted-foreground border-border/60"
                   >
                     {q.topic}
                   </Badge>
@@ -224,17 +222,17 @@ export function AddQuestionsForm({
                   </Badge>
                 </div>
 
-                <div className="text-sm font-medium text-foreground leading-relaxed line-clamp-3">
+                <div className="text-sm font-medium leading-relaxed break-words text-foreground sm:text-base">
                   <LatexText text={q.questionText} />
                 </div>
               </div>
-            </div>
+            </label>
           )
         })}
       </div>
 
-      {/* Floating or Bottom Import Action Bar */}
-      <div className="sticky bottom-4 z-20 flex items-center justify-between rounded-2xl sm:rounded-3xl border border-border/70 bg-card/95 p-4 sm:p-5 shadow-lg backdrop-blur-md">
+      {/* Import action stays in the document flow so every question remains visible. */}
+      <div className="flex flex-col gap-4 rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="flex items-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary font-bold text-xs">
             {selected.size}
@@ -248,7 +246,7 @@ export function AddQuestionsForm({
           onClick={submit}
           disabled={isPending || selected.size === 0}
           size="lg"
-          className="h-11 rounded-xl px-6 text-sm font-semibold shadow-xs"
+          className="h-11 w-full rounded-xl px-4 text-sm font-semibold shadow-2xs sm:h-10 sm:w-auto sm:px-6"
         >
           {isPending && <Spinner className="mr-2" />}
           <Plus className="mr-1.5 size-4" />
