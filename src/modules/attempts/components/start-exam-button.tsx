@@ -43,7 +43,7 @@ export function StartExamButton({
       {webcamMonitoringRequired && (
         <Field
           orientation="horizontal"
-          className="items-start gap-3 rounded-xl border border-border/70 bg-muted/20 p-3 sm:p-4"
+          className="items-start gap-3 rounded-2xl border border-border/70 bg-muted/20 p-3.5 sm:p-4 shadow-2xs"
         >
           <Checkbox
             id="webcam-consent"
@@ -54,7 +54,7 @@ export function StartExamButton({
           <FieldContent>
             <FieldLabel
               htmlFor="webcam-consent"
-              className="cursor-pointer text-sm leading-relaxed font-semibold sm:text-base"
+              className="cursor-pointer text-sm leading-relaxed font-semibold sm:text-base text-foreground"
             >
               I consent to webcam monitoring during this exam.
             </FieldLabel>
@@ -70,7 +70,7 @@ export function StartExamButton({
       )}
       <Button
         size="lg"
-        className="h-12 w-full rounded-xl font-bold shadow-md sm:h-13 sm:text-lg"
+        className="h-11 sm:h-12 w-full rounded-xl font-bold shadow-2xs active:scale-95 transition-all text-sm sm:text-base"
         onClick={start}
         disabled={isPending || (webcamMonitoringRequired && !webcamConsent)}
       >

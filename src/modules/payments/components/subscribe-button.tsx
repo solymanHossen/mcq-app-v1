@@ -48,7 +48,7 @@ export function SubscribeButton({ planKey }: { planKey: string }) {
       <Button
         type="button"
         size="lg"
-        className="h-12 w-full rounded-xl font-bold shadow-md sm:h-13 sm:w-auto sm:text-lg"
+        className="h-10 sm:h-11 w-full sm:w-auto rounded-xl font-bold shadow-2xs active:scale-95 transition-all text-xs sm:text-sm"
         onClick={subscribe}
         disabled={isPending}
       >

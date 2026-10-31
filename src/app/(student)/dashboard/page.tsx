@@ -490,7 +490,7 @@ export default async function DashboardPage({
                   <Button
                     asChild
                     size="lg"
-                    className="h-12 w-full self-start rounded-xl px-5 font-bold shadow-md sm:h-13 sm:w-auto sm:text-lg"
+                    className="h-10 sm:h-11 w-full sm:w-auto self-start rounded-xl px-5 font-bold shadow-2xs active:scale-95 transition-all text-xs sm:text-sm"
                   >
                     <Link href="/mistakes">
                       <RotateCcw data-icon="inline-start" />

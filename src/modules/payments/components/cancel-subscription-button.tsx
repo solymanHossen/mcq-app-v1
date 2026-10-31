@@ -27,9 +27,9 @@ export function CancelSubscriptionButton({
   return (
     <Button
       type="button"
-      size="lg"
+      size="sm"
       variant="outline"
-      className="w-full rounded-xl font-semibold shadow-2xs sm:w-auto"
+      className="h-9 sm:h-10 w-full sm:w-auto rounded-xl font-semibold border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground shadow-2xs active:scale-95 transition-all text-xs sm:text-sm"
       onClick={cancel}
       disabled={isPending}
     >
