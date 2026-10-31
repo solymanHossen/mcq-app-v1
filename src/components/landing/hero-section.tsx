@@ -6,19 +6,16 @@ import Link from "next/link"
 import {
   ArrowRight,
   Check,
-  CheckCircle2,
   GraduationCap,
   MoreHorizontal,
   Play,
-  ShieldCheck,
-  Zap,
+  X,
 } from "lucide-react"
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
@@ -208,72 +205,45 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                     Tour Our Work Process
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-h-[90svh] overflow-y-auto rounded-2xl border-border/70 bg-card p-0 shadow-sm sm:max-w-4xl">
-                  <DialogHeader className="border-b border-border/50 bg-muted/20 p-4 pr-12 text-left sm:p-6 sm:pr-12">
-                    <DialogTitle className="font-heading text-base font-bold tracking-tight sm:text-xl">
-                      ExamHub Platform Walkthrough
-                    </DialogTitle>
-                    <DialogDescription>
-                      Watch how ExamHub works with instant auto-grading,
-                      proctored examinations, and real-time student analytics.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 p-4 sm:p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-                      <span className="font-semibold text-foreground">
-                        ExamHub Platform Tour
-                      </span>
-                      <Badge variant="secondary">Interactive Walkthrough</Badge>
-                      <span>ESC to exit</span>
-                    </div>
-                    <div className="aspect-video overflow-hidden rounded-xl bg-muted">
-                      {embedVideoUrl ? (
-                        <iframe
-                          src={embedVideoUrl}
-                          title="ExamHub Platform Walkthrough"
-                          className="size-full border-0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <video
-                          key={heroVideo}
-                          className="size-full object-contain"
-                          controls
-                          autoPlay
-                          playsInline
-                          preload="metadata"
-                          src={heroVideo}
-                        >
-                          Your browser does not support video playback.
-                        </video>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:gap-4">
-                      <span className="inline-flex items-center gap-1.5">
-                        <ShieldCheck className="size-4 text-primary" />
-                        Anti-cheat Proctoring
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Zap className="size-4 text-primary" />
-                        Instant Auto-Grading
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <CheckCircle2 className="size-4 text-primary" />
-                        Live Leaderboard
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex justify-end border-t border-border/50 bg-muted/20 p-4 sm:px-6">
-                    <Button
-                      asChild
-                      className="h-10 rounded-xl text-sm font-semibold shadow-2xs"
+                <DialogContent
+                  showCloseButton={false}
+                  className="w-full max-w-4xl p-0 overflow-hidden rounded-2xl border border-border/70 bg-black shadow-2xl ring-0 gap-0"
+                >
+                  <DialogTitle className="sr-only">
+                    Platform Walkthrough Video
+                  </DialogTitle>
+                  <DialogClose asChild>
+                    <button
+                      type="button"
+                      className="absolute top-3 right-3 z-30 flex size-8 items-center justify-center rounded-full bg-black/70 text-white/90 hover:bg-black hover:text-white backdrop-blur-md transition-all shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 cursor-pointer"
+                      aria-label="Close"
                     >
-                      <Link href="/teachers">
-                        Explore Teachers
-                        <ArrowRight data-icon="inline-end" />
-                      </Link>
-                    </Button>
+                      <X className="size-4" />
+                      <span className="sr-only">Close</span>
+                    </button>
+                  </DialogClose>
+                  <div className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center">
+                    {embedVideoUrl ? (
+                      <iframe
+                        src={embedVideoUrl}
+                        title="ExamHub Platform Walkthrough"
+                        className="size-full border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        key={heroVideo}
+                        className="size-full object-contain"
+                        controls
+                        autoPlay
+                        playsInline
+                        preload="metadata"
+                        src={heroVideo}
+                      >
+                        Your browser does not support video playback.
+                      </video>
+                    )}
                   </div>
                 </DialogContent>
               </Dialog>
