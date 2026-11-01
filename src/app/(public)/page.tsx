@@ -273,31 +273,43 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      <section className="pb-12 sm:pb-16">
+      <section className="pb-12 sm:pb-16 lg:pb-20">
         <div className={containerClassName}>
-          <div className="flex flex-col gap-6 rounded-2xl border border-border/70 bg-card p-4 shadow-xs sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:p-7">
-            <div className="flex items-start gap-3 sm:gap-4">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
-                <Timer className="size-4 sm:size-5" />
-              </span>
-              <div className="space-y-2">
-                <h2 className="font-heading text-base font-bold tracking-tight sm:text-xl">
-                  Ready to run your first exam?
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Free to start. No credit card required.
-                </p>
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-6 sm:p-8 lg:p-10 shadow-xs hover:shadow-md transition-all duration-300">
+            {/* Subtle radiant highlight along the top border */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+            {/* Subtle atmospheric corner glow */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/5 blur-3xl"
+            />
+
+            <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-center gap-4 sm:gap-5">
+                <div className="size-12 sm:size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                  <Timer className="size-6 sm:size-7" />
+                </div>
+                <div className="space-y-1 sm:space-y-1.5">
+                  <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+                    Ready to run your first exam?
+                  </h2>
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium">
+                    Free to start. No credit card required.
+                  </p>
+                </div>
               </div>
+              <Button
+                asChild
+                size="lg"
+                className="h-12 sm:h-13 w-full sm:w-auto rounded-xl px-7 text-sm sm:text-base font-bold shadow-xs hover:shadow-md active:scale-98 transition-all gap-2 group shrink-0 cursor-pointer"
+              >
+                <Link href="/register">
+                  <span>Get started for free</span>
+                  <ArrowRight className="size-4.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </Button>
             </div>
-            <Button
-              asChild
-              className="h-11 w-full rounded-xl px-5 text-sm font-semibold shadow-2xs sm:h-10 sm:w-auto"
-            >
-              <Link href="/register">
-                Get started for free
-                <ArrowRight data-icon="inline-end" />
-              </Link>
-            </Button>
           </div>
         </div>
       </section>

@@ -180,17 +180,26 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12">
         {/* ================= TOP CARD: MODERN DISPATCH & NEWSLETTER ================= */}
-        <div className="relative mb-16 rounded-3xl border border-border/80 bg-card/85 p-6 sm:p-8 lg:p-10 shadow-xs backdrop-blur-2xl">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <div className="relative mb-16 sm:mb-20 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-6 sm:p-8 lg:p-10 shadow-xs hover:shadow-md transition-all duration-300">
+          {/* Radiant Edge Accent */}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+          {/* Subtle Ambient Corner Glow */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full bg-primary/5 blur-3xl"
+          />
+
+          <div className="relative z-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary mb-3.5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary mb-3.5 shadow-2xs ring-1 ring-primary/20">
                 <Mail className="size-3.5" />
                 <span>ExamHub Dispatch</span>
               </div>
-              <h3 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+              <h3 className="font-heading text-2xl sm:text-3xl lg:text-[32px] font-extrabold tracking-tight text-foreground leading-tight">
                 Stay ahead in modern examination technology
               </h3>
-              <p className="mt-2 text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
+              <p className="mt-2.5 text-sm sm:text-base text-muted-foreground font-medium max-w-xl leading-relaxed">
                 Receive quarterly deep-dives into anti-cheat neural algorithms, automated
                 grading benchmarks, and verified question bank releases.
               </p>
@@ -198,13 +207,13 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
 
             <div className="w-full">
               {isSubscribed ? (
-                <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-emerald-600 dark:text-emerald-400">
-                  <span className="flex size-8 items-center justify-center rounded-xl bg-emerald-500 text-white shrink-0">
-                    <Check className="size-4 stroke-[3]" />
+                <div className="flex items-center gap-3.5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 sm:p-5 text-emerald-600 dark:text-emerald-400 shadow-2xs">
+                  <span className="flex size-9 items-center justify-center rounded-xl bg-emerald-500 text-white shrink-0 shadow-xs">
+                    <Check className="size-4.5 stroke-[3]" />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold">You&apos;re in the loop!</p>
-                    <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80">
+                    <p className="text-sm sm:text-base font-bold font-heading">You&apos;re in the loop!</p>
+                    <p className="text-xs sm:text-sm text-emerald-600/80 dark:text-emerald-400/80 font-medium mt-0.5">
                       Thanks for subscribing to ExamHub Dispatch.
                     </p>
                   </div>
@@ -212,31 +221,33 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
               ) : (
                 <form
                   onSubmit={handleSubscribe}
-                  className="flex flex-col sm:flex-row gap-2.5"
+                  className="flex flex-col sm:flex-row gap-3"
                 >
                   <div className="relative flex-1">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-muted-foreground/60 pointer-events-none" />
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your institution or work email..."
-                      className="w-full h-12 rounded-xl border border-border bg-background/80 px-4 text-sm text-foreground placeholder:text-muted-foreground/70 shadow-2xs transition-all focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full h-12 rounded-xl border border-border/80 bg-background/90 pl-10 pr-4 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 shadow-2xs transition-all focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:shadow active:scale-98 disabled:opacity-70 shrink-0"
+                    className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-6 font-heading text-sm font-bold text-primary-foreground shadow-xs transition-all hover:shadow-md active:scale-98 disabled:opacity-70 shrink-0 cursor-pointer"
                   >
                     <span>{isSubmitting ? "Subscribing..." : "Subscribe"}</span>
                     <ArrowRight className="size-4 stroke-[2.5] transition-transform duration-200 group-hover:translate-x-0.5" />
                   </button>
                 </form>
               )}
-              <p className="mt-2 text-xs text-muted-foreground/75 pl-1">
-                Zero spam. Institutional grade privacy. Unsubscribe with 1-click anytime.
-              </p>
+              <div className="flex items-center gap-1.5 mt-2.5 text-xs text-muted-foreground/75 pl-1 font-medium">
+                <Lock className="size-3 shrink-0 text-muted-foreground/60" />
+                <span>Zero spam. Institutional grade privacy. Unsubscribe with 1-click anytime.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -251,7 +262,7 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
               className="group inline-flex items-center gap-3 transition-opacity hover:opacity-95"
             >
               {logoUrl ? (
-                <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+                <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-border/70 bg-card p-1 shadow-2xs ring-1 ring-border/50 transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
                   <Image
                     src={logoUrl}
                     alt={APP_NAME}
@@ -262,29 +273,29 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
                   />
                 </div>
               ) : (
-                <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs ring-1 ring-primary/20 transition-transform duration-200 group-hover:scale-105">
                   <GraduationCap className="size-5" />
                 </span>
               )}
-              <span className="font-heading text-xl sm:text-[22px] font-bold tracking-tight text-foreground">
+              <span className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
                 {APP_NAME}
               </span>
             </Link>
 
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+            <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-sm">
               The elite standard for high-stakes online examinations, verified question
               banking, AI-driven explanations, and frictionless automated proctoring.
             </p>
 
             {/* Live Operational Status Widget */}
-            <div className="flex items-center gap-2.5 rounded-full border border-border/80 bg-card/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md w-fit">
-              <span className="relative flex size-2">
+            <div className="flex items-center gap-2.5 rounded-full border border-border/80 bg-muted/40 px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-2xs backdrop-blur-sm w-fit">
+              <span className="relative flex size-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
               <span className="text-foreground font-semibold">Systems Normal</span>
-              <span className="text-border">|</span>
-              <span className="text-emerald-600 dark:text-emerald-400">99.99% Uptime</span>
+              <span className="text-border">•</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">99.99% Uptime</span>
             </div>
 
             {/* Social Channels */}
@@ -296,7 +307,7 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={name}
-                  className="flex size-9 items-center justify-center rounded-xl border border-border/80 bg-card/60 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-primary/10 hover:text-primary active:scale-95"
+                  className="flex size-9.5 items-center justify-center rounded-xl border border-border/80 bg-card text-muted-foreground shadow-2xs transition-all duration-200 hover:border-primary/40 hover:bg-primary/10 hover:text-primary active:scale-95"
                 >
                   <Icon className="size-4" />
                 </a>
@@ -307,19 +318,19 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
           {/* Navigation Category Columns */}
           {FOOTER_SECTIONS.map((section) => (
             <div key={section.title} className="col-span-1 flex flex-col gap-3.5">
-              <h4 className="font-heading text-xs sm:text-sm font-semibold uppercase tracking-wider text-foreground">
+              <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-foreground">
                 {section.title}
               </h4>
-              <ul className="flex flex-col gap-2.5 text-sm text-muted-foreground">
+              <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-muted-foreground">
                 {section.links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="group inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+                      className="group inline-flex items-center gap-2 text-muted-foreground font-medium transition-all duration-150 hover:text-foreground hover:translate-x-0.5"
                     >
                       <span>{link.label}</span>
                       {"badge" in link && link.badge && (
-                        <span className="rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary leading-none transition-transform group-hover:scale-105">
+                        <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary leading-none transition-transform group-hover:scale-105 shadow-2xs">
                           {link.badge}
                         </span>
                       )}
@@ -332,9 +343,9 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
         </div>
 
         {/* ================= BOTTOM BAR: COMPLIANCE, COPYRIGHT & BACK TO TOP ================= */}
-        <div className="border-t border-border/80 pt-8 flex flex-col-reverse gap-6 sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground">
+        <div className="border-t border-border/80 pt-8 sm:pt-10 flex flex-col-reverse gap-6 lg:flex-row lg:items-center lg:justify-between text-xs text-muted-foreground">
           {/* Left: Copyright */}
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2 font-medium">
             <span>
               &copy; {new Date().getFullYear()} {APP_NAME}, Inc. All rights reserved.
             </span>
@@ -345,16 +356,16 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
           </div>
 
           {/* Center / Security Badges */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-muted-foreground">
-            <span className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs font-medium">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-2.5 py-1 text-muted-foreground shadow-2xs">
               <ShieldCheck className="size-3.5 text-primary" />
               <span>SOC 2 Type II</span>
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-2.5 py-1 text-muted-foreground shadow-2xs">
               <Lock className="size-3.5 text-primary" />
               <span>FERPA Compliant</span>
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-2.5 py-1 text-muted-foreground shadow-2xs">
               <Globe className="size-3.5 text-primary" />
               <span>256-bit Encrypted</span>
             </span>
@@ -364,7 +375,7 @@ export function Footer({ logoUrl }: { logoUrl?: string | null } = {}) {
           <button
             type="button"
             onClick={scrollToTop}
-            className="group inline-flex items-center gap-2 rounded-xl border border-border/80 bg-card/80 px-3.5 py-2 text-xs font-semibold text-foreground hover:bg-muted/80 hover:border-foreground/20 transition-all shadow-2xs hover:shadow-xs active:scale-95 w-fit"
+            className="group inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted hover:border-border transition-all shadow-2xs hover:shadow-xs active:scale-95 w-fit cursor-pointer"
             aria-label="Scroll back to top"
           >
             <span>Back to top</span>
