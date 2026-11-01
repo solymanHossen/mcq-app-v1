@@ -32,7 +32,6 @@ import {
   Lightbulb,
   Check,
   Info,
-  Sparkles,
 } from "lucide-react"
 
 export type ListedQuestion = {

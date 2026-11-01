@@ -9,7 +9,6 @@ import {
   Clock,
   ShieldCheck,
   CheckCircle2,
-  Sparkles,
   HelpCircle,
   Loader2,
 } from "lucide-react"

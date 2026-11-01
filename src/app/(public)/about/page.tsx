@@ -4,7 +4,6 @@ import {
   GraduationCap,
   ShieldCheck,
   Target,
-  Sparkles,
   Users,
   CheckCircle2,
   FileText,
@@ -48,7 +47,7 @@ export default async function AboutPage() {
 
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="size-3.5" />
+              <Target className="size-3.5" />
               <span>Our Mission</span>
             </div>
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">

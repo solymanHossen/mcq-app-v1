@@ -17,7 +17,6 @@ import {
   Mail,
   ArrowRight,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -269,7 +268,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                 variant="secondary"
                 className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-border/60"
               >
-                <Sparkles className="size-3 text-primary" />
+                <GraduationCap className="size-3 text-primary" />
                 <span>Account Upgrade</span>
               </Badge>
             </div>

@@ -2,7 +2,6 @@ import {
   CreditCard,
   Gift,
   CheckCircle2,
-  Sparkles,
   Calendar,
   Receipt,
   GraduationCap,
@@ -192,7 +191,7 @@ export default async function TeacherBillingPage() {
           aria-labelledby="available-plans-title"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="size-4 text-primary" />
+            <CreditCard className="size-4 text-primary" />
             <h2
               id="available-plans-title"
               className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl"

@@ -8,7 +8,6 @@ import {
   FileText,
   UserCheck,
   ArrowLeft,
-  Sparkles,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"

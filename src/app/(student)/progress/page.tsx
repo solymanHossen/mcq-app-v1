@@ -34,7 +34,6 @@ import {
   BarChart3,
   BookOpen,
   ArrowRight,
-  Sparkles,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -72,7 +71,7 @@ export default async function ProgressPage() {
             variant="secondary"
             className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-border/60"
           >
-            <Sparkles className="size-3 text-primary" />
+            <Trophy className="size-3 text-primary" />
             <span>Level {summary.level} Candidate</span>
           </Badge>
           <Badge

@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   ArrowRight,
   RotateCcw,
-  Sparkles,
   Search,
   CheckCircle2,
   Lock,
@@ -85,7 +84,7 @@ export function ExamCatalogClient({
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="max-w-2xl space-y-2.5">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="size-3.5" />
+              <Globe className="size-3.5" />
               <span>Public Assessments</span>
             </div>
             <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">

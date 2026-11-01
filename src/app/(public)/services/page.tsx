@@ -11,7 +11,6 @@ import {
   Flame,
   ArrowRight,
   Layers,
-  Sparkles,
   Zap,
   Lock,
 } from "lucide-react"
