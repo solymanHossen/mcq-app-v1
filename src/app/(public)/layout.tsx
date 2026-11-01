@@ -27,7 +27,17 @@ export default async function PublicLayout({
     <div className="flex min-h-svh flex-col bg-background text-foreground">
       <Navbar user={user} logoUrl={settings.logoUrl} />
       <div className="flex flex-1 flex-col">{children}</div>
-      <Footer logoUrl={settings.logoUrl} />
+      <Footer
+        logoUrl={settings.logoUrl}
+        socialLinks={{
+          githubUrl: settings.githubUrl,
+          twitterUrl: settings.twitterUrl,
+          linkedinUrl: settings.linkedinUrl,
+          facebookUrl: settings.facebookUrl,
+          youtubeUrl: settings.youtubeUrl,
+          contactEmail: settings.contactEmail,
+        }}
+      />
     </div>
   )
 }

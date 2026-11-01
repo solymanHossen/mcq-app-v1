@@ -1223,6 +1223,14 @@ model SystemSettings {
   heroTitle    String?
   heroSubtitle String?
 
+  // Social Channels & Contact Info
+  githubUrl    String?
+  twitterUrl   String?
+  linkedinUrl  String?
+  facebookUrl  String?
+  youtubeUrl   String?
+  contactEmail String?
+
   updatedAt   DateTime @updatedAt
   updatedById String?
   updatedBy   User?    @relation("SystemSettingsUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)

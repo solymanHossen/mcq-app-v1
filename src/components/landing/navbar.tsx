@@ -8,8 +8,9 @@ import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import {
   ArrowRight,
-  Building2,
   ChevronRight,
+  FileText,
+  Info,
   Laptop,
   LayoutDashboard,
   LogOut,
@@ -46,10 +47,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { href: "/#features", label: "Features", icon: Layers },
-  { href: "/#how-it-works", label: "How it works", icon: Zap },
+  { href: "/exam-list", label: "Exam List", icon: FileText },
   { href: "/teachers", label: "Teachers", icon: Users },
-  { href: "/#enterprise", label: "Enterprise", icon: Building2 },
+  { href: "/services", label: "Services", icon: Layers },
+  { href: "/about", label: "About", icon: Info },
 ] as const
 
 function getInitials(name: string) {
@@ -62,7 +63,8 @@ function getInitials(name: string) {
 }
 
 export function Navbar({ user, logoUrl, className }: NavbarProps) {
-  const isHome = usePathname() === "/"
+  const pathname = usePathname()
+  const isHome = pathname === "/"
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
   const { theme, setTheme } = useTheme()
@@ -71,7 +73,6 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
     () => true,
     () => false
   )
-
 
   // Track scroll state for enhanced elevation
   React.useEffect(() => {
@@ -161,24 +162,25 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           {/* Center: Desktop Navigation Links */}
           <nav
             aria-label="Main navigation"
-            className={cn(
-              "hidden items-center gap-8 md:flex lg:gap-10",
-              isHome && "gap-1 md:hidden lg:flex lg:gap-1"
-            )}
+            className="hidden items-center gap-1 md:flex lg:gap-2"
           >
-            {NAV_LINKS.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                className={cn(
-                  "text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base",
-                  isHome &&
-                    "inline-flex h-10 items-center rounded-xl px-3 text-sm font-semibold hover:bg-muted/60 focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none lg:text-sm"
-                )}
-              >
-                {label}
-              </a>
-            ))}
+            {NAV_LINKS.map(({ href, label }) => {
+              const isActive = pathname === href || pathname.startsWith(href + "/")
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "inline-flex h-9.5 items-center rounded-xl px-3.5 text-sm font-semibold transition-all select-none",
+                    isActive
+                      ? "bg-primary/10 text-primary font-bold shadow-2xs"
+                      : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                  )}
+                >
+                  {label}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Right: Desktop Actions */}
@@ -307,22 +309,37 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
               )}
 
               <div className="flex flex-col gap-1.5">
-                {NAV_LINKS.map(({ href, label, icon: Icon }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="group flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-foreground transition-colors hover:bg-muted/70 active:bg-muted"
-                  >
-                    <span className="flex items-center gap-3.5">
-                      <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <Icon className="size-4.5" />
+                {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+                  const isActive = pathname === href || pathname.startsWith(href + "/")
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "group flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold transition-colors",
+                        isActive
+                          ? "bg-primary/10 text-primary font-bold"
+                          : "text-foreground hover:bg-muted/70 active:bg-muted"
+                      )}
+                    >
+                      <span className="flex items-center gap-3.5">
+                        <span
+                          className={cn(
+                            "flex size-9 items-center justify-center rounded-lg transition-colors",
+                            isActive
+                              ? "bg-primary text-primary-foreground shadow-2xs"
+                              : "bg-muted text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                          )}
+                        >
+                          <Icon className="size-4.5" />
+                        </span>
+                        <span>{label}</span>
                       </span>
-                      <span>{label}</span>
-                    </span>
-                    <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                  </a>
-                ))}
+                      <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  )
+                })}
 
                 {/* Mobile Theme Switcher Segment */}
                 {mounted && (

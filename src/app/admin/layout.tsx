@@ -10,6 +10,7 @@ import {
   ScrollText,
   Settings,
   Palette,
+  Share2,
 } from 'lucide-react';
 import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
@@ -32,6 +33,12 @@ const SUPER_ADMIN_NAV_ITEMS: SidebarNavItem[] = [
         href: '/admin/settings/branding',
         label: 'Hero & Branding',
         icon: <Palette className="size-3.5" />,
+        exact: true,
+      },
+      {
+        href: '/admin/settings/social',
+        label: 'Social & Contact',
+        icon: <Share2 className="size-3.5" />,
         exact: true,
       },
       {

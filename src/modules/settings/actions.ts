@@ -149,3 +149,63 @@ export async function updateHeroBrandingSettingsAction(input: UpdateHeroBranding
   }
 }
 
+export type UpdateSocialContactInput = {
+  githubUrl?: string | null
+  twitterUrl?: string | null
+  linkedinUrl?: string | null
+  facebookUrl?: string | null
+  youtubeUrl?: string | null
+  contactEmail?: string | null
+}
+
+export async function updateSocialContactSettingsAction(input: UpdateSocialContactInput) {
+  try {
+    const admin = await assertRole("SUPER_ADMIN")
+
+    const current = await prisma.systemSettings.findUnique({ where: { id: "global" } })
+    const previousData = {
+      githubUrl: current?.githubUrl ?? null,
+      twitterUrl: current?.twitterUrl ?? null,
+      linkedinUrl: current?.linkedinUrl ?? null,
+      facebookUrl: current?.facebookUrl ?? null,
+      youtubeUrl: current?.youtubeUrl ?? null,
+      contactEmail: current?.contactEmail ?? null,
+    }
+
+    const sanitized = {
+      githubUrl: input.githubUrl?.trim() ? input.githubUrl.trim() : null,
+      twitterUrl: input.twitterUrl?.trim() ? input.twitterUrl.trim() : null,
+      linkedinUrl: input.linkedinUrl?.trim() ? input.linkedinUrl.trim() : null,
+      facebookUrl: input.facebookUrl?.trim() ? input.facebookUrl.trim() : null,
+      youtubeUrl: input.youtubeUrl?.trim() ? input.youtubeUrl.trim() : null,
+      contactEmail: input.contactEmail?.trim() ? input.contactEmail.trim() : null,
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.systemSettings.upsert({
+        where: { id: "global" },
+        update: { ...sanitized, updatedById: admin.id },
+        create: { id: "global", ...sanitized, updatedById: admin.id },
+      })
+      await recordAdminAction(tx, {
+        action: "SYSTEM_SETTINGS_UPDATED",
+        actorId: admin.id,
+        metadata: {
+          field: "socialContactSettings",
+          from: previousData,
+          to: sanitized,
+        },
+      })
+    })
+
+    safeRevalidatePath("/admin/settings")
+    safeRevalidatePath("/admin/settings/social")
+    safeRevalidatePath("/")
+    return { success: true as const }
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to update social & contact settings"
+    return { error: message }
+  }
+}
+
+
