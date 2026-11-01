@@ -137,14 +137,14 @@ export function DashboardAreaChart({
         </div>
       </CardHeader>
 
-      <CardContent className="px-0 pb-3 pt-2">
+      <CardContent className="px-0 pb-4 sm:pb-5 pt-2">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[280px] w-full sm:h-[340px]"
+          className="aspect-auto h-[280px] w-full sm:h-[320px] lg:h-[340px]"
         >
           <AreaChart
             data={activeData}
-            margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+            margin={{ top: 12, right: 0, left: 0, bottom: 4 }}
           >
             <defs>
               <linearGradient id="fillPrimary" x1="0" y1="0" x2="0" y2="1">

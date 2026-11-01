@@ -279,7 +279,6 @@ export default async function DashboardPage({
 
       {/* ================= GRAND DUAL-WAVE INTERACTIVE CHART ================= */}
       <DashboardAreaChart
-        className="min-w-0 gap-0 rounded-2xl border-border/70 py-0 shadow-xs hover:shadow-sm [&_[data-slot=card-content]]:p-4 sm:[&_[data-slot=card-content]]:p-6 lg:[&_[data-slot=card-content]]:p-7 [&_[data-slot=card-header]]:min-w-0 [&_[data-slot=card-header]]:border-b [&_[data-slot=card-header]]:border-border/50 [&_[data-slot=card-header]]:bg-muted/20 [&_[data-slot=card-header]]:px-4 [&_[data-slot=card-header]]:py-3.5 sm:[&_[data-slot=card-header]]:flex-col sm:[&_[data-slot=card-header]]:items-stretch sm:[&_[data-slot=card-header]]:px-6 sm:[&_[data-slot=card-header]]:py-4.5 xl:[&_[data-slot=card-header]]:flex-row xl:[&_[data-slot=card-header]]:items-center [&_[data-slot=card-header]>div:last-child]:max-w-full [&_[data-slot=card-header]>div:last-child]:flex-wrap [&_[data-slot=card-title]]:text-base sm:[&_[data-slot=card-title]]:text-xl"
         title="Learning Velocity & Study Activity"
         description="Daily XP earnings and practice assessment volume for the last 3 months"
         data90d={data90d}

@@ -58,8 +58,7 @@ const dashboardCardClassName =
 const dashboardCardHeaderClassName =
   "min-w-0 gap-1 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5"
 const dashboardCardContentClassName = "min-w-0 p-4 sm:p-6 lg:p-7"
-const dashboardChartClassName =
-  "min-w-0 gap-4 py-0 hover:shadow-sm [&_[data-slot=card-header]]:min-w-0 [&_[data-slot=card-header]]:border-b [&_[data-slot=card-header]]:border-border/50 [&_[data-slot=card-header]]:bg-muted/20 [&_[data-slot=card-header]]:px-4 [&_[data-slot=card-header]]:py-3.5 [&_[data-slot=card-header]>div]:min-w-0 [&_[data-slot=card-title]]:text-base [&_[data-slot=card-description]]:text-xs [&_.truncate]:whitespace-normal sm:[&_[data-slot=card-header]]:px-6 sm:[&_[data-slot=card-header]]:py-4.5 sm:[&_[data-slot=card-title]]:text-xl sm:[&_[data-slot=card-description]]:text-sm"
+const dashboardChartClassName = "min-w-0 shadow-xs hover:shadow-sm"
 const dashboardKpiClassName =
   "h-full min-w-0 justify-start gap-3 hover:translate-y-0 hover:shadow-sm [&_.truncate]:whitespace-normal [&_.items-baseline]:flex-wrap [&>div:first-child]:flex-wrap"
 const dashboardTabClassName =
@@ -458,10 +457,6 @@ export default async function TeacherDashboardPage() {
 
       {/* ================= PRIMARY TIME-SERIES INTERACTIVE CHART (IN SYNC WITH ADMIN) ================= */}
       <DashboardAreaChart
-        className={cn(
-          dashboardChartClassName,
-          "[&_[data-slot=card-header]]:flex-col xl:[&_[data-slot=card-header]]:flex-row [&_[data-slot=card-header]>div]:max-w-full [&_[data-slot=card-header]>div:last-child]:flex-wrap"
-        )}
         title="Student Submissions & Exam Velocity"
         description="Comprehensive volume of student test submissions and candidate participation over time"
         data90d={data90d}
@@ -475,10 +470,6 @@ export default async function TeacherDashboardPage() {
       <div className="grid min-w-0 grid-cols-1 gap-6 sm:gap-8 xl:grid-cols-2">
         {/* Chart A: Exam Lifecycle Status Distribution */}
         <DashboardDonutChart
-          className={cn(
-            dashboardChartClassName,
-            "[&_[data-slot=card-content]>div:last-child]:grid-cols-1 sm:[&_[data-slot=card-content]>div:last-child]:grid-cols-2"
-          )}
           title="Exam Portfolio Breakdown"
           description="Lifecycle distribution across all your authored assessments"
           data={examStatusData}
@@ -489,7 +480,6 @@ export default async function TeacherDashboardPage() {
 
         {/* Chart B: Question Difficulty Distribution */}
         <DashboardBarChart
-          className={dashboardChartClassName}
           title="Question Bank Telemetry"
           description="Curriculum item breakdown categorized by difficulty tier"
           data={questionDifficultyData}
