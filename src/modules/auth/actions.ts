@@ -49,7 +49,7 @@ export async function registerAction(_state: unknown, formData: FormData) {
   if (!parsed.success)
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
-  const { name, email, password } = parsed.data
+  const { name, email, password, role, institution, department, bio } = parsed.data
   const ip = await clientIp()
 
   if (await isRegisterRateLimited(ip)) {
@@ -71,12 +71,21 @@ export async function registerAction(_state: unknown, formData: FormData) {
   const existing = await prisma.user.findUnique({ where: { email } })
 
   if (!existing) {
-    // Explicit field list, never a spread of raw input — `role` can never
-    // arrive from the client this way.
     const passwordHash = await hashPassword(password)
+    const assignedRole = role === "TEACHER" ? "TEACHER" : "STUDENT"
     try {
       const user = await prisma.user.create({
-        data: { name, email, passwordHash, isEmailVerified: !requireEmailVerification },
+        data: {
+          name,
+          email,
+          passwordHash,
+          role: assignedRole,
+          teacherVerificationStatus: "PENDING",
+          institution: institution?.trim() || null,
+          department: department?.trim() || null,
+          bio: bio?.trim() || null,
+          isEmailVerified: !requireEmailVerification,
+        },
       })
       if (requireEmailVerification) await issueEmailVerificationOtp(user.id, email)
     } catch (e) {

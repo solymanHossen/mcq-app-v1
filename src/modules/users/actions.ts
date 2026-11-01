@@ -2,9 +2,10 @@
 
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { assertRole, ADMIN_ROLES, isAdminTier, revokeAllSessions } from "@/lib/authorization"
+import { assertRole, requireUser, ADMIN_ROLES, isAdminTier, revokeAllSessions } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { recordAdminAction } from "@/lib/admin-audit"
+import { teacherApplicationSchema } from "@/modules/auth/validators"
 
 /**
  * Every action here is admin-tier-only (ADMIN or SUPER_ADMIN) and leaves an
@@ -237,3 +238,41 @@ export async function resetTeacherVerificationAction(userId: string) {
   safeRevalidatePath("/admin", "layout")
   return { success: true }
 }
+
+export async function applyForTeacherRoleAction(_state: unknown, formData: FormData) {
+  const user = await requireUser()
+
+  if (user.role === "TEACHER") {
+    return { error: "Your account is already registered as a Teacher / Faculty." }
+  }
+
+  const parsed = teacherApplicationSchema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid application data" }
+  }
+
+  const { institution, department, bio } = parsed.data
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      role: "TEACHER",
+      teacherVerificationStatus: "PENDING",
+      teacherVerifiedAt: null,
+      teacherVerifiedById: null,
+      teacherVerificationNote: null,
+      institution: institution.trim(),
+      department: department.trim(),
+      bio: bio.trim(),
+    },
+  })
+
+  safeRevalidatePath("/profile")
+  safeRevalidatePath("/teachers")
+  safeRevalidatePath("/teachers/apply")
+  safeRevalidatePath("/admin/teachers")
+  safeRevalidatePath("/teacher")
+
+  return { success: true }
+}
+

@@ -8,7 +8,7 @@ import {
   EmptyDescription,
 } from "@/components/ui/empty"
 import { Badge } from "@/components/ui/badge"
-import { UserCheckIcon, Clock, Mail, Calendar, GraduationCap } from "lucide-react"
+import { UserCheckIcon, Clock, Mail, Calendar, GraduationCap, Building2, BookOpen, FileText } from "lucide-react"
 import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -58,9 +58,9 @@ export default async function TeacherVerificationPage() {
           {pending.map((teacher) => (
             <div
               key={teacher.id}
-              className="group relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 p-5 sm:p-6 shadow-xs hover:shadow-md transition-all duration-300 backdrop-blur-xl"
+              className="group relative flex flex-col lg:flex-row lg:items-start justify-between gap-6 rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 p-5 sm:p-6 shadow-xs hover:shadow-md transition-all duration-300 backdrop-blur-xl"
             >
-              <div className="flex items-start sm:items-center gap-4 sm:gap-5 min-w-0">
+              <div className="flex items-start gap-4 sm:gap-5 min-w-0 flex-1">
                 <div className="relative flex size-13 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-base sm:text-lg shadow-2xs">
                   {teacher.name.slice(0, 2).toUpperCase()}
                   <span
@@ -68,7 +68,7 @@ export default async function TeacherVerificationPage() {
                     title="Pending verification"
                   />
                 </div>
-                <div className="min-w-0 space-y-1">
+                <div className="min-w-0 space-y-1.5 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="font-heading text-base sm:text-lg font-bold text-foreground tracking-tight truncate">
                       {teacher.name}
@@ -96,6 +96,32 @@ export default async function TeacherVerificationPage() {
                       </span>
                     </span>
                   </div>
+
+                  {(teacher.institution || teacher.department) && (
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-foreground/80 font-medium pt-1">
+                      {teacher.institution && (
+                        <span className="inline-flex items-center gap-1.5 text-foreground/90">
+                          <Building2 className="size-3.5 text-primary/70 shrink-0" />
+                          <span className="truncate font-semibold">{teacher.institution}</span>
+                        </span>
+                      )}
+                      {teacher.department && (
+                        <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                          <BookOpen className="size-3.5 text-primary/70 shrink-0" />
+                          <span className="truncate">{teacher.department}</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {teacher.bio && (
+                    <div className="pt-2 text-xs text-muted-foreground bg-muted/40 rounded-xl p-3 border border-border/50 max-w-2xl leading-relaxed">
+                      <span className="font-semibold text-foreground/90 mr-1.5 inline-flex items-center gap-1">
+                        <FileText className="size-3.5 text-primary shrink-0" /> Statement / Qualifications:
+                      </span>
+                      <span>{teacher.bio}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

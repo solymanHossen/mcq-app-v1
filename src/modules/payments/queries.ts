@@ -147,7 +147,15 @@ export function listPendingTeacherVerifications() {
   return prisma.user.findMany({
     where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
     orderBy: { createdAt: "asc" },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      institution: true,
+      department: true,
+      bio: true,
+    },
     take: 500,
   })
 }

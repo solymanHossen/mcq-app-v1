@@ -47,6 +47,7 @@ export function isPublicRoute(pathname: string) {
 export const openRoutes = [
   "/",
   "/teachers",
+  "/teachers/apply",
   "/exam",
   "/exam-list",
   "/services",

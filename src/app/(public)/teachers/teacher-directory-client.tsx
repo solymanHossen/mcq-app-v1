@@ -126,6 +126,19 @@ export function TeacherDirectoryClient({
             <p className="max-w-2xl text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed">
               Browse verified academic examiners, inspect question bank repositories, and explore official timed examination tracks.
             </p>
+
+            <div className="pt-1">
+              <Button
+                asChild
+                size="sm"
+                className="h-9 px-3.5 rounded-xl text-xs sm:text-sm font-semibold shadow-2xs gap-1.5"
+              >
+                <Link href="/teachers/apply">
+                  <GraduationCap className="size-4" />
+                  <span>Apply to Join Faculty</span>
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {/* Right: Metric Tiles (Matching /teacher/exams/new choice tiles) */}

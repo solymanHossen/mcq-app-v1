@@ -13,6 +13,7 @@ import {
   Clock,
   CreditCard,
   FileSpreadsheet,
+  GraduationCap,
   HelpCircle,
   KeyRound,
   Palette,
@@ -212,6 +213,35 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                 status={profile.teacherVerificationStatus}
                 note={profile.teacherVerificationNote}
               />
+            )}
+
+            {profile.role === "STUDENT" && (
+              <Card className="rounded-2xl border border-primary/25 bg-primary/5 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+                  <div className="size-10 sm:size-11 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/25">
+                    <GraduationCap className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm sm:text-base font-bold text-foreground">
+                        Interested in Conducting Exams?
+                      </h3>
+                      <Badge variant="secondary" className="rounded-full text-[10px] font-bold px-2 py-0.5">
+                        Faculty Upgrade
+                      </Badge>
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Apply to become a verified teacher to create question banks, host timed exams, and grade students.
+                    </p>
+                  </div>
+                </div>
+                <Button asChild size="sm" className="rounded-xl font-bold shrink-0 self-start sm:self-auto gap-1.5 shadow-xs">
+                  <Link href="/teachers/apply">
+                    <span>Apply for Faculty Role</span>
+                    <ArrowRight className="size-3.5" />
+                  </Link>
+                </Button>
+              </Card>
             )}
 
             <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-2 sm:gap-8">

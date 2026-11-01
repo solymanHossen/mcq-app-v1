@@ -1,7 +1,7 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 
-const SCHEMA_VERSION = 2
+const SCHEMA_VERSION = 3
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
