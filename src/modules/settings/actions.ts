@@ -87,9 +87,17 @@ export async function setBillingEnabledAction(enabled: boolean) {
     })
   })
 
+  safeRevalidatePath("/")
+  safeRevalidatePath("/admin")
   safeRevalidatePath("/admin/settings")
   safeRevalidatePath("/admin/settings/policies")
+  safeRevalidatePath("/admin/subscriptions")
+  safeRevalidatePath("/admin/coupons")
+  safeRevalidatePath("/admin/payments")
   safeRevalidatePath("/billing")
+  safeRevalidatePath("/dashboard")
+  safeRevalidatePath("/teacher")
+  safeRevalidatePath("/profile")
   return { success: true as const }
 }
 

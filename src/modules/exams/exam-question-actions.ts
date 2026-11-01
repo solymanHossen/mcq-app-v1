@@ -39,6 +39,10 @@ export async function addQuestionsToExamAction(
     },
   })
 
+  if (questions.length !== parsed.data.questionIds.length) {
+    return { error: "One or more questions are draft, archived, or unavailable" }
+  }
+
   const alreadyAdded = await prisma.examQuestion.findMany({
     where: { examId, questionId: { in: questions.map((q) => q.id) } },
     select: { questionId: true },

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import {
@@ -271,8 +272,20 @@ export function AddQuestionsModal({
               </div>
               <p className="font-bold text-foreground text-sm sm:text-base">No Unused Questions in Bank</p>
               <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                All questions in your bank are either already added to this exam or in draft status. You can create new questions in your question bank.
+                All questions in your bank are already in this exam. You can author new questions in your question bank repository.
               </p>
+              <div className="pt-2">
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-xl font-bold gap-1.5 h-9 px-4 shadow-xs"
+                >
+                  <Link href="/teacher/questions/new">
+                    <Plus className="size-4" />
+                    <span>Create New Question in Bank</span>
+                  </Link>
+                </Button>
+              </div>
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-12 sm:py-16 text-center text-muted-foreground space-y-2">

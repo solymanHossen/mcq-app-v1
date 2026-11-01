@@ -17,6 +17,7 @@ import { DashboardShell } from '@/components/shared/dashboard-shell';
 import type { SidebarNavItem } from '@/components/shared/sidebar-nav';
 import { APP_NAME } from '@/lib/config';
 import { countPendingTeacherVerifications } from '@/modules/payments/queries';
+import { getSystemSettings } from '@/modules/settings/queries';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -54,9 +55,10 @@ const SUPER_ADMIN_NAV_ITEMS: SidebarNavItem[] = [
 export default async function AdminLayout({
   children,
 }: { children: React.ReactNode }) {
-  const [admin, pendingTeacherCount] = await Promise.all([
+  const [admin, pendingTeacherCount, { billingEnabled }] = await Promise.all([
     requireRole(...ADMIN_ROLES),
     countPendingTeacherVerifications(),
+    getSystemSettings(),
   ]);
   const isSuperAdmin = admin.role === 'SUPER_ADMIN';
 
@@ -69,9 +71,13 @@ export default async function AdminLayout({
       icon: <GraduationCap />,
       badge: pendingTeacherCount,
     },
-    { href: '/admin/subscriptions', label: 'Plans', icon: <CreditCard /> },
-    { href: '/admin/coupons', label: 'Coupons', icon: <Ticket /> },
-    { href: '/admin/payments', label: 'Payments', icon: <Receipt /> },
+    ...(billingEnabled
+      ? [
+          { href: '/admin/subscriptions', label: 'Plans', icon: <CreditCard /> },
+          { href: '/admin/coupons', label: 'Coupons', icon: <Ticket /> },
+          { href: '/admin/payments', label: 'Payments', icon: <Receipt /> },
+        ]
+      : []),
     { href: '/admin/audit-log', label: 'Audit log', icon: <ScrollText /> },
   ];
 

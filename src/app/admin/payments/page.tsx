@@ -13,12 +13,14 @@ import {
   ShieldAlert,
   Layers,
   Building2,
+  EyeOff,
 } from "lucide-react"
 import {
   adminListPaymentTransactions,
   getPaymentOverviewMetrics,
   getStalePendingTransactions,
 } from "@/modules/payments/queries"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -96,10 +98,12 @@ export default async function AdminPaymentsPage({
     [transactions, totalCount],
     metrics,
     stalePending,
+    { billingEnabled },
   ] = await Promise.all([
     adminListPaymentTransactions({ page, pageSize: PAGE_SIZE, status, search }),
     getPaymentOverviewMetrics(),
     getStalePendingTransactions(),
+    getSystemSettings(),
   ])
 
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
@@ -140,6 +144,26 @@ export default async function AdminPaymentsPage({
           />
         }
       />
+
+      {!billingEnabled && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300">
+              <EyeOff className="size-4.5" />
+            </span>
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold">Monetization is currently Turned Off (Free Mode).</span>{" "}
+              New payment transactions cannot be initiated while billing is disabled platform-wide.
+            </div>
+          </div>
+          <Link
+            href="/admin/settings/policies"
+            className="shrink-0 text-xs font-semibold underline underline-offset-4 hover:opacity-80"
+          >
+            Billing Settings →
+          </Link>
+        </div>
+      )}
 
       {/* ================= 4-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">

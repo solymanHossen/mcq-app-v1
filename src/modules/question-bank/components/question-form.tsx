@@ -58,12 +58,16 @@ export function QuestionForm({
 }) {
   const [state, formAction, isPending] = useActionState(action, undefined)
   const [confirmedDuplicate, setConfirmedDuplicate] = useState(false)
+  const [difficulty, setDifficulty] = useState(initialValues?.difficulty ?? "MEDIUM")
+  const [correctOption, setCorrectOption] = useState(initialValues?.correctOption ?? "A")
   const formRef = useRef<HTMLFormElement>(null)
 
   function saveAnyway() {
     if (!formRef.current) return
     const data = new FormData(formRef.current)
     data.set("confirmDuplicate", "true")
+    data.set("difficulty", difficulty)
+    data.set("correctOption", correctOption)
     setConfirmedDuplicate(true)
     formAction(data)
   }
@@ -78,6 +82,8 @@ export function QuestionForm({
       className={cn("w-full space-y-6 sm:space-y-8", className)}
     >
       <input type="hidden" name="confirmDuplicate" value="false" />
+      <input type="hidden" name="difficulty" value={difficulty} />
+      <input type="hidden" name="correctOption" value={correctOption} />
 
       {/* ── CARD 1: QUESTION CLASSIFICATION & CORE ── */}
       <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
@@ -133,7 +139,8 @@ export function QuestionForm({
               </Label>
               <Select
                 name="difficulty"
-                defaultValue={initialValues?.difficulty ?? "MEDIUM"}
+                value={difficulty}
+                onValueChange={setDifficulty}
               >
                 <SelectTrigger id="difficulty" className="h-10 w-full rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm">
                   <SelectValue />
@@ -220,7 +227,8 @@ export function QuestionForm({
             </Label>
             <Select
               name="correctOption"
-              defaultValue={initialValues?.correctOption ?? "A"}
+              value={correctOption}
+              onValueChange={setCorrectOption}
             >
               <SelectTrigger id="correctOption" className="h-10 w-full rounded-xl border-border/70 bg-card shadow-2xs font-semibold text-xs sm:text-sm">
                 <SelectValue />

@@ -322,7 +322,7 @@ export default async function ExamDetailPage({
               </div>
             </div>
 
-            {isDraft && (
+            {isDraft ? (
               <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0 pt-1 lg:pt-0">
                 {/* Instant Modal Trigger: Add Questions from Bank */}
                 <AddQuestionsModal
@@ -350,6 +350,16 @@ export default async function ExamDetailPage({
                     <span>Create New Question</span>
                   </Link>
                 </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 shrink-0 pt-1 lg:pt-0">
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-3 py-1 text-xs font-semibold text-muted-foreground border-border/80 bg-muted/30 flex items-center gap-1.5"
+                >
+                  <Lock className="size-3 text-amber-500" />
+                  <span>Questions Locked (Published Assessment)</span>
+                </Badge>
               </div>
             )}
           </div>
