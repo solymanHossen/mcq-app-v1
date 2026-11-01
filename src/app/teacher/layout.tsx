@@ -23,7 +23,7 @@ export default async function TeacherLayout({
     { href: "/teacher/exams", label: "Exams", icon: <ClipboardList /> },
     { href: "/teacher/questions", label: "Question bank", icon: <BookOpen /> },
     ...(billingEnabled
-      ? [{ href: "/billing", label: "Billing", icon: <CreditCard /> }]
+      ? [{ href: "/teacher/billing", label: "Billing", icon: <CreditCard /> }]
       : []),
     { href: "/teacher/settings", label: "Settings", icon: <Settings /> },
   ]

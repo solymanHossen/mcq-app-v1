@@ -51,6 +51,8 @@ function formatPrice(cents: number, currency: string) {
 export default async function BillingPage() {
   const user = await requireUser()
   if (user.isGuest) redirect("/exams")
+  if (user.role === "TEACHER") redirect("/teacher/billing")
+  if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") redirect("/admin/subscriptions")
 
   const [subscription, history, plans, { billingEnabled }] = await Promise.all([
     getCurrentSubscription(user.id),

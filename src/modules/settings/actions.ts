@@ -95,6 +95,7 @@ export async function setBillingEnabledAction(enabled: boolean) {
   safeRevalidatePath("/admin/coupons")
   safeRevalidatePath("/admin/payments")
   safeRevalidatePath("/billing")
+  safeRevalidatePath("/teacher/billing")
   safeRevalidatePath("/dashboard")
   safeRevalidatePath("/teacher")
   safeRevalidatePath("/profile")

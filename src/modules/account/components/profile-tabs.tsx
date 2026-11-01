@@ -765,7 +765,17 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                     size="lg"
                     className="h-12 rounded-xl px-7 text-sm font-semibold shadow-xs"
                   >
-                    <Link href="/billing">Manage Billing & Plans →</Link>
+                    <Link
+                      href={
+                        profile.role === "TEACHER"
+                          ? "/teacher/billing"
+                          : profile.role === "ADMIN" || profile.role === "SUPER_ADMIN"
+                          ? "/admin/subscriptions"
+                          : "/billing"
+                      }
+                    >
+                      Manage Billing & Plans →
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
