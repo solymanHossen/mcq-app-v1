@@ -49,7 +49,7 @@ export async function registerAction(_state: unknown, formData: FormData) {
   if (!parsed.success)
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
-  const { name, email, password, role, institution, department, bio } = parsed.data
+  const { name, email, password } = parsed.data
   const ip = await clientIp()
 
   if (await isRegisterRateLimited(ip)) {
@@ -72,18 +72,13 @@ export async function registerAction(_state: unknown, formData: FormData) {
 
   if (!existing) {
     const passwordHash = await hashPassword(password)
-    const assignedRole = role === "TEACHER" ? "TEACHER" : "STUDENT"
     try {
       const user = await prisma.user.create({
         data: {
           name,
           email,
           passwordHash,
-          role: assignedRole,
-          teacherVerificationStatus: "PENDING",
-          institution: institution?.trim() || null,
-          department: department?.trim() || null,
-          bio: bio?.trim() || null,
+          role: "STUDENT",
           isEmailVerified: !requireEmailVerification,
         },
       })

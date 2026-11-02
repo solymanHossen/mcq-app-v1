@@ -26,7 +26,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Spinner } from "@/components/ui/spinner"
-import { registerAction } from "@/modules/auth/actions"
 import { applyForTeacherRoleAction } from "@/modules/users/actions"
 import { toast } from "sonner"
 
@@ -45,12 +44,6 @@ interface TeacherApplyClientProps {
 
 export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
   const router = useRouter()
-
-  // Guest registration state
-  const [guestState, guestAction, isGuestPending] = React.useActionState(
-    registerAction,
-    undefined
-  )
 
   // Student upgrade state
   const [isUpgrading, setIsUpgrading] = React.useState(false)
@@ -425,7 +418,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
     )
   }
 
-  // CASE 3: GUEST VISITOR (NEW REGISTRATION MODE)
+  // CASE 3: GUEST VISITOR (REQUIRES LOGIN TO APPLY)
   return (
     <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
       {/* Top Header & Breadcrumb */}
@@ -449,7 +442,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
             size="sm"
             className="text-xs sm:text-sm font-semibold text-primary hover:text-primary/90 gap-1.5"
           >
-            <Link href="/login">
+            <Link href="/login?callbackUrl=/teachers/apply">
               <span>Already registered? Sign in</span>
               <ArrowRight className="size-3.5" />
             </Link>
@@ -472,172 +465,36 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
         </div>
       </div>
 
-      {/* Guest Application Form */}
-      <form action={guestAction} className="space-y-6 sm:space-y-8">
-        <input type="hidden" name="role" value="TEACHER" />
-
-        {guestState?.error && (
-          <Alert variant="destructive" className="rounded-xl border-destructive/30">
-            <AlertTriangle className="size-4" />
-            <AlertTitle>Application Error</AlertTitle>
-            <AlertDescription>{guestState.error}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* Card 1: Account Credentials */}
-        <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3">
-            <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
-              <User className="size-4.5 sm:size-5.5" />
-            </div>
-            <div>
-              <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground">
-                Account Credentials
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                Your login credentials for managing tests and question banks
-              </p>
-            </div>
+      <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
+        <div className="p-8 sm:p-12 text-center max-w-xl mx-auto space-y-6">
+          <div className="size-16 sm:size-20 rounded-2xl sm:rounded-3xl bg-primary/10 text-primary flex items-center justify-center mx-auto ring-1 ring-primary/20 shadow-2xs">
+            <GraduationCap className="size-8 sm:size-10" />
           </div>
 
-          <div className="p-4 sm:p-6 lg:p-7 space-y-4 sm:space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-semibold text-foreground">
-                  Full Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="Prof. Jane Doe"
-                  autoComplete="name"
-                  className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-foreground">
-                  Official / Academic Email <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="faculty@university.edu"
-                  autoComplete="email"
-                  className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold text-foreground">
-                Password <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Minimum 8 characters"
-                autoComplete="new-password"
-                className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
-                required
-              />
-            </div>
-          </div>
-        </Card>
-
-        {/* Card 2: Academic Affiliation */}
-        <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3">
-            <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-indigo-500/20">
-              <Building2 className="size-4.5 sm:size-5.5" />
-            </div>
-            <div>
-              <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground">
-                Academic Affiliation
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                University, college, school, coaching academy, or examination board
-              </p>
-            </div>
+          <div className="space-y-2">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+              Sign In to Submit Faculty Credentials
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              To ensure academic integrity, teacher and faculty applications require an active account. Please sign in to your ExamHub account or create an account to submit your qualifications for administrative verification.
+            </p>
           </div>
 
-          <div className="p-4 sm:p-6 lg:p-7 space-y-4 sm:space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-              <div className="space-y-2">
-                <Label htmlFor="institution" className="text-sm font-semibold text-foreground">
-                  Institution Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="institution"
-                  name="institution"
-                  placeholder="e.g. Dhaka University / Oxford Academy"
-                  className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="department" className="text-sm font-semibold text-foreground">
-                  Department / Subject <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="department"
-                  name="department"
-                  placeholder="e.g. Physics / Computer Science"
-                  className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="bio" className="text-sm font-semibold text-foreground">
-                  Academic Background / Bio <span className="text-destructive">*</span>
-                </Label>
-                <span className="text-xs text-muted-foreground">Minimum 10 characters</span>
-              </div>
-              <Textarea
-                id="bio"
-                name="bio"
-                rows={4}
-                placeholder="Mention your designation, years of teaching, or topics you conduct examinations for..."
-                className="rounded-xl text-sm sm:text-base min-h-[110px] resize-y p-4 leading-relaxed"
-                required
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Button asChild size="lg" className="h-11 sm:h-12 px-6 rounded-xl font-bold shadow-md w-full sm:w-auto">
+              <Link href="/login?callbackUrl=/teachers/apply">
+                <User className="size-4 mr-2" />
+                <span>Sign In to Apply</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-11 sm:h-12 px-6 rounded-xl font-semibold border-border/70 w-full sm:w-auto">
+              <Link href="/register">
+                <span>Create an Account</span>
+              </Link>
+            </Button>
           </div>
-        </Card>
-
-        {/* Submit Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <p className="text-xs text-muted-foreground">
-            By registering, you agree to ExamHub&apos;s Terms of Service and Privacy Policy.
-          </p>
-          <Button
-            type="submit"
-            size="lg"
-            disabled={isGuestPending}
-            className="h-11 sm:h-12 px-8 rounded-xl font-bold shadow-md text-sm sm:text-base w-full sm:w-auto"
-          >
-            {isGuestPending ? (
-              <>
-                <Spinner data-icon="inline-start" />
-                <span>Creating Faculty Account...</span>
-              </>
-            ) : (
-              <>
-                <GraduationCap className="size-4 mr-2" />
-                <span>Register &amp; Apply as Faculty</span>
-              </>
-            )}
-          </Button>
         </div>
-      </form>
+      </Card>
     </div>
   )
 }
