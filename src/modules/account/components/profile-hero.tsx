@@ -13,9 +13,7 @@ import {
   Flame,
   GraduationCap,
   Mail,
-  ShieldAlert,
   ShieldCheck,
-  Sparkles,
   Trophy,
   User as UserIcon,
   Users,
@@ -32,6 +30,7 @@ import type {
 } from "@/prisma/generated/prisma/client"
 
 interface ProfileHeroProps {
+  className?: string
   user: {
     id: string
     name: string
@@ -86,7 +85,7 @@ function getRoleLabel(role: Role) {
   }
 }
 
-export function ProfileHero({ user }: ProfileHeroProps) {
+export function ProfileHero({ user, className }: ProfileHeroProps) {
   const [copiedEmail, setCopiedEmail] = React.useState(false)
   const roleInfo = getRoleLabel(user.role)
   const RoleIcon = roleInfo.icon
@@ -104,7 +103,12 @@ export function ProfileHero({ user }: ProfileHeroProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"
@@ -169,7 +173,9 @@ export function ProfileHero({ user }: ProfileHeroProps) {
                 </span>
               )}
 
-              <span className="hidden text-muted-foreground/30 sm:inline">•</span>
+              <span className="hidden text-muted-foreground/30 sm:inline">
+                •
+              </span>
 
               <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:inline-flex">
                 <Calendar className="size-3 text-muted-foreground" />
@@ -217,7 +223,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               {/* Exams */}
               <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                  <Sparkles className="size-4" />
+                  <ClipboardList className="size-4" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -346,7 +352,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
               {/* Live Exams */}
               <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                  <Sparkles className="size-4" />
+                  <ClipboardList className="size-4" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -379,5 +385,3 @@ export function ProfileHero({ user }: ProfileHeroProps) {
     </div>
   )
 }
-
-

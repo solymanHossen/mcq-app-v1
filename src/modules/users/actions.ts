@@ -2,9 +2,10 @@
 
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { assertRole, ADMIN_ROLES, isAdminTier, revokeAllSessions } from "@/lib/authorization"
+import { assertRole, requireUser, ADMIN_ROLES, isAdminTier, revokeAllSessions } from "@/lib/authorization"
 import { safeRevalidatePath } from "@/lib/safe-revalidate"
 import { recordAdminAction } from "@/lib/admin-audit"
+import { teacherApplicationSchema } from "@/modules/auth/validators"
 
 /**
  * Every action here is admin-tier-only (ADMIN or SUPER_ADMIN) and leaves an
@@ -149,7 +150,9 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 1000) || null
 
@@ -157,6 +160,7 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
     await tx.user.update({
       where: { id: userId },
       data: {
+        role: "TEACHER",
         teacherVerificationStatus: "VERIFIED",
         teacherVerifiedAt: new Date(),
         teacherVerifiedById: admin.id,
@@ -181,7 +185,9 @@ export async function rejectTeacherAction(userId: string, _state: unknown, formD
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   const parsed = reasonSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid request" }
@@ -214,7 +220,9 @@ export async function resetTeacherVerificationAction(userId: string) {
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   await prisma.$transaction(async (tx) => {
     await tx.user.update({
@@ -237,3 +245,43 @@ export async function resetTeacherVerificationAction(userId: string) {
   safeRevalidatePath("/admin", "layout")
   return { success: true }
 }
+
+export async function applyForTeacherRoleAction(_state: unknown, formData: FormData) {
+  const user = await requireUser()
+
+  if (user.role === "TEACHER" && user.teacherVerificationStatus === "VERIFIED") {
+    return { error: "Your account is already accredited as a Verified Teacher." }
+  }
+
+  const parsed = teacherApplicationSchema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid application data" }
+  }
+
+  const { institution, department, bio } = parsed.data
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      // Keep their existing role (e.g. STUDENT) so their student dashboard, exams,
+      // and learning features remain 100% active while the application is under review.
+      teacherVerificationStatus: "PENDING",
+      teacherVerifiedAt: null,
+      teacherVerifiedById: null,
+      teacherVerificationNote: null,
+      institution: institution.trim(),
+      department: department.trim(),
+      bio: bio.trim(),
+    },
+  })
+
+  safeRevalidatePath("/dashboard")
+  safeRevalidatePath("/profile")
+  safeRevalidatePath("/teachers")
+  safeRevalidatePath("/teachers/apply")
+  safeRevalidatePath("/admin/teachers")
+  safeRevalidatePath("/teacher")
+
+  return { success: true }
+}
+

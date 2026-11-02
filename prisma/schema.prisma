@@ -64,6 +64,11 @@ model User {
   verifiedTeachers          User[]                    @relation("VerifiedTeachers")
   teacherVerificationNote   String?                   @db.Text
 
+  // Faculty & Academic Profile Details
+  institution               String?
+  department                String?
+  bio                       String?                   @db.Text
+
   // Bumped to invalidate every existing session at once (forced logout on
   // password reset, admin-triggered revocation). Server-side guards re-check
   // this against the value embedded in the session on every protected
@@ -1222,6 +1227,14 @@ model SystemSettings {
   heroVideoUrl String?
   heroTitle    String?
   heroSubtitle String?
+
+  // Social Channels & Contact Info
+  githubUrl    String?
+  twitterUrl   String?
+  linkedinUrl  String?
+  facebookUrl  String?
+  youtubeUrl   String?
+  contactEmail String?
 
   updatedAt   DateTime @updatedAt
   updatedById String?

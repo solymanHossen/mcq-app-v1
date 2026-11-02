@@ -47,27 +47,37 @@ export default async function ExamViolationsPage({
   const attempts = await listFlaggedAttempts(examId)
 
   return (
-    <div className="w-full space-y-8 pb-16">
-      {/* Header */}
-      <div>
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="mb-2 -ml-2 text-muted-foreground hover:text-foreground"
-        >
-          <Link href={`/teacher/exams/${examId}/results`}>
-            <ArrowLeft className="mr-1.5 size-4" />
-            <span>Back to results</span>
-          </Link>
-        </Button>
+    <div className="w-full max-w-full min-w-0 space-y-6 sm:space-y-8 pb-12 sm:pb-16">
+      {/* Header & Back Pill Button */}
+      <div className="space-y-3 sm:space-y-4">
+        <div>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs active:scale-95 group gap-1.5 sm:gap-2 mb-2 sm:mb-3"
+          >
+            <Link href={`/teacher/exams/${examId}/results`}>
+              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+              <span>Back to results</span>
+            </Link>
+          </Button>
+        </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-border/60">
           <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              {exam.title} — Flagged Proctoring Attempts
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
+                {exam.title} — Flagged Proctoring Attempts
+              </h1>
+              <Badge
+                variant="outline"
+                className="rounded-full px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
+              >
+                {attempts.length} {attempts.length === 1 ? "Flagged Attempt" : "Flagged Attempts"}
+              </Badge>
+            </div>
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
               Review candidates exceeding the cumulative violation threshold ({exam.violationReviewThreshold} pts) or disqualified.
             </p>
           </div>
@@ -75,12 +85,12 @@ export default async function ExamViolationsPage({
       </div>
 
       {/* Proctoring Policy Notice */}
-      <Alert className="rounded-2xl border-amber-500/20 bg-amber-500/[0.04]">
-        <ShieldAlert className="size-4 text-amber-500" />
-        <AlertTitle className="font-heading font-semibold text-foreground">
+      <Alert className="rounded-2xl sm:rounded-3xl border border-amber-500/25 bg-amber-500/[0.05] p-5 sm:p-6 shadow-2xs">
+        <ShieldAlert className="size-5 text-amber-500" />
+        <AlertTitle className="font-heading text-sm sm:text-base font-bold text-foreground">
           Human Review Threshold: {exam.violationReviewThreshold} Points
         </AlertTitle>
-        <AlertDescription className="text-xs sm:text-sm text-muted-foreground">
+        <AlertDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-1">
           Attempts appear here automatically once detected anomalies (tab switches, window blur, fullscreen exits)
           reach this exam&apos;s review threshold. Flagging never disqualifies students automatically — any disqualification
           requires explicit faculty rationale.
@@ -89,16 +99,18 @@ export default async function ExamViolationsPage({
 
       {/* Flagged Attempts List */}
       {attempts.length === 0 ? (
-        <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-muted/20 p-8 sm:p-12 text-center">
+        <div className="rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-muted/20 p-8 sm:p-14 text-center">
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <ShieldCheck className="size-8 text-emerald-500" />
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs ring-1 ring-emerald-500/20 mx-auto">
+                  <ShieldCheck className="size-7" />
+                </div>
               </EmptyMedia>
-              <EmptyTitle className="font-heading text-lg sm:text-xl font-bold">
+              <EmptyTitle className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground mt-3">
                 Zero Flagged Attempts
               </EmptyTitle>
-              <EmptyDescription className="text-sm text-muted-foreground max-w-sm mx-auto">
+              <EmptyDescription className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
                 No students have crossed the violation review threshold for this assessment track.
               </EmptyDescription>
             </EmptyHeader>
@@ -109,7 +121,7 @@ export default async function ExamViolationsPage({
           {attempts.map((attempt) => (
             <div
               key={attempt.id}
-              className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-xs space-y-6 transition-all"
+              className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 shadow-2xs space-y-6 transition-all"
             >
               {/* Attempt Student Header */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/50 pb-5">
@@ -134,7 +146,7 @@ export default async function ExamViolationsPage({
                     variant={
                       attempt.status === "DISQUALIFIED" ? "destructive" : "secondary"
                     }
-                    className="rounded-lg text-xs font-semibold px-2.5 py-1"
+                    className="rounded-full text-xs font-semibold px-2.5 py-0.5"
                   >
                     {attempt.status}
                   </Badge>

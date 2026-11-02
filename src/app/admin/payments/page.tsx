@@ -13,12 +13,14 @@ import {
   ShieldAlert,
   Layers,
   Building2,
+  EyeOff,
 } from "lucide-react"
 import {
   adminListPaymentTransactions,
   getPaymentOverviewMetrics,
   getStalePendingTransactions,
 } from "@/modules/payments/queries"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -36,6 +38,7 @@ import { RefundForm } from "@/modules/payments/components/payment-transaction-ro
 import { ReconcileTransactionForm } from "@/modules/payments/components/reconcile-transaction-form"
 import { cn } from "@/lib/utils"
 import type { PaymentTransactionStatus } from "@/prisma/generated/prisma/client"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -95,10 +98,12 @@ export default async function AdminPaymentsPage({
     [transactions, totalCount],
     metrics,
     stalePending,
+    { billingEnabled },
   ] = await Promise.all([
     adminListPaymentTransactions({ page, pageSize: PAGE_SIZE, status, search }),
     getPaymentOverviewMetrics(),
     getStalePendingTransactions(),
+    getSystemSettings(),
   ])
 
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
@@ -118,13 +123,10 @@ export default async function AdminPaymentsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & GLOBAL SEARCH BAR ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Payment Transactions
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Payment Transactions"
+        description={
+          <>
             <span className="font-semibold text-foreground">{metrics.totalTransactions}</span> total transaction{metrics.totalTransactions === 1 ? "" : "s"} ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatAmount(metrics.totalVolumeCents, "usd")}
@@ -133,17 +135,35 @@ export default async function AdminPaymentsPage({
             <span className="font-semibold text-foreground">{metrics.succeededCount}</span> successful
             {status ? ` · filtered by ${status.toLowerCase()}` : ""}
             {search ? ` matching "${search}"` : ""}
-          </p>
-        </div>
-
-        {/* Global Debounced Search Bar */}
-        <div className="w-full max-w-sm">
+          </>
+        }
+        actions={
           <DebouncedSearchInput
             placeholder="Search by customer, email, or tx ID…"
-            className="w-full"
+            className="w-full sm:w-80"
           />
+        }
+      />
+
+      {!billingEnabled && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300">
+              <EyeOff className="size-4.5" />
+            </span>
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold">Monetization is currently Turned Off (Free Mode).</span>{" "}
+              New payment transactions cannot be initiated while billing is disabled platform-wide.
+            </div>
+          </div>
+          <Link
+            href="/admin/settings/policies"
+            className="shrink-0 text-xs font-semibold underline underline-offset-4 hover:opacity-80"
+          >
+            Billing Settings →
+          </Link>
         </div>
-      </div>
+      )}
 
       {/* ================= 4-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">

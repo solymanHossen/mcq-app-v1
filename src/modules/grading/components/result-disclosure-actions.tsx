@@ -44,8 +44,16 @@ export function ResultDisclosureActions({
   }
 
   return (
-    <div className="flex gap-2">
-      <Button size="sm" disabled={isPending} onClick={publish}>
+    <div
+      aria-busy={isPending}
+      className="grid min-w-0 grid-cols-1 gap-2 sm:col-span-2 sm:grid-cols-2 sm:gap-2.5 xl:flex xl:flex-wrap"
+    >
+      <Button
+        size="sm"
+        disabled={isPending}
+        onClick={publish}
+        className="h-10 gap-2 rounded-xl px-4 text-sm font-semibold shadow-xs"
+      >
         Publish results
       </Button>
       <Button
@@ -53,6 +61,7 @@ export function ResultDisclosureActions({
         variant="outline"
         disabled={isPending || answerKeyReleased}
         onClick={releaseKey}
+        className="h-10 rounded-xl border-border/70 px-4 text-sm font-semibold shadow-2xs"
       >
         {answerKeyReleased ? "Answer key released" : "Release answer key"}
       </Button>

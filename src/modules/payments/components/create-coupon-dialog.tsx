@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import {
   Ticket,
   Plus,
-  Sparkles,
+  RefreshCw,
   Percent,
   DollarSign,
   Calendar,
@@ -99,12 +99,13 @@ export function CreateCouponDialog() {
           resetForm()
           setOpen(true)
         }}
-        className="h-10 sm:h-11 rounded-xl px-4 sm:px-6 font-bold shadow-xs hover:shadow-md transition-all active:scale-[0.98] gap-2 cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
+        className="h-10 sm:h-11 rounded-xl px-4 sm:px-5 font-bold shadow-xs hover:shadow-md transition-all active:scale-[0.98] gap-2 cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm"
       >
-        <Plus className="size-4.5 shrink-0" />
+        <Plus className="size-4 shrink-0" />
         <span>Create Coupon</span>
       </Button>
 
+      {/* ================= MASTER REFERENCE COMPLIANT MODAL ================= */}
       <Dialog
         open={open}
         onOpenChange={(next) => {
@@ -112,199 +113,206 @@ export function CreateCouponDialog() {
           if (!next) resetForm()
         }}
       >
-        <DialogContent className="sm:max-w-lg rounded-2xl sm:rounded-3xl border border-border/80 bg-background/98 backdrop-blur-2xl p-6 shadow-2xl">
-          <form action={formAction} className="flex flex-col gap-5">
-            <DialogHeader className="gap-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent text-primary border border-primary/25 shadow-xs">
-                  <Ticket className="size-6" />
-                </div>
-                <div>
-                  <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                    Create Discount Coupon
-                  </DialogTitle>
-                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                    Issue promotional codes with percentage or fixed discount limits.
-                  </DialogDescription>
-                </div>
+        <DialogContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-lg max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border border-border/80 shadow-2xl overflow-hidden bg-background"
+        >
+          {/* Header with Icon Badge */}
+          <DialogHeader className="p-4 sm:p-5 pb-3 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0 text-left">
+            <div className="flex items-center gap-3 pr-6">
+              <div className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-primary/10 text-primary border border-primary/25 shadow-xs">
+                <Ticket className="size-5 sm:size-5.5" />
               </div>
-            </DialogHeader>
-
-            {/* Interactive Live Coupon Ticket Preview */}
-            <div className="relative overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4 sm:p-5 shadow-xs">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <Tag className="size-4 text-primary" />
-                    <span className="font-mono text-base sm:text-lg font-black tracking-wider text-foreground">
-                      {code.trim() ? code.trim().toUpperCase() : "YOUR-CODE"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {discountType === "PERCENT"
-                      ? `${discountValue || "0"}% discount off subscription checkouts`
-                      : `$${discountValue ? (Number(discountValue) / 100).toFixed(2) : "0.00"} fixed discount off checkouts`}
-                  </p>
-                </div>
-                <Badge
-                  className="rounded-xl px-3 py-1 font-bold text-xs shrink-0 shadow-xs bg-primary text-primary-foreground"
-                >
-                  {discountType === "PERCENT"
-                    ? `${discountValue || 0}% OFF`
-                    : `$${discountValue ? (Number(discountValue) / 100).toFixed(2) : "0.00"} OFF`}
-                </Badge>
-              </div>
-
-              <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-border/50 pt-2.5 text-[11px] text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <Users className="size-3 text-muted-foreground/70" />
-                  {maxRedemptions ? `Limit: ${maxRedemptions} claims` : "Unlimited claims"}
-                </span>
-                <span>•</span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="size-3 text-muted-foreground/70" />
-                  {expiresAt ? `Expires: ${expiresAt}` : "No expiry date"}
-                </span>
+              <div className="min-w-0">
+                <DialogTitle className="font-heading text-base sm:text-xl font-bold tracking-tight text-foreground leading-snug">
+                  Create Discount Coupon
+                </DialogTitle>
+                <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5 truncate">
+                  Issue promotional codes with percentage or fixed limits.
+                </DialogDescription>
               </div>
             </div>
+          </DialogHeader>
 
-            {/* Coupon Code Input & Generator */}
-            <Field className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <FieldLabel htmlFor="coupon-code" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Coupon Code <span className="text-rose-500">*</span>
-                </FieldLabel>
-                <button
-                  type="button"
-                  onClick={generateRandomCode}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
-                >
-                  <Sparkles className="size-3" />
-                  <span>Generate Code</span>
-                </button>
-              </div>
-              <Input
-                id="coupon-code"
-                name="code"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                placeholder="e.g. WELCOME50"
-                required
-                className="h-11 rounded-xl font-mono text-sm uppercase tracking-wider font-bold border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
-              />
-            </Field>
-
-            {/* Discount Type & Value Segment */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field className="space-y-1.5">
-                <FieldLabel htmlFor="discount-type" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Discount Type <span className="text-rose-500">*</span>
-                </FieldLabel>
-                <input type="hidden" name="discountType" value={discountType} />
-                <div className="grid grid-cols-2 gap-1 rounded-xl border border-border/80 bg-muted/50 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setDiscountType("PERCENT")}
-                    className={cn(
-                      "flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition-all cursor-pointer",
-                      discountType === "PERCENT"
-                        ? "bg-background text-foreground shadow-xs border border-border/60"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
+          <form action={formAction} className="flex flex-col flex-1 overflow-hidden">
+            <div className="p-4 sm:p-5 space-y-3.5 text-sm overflow-y-auto flex-1">
+              {/* Interactive Live Coupon Ticket Preview */}
+              <div className="relative overflow-hidden rounded-xl border border-primary/25 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-3.5 sm:p-4 shadow-2xs">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <Tag className="size-3.5 text-primary" />
+                      <span className="font-mono text-sm sm:text-base font-black tracking-wider text-foreground">
+                        {code.trim() ? code.trim().toUpperCase() : "YOUR-CODE"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {discountType === "PERCENT"
+                        ? `${discountValue || "0"}% discount off subscription checkouts`
+                        : `$${discountValue ? (Number(discountValue) / 100).toFixed(2) : "0.00"} fixed discount off checkouts`}
+                    </p>
+                  </div>
+                  <Badge
+                    className="rounded-lg px-2.5 py-0.5 font-bold text-xs shrink-0 shadow-2xs bg-primary text-primary-foreground"
                   >
-                    <Percent className="size-3.5" />
-                    <span>Percent</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDiscountType("FIXED_AMOUNT")}
-                    className={cn(
-                      "flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition-all cursor-pointer",
-                      discountType === "FIXED_AMOUNT"
-                        ? "bg-background text-foreground shadow-xs border border-border/60"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    <DollarSign className="size-3.5" />
-                    <span>Fixed (¢)</span>
-                  </button>
+                    {discountType === "PERCENT"
+                      ? `${discountValue || 0}% OFF`
+                      : `$${discountValue ? (Number(discountValue) / 100).toFixed(2) : "0.00"} OFF`}
+                  </Badge>
                 </div>
-              </Field>
 
-              <Field className="space-y-1.5">
-                <FieldLabel htmlFor="discount-value" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  {discountType === "PERCENT" ? "Percentage Off (%)" : "Amount Off (Cents ¢)"} <span className="text-rose-500">*</span>
-                </FieldLabel>
-                <div className="relative">
-                  <Input
-                    id="discount-value"
-                    name="discountValue"
-                    type="number"
-                    min={1}
-                    max={discountType === "PERCENT" ? 100 : undefined}
-                    value={discountValue}
-                    onChange={(e) => setDiscountValue(e.target.value)}
-                    placeholder={discountType === "PERCENT" ? "20" : "500 (= $5.00)"}
-                    required
-                    className="h-11 rounded-xl text-sm font-semibold border-border/80 bg-background pl-4 pr-10 shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
-                  />
-                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
-                    {discountType === "PERCENT" ? "%" : "¢"}
+                <div className="mt-2.5 flex flex-wrap items-center gap-3 border-t border-border/50 pt-2 text-[11px] text-muted-foreground">
+                  <span className="inline-flex items-center gap-1">
+                    <Users className="size-3 text-muted-foreground/70" />
+                    {maxRedemptions ? `Limit: ${maxRedemptions} claims` : "Unlimited claims"}
+                  </span>
+                  <span>•</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="size-3 text-muted-foreground/70" />
+                    {expiresAt ? `Expires: ${expiresAt}` : "No expiry date"}
                   </span>
                 </div>
-              </Field>
-            </div>
+              </div>
 
-            {/* Optional Constraints: Max Redemptions & Expiration */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Coupon Code Input & Generator */}
               <Field className="space-y-1.5">
-                <FieldLabel htmlFor="max-redemptions" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Max Redemptions
-                </FieldLabel>
+                <div className="flex items-center justify-between">
+                  <label htmlFor="coupon-code" className="text-xs font-semibold text-foreground">
+                    Coupon Code <span className="text-destructive">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateRandomCode}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                  >
+                    <RefreshCw className="size-3" />
+                    <span>Generate Code</span>
+                  </button>
+                </div>
                 <Input
-                  id="max-redemptions"
-                  name="maxRedemptions"
-                  type="number"
-                  min={1}
-                  value={maxRedemptions}
-                  onChange={(e) => setMaxRedemptions(e.target.value)}
-                  placeholder="e.g. 100 (Optional)"
-                  className="h-11 rounded-xl text-sm border-border/80 bg-background shadow-2xs focus-visible:ring-2 focus-visible:ring-primary/30"
+                  id="coupon-code"
+                  name="code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  placeholder="e.g. WELCOME50"
+                  required
+                  className="h-10 sm:h-11 rounded-xl font-mono text-sm uppercase tracking-wider font-bold border-border/70 bg-muted/20 shadow-2xs focus-visible:bg-background"
                 />
               </Field>
 
-              <Field className="space-y-1.5">
-                <FieldLabel htmlFor="expires-at" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Expiry Date
-                </FieldLabel>
-                <DatePicker
-                  id="expires-at"
-                  name="expiresAt"
-                  value={expiresAt ? new Date(expiresAt) : undefined}
-                  onChange={(date) => setExpiresAt(date ? format(date, "yyyy-MM-dd") : "")}
-                  placeholder="Pick expiration date"
-                  minDate={new Date()}
-                />
+              {/* Discount Type & Value Segment */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field className="space-y-1.5">
+                  <label htmlFor="discount-type" className="text-xs font-semibold text-foreground">
+                    Discount Type <span className="text-destructive">*</span>
+                  </label>
+                  <input type="hidden" name="discountType" value={discountType} />
+                  <div className="grid grid-cols-2 gap-1 rounded-xl border border-border/70 bg-muted/30 p-1">
+                    <button
+                      type="button"
+                      onClick={() => setDiscountType("PERCENT")}
+                      className={cn(
+                        "flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-bold transition-all cursor-pointer",
+                        discountType === "PERCENT"
+                          ? "bg-background text-foreground shadow-xs border border-border/60"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <Percent className="size-3.5" />
+                      <span>Percent</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDiscountType("FIXED_AMOUNT")}
+                      className={cn(
+                        "flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-bold transition-all cursor-pointer",
+                        discountType === "FIXED_AMOUNT"
+                          ? "bg-background text-foreground shadow-xs border border-border/60"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <DollarSign className="size-3.5" />
+                      <span>Fixed (¢)</span>
+                    </button>
+                  </div>
+                </Field>
 
-              </Field>
+                <Field className="space-y-1.5">
+                  <label htmlFor="discount-value" className="text-xs font-semibold text-foreground">
+                    {discountType === "PERCENT" ? "Percentage Off (%)" : "Amount Off (Cents ¢)"} <span className="text-destructive">*</span>
+                  </label>
+                  <div className="relative">
+                    <Input
+                      id="discount-value"
+                      name="discountValue"
+                      type="number"
+                      min={1}
+                      max={discountType === "PERCENT" ? 100 : undefined}
+                      value={discountValue}
+                      onChange={(e) => setDiscountValue(e.target.value)}
+                      placeholder={discountType === "PERCENT" ? "20" : "500 (= $5.00)"}
+                      required
+                      className="h-10 sm:h-11 rounded-xl text-sm font-semibold border-border/70 bg-muted/20 pl-4 pr-10 shadow-2xs focus-visible:bg-background"
+                    />
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
+                      {discountType === "PERCENT" ? "%" : "¢"}
+                    </span>
+                  </div>
+                </Field>
+              </div>
+
+              {/* Optional Constraints: Max Redemptions & Expiration */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field className="space-y-1.5">
+                  <label htmlFor="max-redemptions" className="text-xs font-semibold text-foreground">
+                    Max Redemptions
+                  </label>
+                  <Input
+                    id="max-redemptions"
+                    name="maxRedemptions"
+                    type="number"
+                    min={1}
+                    value={maxRedemptions}
+                    onChange={(e) => setMaxRedemptions(e.target.value)}
+                    placeholder="e.g. 100 (Optional)"
+                    className="h-10 sm:h-11 rounded-xl text-sm border-border/70 bg-muted/20 shadow-2xs focus-visible:bg-background"
+                  />
+                </Field>
+
+                <Field className="space-y-1.5">
+                  <label htmlFor="expires-at" className="text-xs font-semibold text-foreground">
+                    Expiry Date
+                  </label>
+                  <DatePicker
+                    id="expires-at"
+                    name="expiresAt"
+                    value={expiresAt ? new Date(expiresAt) : undefined}
+                    onChange={(date) => setExpiresAt(date ? format(date, "yyyy-MM-dd") : "")}
+                    placeholder="Pick expiration date"
+                    minDate={new Date()}
+                  />
+                </Field>
+              </div>
+
+              {state && "error" in state && (
+                <FieldError className="text-xs font-semibold text-destructive">{state.error}</FieldError>
+              )}
             </div>
 
-            {state && "error" in state && <FieldError>{state.error}</FieldError>}
-
-            <DialogFooter className="mt-2 flex-row justify-end gap-2.5 border-t border-border/60 pt-4 -mx-6 -mb-6 px-6 pb-6 bg-muted/20">
+            <DialogFooter className="px-5 sm:px-6 py-4 sm:py-4.5 border-t border-border/60 bg-muted/20 shrink-0 flex flex-row items-center justify-end gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
                 disabled={isPending}
-                className="h-10 sm:h-11 px-4 sm:px-5 rounded-xl font-medium border-border/70 text-xs sm:text-sm cursor-pointer"
+                className="h-10 px-4.5 rounded-xl border border-border/70 text-xs sm:text-sm font-semibold cursor-pointer hover:bg-muted/70 transition-all"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isPending || !isFormValid}
-                className="h-10 sm:h-11 px-5 sm:px-6 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm shadow-primary/25 gap-2 cursor-pointer text-xs sm:text-sm"
+                className="h-10 px-5.5 rounded-xl font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs gap-2 cursor-pointer text-xs sm:text-sm transition-all disabled:opacity-45"
               >
                 {isPending ? (
                   <>
@@ -325,3 +333,4 @@ export function CreateCouponDialog() {
     </>
   )
 }
+

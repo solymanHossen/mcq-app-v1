@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { connection } from "next/server"
 import { requireUser, assertOwner } from "@/lib/authorization"
 import { getExamWithQuestions, getExamTotalMarks } from "@/modules/exams/queries"
 import { listActiveUnusedQuestions } from "@/modules/question-bank/queries"
@@ -28,7 +29,6 @@ import {
   BarChart3,
   Calendar,
   ShieldAlert,
-  Sparkles,
   Users,
   CheckCircle2,
   Layers,
@@ -47,6 +47,7 @@ export default async function ExamDetailPage({
   params: Promise<{ examId: string }>
   searchParams?: Promise<Record<string, string | undefined>>
 }) {
+  await connection()
   const { examId } = await params
   const sp = (await searchParams) ?? {}
   const user = await requireUser()
@@ -69,34 +70,36 @@ export default async function ExamDetailPage({
   const defaultTab = sp.tab || "questions"
 
   return (
-    <div className="w-full space-y-8 pb-24 lg:pb-16">
+    <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
       {/* ─── 1. TOP BREADCRUMB & HERO COMMAND BAR ─── */}
-      <div className="space-y-4">
-        {/* Back Link */}
-        <div>
-          <Link
-            href="/teacher/exams"
-            className="group inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+      <div className="space-y-3 sm:space-y-4">
+        {/* Back Button matching master reference pill style */}
+        <div className="flex items-center justify-between">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs active:scale-95 group gap-1.5 sm:gap-2"
           >
-            <div className="flex size-7 items-center justify-center rounded-lg border border-border/70 bg-card group-hover:bg-muted transition-colors shadow-2xs">
-              <ArrowLeft className="size-3.5" />
-            </div>
-            <span>Back to All Exams</span>
-          </Link>
+            <Link href="/teacher/exams">
+              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+              <span>Back to exams</span>
+            </Link>
+          </Button>
         </div>
 
         {/* Main Hero Header Row */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-2 border-b border-border/60">
-          <div className="space-y-3 max-w-4xl">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-6 pb-2 border-b border-border/60">
+          <div className="space-y-1.5 max-w-4xl">
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground leading-tight">
                 {exam.title}
               </h1>
 
               {/* Status Badge */}
               <Badge
                 variant={isDraft ? "secondary" : isPublished ? "default" : "outline"}
-                className={`font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider ${
+                className={`font-bold text-xs px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                   isDraft
                     ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
                     : isPublished
@@ -109,17 +112,17 @@ export default async function ExamDetailPage({
             </div>
 
             {exam.description && (
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {exam.description}
               </p>
             )}
           </div>
 
-          {/* Unified Action Button Bar: Big, Consistent, Polished Buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            {/* Direct Link Active Status Badge (Contextually paired with Share Exam) */}
+          {/* Unified Action Button Bar */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 pt-1 lg:pt-0">
+            {/* Direct Link Active Status Badge */}
             {isPublished && exam.allowGuestAccess && (
-              <div className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs h-10 select-none">
+              <div className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs h-10 select-none">
                 <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                 <Globe className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>Direct Link Active</span>
@@ -131,7 +134,7 @@ export default async function ExamDetailPage({
               <ShareExamModal
                 exam={exam}
                 trigger={
-                  <Button className="gap-2 shadow-sm font-semibold rounded-xl text-xs sm:text-sm h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Button className="gap-2 shadow-xs font-semibold rounded-xl text-xs sm:text-sm h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer">
                     <Share2 className="size-4" />
                     <span>Share Exam</span>
                   </Button>
@@ -139,7 +142,7 @@ export default async function ExamDetailPage({
               />
             )}
 
-            {/* Student Preview Modal Button (Opens directly in Modal) */}
+            {/* Student Preview Modal Button */}
             <StudentPreviewModal
               exam={exam}
               totalMarks={totalMarks}
@@ -155,26 +158,26 @@ export default async function ExamDetailPage({
               </Button>
             )}
 
-            {/* Big Publish & Delete Draft Buttons with Confirmation AlertDialogs */}
+            {/* Publish & Delete Draft Buttons */}
             <ExamStatusActions examId={exam.id} status={exam.status} />
           </div>
         </div>
       </div>
 
-      {/* ─── 2. WORLD-CLASS 4-CARD KPI STATS ROW (Boro Boro & Clean) ─── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* ─── 2. 4-CARD KPI STATS ROW (Matching Master Design System) ─── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Card 1: Questions & Marks */}
-        <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-4">
-          <div className="size-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-            <HelpCircle className="size-6" />
+        <div className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-3.5 sm:gap-4">
+          <div className="size-11 sm:size-12 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <HelpCircle className="size-5 sm:size-6" />
           </div>
           <div className="space-y-0.5 min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Questions & Marks
             </p>
-            <p className="text-2xl font-extrabold text-foreground tracking-tight">
+            <p className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
               {exam.examQuestions.length}{" "}
-              <span className="text-sm font-medium text-muted-foreground">Qs</span>
+              <span className="text-xs sm:text-sm font-medium text-muted-foreground">Qs</span>
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {totalMarks} Total Marks ({exam.passingMarks ? `Pass: ${exam.passingMarks}` : "No pass mark"})
@@ -183,17 +186,17 @@ export default async function ExamDetailPage({
         </div>
 
         {/* Card 2: Duration & Limits */}
-        <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-4">
-          <div className="size-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-            <Clock className="size-6" />
+        <div className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-3.5 sm:gap-4">
+          <div className="size-11 sm:size-12 rounded-xl sm:rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <Clock className="size-5 sm:size-6" />
           </div>
           <div className="space-y-0.5 min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Timing & Attempts
             </p>
-            <p className="text-2xl font-extrabold text-foreground tracking-tight">
+            <p className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
               {exam.durationMinutes}{" "}
-              <span className="text-sm font-medium text-muted-foreground">mins</span>
+              <span className="text-xs sm:text-sm font-medium text-muted-foreground">mins</span>
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {exam.maxAttempts} max attempt{exam.maxAttempts === 1 ? "" : "s"} allowed
@@ -202,19 +205,19 @@ export default async function ExamDetailPage({
         </div>
 
         {/* Card 3: Student Access & PIN */}
-        <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-4">
+        <div className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-3.5 sm:gap-4">
           <div
-            className={`size-12 rounded-2xl flex items-center justify-center shrink-0 ${
+            className={`size-11 sm:size-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${
               exam.allowGuestAccess
                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                 : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
             }`}
           >
-            <Globe className="size-6" />
+            <Globe className="size-5 sm:size-6" />
           </div>
           <div className="space-y-0.5 min-w-0 flex-1">
             <div className="flex items-center justify-between gap-1.5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Student Access
               </p>
               {exam.allowGuestAccess && isPublished && (
@@ -227,7 +230,7 @@ export default async function ExamDetailPage({
                 </Badge>
               )}
             </div>
-            <p className="text-lg font-extrabold text-foreground tracking-tight truncate">
+            <p className="text-base sm:text-lg font-extrabold text-foreground tracking-tight truncate">
               {exam.allowGuestAccess ? "Direct Link Access" : "Registered Only"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
@@ -237,15 +240,15 @@ export default async function ExamDetailPage({
         </div>
 
         {/* Card 4: Proctoring & Rules */}
-        <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-4">
-          <div className="size-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-            <ShieldAlert className="size-6" />
+        <div className="rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs hover:border-primary/40 transition-all flex items-center gap-3.5 sm:gap-4">
+          <div className="size-11 sm:size-12 rounded-xl sm:rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+            <ShieldAlert className="size-5 sm:size-6" />
           </div>
           <div className="space-y-0.5 min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Proctoring Mode
             </p>
-            <p className="text-lg font-extrabold text-foreground tracking-tight truncate">
+            <p className="text-base sm:text-lg font-extrabold text-foreground tracking-tight truncate">
               {exam.webcamMonitoringRequired ? "Webcam Proctored" : "Standard Anti-Cheat"}
             </p>
             <p className="text-xs text-muted-foreground truncate">
@@ -255,18 +258,18 @@ export default async function ExamDetailPage({
         </div>
       </div>
 
-      {/* ─── 3. SLEEK SEGMENTED PILL DOCK TABS (Matching Teacher Dashboard Standard) ─── */}
-      <Tabs defaultValue={defaultTab} className="w-full space-y-8">
-        <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-          <TabsList className="group-data-horizontal/tabs:!h-auto !h-auto flex w-fit items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 sm:p-2 min-h-12 sm:min-h-14">
+      {/* ─── 3. SEGMENTED TABS (Matching Master Design System Standard) ─── */}
+      <Tabs defaultValue={defaultTab} className="w-full space-y-6 sm:space-y-8">
+        <div className="w-full overflow-x-auto pb-1 no-scrollbar">
+          <TabsList className="h-11 sm:h-12 p-1 sm:p-1.5 bg-muted/70 rounded-xl border border-border/60 gap-1 sm:gap-1.5 w-fit">
             {/* Tab 1: Questions */}
             <TabsTrigger
               value="questions"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-full rounded-lg text-xs sm:text-sm font-bold gap-1.5 sm:gap-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs text-muted-foreground hover:text-foreground transition-none duration-0"
             >
-              <HelpCircle className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <HelpCircle className="size-4 shrink-0" />
               <span className="whitespace-nowrap">Questions</span>
-              <span className="ml-0.5 inline-flex size-5.5 items-center justify-center rounded-full text-xs font-bold transition-colors bg-background text-foreground shadow-2xs group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground">
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] sm:text-xs font-bold bg-muted-foreground/10 text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
                 {exam.examQuestions.length}
               </span>
             </TabsTrigger>
@@ -274,18 +277,18 @@ export default async function ExamDetailPage({
             {/* Tab 2: Settings */}
             <TabsTrigger
               value="settings"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-full rounded-lg text-xs sm:text-sm font-bold gap-1.5 sm:gap-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs text-muted-foreground hover:text-foreground transition-none duration-0"
             >
-              <Settings className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <Settings className="size-4 shrink-0" />
               <span className="whitespace-nowrap">Settings & Rules</span>
             </TabsTrigger>
 
             {/* Tab 3: Share Link */}
             <TabsTrigger
               value="share"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-full rounded-lg text-xs sm:text-sm font-bold gap-1.5 sm:gap-2 px-3 sm:px-4 cursor-pointer data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-xs text-muted-foreground hover:text-foreground transition-none duration-0"
             >
-              <Share2 className="size-4.5 sm:size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-primary group-data-[state=active]:text-primary-foreground" />
+              <Share2 className="size-4 shrink-0" />
               <span className="whitespace-nowrap">Share & Link Hub</span>
             </TabsTrigger>
           </TabsList>
@@ -294,33 +297,69 @@ export default async function ExamDetailPage({
         {/* ─── TAB 1: QUESTIONS MANAGEMENT ─── */}
         <TabsContent value="questions" className="space-y-6 outline-none">
           {/* Action Bar Above Questions */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-card border border-border/70 shadow-2xs">
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <span>Assessment Questions</span>
-                <Badge variant="outline" className="text-xs bg-muted/40 font-semibold px-2.5 py-0.5">
-                  {exam.examQuestions.length} Questions · {totalMarks} Marks
-                </Badge>
-              </h2>
-              <p className="text-xs text-muted-foreground">
-                Reorder, inspect option choices, or remove questions from this examination.
-              </p>
+          <div className="p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl bg-card border border-border/70 shadow-2xs hover:shadow-xs transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="size-10 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20 mt-0.5 sm:mt-0">
+                <Layers className="size-5 sm:size-5.5" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                  <h2 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-foreground">
+                    Assessment Questions
+                  </h2>
+                  <Badge
+                    variant="secondary"
+                    className="rounded-full px-2.5 py-0.5 text-[11px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5 border border-border/60 shrink-0"
+                  >
+                    <span>{exam.examQuestions.length} Questions</span>
+                    <span className="size-1 rounded-full bg-muted-foreground/40" />
+                    <span>{totalMarks} Marks</span>
+                  </Badge>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+                  Reorder, inspect option choices, or remove questions from this examination.
+                </p>
+              </div>
             </div>
 
-            {isDraft && (
-              <div className="flex items-center gap-2 flex-wrap">
+            {isDraft ? (
+              <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap shrink-0 pt-1 lg:pt-0">
                 {/* Instant Modal Trigger: Add Questions from Bank */}
                 <AddQuestionsModal
                   examId={examId}
                   availableQuestions={unusedQuestionsData.items}
+                  trigger={
+                    <Button
+                      type="button"
+                      className="gap-2 rounded-xl font-bold text-xs sm:text-sm h-10 sm:h-10.5 px-3.5 sm:px-4.5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex-1 sm:flex-initial"
+                    >
+                      <Plus className="size-4 shrink-0" />
+                      <span>Add from Question Bank</span>
+                    </Button>
+                  }
                 />
 
-                <Button asChild variant="outline" size="sm" className="gap-2 rounded-xl font-semibold text-xs sm:text-sm h-10 px-4 shadow-2xs">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 rounded-xl font-bold text-xs sm:text-sm h-10 sm:h-10.5 px-3 sm:px-4 border-border/70 bg-card hover:bg-muted text-foreground active:scale-95 transition-all shadow-2xs cursor-pointer whitespace-nowrap flex-1 sm:flex-initial"
+                >
                   <Link href="/teacher/questions/new">
-                    <FilePlus2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <FilePlus2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>Create New Question</span>
                   </Link>
                 </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 shrink-0 pt-1 lg:pt-0">
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-3 py-1 text-xs font-semibold text-muted-foreground border-border/80 bg-muted/30 flex items-center gap-1.5"
+                >
+                  <Lock className="size-3 text-amber-500" />
+                  <span>Questions Locked (Published Assessment)</span>
+                </Badge>
               </div>
             )}
           </div>
@@ -457,32 +496,45 @@ export default async function ExamDetailPage({
 
         {/* ─── TAB 3: SHARE & STUDENT ACCESS LINK ─── */}
         <TabsContent value="share" className="space-y-6 outline-none">
-          <Card className="rounded-3xl border-border/70 shadow-2xs overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-primary/10 via-primary/5 to-background border-b border-border/50 p-6 sm:p-8">
-              <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
-                <Globe className="size-4" />
-                <span>Candidate Assessment Hub</span>
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            {/* Master Header Bar */}
+            <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                  <Globe className="size-4.5 sm:size-5.5" />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                    Share Assessment with Students
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                    Direct candidate link sharing, entry credentials, and test distribution
+                  </p>
+                </div>
               </div>
-              <CardTitle className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                Share Assessment with Students
-              </CardTitle>
-              <CardDescription className="text-xs sm:text-sm max-w-2xl leading-relaxed">
-                Send this direct link to your students via WhatsApp, Messenger, Telegram, or email. Students can start the test instantly with only their Name and Email address — no prior registration required.
-              </CardDescription>
-            </CardHeader>
+              <Badge variant="outline" className="text-xs font-semibold px-2.5 py-0.5 sm:py-1 border-border/70 shrink-0 self-start sm:self-auto">
+                Candidate Access
+              </Badge>
+            </div>
 
-            <CardContent className="p-6 sm:p-8 space-y-6">
-              <div className="p-5 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Card Content Body */}
+            <div className="p-4 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-3xl">
+                Send this direct link to your students via WhatsApp, Messenger, Telegram, or email. Students can start the test instantly with only their Name and Email address — no prior registration required.
+              </p>
+
+              {/* Status and Action Banner */}
+              <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold px-2.5 py-0.5">
-                      <CheckCircle2 className="size-3 mr-1" />
-                      Direct Link Active
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold px-2.5 py-0.5 rounded-full gap-1">
+                      <CheckCircle2 className="size-3" />
+                      <span>Direct Link Active</span>
                     </Badge>
                     {exam.accessCode && (
-                      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 font-mono px-2.5 py-0.5">
-                        <Lock className="size-3 mr-1" />
-                        PIN: {exam.accessCode}
+                      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 font-mono font-bold px-2.5 py-0.5 rounded-full gap-1">
+                        <Lock className="size-3" />
+                        <span>PIN: {exam.accessCode}</span>
                       </Badge>
                     )}
                   </div>
@@ -494,47 +546,53 @@ export default async function ExamDetailPage({
                 <ShareExamModal
                   exam={exam}
                   trigger={
-                    <Button className="gap-2 shadow-sm font-semibold rounded-xl text-xs sm:text-sm h-11 px-5 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Button className="gap-2 shadow-xs font-semibold rounded-xl text-xs sm:text-sm h-10 sm:h-10.5 px-4 shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer">
                       <Share2 className="size-4" />
-                      <span>Open Share Hub (QR Code & Socials)</span>
+                      <span>Open Share Hub</span>
                     </Button>
                   }
                 />
               </div>
 
               {/* Student Experience Info Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                <div className="p-4 rounded-xl border border-border/70 bg-card/60 space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-sm text-foreground">
-                    <Users className="size-4 text-primary" />
-                    <span>1. Direct Join</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 pt-1">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-primary/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/20">
+                      <Users className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">1. Direct Join</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Student clicks the shared link on their phone or computer.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl border border-border/70 bg-card/60 space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-sm text-foreground">
-                    <Award className="size-4 text-emerald-500" />
-                    <span>2. Name & Email</span>
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-emerald-500/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20">
+                      <Award className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">2. Name &amp; Email</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Enters their full name, email, and optional PIN to start immediately.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl border border-border/70 bg-card/60 space-y-1.5">
-                  <div className="flex items-center gap-2 font-bold text-sm text-foreground">
-                    <BarChart3 className="size-4 text-blue-500" />
-                    <span>3. Instant Grading</span>
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card hover:border-blue-500/40 hover:shadow-xs transition-all space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-8 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 ring-1 ring-blue-500/20">
+                      <BarChart3 className="size-4" />
+                    </div>
+                    <span className="font-bold text-sm sm:text-base text-foreground">3. Instant Grading</span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     Upon submission, results flow straight into your teacher dashboard.
                   </p>
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </TabsContent>
       </Tabs>

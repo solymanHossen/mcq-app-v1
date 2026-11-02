@@ -39,15 +39,15 @@ export function ReconcileTransactionForm({ transactionId }: { transactionId: str
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-2.5 text-left">
+    <form action={formAction} className="flex flex-col gap-2.5 text-left p-3.5 rounded-xl border border-border/70 bg-card shadow-2xs">
       <input type="hidden" name="resolution" value={resolution} />
       <Field>
         <Textarea
           name="reason"
           rows={2}
-          placeholder="How was this confirmed? (e.g. checked the provider dashboard)"
+          placeholder="How was this confirmed? (e.g. verified on provider dashboard)"
           required
-          className="rounded-xl border-border/80 bg-background/80 p-3 text-xs shadow-2xs resize-none placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
+          className="rounded-xl border-border/80 bg-background p-3 text-xs shadow-2xs resize-none placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
         />
       </Field>
       {state && "error" in state && (
@@ -56,11 +56,11 @@ export function ReconcileTransactionForm({ transactionId }: { transactionId: str
           <span>{state.error}</span>
         </div>
       )}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 pt-0.5">
         <Button
           type="submit"
           disabled={isPending}
-          className="h-9 px-4 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs cursor-pointer text-xs transition-all gap-1.5"
+          className="h-8.5 px-4 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs cursor-pointer text-xs transition-all gap-1.5"
         >
           {isPending && <Spinner className="size-3.5 shrink-0" />}
           <span>Confirm Resolution</span>
@@ -69,7 +69,7 @@ export function ReconcileTransactionForm({ transactionId }: { transactionId: str
           type="button"
           variant="outline"
           onClick={() => setResolution(null)}
-          className="h-9 px-3.5 rounded-xl font-medium border-border/70 text-xs cursor-pointer hover:bg-muted/80 transition-all"
+          className="h-8.5 px-3.5 rounded-xl font-medium border-border/70 text-xs cursor-pointer hover:bg-muted/80 transition-all"
         >
           Cancel
         </Button>

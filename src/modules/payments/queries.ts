@@ -145,16 +145,36 @@ export function listAllCoupons() {
 
 export function listPendingTeacherVerifications() {
   return prisma.user.findMany({
-    where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
+    where: {
+      teacherVerificationStatus: "PENDING",
+      OR: [
+        { role: "TEACHER" },
+        { institution: { not: null } },
+      ],
+    },
     orderBy: { createdAt: "asc" },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      institution: true,
+      department: true,
+      bio: true,
+    },
     take: 500,
   })
 }
 
 export function countPendingTeacherVerifications() {
   return prisma.user.count({
-    where: { role: "TEACHER", teacherVerificationStatus: "PENDING" },
+    where: {
+      teacherVerificationStatus: "PENDING",
+      OR: [
+        { role: "TEACHER" },
+        { institution: { not: null } },
+      ],
+    },
   })
 }
 

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table"
 import { PagePagination } from "@/components/shared/page-pagination"
 import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 import { ShieldCheck, History } from "lucide-react"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -37,24 +38,21 @@ export default async function AdminAuditLogPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            System Audit Log
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="System Audit Log"
+        description={
+          <>
             <span className="font-semibold text-foreground">{totalCount}</span> total audit record{totalCount === 1 ? "" : "s"}
             {search ? ` matching "${search}"` : ""} · Immutable log of administrative operations
-          </p>
-        </div>
-
-        <div className="w-full max-w-sm">
+          </>
+        }
+        actions={
           <DebouncedSearchInput
             placeholder="Search action, actor, target or reason…"
-            className="w-full"
+            className="w-full sm:w-80"
           />
-        </div>
-      </div>
+        }
+      />
 
       {/* ================= WORLD-CLASS AUDIT LOG DATA TABLE ================= */}
       <div className="w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs">

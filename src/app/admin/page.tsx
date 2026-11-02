@@ -29,6 +29,7 @@ import { DashboardAreaChart } from "@/components/shared/dashboard-area-chart"
 import { DashboardDonutChart } from "@/components/shared/dashboard-donut-chart"
 import { DashboardBarChart } from "@/components/shared/dashboard-bar-chart"
 import { generateDashboardChartData } from "@/lib/chart-data-utils"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -178,12 +179,10 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="w-full min-w-0 flex flex-col gap-6 sm:gap-8">
-      {/* ================= CLEAN WORLD-CLASS HEADER ================= */}
-      <div className="flex items-center justify-between pb-1">
-        <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-          Dashboard
-        </h1>
-      </div>
+      <AdminPageHeader
+        title="Dashboard"
+        description="Platform operations, assessment activity, and account health at a glance."
+      />
 
       {/* ================= 5-TILE GRAND KPI METRICS ROW ================= */}
       <div className="w-full grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 sm:gap-4.5">

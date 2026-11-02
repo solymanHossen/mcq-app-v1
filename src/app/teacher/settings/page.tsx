@@ -13,6 +13,9 @@ import { APP_NAME } from "@/lib/config"
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false
 
+const settingsCardClassName =
+  "min-w-0 rounded-2xl border border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_h3]:text-base [&_h3]:tracking-tight sm:[&_h3]:text-xl [&_label]:text-sm [&_label]:font-semibold [&_label]:tracking-normal [&_label]:normal-case sm:[&_label]:text-base [&_input]:h-11 [&_input]:rounded-xl [&_input]:border [&_input]:border-input/60 [&_input]:bg-muted/20 [&_input]:px-4 sm:[&_input]:h-12 sm:[&_input]:rounded-2xl md:[&_input]:text-sm [&_input[type=password]]:pr-12 [&_button[type=submit]]:h-auto [&_button[type=submit]]:min-h-10 [&_button[type=submit]]:whitespace-normal [&_button[type=submit]]:py-2.5 [&_button[type=submit]]:text-sm [&_button[type=submit]]:font-semibold"
+
 export default async function TeacherSettingsPage() {
   const teacher = await requireRole(...TEACHER_ROLES)
   const overview = await getAccountOverview(teacher.id)
@@ -34,34 +37,35 @@ export default async function TeacherSettingsPage() {
     : null
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+    <div className="w-full min-w-0 space-y-6 pb-12 sm:space-y-8 sm:pb-16">
+      <div className="border-b border-border/60 pb-3 sm:pb-4">
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
           Teacher Settings
         </h1>
         <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-          Manage your faculty credentials, account security, and {APP_NAME} preferences.
+          Manage your faculty credentials, account security, and {APP_NAME}{" "}
+          preferences.
         </p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
-        <div className="w-full overflow-x-auto pb-1 scrollbar-none">
-          <TabsList className="group-data-horizontal/tabs:!h-auto !h-auto flex w-fit items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/60 p-1.5 backdrop-blur-xl shadow-2xs sm:gap-2 sm:p-2 min-h-12 sm:min-h-14">
+        <div className="w-full scrollbar-none overflow-x-auto pb-1">
+          <TabsList className="flex min-h-11 w-max items-center gap-1 rounded-xl border border-border/60 bg-muted/20 p-1 shadow-2xs group-data-horizontal/tabs:h-auto">
             <TabsTrigger
               value="profile"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-10 shrink-0 cursor-pointer rounded-lg px-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:px-5"
             >
               Faculty Profile
             </TabsTrigger>
             <TabsTrigger
               value="security"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-10 shrink-0 cursor-pointer rounded-lg px-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:px-5"
             >
               Security
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="group relative flex !h-auto min-h-9.5 sm:min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 select-none sm:gap-2.5 sm:px-5 sm:py-2.5 sm:text-[15px] text-muted-foreground hover:bg-background/80 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm focus-visible:ring-0 focus-visible:outline-none"
+              className="h-10 shrink-0 cursor-pointer rounded-lg px-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:px-5"
             >
               Appearance
             </TabsTrigger>
@@ -71,12 +75,15 @@ export default async function TeacherSettingsPage() {
         <TabsContent value="profile" className="space-y-6">
           {teacher.role === "TEACHER" && (
             <VerificationStatusCard
+              className="rounded-2xl border border-border/70 shadow-xs backdrop-blur-none sm:rounded-2xl dark:shadow-xs"
               status={teacher.teacherVerificationStatus}
               note={overview.teacherVerificationNote}
             />
           )}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          <div className="grid min-w-0 grid-cols-1 gap-6 sm:gap-8">
             <ProfileCard
+              variant="outlined"
+              className={settingsCardClassName}
               name={teacher.name}
               email={teacher.email}
               role={teacher.role}
@@ -87,19 +94,21 @@ export default async function TeacherSettingsPage() {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-            <ChangePasswordCard />
-            <SessionsCard />
+          <div className="grid min-w-0 grid-cols-1 gap-6 sm:gap-8 xl:grid-cols-2">
+            <ChangePasswordCard
+              variant="outlined"
+              className={settingsCardClassName}
+            />
+            <SessionsCard className={settingsCardClassName} />
           </div>
         </TabsContent>
 
         <TabsContent value="appearance" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-            <AppearanceCard />
+          <div className="grid min-w-0 grid-cols-1 gap-6 sm:gap-8">
+            <AppearanceCard className={settingsCardClassName} />
           </div>
         </TabsContent>
       </Tabs>
     </div>
   )
 }
-

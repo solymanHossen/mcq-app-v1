@@ -9,19 +9,22 @@ import {
   Camera,
   AlertTriangle,
   ArrowRight,
-  ArrowLeft,
-  Sparkles,
   Trophy,
-  Shield,
+  ShieldCheck,
   Calendar,
-  Layers,
-  Check,
   Trash2,
-  Plus,
   Globe,
   Lock,
   Users,
   RefreshCw,
+  FileText,
+  CheckCircle2,
+  SlidersHorizontal,
+  HelpCircle,
+  Eye,
+  KeyRound,
+  ShieldAlert,
+  Plus,
 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
@@ -29,11 +32,25 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator"
 import { Spinner } from "@/components/ui/spinner"
 import { DateTimePicker } from "@/components/ui/date-time-picker"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { TitleTemplateModal } from "@/modules/exams/components/title-template-modal"
 import type { ExamFormState } from "@/modules/exams/actions"
 import { cn } from "@/lib/utils"
@@ -57,10 +74,34 @@ export type ExamFormValues = {
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120] as const
 
+/**
+ * Reusable Info Tooltip Helper
+ */
+function InfoTip({ text, side = "top" }: { text: string; side?: "top" | "bottom" | "left" | "right" }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          tabIndex={-1}
+          role="button"
+          aria-label="More information"
+          className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors cursor-help outline-none shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <HelpCircle className="size-3.5" />
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side={side} className="max-w-xs text-xs font-normal leading-relaxed p-2.5 shadow-md">
+        {text}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 export function ExamForm({
   action,
   initialValues,
-  submitLabel = "Create Exam",
+  submitLabel = "Create Assessment",
   cancelHref = "/teacher/exams",
 }: {
   action: (
@@ -76,6 +117,10 @@ export function ExamForm({
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [titleTouched, setTitleTouched] = useState(false)
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
+
+  // Advanced Configuration Modals State
+  const [isProctoringModalOpen, setIsProctoringModalOpen] = useState(false)
+  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
 
   function handleSelectPresetTitle(presetTitle: string) {
     setTitle(presetTitle)
@@ -156,317 +201,413 @@ export function ExamForm({
   ].filter(Boolean).length
 
   return (
-    <form action={formAction} className="w-full">
-      {state && "error" in state && (
-        <Alert variant="destructive" className="mb-6 rounded-xl border-destructive/30">
-          <AlertTriangle className="size-4" />
-          <AlertTitle className="text-sm font-semibold">Error saving exam</AlertTitle>
-          <AlertDescription className="text-xs mt-0.5">{state.error}</AlertDescription>
-        </Alert>
-      )}
+    <TooltipProvider delayDuration={150}>
+      <form action={formAction} className="w-full">
+        {state && "error" in state && (
+          <Alert variant="destructive" className="mb-6 rounded-2xl border-destructive/30 shadow-xs">
+            <AlertTriangle className="size-5" />
+            <AlertTitle className="text-base font-bold">Error saving assessment</AlertTitle>
+            <AlertDescription className="text-sm mt-1">{state.error}</AlertDescription>
+          </Alert>
+        )}
 
-      {/* Main 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
-        {/* Left Form Canvas (8 Columns on lg/xl) */}
-        <div className="space-y-6 lg:col-span-8 min-w-0">
-          {/* Card 1: Details */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground">
-                  Exam Details
-                </CardTitle>
-                <Badge variant="secondary" className="text-xs font-medium px-2 py-0.5">
-                  General
+        {/* Main 2-Column Responsive Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
+          {/* Left Form Canvas (8 Columns on lg/xl) */}
+          <div className="space-y-8 lg:col-span-8 min-w-0">
+            {/* ── CARD 1: EXAM DETAILS ── */}
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
+                    <FileText className="size-4.5 sm:size-5.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                        Assessment Details
+                      </h2>
+                      <InfoTip text="General information, subject naming conventions, and candidate instructions that will appear on test entry." />
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                      General title and candidate instructions
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border-border/70 shrink-0">
+                  Required
                 </Badge>
               </div>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-              <div className="space-y-1.5 sm:space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <Label htmlFor="title" className="text-xs sm:text-sm font-semibold text-foreground">
-                      Title <span className="text-destructive">*</span>
+
+              <div className="p-4 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
+                {/* Title Field */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <Label htmlFor="title" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Assessment Title</span>
+                      <span className="text-destructive">*</span>
+                      <InfoTip text="The official title students see on their dashboard and certificate. Minimum 3 characters." />
                     </Label>
-                    <button
-                      type="button"
-                      onClick={() => setIsTemplateModalOpen(true)}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-[11px] sm:text-xs font-semibold hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer shadow-2xs active:scale-95"
-                      title="Open Title Presets & Dropdown Generator"
-                    >
-                      <Plus className="size-3.5 shrink-0" />
-                      <span>Title Presets</span>
-                    </button>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-xs transition-colors",
-                      titleTouched && !isTitleValid
-                        ? "text-destructive font-semibold"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {title.length}/200
-                  </span>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    onBlur={() => setTitleTouched(true)}
-                    placeholder="e.g. Mathematics Mid-Term 2026"
-                    maxLength={200}
-                    className={cn(
-                      "h-10 sm:h-12 text-sm sm:text-base font-medium rounded-xl pr-11 transition-colors",
-                      titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
-                    )}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setIsTemplateModalOpen(true)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 size-7 sm:size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
-                    title="Open Title Presets & Dropdown Generator"
-                  >
-                    <Plus className="size-4" />
-                  </button>
-                </div>
-                {titleTouched && !isTitleValid && (
-                  <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                    <AlertTriangle className="size-3.5 shrink-0" />
-                    <span>
-                      {title.trim().length === 0
-                        ? "Exam title is required"
-                        : "Title must be at least 3 characters"}
-                    </span>
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-1.5 sm:space-y-2">
-                <Label htmlFor="description" className="text-xs sm:text-sm font-semibold text-foreground">
-                  Description <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                </Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  rows={3}
-                  defaultValue={initialValues?.description}
-                  placeholder="Instructions, syllabus topics, or candidate rules..."
-                  className="rounded-xl text-xs sm:text-sm min-h-[80px] sm:min-h-[90px] resize-y p-3 sm:p-3.5 leading-relaxed"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card 2: Timing & Scoring */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-2">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Clock className="size-4 text-primary shrink-0" />
-                  <span>Timing & Limits</span>
-                </CardTitle>
-                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
-                  {DURATION_PRESETS.map((mins) => (
-                    <button
-                      key={mins}
-                      type="button"
-                      onClick={() => setDurationMinutes(mins)}
+                    <span
                       className={cn(
-                        "text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium transition-colors border shrink-0 cursor-pointer active:scale-95",
-                        durationMinutes === mins
-                          ? "bg-primary text-primary-foreground border-primary font-semibold shadow-2xs"
-                          : "bg-muted/40 hover:bg-muted text-muted-foreground border-border/60"
+                        "text-xs sm:text-sm transition-colors font-medium",
+                        titleTouched && !isTitleValid
+                          ? "text-destructive font-bold"
+                          : "text-muted-foreground"
                       )}
                     >
-                      {mins}m
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="durationMinutes" className="text-sm font-semibold text-foreground">
-                    Duration (Minutes) <span className="text-destructive">*</span>
-                  </Label>
+                      {title.length}/200
+                    </span>
+                  </div>
+
                   <div className="relative">
                     <Input
-                      id="durationMinutes"
-                      name="durationMinutes"
-                      type="number"
-                      min={1}
-                      max={600}
-                      value={durationMinutes || ""}
-                      onChange={(e) => {
-                        const val = e.target.value === "" ? 0 : Number(e.target.value)
-                        setDurationMinutes(val)
-                      }}
-                      onBlur={() => setDurationTouched(true)}
+                      id="title"
+                      name="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => setTitleTouched(true)}
+                      placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
+                      maxLength={200}
                       className={cn(
-                        "h-11 sm:h-12 text-base font-semibold rounded-xl pr-12 transition-colors",
-                        durationTouched && !isDurationValid && "border-destructive focus-visible:ring-destructive/30"
+                        "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all pr-14",
+                        titleTouched && !isTitleValid && "border-destructive focus-visible:ring-destructive/30"
                       )}
                       required
                     />
-                    <span className="absolute inset-y-0 right-3.5 flex items-center text-xs font-semibold text-muted-foreground pointer-events-none">
-                      min
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setIsTemplateModalOpen(true)
+                      }}
+                      className="absolute right-2 top-0 bottom-0 my-auto size-9 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 cursor-pointer transition-none duration-0 select-none z-10"
+                      aria-label="Open Title Presets & Generator"
+                    >
+                      <Plus className="size-5" />
+                    </Button>
+                  </div>
+
+                  {titleTouched && !isTitleValid && (
+                    <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                      <AlertTriangle className="size-4 shrink-0" />
+                      <span>
+                        {title.trim().length === 0
+                          ? "Exam title is required (minimum 3 characters)."
+                          : "Title must be at least 3 characters."}
+                      </span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Description Field */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="description" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Description & Instructions</span>
+                      <InfoTip text="Guidelines, allowed materials, or syllabus topics shown to students before they click Start Exam." />
+                    </Label>
+                    <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+                      Optional
                     </span>
                   </div>
-                  {durationTouched && !isDurationValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Duration must be 1-600 mins</span>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    rows={4}
+                    defaultValue={initialValues?.description}
+                    placeholder="Provide syllabus chapters, negative marking notices, or candidate guidelines..."
+                    className="rounded-xl text-sm sm:text-base min-h-[105px] resize-y p-4 leading-relaxed"
+                  />
+                </div>
+              </div>
+            </Card>
+
+            {/* ── CARD 2: TIMING & LIMITS ── */}
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-blue-500/20">
+                    <Clock className="size-4.5 sm:size-5.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                        Timing & Scoring Limits
+                      </h2>
+                      <InfoTip text="Enforces total test countdown timer, retry constraints, and grading threshold." />
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                      Test duration, maximum attempts, and passing threshold
                     </p>
-                  )}
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="maxAttempts" className="text-sm font-semibold text-foreground">
-                    Max Attempts <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="maxAttempts"
-                    name="maxAttempts"
-                    type="number"
-                    min={1}
-                    max={10}
-                    value={maxAttempts || ""}
-                    onChange={(e) => {
-                      const val = e.target.value === "" ? 0 : Number(e.target.value)
-                      setMaxAttempts(val)
-                    }}
-                    onBlur={() => setAttemptsTouched(true)}
-                    className={cn(
-                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
-                      attemptsTouched && !isAttemptsValid && "border-destructive focus-visible:ring-destructive/30"
+                {/* Duration Presets as Shadcn Buttons */}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
+                  <span className="text-xs font-semibold text-muted-foreground mr-1 hidden md:inline">Presets:</span>
+                  {DURATION_PRESETS.map((mins) => (
+                    <Button
+                      key={mins}
+                      type="button"
+                      variant={durationMinutes === mins ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => {
+                        setDurationMinutes(mins)
+                        setDurationTouched(true)
+                      }}
+                      className={cn(
+                        "h-8 px-2.5 sm:px-3 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer active:scale-95",
+                        durationMinutes === mins
+                          ? "shadow-sm font-bold"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {mins}m
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 sm:p-6 lg:p-7">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                  {/* Duration */}
+                  <div className="space-y-2">
+                    <Label htmlFor="durationMinutes" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Duration (Minutes)</span>
+                      <span className="text-destructive">*</span>
+                      <InfoTip text="The countdown timer starts as soon as the student launches the test. Exam auto-submits when time reaches 0." />
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="durationMinutes"
+                        name="durationMinutes"
+                        type="number"
+                        min={1}
+                        max={600}
+                        value={durationMinutes || ""}
+                        onChange={(e) => {
+                          const val = e.target.value === "" ? 0 : Number(e.target.value)
+                          setDurationMinutes(val)
+                        }}
+                        onBlur={() => setDurationTouched(true)}
+                        className={cn(
+                          "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl pr-14 transition-all",
+                          durationTouched && !isDurationValid && "border-destructive focus-visible:ring-destructive/30"
+                        )}
+                        required
+                      />
+                      <span className="absolute inset-y-0 right-4 flex items-center text-xs sm:text-sm font-semibold text-muted-foreground pointer-events-none">
+                        mins
+                      </span>
+                    </div>
+                    {durationTouched && !isDurationValid && (
+                      <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                        <AlertTriangle className="size-4 shrink-0" />
+                        <span>Duration must be between 1 and 600 minutes.</span>
+                      </p>
                     )}
-                    required
-                  />
-                  {attemptsTouched && !isAttemptsValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Attempts must be 1-10</span>
-                    </p>
-                  )}
-                </div>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="passingMarks" className="text-sm font-semibold text-foreground">
-                    Passing Marks <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                  </Label>
-                  <Input
-                    id="passingMarks"
-                    name="passingMarks"
-                    type="number"
-                    min={0}
-                    step="any"
-                    value={passingMarks}
-                    onChange={(e) => setPassingMarks(e.target.value)}
-                    onBlur={() => setPassingMarksTouched(true)}
-                    placeholder="e.g. 40"
-                    className={cn(
-                      "h-11 sm:h-12 text-base font-semibold rounded-xl transition-colors",
-                      passingMarksTouched && !isPassingMarksValid && "border-destructive focus-visible:ring-destructive/30"
+                  {/* Max Attempts */}
+                  <div className="space-y-2">
+                    <Label htmlFor="maxAttempts" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Max Attempts</span>
+                      <span className="text-destructive">*</span>
+                      <InfoTip text="Maximum number of times a candidate can take this exam. 1 attempt is recommended for formal assessments." />
+                    </Label>
+                    <Input
+                      id="maxAttempts"
+                      name="maxAttempts"
+                      type="number"
+                      min={1}
+                      max={10}
+                      value={maxAttempts || ""}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? 0 : Number(e.target.value)
+                        setMaxAttempts(val)
+                      }}
+                      onBlur={() => setAttemptsTouched(true)}
+                      className={cn(
+                        "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl transition-all",
+                        attemptsTouched && !isAttemptsValid && "border-destructive focus-visible:ring-destructive/30"
+                      )}
+                      required
+                    />
+                    {attemptsTouched && !isAttemptsValid && (
+                      <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                        <AlertTriangle className="size-4 shrink-0" />
+                        <span>Attempts must be between 1 and 10.</span>
+                      </p>
                     )}
-                  />
-                  {passingMarksTouched && !isPassingMarksValid && (
-                    <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-1 animate-in fade-in-50 duration-200">
-                      <AlertTriangle className="size-3.5 shrink-0" />
-                      <span>Must be 0 or higher</span>
+                  </div>
+
+                  {/* Passing Marks */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="passingMarks" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                        <span>Passing Marks</span>
+                        <InfoTip text="Score required to achieve 'PASSED' status. If left blank, total score is displayed without pass/fail distinction." />
+                      </Label>
+                      <span className="text-xs text-muted-foreground font-medium">Optional</span>
+                    </div>
+                    <Input
+                      id="passingMarks"
+                      name="passingMarks"
+                      type="number"
+                      min={0}
+                      step="any"
+                      value={passingMarks}
+                      onChange={(e) => setPassingMarks(e.target.value)}
+                      onBlur={() => setPassingMarksTouched(true)}
+                      placeholder="e.g. 40"
+                      className={cn(
+                        "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl transition-all",
+                        passingMarksTouched && !isPassingMarksValid && "border-destructive focus-visible:ring-destructive/30"
+                      )}
+                    />
+                    {passingMarksTouched && !isPassingMarksValid && (
+                      <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                        <AlertTriangle className="size-4 shrink-0" />
+                        <span>Passing marks must be 0 or greater.</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* ── CARD 3: SCHEDULE WINDOW ── */}
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-purple-500/20">
+                    <Calendar className="size-4.5 sm:size-5.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                        Schedule Window
+                      </h2>
+                      <InfoTip text="Define precise opening and closing times. Candidates cannot take the assessment outside of this window." />
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                      Restrict exam accessibility within a specified date & time range
                     </p>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card 3: Schedule */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Calendar className="size-4 text-purple-500 shrink-0" />
-                  <span>Schedule Window</span>
-                </CardTitle>
-                <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
-                  Leave empty for anytime access
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                <div className="space-y-1.5 sm:space-y-2">
-                  <Label htmlFor="startTime" className="text-xs sm:text-sm font-semibold text-foreground">
-                    Opens At
-                  </Label>
-                  <DateTimePicker
-                    id="startTime"
-                    name="startTime"
-                    value={startTime}
-                    onChange={setStartTime}
-                    placeholder="Opening date & time"
-                  />
-                </div>
-
-                <div className="space-y-1.5 sm:space-y-2">
-                  <Label htmlFor="endTime" className="text-xs sm:text-sm font-semibold text-foreground">
-                    Closes At
-                  </Label>
-                  <DateTimePicker
-                    id="endTime"
-                    name="endTime"
-                    value={endTime}
-                    onChange={setEndTime}
-                    minDate={startTime}
-                    placeholder="Closing date & time"
-                  />
-                </div>
-              </div>
-              {!isScheduleValid && (
-                <p className="text-xs text-destructive font-medium flex items-center gap-1.5 mt-2.5 animate-in fade-in-50 duration-200">
-                  <AlertTriangle className="size-3.5 shrink-0" />
-                  <span>Closing date & time must be strictly after the opening date & time.</span>
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Card 4: Proctoring & Integrity */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Shield className="size-4 text-emerald-500" />
-                  Proctoring & Integrity
-                </CardTitle>
-                <Badge variant="outline" className="text-[11px] sm:text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
-                  {activeProctoringCount} of 3 active
+                <Badge variant="secondary" className="text-[11px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 shrink-0 self-start sm:self-auto">
+                  Leave empty for 24/7 access
                 </Badge>
               </div>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
-              {/* Clean 3-Item Toggle Rows */}
-              <div className="divide-y divide-border/50 rounded-xl border border-border/60 overflow-hidden bg-card">
-                <label
-                  htmlFor="shuffleQuestionsSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+
+              <div className="p-4 sm:p-6 lg:p-7 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="startTime" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Opens At (Start Time)</span>
+                      <InfoTip text="Date and time when students can begin taking this assessment." />
+                    </Label>
+                    <DateTimePicker
+                      id="startTime"
+                      name="startTime"
+                      value={startTime}
+                      onChange={setStartTime}
+                      placeholder="Opening date & time"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="endTime" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                      <span>Closes At (End Time)</span>
+                      <InfoTip text="Deadline after which no new student attempts can be started." />
+                    </Label>
+                    <DateTimePicker
+                      id="endTime"
+                      name="endTime"
+                      value={endTime}
+                      onChange={setEndTime}
+                      minDate={startTime}
+                      placeholder="Closing date & time"
+                    />
+                  </div>
+                </div>
+
+                {!isScheduleValid && (
+                  <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-2 animate-in fade-in-50 duration-200">
+                    <AlertTriangle className="size-4 shrink-0" />
+                    <span>Closing date & time must be strictly later than opening date & time.</span>
+                  </p>
+                )}
+              </div>
+            </Card>
+
+            {/* ── CARD 4: PROCTORING & INTEGRITY (Google UI Clean Design: Minimal text, rich modal) ── */}
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-emerald-500/20">
+                    <ShieldCheck className="size-4.5 sm:size-5.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                        Proctoring & Anti-Cheating
+                      </h2>
+                      <InfoTip text="Automated integrity controls. Configure question randomization, camera verification, and anomaly sensitivity." />
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                      {activeProctoringCount} of 3 active • {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"} sensitivity
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsProctoringModalOpen(true)}
+                    className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
+                  >
+                    <SlidersHorizontal className="size-3.5 sm:size-4" />
+                    <span>Configure Rules</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Direct Clean Settings List inside the Card */}
+              <div className="divide-y divide-border/50">
+                {/* 1. Shuffle Questions */}
+                <div
+                  onClick={() => setShuffleQuestions(!shuffleQuestions)}
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 text-primary shrink-0" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Questions</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Randomize question order per student</p>
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleQuestions ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Shuffle Questions</span>
+                        <InfoTip text="Display exam questions in completely randomized order for each candidate." />
+                      </div>
                     </div>
                   </div>
                   <Switch
                     id="shuffleQuestionsSwitch"
                     checked={shuffleQuestions}
                     onCheckedChange={setShuffleQuestions}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -475,23 +616,32 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
+                </div>
 
-                <label
-                  htmlFor="shuffleOptionsSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                {/* 2. Shuffle Options */}
+                <div
+                  onClick={() => setShuffleOptions(!shuffleOptions)}
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <Shuffle className="size-4 rotate-90 text-primary shrink-0" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Shuffle Options</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Randomize choices (A, B, C, D) inside MCQs</p>
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleOptions ? "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-4 sm:size-5 rotate-90" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Shuffle Options</span>
+                        <InfoTip text="Randomize multiple-choice option positions (A, B, C, D) within every question." />
+                      </div>
                     </div>
                   </div>
                   <Switch
                     id="shuffleOptionsSwitch"
                     checked={shuffleOptions}
                     onCheckedChange={setShuffleOptions}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -500,23 +650,32 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
+                </div>
 
-                <label
-                  htmlFor="webcamMonitoringSwitch"
-                  className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/30 transition-colors cursor-pointer"
+                {/* 3. Webcam Surveillance */}
+                <div
+                  onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <Camera className="size-4 text-primary shrink-0" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">Webcam Consent</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Require camera permission to start</p>
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      webcamMonitoringRequired ? "bg-blue-500/15 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Camera className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">Webcam Surveillance</span>
+                        <InfoTip text="Require student camera permission and capture periodic audit snapshots during the test." />
+                      </div>
                     </div>
                   </div>
                   <Switch
                     id="webcamMonitoringSwitch"
                     checked={webcamMonitoringRequired}
                     onCheckedChange={setWebcamMonitoringRequired}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
                     type="checkbox"
@@ -525,265 +684,619 @@ export function ExamForm({
                     readOnly
                     className="sr-only"
                   />
-                </label>
-              </div>
-
-              {/* Review Threshold */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
-                <div>
-                  <Label htmlFor="violationReviewThreshold" className="text-sm font-semibold text-foreground">
-                    Review Threshold Score
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Cumulative anomaly score that flags attempt for review.
-                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="violationReviewThreshold"
-                    name="violationReviewThreshold"
-                    type="number"
-                    min={1}
-                    max={100}
-                    value={violationThreshold}
-                    onChange={(e) => setViolationThreshold(Number(e.target.value))}
-                    className="w-20 h-10 text-center font-bold rounded-xl"
-                    required
-                  />
-                  <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1">
-                    {violationThreshold <= 3 ? "Strict" : violationThreshold <= 7 ? "Balanced" : "Lenient"}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Card 5: Link Access & Student Participation */}
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <CardHeader className="px-4 py-3 sm:px-6 sm:py-4.5 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Globe className="size-4 text-primary" />
-                  Link Sharing & Student Access
-                </CardTitle>
-                <Badge variant={allowGuestAccess ? "default" : "secondary"} className="text-xs font-semibold">
-                  {allowGuestAccess ? "Open Link Enabled" : "Registered Only"}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-4">
-              {/* Participation Mode */}
-              <div className="space-y-3">
-                <label
-                  htmlFor="allowGuestAccessSwitch"
-                  className="flex items-start justify-between gap-3 p-3.5 rounded-xl border border-border/70 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                      <Users className="size-4" />
+                {/* 4. Anomaly Review Sensitivity */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors gap-3">
+                  <div className="flex items-center gap-3 sm:gap-3.5">
+                    <div className="size-8.5 sm:size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="size-4 sm:size-5" />
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        Direct Link Participation (No Registration Required)
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Students can start instantly via link by entering their <strong>Name & Email</strong>. Registered students can also participate with their logged-in account.
-                      </p>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-base font-semibold text-foreground">Review Threshold</span>
+                      <InfoTip text="Cumulative anti-cheat score triggering teacher review (tab switches, face absences, fullscreen exits)." />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 self-start sm:self-auto overflow-x-auto no-scrollbar w-full sm:w-auto">
+                    {[
+                      { label: "Strict (3)", val: 3 },
+                      { label: "Balanced (5)", val: 5 },
+                      { label: "Lenient (10)", val: 10 },
+                    ].map(({ label, val }) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setViolationThreshold(val)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap",
+                          violationThreshold === val
+                            ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/30"
+                            : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                    <input
+                      type="hidden"
+                      name="violationReviewThreshold"
+                      value={violationThreshold}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* ── CARD 5: CANDIDATE ACCESS & PIN (Google UI Clean Design: Minimal text, rich modal) ── */}
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+              <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                  <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-amber-500/20">
+                    <Globe className="size-4.5 sm:size-5.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
+                        Candidate Access & Security
+                      </h2>
+                      <InfoTip text="Control how candidates join: friction-free open link or registered account, with optional secret PIN." />
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
+                      {allowGuestAccess ? "Direct Link Enabled" : "Registered Students Only"} • {accessCode ? `PIN: ${accessCode}` : "Open Access"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAccessModalOpen(true)}
+                    className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300 hover:bg-amber-500/15 text-xs sm:text-sm font-bold gap-1.5 shadow-2xs active:scale-95 cursor-pointer transition-all"
+                  >
+                    <KeyRound className="size-3.5 sm:size-4" />
+                    <span>Access Settings</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Direct Clean Settings List inside the Card */}
+              <div className="divide-y divide-border/50">
+                {/* Direct Link Access */}
+                <div
+                  onClick={() => setAllowGuestAccess(!allowGuestAccess)}
+                  className="flex items-center justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors cursor-pointer select-none gap-3"
+                >
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      allowGuestAccess ? "bg-sky-500/15 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Users className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground truncate">
+                          Direct Link (Open Access)
+                        </span>
+                        <InfoTip text="Students can begin test immediately via link by entering their Full Name & Email. Registered students can also log in seamlessly." />
+                      </div>
                     </div>
                   </div>
                   <Switch
                     id="allowGuestAccessSwitch"
                     checked={allowGuestAccess}
                     onCheckedChange={setAllowGuestAccess}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <input
-                    type="checkbox"
+                    type="hidden"
                     name="allowGuestAccess"
-                    checked={allowGuestAccess}
-                    readOnly
-                    className="sr-only"
+                    value={allowGuestAccess ? "on" : "off"}
                   />
-                </label>
-              </div>
-
-              {/* Optional Passcode / Security PIN */}
-              <div className="rounded-xl border border-border/60 bg-card p-3.5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="accessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
-                    <Lock className="size-3.5 text-muted-foreground" />
-                    <span>Access Passcode / PIN (Optional)</span>
-                  </Label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
-                      setAccessCode(randomCode)
-                    }}
-                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <RefreshCw className="size-3" />
-                    <span>Generate PIN</span>
-                  </button>
                 </div>
-                <div className="relative">
-                  <Input
-                    id="accessCode"
-                    name="accessCode"
-                    placeholder="e.g. 2026EXAM or leave empty for open access"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value)}
-                    className="h-10 text-sm font-mono rounded-xl pr-14"
-                    maxLength={50}
-                  />
-                  {accessCode && (
-                    <button
+
+                {/* Access PIN Code */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 sm:py-4.5 px-4 sm:px-6 hover:bg-muted/20 transition-colors gap-3">
+                  <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Lock className="size-4 sm:size-5" />
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-xs sm:text-base font-semibold text-foreground">
+                        Passcode / PIN
+                      </span>
+                      <span className="text-[11px] text-muted-foreground font-normal">(Optional)</span>
+                      <InfoTip text="If set, candidates must input this passcode along with their credentials before the test commences." />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-48 lg:w-56">
+                      <Input
+                        id="accessCode"
+                        name="accessCode"
+                        placeholder="e.g. 2026EXAM"
+                        value={accessCode}
+                        onChange={(e) => setAccessCode(e.target.value)}
+                        className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
+                        maxLength={50}
+                      />
+                      {accessCode && (
+                        <button
+                          type="button"
+                          onClick={() => setAccessCode("")}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                    <Button
                       type="button"
-                      onClick={() => setAccessCode("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer px-1 py-0.5"
+                      variant="outline"
+                      onClick={() => {
+                        const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
+                        setAccessCode(randomCode)
+                      }}
+                      className="h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-1.5 shadow-2xs active:scale-95 transition-all"
+                      title="Generate random 6-digit PIN"
                     >
-                      Clear
-                    </button>
-                  )}
+                      <RefreshCw className="size-3.5 sm:size-4" />
+                      <span>Generate PIN</span>
+                    </Button>
+                  </div>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  If set, students must enter this passcode along with their Name & Email before starting the test.
-                </p>
               </div>
 
-              {/* Hidden isPublic field */}
-              <input type="checkbox" name="isPublic" checked={isPublic} readOnly className="sr-only" />
-            </CardContent>
-          </Card>
+              <input type="hidden" name="isPublic" value={isPublic ? "on" : "off"} />
+            </Card>
+          </div>
+
+          {/* ── RIGHT STICKY SIDEBAR (4 Columns on lg/xl) ── */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
+            <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Assessment Overview
+                  </span>
+                  <Badge variant="secondary" className="font-bold text-xs px-2.5 py-0.5 rounded-full">
+                    Draft
+                  </Badge>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground mt-1.5 line-clamp-2">
+                  {title.trim() ? title : "Untitled Assessment"}
+                </h3>
+              </div>
+
+              <div className="p-4 sm:p-5 lg:p-6 space-y-4 sm:space-y-5">
+                {/* Specification List: Shown on Desktop, hidden on Mobile to remove redundant duplicate clutter as requested */}
+                <div className="hidden lg:block divide-y divide-border/60 text-sm sm:text-base">
+                  <div className="flex items-center justify-between py-3 first:pt-0">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <Clock className="size-4 text-blue-500" />
+                      <span>Duration</span>
+                    </span>
+                    <span className={cn("font-bold", isDurationValid ? "text-foreground" : "text-destructive")}>
+                      {durationMinutes > 0 ? `${durationMinutes} mins` : "Required"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <RefreshCw className="size-4 text-amber-500" />
+                      <span>Max Attempts</span>
+                    </span>
+                    <span className={cn("font-bold", isAttemptsValid ? "text-foreground" : "text-destructive")}>
+                      {maxAttempts > 0
+                        ? `${maxAttempts} ${maxAttempts === 1 ? "attempt" : "attempts"}`
+                        : "Required"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <Trophy className="size-4 text-yellow-500" />
+                      <span>Passing Score</span>
+                    </span>
+                    <span className={cn("font-bold", isPassingMarksValid ? "text-foreground" : "text-destructive")}>
+                      {passingMarks ? passingMarks : "None"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <ShieldCheck className="size-4 text-emerald-500" />
+                      <span>Proctoring</span>
+                    </span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      {activeProctoringCount} of 3 active
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3 last:pb-0">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <Globe className="size-4 text-primary" />
+                      <span>Candidate Access</span>
+                    </span>
+                    <span className="font-bold text-primary text-xs sm:text-sm">
+                      {allowGuestAccess ? "Direct Link (Open)" : "Registered Only"}
+                    </span>
+                  </div>
+                </div>
+
+                <Separator className="my-2 hidden lg:block" />
+
+                {/* Live Form Readiness Status Alert */}
+                {!isFormValid ? (
+                  <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 sm:p-3.5 text-xs sm:text-sm text-amber-800 dark:text-amber-300 font-semibold">
+                    <AlertTriangle className="size-4 sm:size-4.5 shrink-0 text-amber-500 mt-0.5" />
+                    <span>
+                      {!isTitleValid
+                        ? "Enter exam title (minimum 3 characters)"
+                        : !isDurationValid
+                        ? "Enter valid duration (1-600 mins)"
+                        : !isAttemptsValid
+                        ? "Enter valid attempts (1-10)"
+                        : !isPassingMarksValid
+                        ? "Passing marks must be ≥ 0"
+                        : !isScheduleValid
+                        ? "Closing time must be after opening time"
+                        : "Please fill required fields to activate"}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 sm:p-3.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 font-bold animate-in fade-in-50 duration-200">
+                    <CheckCircle2 className="size-4 sm:size-4.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                    <span>All fields valid — ready to save!</span>
+                  </div>
+                )}
+
+                {/* Actions Section */}
+                <div className="pt-1 sm:pt-2 w-full">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={!isFormValid || isPending}
+                    className={cn(
+                      "w-full h-12 sm:h-13 rounded-xl text-sm sm:text-lg font-bold shadow-md transition-all cursor-pointer",
+                      isFormValid && !isPending
+                        ? "hover:shadow-lg active:scale-[0.99] text-primary-foreground"
+                        : "opacity-50 cursor-not-allowed pointer-events-auto"
+                    )}
+                  >
+                    {isPending ? (
+                      <>
+                        <Spinner className="mr-2" />
+                        <span>Saving Assessment...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{submitLabel}</span>
+                        <ArrowRight className="ml-2 size-4 sm:size-5" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
 
-        {/* Right Sticky Summary Sidebar (4 Columns on lg/xl) */}
-        <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4 min-w-0">
-          <Card className="rounded-2xl border border-border/70 bg-card py-0 gap-0 shadow-xs overflow-hidden">
-            <div className="px-4 py-3 sm:px-5 sm:py-4 border-b border-border/50 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Overview
-                </span>
-                <Badge variant="secondary" className="font-semibold text-xs px-2 py-0.5">
-                  Draft
-                </Badge>
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground mt-1 truncate">
-                {title.trim() ? title : "Untitled Exam"}
-              </h3>
-            </div>
-
-            <CardContent className="p-4 sm:p-5 space-y-4 sm:space-y-5">
-              {/* Clean Specs List (No cut-offs on any resolution!) */}
-              <div className="divide-y divide-border/50 text-sm">
-                <div className="flex items-center justify-between py-2.5 first:pt-0">
-                  <span className="text-muted-foreground font-medium">Duration</span>
-                  <span className={cn("font-bold", isDurationValid ? "text-foreground" : "text-destructive")}>
-                    {durationMinutes > 0 ? `${durationMinutes} mins` : "Required"}
-                  </span>
+        {/* ── MODAL 1: PROCTORING & ANTI-CHEAT GOVERNANCE MODAL ── */}
+        <Dialog open={isProctoringModalOpen} onOpenChange={setIsProctoringModalOpen}>
+          <DialogContent
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+          >
+            <DialogHeader className="p-3.5 sm:p-6 pb-2.5 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 pr-8">
+                <div className="size-9 sm:size-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/20 shadow-xs">
+                  <ShieldCheck className="size-4.5 sm:size-6" />
                 </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Max Attempts</span>
-                  <span className={cn("font-bold", isAttemptsValid ? "text-foreground" : "text-destructive")}>
-                    {maxAttempts > 0
-                      ? `${maxAttempts} ${maxAttempts === 1 ? "attempt" : "attempts"}`
-                      : "Required"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Passing Marks</span>
-                  <span className={cn("font-bold", isPassingMarksValid ? "text-foreground" : "text-destructive")}>
-                    {passingMarks ? passingMarks : "None"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-muted-foreground font-medium">Proctoring</span>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                    {activeProctoringCount} of 3 active
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-2.5 last:pb-0">
-                  <span className="text-muted-foreground font-medium">Student Access</span>
-                  <span className="font-bold text-primary text-xs">
-                    {allowGuestAccess ? "Direct Link (No Reg.)" : "Registered Only"}
-                  </span>
+                <div>
+                  <DialogTitle className="text-base sm:text-2xl font-bold tracking-tight text-foreground leading-snug">
+                    Proctoring & Anti-Cheat Governance
+                  </DialogTitle>
+                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Automated cheating deterrents, live camera monitoring, and integrity rules
+                  </DialogDescription>
                 </div>
               </div>
+            </DialogHeader>
 
-              {/* Form Readiness Indicator */}
-              {!isFormValid ? (
-                <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 px-3.5 py-2.5 text-xs text-amber-700 dark:text-amber-400 font-medium">
-                  <AlertTriangle className="size-4 shrink-0 text-amber-500" />
-                  <span>
-                    {!isTitleValid
-                      ? "Enter exam title (min 3 chars)"
-                      : !isDurationValid
-                      ? "Enter valid duration (1-600 mins)"
-                      : !isAttemptsValid
-                      ? "Enter valid attempts (1-10)"
-                      : !isPassingMarksValid
-                      ? "Passing marks must be ≥ 0"
-                      : !isScheduleValid
-                      ? "Closing time must be after opening time"
-                      : "Fill required fields to activate"}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-2.5 text-xs text-emerald-700 dark:text-emerald-400 font-semibold animate-in fade-in-50 duration-200">
-                  <Check className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                  <span>All fields valid — ready to submit!</span>
-                </div>
-              )}
-
-              {/* Action Buttons: Stacked vertically so button text has full width and never truncates */}
-              <div className="pt-2 flex flex-col gap-2.5 w-full">
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={!isFormValid || isPending}
+            <div className="p-3.5 sm:p-6 space-y-3 sm:space-y-4 text-sm overflow-y-auto flex-1">
+              <div className="space-y-2.5 sm:space-y-3">
+                {/* Row 1: Shuffle Questions */}
+                <div
+                  onClick={() => setShuffleQuestions(!shuffleQuestions)}
                   className={cn(
-                    "w-full h-12 rounded-xl text-sm sm:text-base font-bold shadow-xs transition-all",
-                    isFormValid && !isPending
-                      ? "cursor-pointer hover:shadow-md active:scale-[0.99] text-primary-foreground"
-                      : "opacity-45 cursor-not-allowed pointer-events-auto"
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
+                    shuffleQuestions
+                      ? "border-emerald-500/40 bg-emerald-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
                   )}
                 >
-                  {isPending ? (
-                    <>
-                      <Spinner className="mr-2" />
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{submitLabel}</span>
-                      <ArrowRight className="ml-1.5 size-4" />
-                    </>
-                  )}
-                </Button>
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleQuestions ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Shuffle Questions</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
+                        Randomizes question sequence for each candidate attempt
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={shuffleQuestions}
+                    onCheckedChange={setShuffleQuestions}
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
+                  />
+                </div>
 
-                <Button
-                  asChild
-                  variant="destructive"
-                  size="lg"
-                  className="w-full h-11 px-5 rounded-xl text-sm font-semibold border border-destructive/25 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all cursor-pointer active:scale-[0.98] shadow-2xs whitespace-nowrap"
+                {/* Row 2: Shuffle Choices */}
+                <div
+                  onClick={() => setShuffleOptions(!shuffleOptions)}
+                  className={cn(
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
+                    shuffleOptions
+                      ? "border-indigo-500/40 bg-indigo-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
+                  )}
                 >
-                  <Link href={cancelHref} className="flex items-center justify-center gap-2 whitespace-nowrap">
-                    <Trash2 className="size-4 shrink-0" />
-                    <span>Discard Exam</span>
-                  </Link>
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      shuffleOptions ? "bg-indigo-500/20 text-indigo-600 dark:text-indigo-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Shuffle className="size-4 sm:size-5 rotate-90" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Shuffle Options</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
+                        Scrambles multiple-choice options (A, B, C, D) inside each question
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={shuffleOptions}
+                    onCheckedChange={setShuffleOptions}
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
+                  />
+                </div>
+
+                {/* Row 3: Mandatory Webcam */}
+                <div
+                  onClick={() => setWebcamMonitoringRequired(!webcamMonitoringRequired)}
+                  className={cn(
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
+                    webcamMonitoringRequired
+                      ? "border-blue-500/40 bg-blue-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      webcamMonitoringRequired ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Camera className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">Webcam Surveillance & Consent</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
+                        Periodic silent audit snapshots verify student identity and presence
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={webcamMonitoringRequired}
+                    onCheckedChange={setWebcamMonitoringRequired}
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
+                  />
+                </div>
+
+                {/* Row 4: Anomaly Sensitivity */}
+                <div className="p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-2.5 sm:space-y-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5">
+                    <div className="size-8.5 sm:size-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="size-4 sm:size-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs sm:text-base font-semibold text-foreground block">Anomaly Review Threshold</span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-tight sm:leading-normal">
+                        Cumulative score triggering teacher review and cheating alerts
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-0.5">
+                    {[
+                      { label: "Strict (3 pts)", val: 3 },
+                      { label: "Balanced (5 pts)", val: 5 },
+                      { label: "Lenient (10 pts)", val: 10 },
+                    ].map(({ label, val }) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setViolationThreshold(val)}
+                        className={cn(
+                          "h-9 sm:h-10 px-1 sm:px-3 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-semibold transition-all cursor-pointer flex items-center justify-center text-center",
+                          violationThreshold === val
+                            ? "bg-primary text-primary-foreground shadow-2xs font-bold ring-1 ring-primary/40"
+                            : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border/50"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-1 sm:pt-2">
+                <Button
+                  type="button"
+                  onClick={() => setIsProctoringModalOpen(false)}
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
+                >
+                  <CheckCircle2 className="size-4.5 sm:size-5" />
+                  <span>Save & Apply Proctoring Rules</span>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
-      {/* Title Presets & Dropdown Generator Modal */}
-      <TitleTemplateModal
-        open={isTemplateModalOpen}
-        onOpenChange={setIsTemplateModalOpen}
-        onSelectTitle={handleSelectPresetTitle}
-      />
-    </form>
+        {/* ── MODAL 2: CANDIDATE ACCESS & PARTICIPATION MODAL ── */}
+        <Dialog open={isAccessModalOpen} onOpenChange={setIsAccessModalOpen}>
+          <DialogContent
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className="w-[calc(100vw-1.25rem)] sm:w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border-border/80 shadow-2xl overflow-hidden"
+          >
+            <DialogHeader className="p-3.5 sm:p-6 pb-2.5 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 pr-8">
+                <div className="size-9 sm:size-12 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20 shadow-xs">
+                  <Globe className="size-4.5 sm:size-6" />
+                </div>
+                <div>
+                  <DialogTitle className="text-base sm:text-2xl font-bold tracking-tight text-foreground leading-snug">
+                    Candidate Access & Security Governance
+                  </DialogTitle>
+                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Define student joining permissions, registration requirements, and secret passcodes
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <div className="p-3.5 sm:p-6 space-y-3 sm:space-y-4 text-sm overflow-y-auto flex-1">
+              <div className="space-y-2.5 sm:space-y-3">
+                {/* Row 1: Direct Link Participation */}
+                <div
+                  onClick={() => setAllowGuestAccess(!allowGuestAccess)}
+                  className={cn(
+                    "flex items-center justify-between gap-2.5 sm:gap-3.5 p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer select-none",
+                    allowGuestAccess
+                      ? "border-sky-500/40 bg-sky-500/5 shadow-2xs"
+                      : "border-border/60 bg-card hover:bg-muted/30"
+                  )}
+                >
+                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-1">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      allowGuestAccess ? "bg-sky-500/20 text-sky-600 dark:text-sky-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Users className="size-4 sm:size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-base font-semibold text-foreground block truncate sm:text-wrap">
+                        Direct Link (No Registration Required)
+                      </span>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:line-clamp-none leading-tight sm:leading-normal">
+                        Candidates can start with Name & Email without account registration
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={allowGuestAccess}
+                    onCheckedChange={setAllowGuestAccess}
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
+                  />
+                </div>
+
+                {/* Row 2: Security PIN Passcode */}
+                <div className="p-3 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card hover:bg-muted/30 transition-all space-y-2.5 sm:space-y-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3.5">
+                    <div className={cn(
+                      "size-8.5 sm:size-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-colors",
+                      accessCode ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Lock className="size-4 sm:size-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs sm:text-base font-semibold text-foreground">
+                          Access Passcode / Security PIN
+                        </span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground font-normal">(Optional)</span>
+                      </div>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-tight sm:leading-normal">
+                        Require candidates to enter this secret PIN before the test commences
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 sm:gap-2.5 pt-0.5">
+                    <div className="relative flex-1">
+                      <Input
+                        placeholder="e.g. 2026EXAM"
+                        value={accessCode}
+                        onChange={(e) => setAccessCode(e.target.value)}
+                        className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
+                        maxLength={50}
+                      />
+                      {accessCode && (
+                        <button
+                          type="button"
+                          onClick={() => setAccessCode("")}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer font-medium"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const randomCode = Math.floor(100000 + Math.random() * 900000).toString()
+                        setAccessCode(randomCode)
+                      }}
+                      className="h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm font-bold shrink-0 cursor-pointer rounded-xl gap-1.5 sm:gap-2 shadow-2xs active:scale-95 transition-all"
+                      title="Generate random 6-digit PIN"
+                    >
+                      <RefreshCw className="size-3.5 sm:size-4" />
+                      <span>Generate PIN</span>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-1 sm:pt-2">
+                <Button
+                  type="button"
+                  onClick={() => setIsAccessModalOpen(false)}
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base font-bold rounded-xl cursor-pointer gap-2 shadow-sm"
+                >
+                  <CheckCircle2 className="size-4.5 sm:size-5" />
+                  <span>Save Access Settings</span>
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Title Presets & Dropdown Generator Modal */}
+        <TitleTemplateModal
+          open={isTemplateModalOpen}
+          onOpenChange={setIsTemplateModalOpen}
+          onSelectTitle={handleSelectPresetTitle}
+        />
+      </form>
+    </TooltipProvider>
   )
 }

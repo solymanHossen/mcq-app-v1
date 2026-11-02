@@ -10,8 +10,10 @@ import {
   Tag,
   Clock,
   TrendingUp,
+  EyeOff,
 } from "lucide-react"
 import { listAllCoupons } from "@/modules/payments/queries"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {
@@ -27,6 +29,7 @@ import { DeactivateCouponButton } from "@/modules/payments/components/deactivate
 import { CopyCouponButton } from "@/modules/payments/components/copy-coupon-button"
 import { DebouncedSearchInput } from "@/components/shared/debounced-search-input"
 import { cn } from "@/lib/utils"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -71,7 +74,10 @@ export default async function AdminCouponsPage({
   const activeTab = sp.filter ?? "all"
   const search = sp.q?.trim()
 
-  const allCoupons = await listAllCoupons()
+  const [allCoupons, { billingEnabled }] = await Promise.all([
+    listAllCoupons(),
+    getSystemSettings(),
+  ])
 
   const activeCount = allCoupons.filter((c) => c.isActive).length
   const totalRedemptions = allCoupons.reduce((sum, c) => sum + c.timesRedeemed, 0)
@@ -96,25 +102,40 @@ export default async function AdminCouponsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & NEW COUPON BUTTON ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Discount Coupons
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Discount Coupons"
+        description={
+          <>
             <span className="font-semibold text-foreground">{activeCount}</span> of {allCoupons.length} active vouchers ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {totalRedemptions}
             </span>{" "}
             total claims applied ·{" "}
             <span className="font-semibold text-foreground">{maxPercent > 0 ? `Up to ${maxPercent}% off` : "Custom rates"}</span>
-          </p>
-        </div>
+          </>
+        }
+        actions={<CreateCouponDialog />}
+      />
 
-        {/* Aligned Create Coupon Modal Trigger */}
-        <CreateCouponDialog />
-      </div>
+      {!billingEnabled && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300">
+              <EyeOff className="size-4.5" />
+            </span>
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold">Monetization is currently Turned Off (Free Mode).</span>{" "}
+              Coupons cannot be applied by students while billing is disabled platform-wide.
+            </div>
+          </div>
+          <Link
+            href="/admin/settings/policies"
+            className="shrink-0 text-xs font-semibold underline underline-offset-4 hover:opacity-80"
+          >
+            Billing Settings →
+          </Link>
+        </div>
+      )}
 
       {/* ================= 3-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">

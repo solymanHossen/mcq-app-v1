@@ -46,12 +46,13 @@ export async function createCheckoutSessionAction(input: unknown) {
 
   const provider = getPaymentProvider()
   const origin = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
+  const returnPath = user.role === "TEACHER" ? "/teacher/billing" : "/billing"
   const result = await provider.createCheckoutSession({
     userId: user.id,
     planKey,
     couponCode,
-    successUrl: `${origin}/billing?checkout=success`,
-    cancelUrl: `${origin}/billing?checkout=canceled`,
+    successUrl: `${origin}${returnPath}?checkout=success`,
+    cancelUrl: `${origin}${returnPath}?checkout=canceled`,
   })
 
   return result
@@ -80,5 +81,6 @@ export async function cancelSubscriptionAction(subscriptionId: string) {
   })
 
   safeRevalidatePath("/billing")
+  safeRevalidatePath("/teacher/billing")
   return { success: true }
 }

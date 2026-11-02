@@ -10,6 +10,12 @@ export type SystemSettings = {
   heroVideoUrl: string | null
   heroTitle: string | null
   heroSubtitle: string | null
+  githubUrl: string | null
+  twitterUrl: string | null
+  linkedinUrl: string | null
+  facebookUrl: string | null
+  youtubeUrl: string | null
+  contactEmail: string | null
 }
 
 // Mirrors the SystemSettings model's own column defaults — what the
@@ -24,6 +30,12 @@ const DEFAULT_SETTINGS: SystemSettings = {
   heroVideoUrl: null,
   heroTitle: null,
   heroSubtitle: null,
+  githubUrl: null,
+  twitterUrl: null,
+  linkedinUrl: null,
+  facebookUrl: null,
+  youtubeUrl: null,
+  contactEmail: null,
 }
 
 // Memoized per request: a layout, a page, and a server action can all ask
@@ -42,6 +54,13 @@ export const getSystemSettings = cache(async (): Promise<SystemSettings> => {
     heroVideoUrl: row.heroVideoUrl ?? null,
     heroTitle: row.heroTitle ?? null,
     heroSubtitle: row.heroSubtitle ?? null,
+    githubUrl: row.githubUrl ?? null,
+    twitterUrl: row.twitterUrl ?? null,
+    linkedinUrl: row.linkedinUrl ?? null,
+    facebookUrl: row.facebookUrl ?? null,
+    youtubeUrl: row.youtubeUrl ?? null,
+    contactEmail: row.contactEmail ?? null,
   }
 })
+
 

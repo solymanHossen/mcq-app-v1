@@ -6,6 +6,12 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+} from "@/components/ui/field"
 import { startAttemptAction } from "@/modules/attempts/actions"
 
 export function StartExamButton({
@@ -33,30 +39,38 @@ export function StartExamButton({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-4 sm:gap-5">
       {webcamMonitoringRequired && (
-        <div className="flex items-start gap-2 rounded-md border p-3 text-sm">
+        <Field
+          orientation="horizontal"
+          className="items-start gap-3 rounded-2xl border border-border/70 bg-muted/20 p-3.5 sm:p-4 shadow-2xs"
+        >
           <Checkbox
             id="webcam-consent"
             checked={webcamConsent}
             onCheckedChange={(checked) => setWebcamConsent(checked === true)}
             aria-describedby="webcam-consent-description"
           />
-          <label htmlFor="webcam-consent" className="cursor-pointer">
-            <span className="font-medium">
-              I consent to webcam monitoring during this exam.
-            </span>
-            <p
-              id="webcam-consent-description"
-              className="mt-1 text-xs text-muted-foreground"
+          <FieldContent>
+            <FieldLabel
+              htmlFor="webcam-consent"
+              className="cursor-pointer text-sm leading-relaxed font-semibold sm:text-base text-foreground"
             >
-              This exam requires webcam monitoring. No recording starts
-              without this checkbox.
-            </p>
-          </label>
-        </div>
+              I consent to webcam monitoring during this exam.
+            </FieldLabel>
+            <FieldDescription
+              id="webcam-consent-description"
+              className="text-xs leading-relaxed text-muted-foreground sm:text-sm"
+            >
+              This exam requires webcam monitoring. No recording starts without
+              this checkbox.
+            </FieldDescription>
+          </FieldContent>
+        </Field>
       )}
       <Button
+        size="lg"
+        className="h-11 sm:h-12 w-full rounded-xl font-bold shadow-2xs active:scale-95 transition-all text-sm sm:text-base"
         onClick={start}
         disabled={isPending || (webcamMonitoringRequired && !webcamConsent)}
       >

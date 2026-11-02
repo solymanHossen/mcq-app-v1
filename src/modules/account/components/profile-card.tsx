@@ -1,9 +1,12 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { Lock } from "lucide-react"
 
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
@@ -12,13 +15,18 @@ import { updateProfileNameAction } from "@/modules/account/actions"
 export function ProfileCard({
   name,
   email,
+  className,
+  variant = "default",
 }: {
+  variant?: "default" | "outlined"
+  className?: string
   name: string
   email: string
   role: string
   joinedAt: string
   lastLoginAt: string | null
 }) {
+  const FormInput = variant === "outlined" ? Input : "input"
   const [value, setValue] = useState(name)
   const [isPending, startTransition] = useTransition()
   const dirty = value.trim().length > 0 && value.trim() !== name
@@ -36,7 +44,12 @@ export function ProfileCard({
   }
 
   return (
-    <div className="relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+    <div
+      className={cn(
+        "relative flex flex-col justify-between rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-8 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        className
+      )}
+    >
       <div>
         <div className="pb-6">
           <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -54,7 +67,7 @@ export function ProfileCard({
               >
                 Full Name
               </Label>
-              <input
+              <FormInput
                 id="name"
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
@@ -80,7 +93,7 @@ export function ProfileCard({
                   Immutable
                 </span>
               </div>
-              <input
+              <FormInput
                 id="email"
                 value={email}
                 disabled
@@ -94,7 +107,9 @@ export function ProfileCard({
           <div className="flex items-center justify-between border-t border-border/50 pt-6">
             <span className="text-xs font-medium text-muted-foreground">
               {dirty ? (
-                <span className="font-semibold text-primary">Unsaved changes</span>
+                <span className="font-semibold text-primary">
+                  Unsaved changes
+                </span>
               ) : (
                 "Up to date"
               )}
@@ -103,7 +118,7 @@ export function ProfileCard({
             <Button
               type="submit"
               disabled={!dirty || isPending}
-              className="h-11 rounded-xl px-7 text-sm font-bold bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-95 transition-all cursor-pointer sm:h-12"
+              className="h-11 cursor-pointer rounded-xl bg-primary px-7 text-sm font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-95 sm:h-12"
             >
               {isPending && <Spinner data-icon="inline-start" />}
               Save Changes
@@ -114,4 +129,3 @@ export function ProfileCard({
     </div>
   )
 }
-

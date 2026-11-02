@@ -8,12 +8,15 @@ import {
   Users,
   DollarSign,
   Layers,
+  EyeOff,
 } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { listAllSubscriptionPlans } from "@/modules/payments/queries"
 import { CreatePlanDialog } from "@/modules/payments/components/create-plan-form"
 import { PlanActiveToggle } from "@/modules/payments/components/plan-active-toggle"
 import { cn } from "@/lib/utils"
+import { AdminPageHeader } from "@/components/shared/admin-page-header"
+import { getSystemSettings } from "@/modules/settings/queries"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -66,7 +69,7 @@ export default async function AdminSubscriptionsPage({
   const sp = (await searchParams) ?? {}
   const activeTab = sp.filter ?? "all"
 
-  const [allPlans, totalActiveSubscribers, revenueAggregate, subscriberGroups] =
+  const [allPlans, totalActiveSubscribers, revenueAggregate, subscriberGroups, { billingEnabled }] =
     await Promise.all([
       listAllSubscriptionPlans(),
       prisma.subscription.count({ where: { status: "ACTIVE" } }),
@@ -79,6 +82,7 @@ export default async function AdminSubscriptionsPage({
         where: { status: "ACTIVE" },
         _count: { id: true },
       }),
+      getSystemSettings(),
     ])
 
   const totalRevenueCents = revenueAggregate._sum.amountCents ?? 0
@@ -96,24 +100,40 @@ export default async function AdminSubscriptionsPage({
 
   return (
     <div className="w-full min-w-0 space-y-6 sm:space-y-8">
-      {/* ================= PAGE HEADER & NEW PLAN BUTTON ================= */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-1">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Subscription Plans
-          </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+      <AdminPageHeader
+        title="Subscription Plans"
+        description={
+          <>
             <span className="font-semibold text-foreground">{totalActiveSubscribers}</span> active subscriber{totalActiveSubscribers === 1 ? "" : "s"} ·{" "}
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatPrice(totalRevenueCents, "usd")}
             </span>{" "}
             total billed ·{" "}
             <span className="font-semibold text-foreground">{activePlanCount}</span> of {allPlans.length} active tiers
-          </p>
-        </div>
+          </>
+        }
+        actions={<CreatePlanDialog />}
+      />
 
-        <CreatePlanDialog />
-      </div>
+      {!billingEnabled && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300">
+              <EyeOff className="size-4.5" />
+            </span>
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold">Monetization is currently Turned Off (Free Mode).</span>{" "}
+              All billing links and checkout flows are completely hidden from students and teachers across the platform.
+            </div>
+          </div>
+          <Link
+            href="/admin/settings/policies"
+            className="shrink-0 text-xs font-semibold underline underline-offset-4 hover:opacity-80"
+          >
+            Billing Settings →
+          </Link>
+        </div>
+      )}
 
       {/* ================= 3-TILE SUMMARY METRICS STRIP ================= */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">

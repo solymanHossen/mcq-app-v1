@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Plus, BookOpen, Layers } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { requireUser, assertOwner } from "@/lib/authorization"
 import {
@@ -12,6 +12,7 @@ import {
 import { QuestionFilters } from "@/modules/question-bank/components/question-filters"
 import { AddQuestionsForm } from "@/modules/exams/components/add-questions-form"
 import { PagePagination } from "@/components/shared/page-pagination"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
@@ -70,23 +71,23 @@ export default async function AddQuestionsPage({
   ])
 
   return (
-    <div className="w-full space-y-8 pb-12">
+    <div className="w-full min-w-0 space-y-6 pb-12 sm:space-y-8 sm:pb-16">
       {/* Header */}
-      <div>
+      <div className="space-y-3 sm:space-y-4">
         <Button
           asChild
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="mb-2 -ml-2 text-muted-foreground hover:text-foreground"
+          className="h-8 max-w-full rounded-full border-border/70 bg-card px-3 text-xs font-semibold text-muted-foreground shadow-2xs hover:bg-muted hover:text-foreground sm:h-8.5 sm:text-sm"
         >
           <Link href={`/teacher/exams/${examId}`}>
             <ArrowLeft className="mr-1.5 size-4" />
-            <span>Back to {exam.title}</span>
+            <span className="truncate">Back to {exam.title}</span>
           </Link>
         </Button>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-border/60 pb-3 sm:gap-4 sm:pb-4">
           <div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
               Add Questions from Vault
             </h1>
             <p className="mt-1 text-sm sm:text-base text-muted-foreground">
@@ -98,9 +99,11 @@ export default async function AddQuestionsPage({
       </div>
 
       {/* Filters Card */}
-      <div className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-4 sm:p-5 shadow-xs">
-        <QuestionFilters subjects={subjects} topics={topics} />
-      </div>
+      <Card className="gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0">
+        <CardContent className="p-4 sm:p-6 lg:p-7">
+          <QuestionFilters subjects={subjects} topics={topics} />
+        </CardContent>
+      </Card>
 
       {/* Questions Selection Form */}
       <AddQuestionsForm examId={examId} questions={items} />

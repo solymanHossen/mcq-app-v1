@@ -11,6 +11,12 @@ export const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
+export const teacherApplicationSchema = z.object({
+  institution: z.string().min(2, 'Institution name must be at least 2 characters').max(150),
+  department: z.string().min(2, 'Subject or department must be at least 2 characters').max(100),
+  bio: z.string().min(10, 'Please provide qualification background (min 10 characters)').max(1000),
+});
+
 export const verifyEmailSchema = z.object({
   email: z.string().email('Enter a valid email address'),
   otp: z.string().regex(/^\d{6}$/, 'OTP must be 6 digits'),

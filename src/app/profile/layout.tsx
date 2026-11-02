@@ -3,6 +3,7 @@ import * as React from "react"
 import { Navbar } from "@/components/landing/navbar"
 import { Footer } from "@/components/landing/footer"
 import { requireUser } from "@/lib/authorization"
+import { getSystemSettings } from "@/modules/settings/queries"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -14,12 +15,15 @@ export default async function ProfileLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await requireUser()
+  const [user, settings] = await Promise.all([
+    requireUser(),
+    getSystemSettings(),
+  ])
 
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground">
       {/* Exact Same Public Route Header Navbar (Floating Pill on Desktop, Flush Edge-to-Edge on Mobile) */}
-      <Navbar user={user} />
+      <Navbar user={user} logoUrl={settings.logoUrl} />
 
       {/* Dynamic Ambient Background Glows matching the Landing Hero Section */}
       <div
@@ -39,7 +43,17 @@ export default async function ProfileLayout({
       </main>
 
       {/* Unified World-Class Footer */}
-      <Footer />
+      <Footer
+        logoUrl={settings.logoUrl}
+        socialLinks={{
+          githubUrl: settings.githubUrl,
+          twitterUrl: settings.twitterUrl,
+          linkedinUrl: settings.linkedinUrl,
+          facebookUrl: settings.facebookUrl,
+          youtubeUrl: settings.youtubeUrl,
+          contactEmail: settings.contactEmail,
+        }}
+      />
     </div>
   )
 }

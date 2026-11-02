@@ -16,6 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import { BookOpen, BarChart3 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface BarDataPoint {
   category: string
@@ -24,6 +25,7 @@ interface BarDataPoint {
 }
 
 interface DashboardBarChartProps {
+  className?: string
   title?: string
   description?: string
   data: BarDataPoint[]
@@ -44,9 +46,15 @@ export function DashboardBarChart({
   data,
   totalItems,
   itemLabel = "Questions",
+  className,
 }: DashboardBarChartProps) {
   return (
-    <Card className="flex flex-col rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md">
+    <Card
+      className={cn(
+        "flex flex-col rounded-2xl border border-border/70 bg-card shadow-xs transition-all hover:shadow-md",
+        className
+      )}
+    >
       <CardHeader className="flex flex-row items-center justify-between p-5 pb-2 sm:p-6 sm:pb-2">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">

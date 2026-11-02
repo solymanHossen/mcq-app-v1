@@ -32,8 +32,10 @@ export async function finalizeAndGradeAttempt(
       select: { examId: true, studentId: true },
     })
 
-    await tx.examResult.create({
-      data: { attemptId, ...grade },
+    await tx.examResult.upsert({
+      where: { attemptId },
+      create: { attemptId, ...grade },
+      update: { ...grade, gradedAt: new Date() },
     })
     await tx.gradingAuditLog.create({
       data: {

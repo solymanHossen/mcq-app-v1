@@ -1,4 +1,5 @@
 import * as React from "react"
+import { connection } from "next/server"
 import { Navbar } from "@/components/landing/navbar"
 import { Footer } from "@/components/landing/footer"
 import { getCurrentUser } from "@/lib/authorization"
@@ -14,6 +15,9 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Resolve visitor sessions at request time rather than during prerendering.
+  await connection()
+
   const [user, settings] = await Promise.all([
     getCurrentUser(),
     getSystemSettings(),
@@ -23,7 +27,17 @@ export default async function PublicLayout({
     <div className="flex min-h-svh flex-col bg-background text-foreground">
       <Navbar user={user} logoUrl={settings.logoUrl} />
       <div className="flex flex-1 flex-col">{children}</div>
-      <Footer logoUrl={settings.logoUrl} />
+      <Footer
+        logoUrl={settings.logoUrl}
+        socialLinks={{
+          githubUrl: settings.githubUrl,
+          twitterUrl: settings.twitterUrl,
+          linkedinUrl: settings.linkedinUrl,
+          facebookUrl: settings.facebookUrl,
+          youtubeUrl: settings.youtubeUrl,
+          contactEmail: settings.contactEmail,
+        }}
+      />
     </div>
   )
 }

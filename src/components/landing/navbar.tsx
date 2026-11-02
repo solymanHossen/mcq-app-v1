@@ -3,18 +3,21 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { useTheme } from "next-themes"
 import {
   ArrowRight,
-  Building2,
   ChevronRight,
+  FileText,
+  Info,
   Laptop,
   LayoutDashboard,
   LogOut,
   Menu,
   Moon,
-  Sparkles,
+  Layers,
+  GraduationCap,
   Sun,
   User as UserIcon,
   Users,
@@ -44,10 +47,10 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { href: "/#features", label: "Features", icon: Sparkles },
-  { href: "/#how-it-works", label: "How it works", icon: Zap },
+  { href: "/exam-list", label: "Exam List", icon: FileText },
   { href: "/teachers", label: "Teachers", icon: Users },
-  { href: "/#enterprise", label: "Enterprise", icon: Building2 },
+  { href: "/services", label: "Services", icon: Layers },
+  { href: "/about", label: "About", icon: Info },
 ] as const
 
 function getInitials(name: string) {
@@ -60,14 +63,16 @@ function getInitials(name: string) {
 }
 
 export function Navbar({ user, logoUrl, className }: NavbarProps) {
+  const pathname = usePathname()
+  const isHome = pathname === "/"
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
   // Track scroll state for enhanced elevation
   React.useEffect(() => {
@@ -105,7 +110,12 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
       )}
     >
       {/* Mobile: 100% full-width flush to top. Desktop/Tablet: floating container */}
-      <div className="w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5">
+      <div
+        className={cn(
+          "w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5",
+          isHome && "mx-auto px-4 pt-3 lg:px-8"
+        )}
+      >
         <div
           className={cn(
             "relative flex h-16 w-full items-center justify-between px-4 transition-all duration-300 sm:h-[68px] sm:px-7",
@@ -113,6 +123,8 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             "rounded-none border-0 border-b border-border/80 bg-card/95 text-card-foreground shadow-none backdrop-blur-2xl",
             // Tablet/Desktop (sm+): Floating rounded pill with full border and subtle shadow
             "sm:rounded-[22px] sm:border sm:border-border/80 sm:bg-card/85 sm:shadow-xs",
+            isHome &&
+              "rounded-2xl border border-border/70 bg-card/95 shadow-xs sm:rounded-2xl sm:bg-card/95",
             // Scrolled states
             scrolled &&
               "border-border bg-card/98 shadow-sm sm:border-border sm:bg-card/95 sm:shadow-md"
@@ -124,19 +136,22 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             className="group flex items-center gap-3 transition-opacity hover:opacity-95"
           >
             {logoUrl ? (
-              <div className="relative size-9.5 sm:size-10 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+              <div className="relative flex size-9.5 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
                 <Image
                   src={logoUrl}
                   alt={APP_NAME}
                   width={40}
                   height={40}
                   className="size-full object-contain"
-                  unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
+                  unoptimized={
+                    logoUrl.startsWith("/uploads/") ||
+                    logoUrl.startsWith("http")
+                  }
                 />
               </div>
             ) : (
               <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-                <Sparkles className="size-5" />
+                <GraduationCap className="size-5" />
               </span>
             )}
             <span className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-[22px]">
@@ -145,24 +160,40 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           </Link>
 
           {/* Center: Desktop Navigation Links */}
-          <nav className="hidden items-center gap-8 md:flex lg:gap-10">
-            {NAV_LINKS.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                className="text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base"
-              >
-                {label}
-              </a>
-            ))}
+          <nav
+            aria-label="Main navigation"
+            className="hidden items-center gap-1 md:flex lg:gap-2"
+          >
+            {NAV_LINKS.map(({ href, label }) => {
+              const isActive = pathname === href || pathname.startsWith(href + "/")
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "inline-flex h-9.5 items-center rounded-xl px-3.5 text-sm font-semibold transition-all select-none",
+                    isActive
+                      ? "bg-primary/10 text-primary font-bold shadow-2xs"
+                      : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                  )}
+                >
+                  {label}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Right: Desktop Actions */}
-          <div className="hidden items-center gap-4 md:flex">
+          <div
+            className={cn(
+              "hidden items-center gap-4 md:flex",
+              isHome && "gap-3 md:hidden lg:flex"
+            )}
+          >
             {user ? (
               <UserNav user={user} showDashboardButton={true} />
             ) : (
-              <div className="flex items-center gap-5">
+              <div className={cn("flex items-center gap-5", isHome && "gap-3")}>
                 <Link
                   href="/login"
                   className="px-2 py-1.5 text-[15.5px] font-medium text-muted-foreground transition-colors hover:text-foreground lg:text-base"
@@ -181,7 +212,12 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           </div>
 
           {/* Mobile Right Actions: Avatar (if logged in) + Mobile Menu Toggle */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div
+            className={cn(
+              "flex items-center gap-2 md:hidden",
+              isHome && "md:flex lg:hidden"
+            )}
+          >
             {user && <UserNav user={user} showDashboardButton={false} />}
 
             <button
@@ -207,14 +243,22 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             <div
               aria-hidden="true"
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden"
+              className={cn(
+                "fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden",
+                isHome && "top-20 sm:top-24 md:block lg:hidden"
+              )}
             />
 
             {/* Edge-to-edge flush drawer directly beneath the header */}
             <div
               role="dialog"
               aria-modal="true"
-              className="fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden"
+              aria-label="Mobile navigation"
+              className={cn(
+                "fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden",
+                isHome &&
+                  "inset-x-4 top-20 max-h-[calc(100dvh-7rem)] w-auto rounded-2xl border border-border/70 p-4 shadow-sm sm:top-24 md:block lg:hidden"
+              )}
             >
               {/* If Logged In: Prominent User Header Card */}
               {user && (
@@ -265,22 +309,37 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
               )}
 
               <div className="flex flex-col gap-1.5">
-                {NAV_LINKS.map(({ href, label, icon: Icon }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="group flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-foreground transition-colors hover:bg-muted/70 active:bg-muted"
-                  >
-                    <span className="flex items-center gap-3.5">
-                      <span className="flex size-9 items-center justify-center rounded-lg bg-muted text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <Icon className="size-4.5" />
+                {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+                  const isActive = pathname === href || pathname.startsWith(href + "/")
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "group flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold transition-colors",
+                        isActive
+                          ? "bg-primary/10 text-primary font-bold"
+                          : "text-foreground hover:bg-muted/70 active:bg-muted"
+                      )}
+                    >
+                      <span className="flex items-center gap-3.5">
+                        <span
+                          className={cn(
+                            "flex size-9 items-center justify-center rounded-lg transition-colors",
+                            isActive
+                              ? "bg-primary text-primary-foreground shadow-2xs"
+                              : "bg-muted text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                          )}
+                        >
+                          <Icon className="size-4.5" />
+                        </span>
+                        <span>{label}</span>
                       </span>
-                      <span>{label}</span>
-                    </span>
-                    <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                  </a>
-                ))}
+                      <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  )
+                })}
 
                 {/* Mobile Theme Switcher Segment */}
                 {mounted && (

@@ -1,4 +1,5 @@
 import { cache } from "react"
+import { connection } from "next/server"
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
@@ -75,6 +76,11 @@ export async function resolveCurrentUser(
 // Memoized per request: a layout and the page it wraps both call this, and
 // should share one DB lookup instead of issuing it twice.
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
+  try {
+    await connection()
+  } catch {
+    // Non-fatal if running outside of Next.js server request context (e.g. tests or scripts)
+  }
   const session = await auth()
   if (!session?.user) return null
   return resolveCurrentUser({

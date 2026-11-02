@@ -44,7 +44,18 @@ export function isPublicRoute(pathname: string) {
 }
 
 // Routes accessible to both guests and authenticated users
-export const openRoutes = ["/", "/teachers", "/exam"] as const
+export const openRoutes = [
+  "/",
+  "/teachers",
+  "/teachers/apply",
+  "/exam",
+  "/exam-list",
+  "/services",
+  "/about",
+  "/contact",
+  "/privacy",
+  "/terms",
+] as const
 
 export function isOpenRoute(pathname: string) {
   // Normalize consecutive slashes and trailing slashes (e.g. /exam/id// -> /exam/id)

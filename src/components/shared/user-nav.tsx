@@ -108,11 +108,11 @@ export function UserNav({
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="group relative flex items-center gap-2 rounded-full p-1 ring-offset-background outline-hidden transition-all duration-200 hover:ring-3 hover:ring-primary/40 focus-visible:ring-3 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95"
+            className="group relative flex items-center rounded-full p-0.5 outline-hidden transition-all duration-150 hover:ring-2 hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
             aria-label="User account menu"
           >
-            <Avatar className="size-10 border-2 border-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-11">
-              <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary sm:text-sm">
+            <Avatar className="size-8.5 sm:size-9 border border-border/70 shadow-2xs transition-transform duration-150 group-hover:scale-105">
+              <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
@@ -236,6 +236,19 @@ export function UserNav({
                     <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/teachers/apply"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="size-4.5 text-primary transition-all duration-200 group-hover:scale-105" />
+                      <span className="font-semibold text-primary">Apply as Faculty</span>
+                    </div>
+                    <ChevronRight className="size-4 text-primary/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-primary" />
+                  </Link>
+                </DropdownMenuItem>
               </>
             )}
 
@@ -275,6 +288,19 @@ export function UserNav({
                     <div className="flex items-center gap-3">
                       <Settings className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
                       <span>Teacher Settings</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/profile?tab=activity"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>My Learning History</span>
                     </div>
                     <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>

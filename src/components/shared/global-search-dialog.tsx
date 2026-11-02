@@ -14,7 +14,7 @@ import {
   Settings,
   User as UserIcon,
   PlusCircle,
-  Sparkles,
+  Compass,
   Command,
   ArrowRight,
   X,
@@ -146,19 +146,19 @@ export function GlobalSearchTrigger({ className }: { className?: string }) {
       type="button"
       onClick={openGlobalSearch}
       className={cn(
-        "group flex h-11 w-full items-center justify-between rounded-2xl border border-border/40 bg-muted/30 px-4 text-xs sm:text-sm text-muted-foreground shadow-2xs transition-all duration-200 hover:border-primary/30 hover:bg-muted/60 hover:shadow-xs cursor-pointer",
+        "group flex h-9.5 sm:h-10 w-full items-center justify-between rounded-xl border border-border/70 bg-muted/30 hover:bg-muted/60 hover:border-border/90 px-3.5 text-xs sm:text-sm text-muted-foreground shadow-2xs transition-all duration-150 cursor-pointer",
         className
       )}
       title="Search anything (⌘K or Ctrl+K)"
     >
       <div className="flex items-center gap-2.5 min-w-0">
-        <Search className="size-4 text-primary/70 group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
-        <span className="truncate font-medium text-muted-foreground/80 group-hover:text-foreground">
+        <Search className="size-4 text-muted-foreground/70 group-hover:text-foreground shrink-0 transition-colors" />
+        <span className="truncate font-normal text-muted-foreground/70 group-hover:text-foreground text-xs sm:text-sm">
           Search assessments, users, records...
         </span>
       </div>
-      <kbd className="pointer-events-none inline-flex items-center gap-1 rounded-lg border border-border/40 bg-background/80 px-2 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground shadow-2xs transition-colors group-hover:text-foreground">
-        <Command className="size-3" />
+      <kbd className="pointer-events-none inline-flex items-center gap-0.5 rounded-md border border-border/70 bg-background/90 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-muted-foreground/80 shadow-2xs transition-colors group-hover:text-foreground">
+        <Command className="size-2.5" />
         <span>K</span>
       </kbd>
     </button>
@@ -171,12 +171,12 @@ export function GlobalSearchMobileButton({ className }: { className?: string }) 
       type="button"
       onClick={openGlobalSearch}
       className={cn(
-        "flex size-10 items-center justify-center rounded-2xl border-none bg-muted/40 text-muted-foreground shadow-2xs transition-all duration-200 hover:bg-muted/80 hover:text-foreground hover:scale-105 active:scale-95 md:hidden cursor-pointer",
+        "flex size-8.5 sm:size-9 items-center justify-center rounded-xl border border-border/60 bg-muted/30 text-muted-foreground shadow-2xs transition-all duration-150 hover:bg-muted/70 hover:text-foreground md:hidden cursor-pointer",
         className
       )}
       aria-label="Open search"
     >
-      <Search className="size-4.5" />
+      <Search className="size-4" />
     </button>
   )
 }
@@ -301,7 +301,7 @@ export function GlobalSearchDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent
         showCloseButton={false}
-        className="fixed top-1/2 left-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 p-0 overflow-hidden rounded-3xl border-none bg-background/95 backdrop-blur-2xl shadow-[0_25px_70px_rgba(0,0,0,0.35)] ring-1 ring-border/50 duration-200"
+        className="w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-2xl p-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-2xl duration-200 gap-0"
       >
         <div className="sr-only">
           <DialogTitle>Global Spotlight Search</DialogTitle>
@@ -309,36 +309,37 @@ export function GlobalSearchDialog({
         </div>
 
         {/* Top Search Input Bar */}
-        <div className="relative flex items-center border-b border-border/20 px-4 py-3 sm:px-6">
-          <Search className="size-5 shrink-0 text-primary animate-pulse" />
+        <div className="relative flex items-center border-b border-border/60 bg-muted/20 px-4 sm:px-5 py-3 sm:py-3.5">
+          <Search className="size-4.5 sm:size-5 shrink-0 text-muted-foreground/80 transition-colors" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search pages, users, exams, coupons... (Type to find anything)"
-            className="flex-1 bg-transparent px-3 text-base sm:text-lg font-medium text-foreground placeholder:text-muted-foreground/60 outline-none"
+            className="flex-1 bg-transparent px-3 text-sm sm:text-base font-medium text-foreground placeholder:text-muted-foreground/60 outline-none"
           />
           {loading && (
-            <Loader2 className="size-5 shrink-0 animate-spin text-muted-foreground mr-2" />
+            <Loader2 className="size-4.5 shrink-0 animate-spin text-muted-foreground mr-2" />
           )}
           {query ? (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="flex size-7 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+              className="flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+              aria-label="Clear query"
             >
               <X className="size-4" />
             </button>
           ) : (
-            <kbd className="hidden sm:inline-flex items-center gap-1 rounded-lg bg-muted/60 px-2 py-1 text-[11px] font-mono font-semibold text-muted-foreground shadow-2xs">
+            <kbd className="hidden sm:inline-flex items-center gap-1 rounded-md border border-border/70 bg-background/90 px-2 py-0.5 text-[11px] font-mono font-medium text-muted-foreground shadow-2xs">
               ESC
             </kbd>
           )}
         </div>
 
         {/* Filter Chips Bar */}
-        <div className="flex items-center gap-1.5 px-4 sm:px-6 py-2 border-b border-border/15 bg-muted/20 text-xs overflow-x-auto">
+        <div className="flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 border-b border-border/60 bg-muted/10 text-xs overflow-x-auto">
           {(
             [
               { id: "all", label: "All" },
@@ -353,9 +354,9 @@ export function GlobalSearchDialog({
               type="button"
               onClick={() => setFilter(tab.id)}
               className={cn(
-                "rounded-xl px-3 py-1 font-semibold transition-all cursor-pointer whitespace-nowrap",
+                "rounded-lg px-2.5 py-1 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
                 filter === tab.id
-                  ? "bg-primary text-primary-foreground shadow-xs"
+                  ? "bg-primary text-primary-foreground shadow-2xs"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
@@ -364,12 +365,12 @@ export function GlobalSearchDialog({
           ))}
         </div>
 
-        {/* Scrollable Results Area */}
-        <div className="max-h-[60vh] overflow-y-auto p-3 sm:p-4 space-y-4">
+        {/* Scrollable Results Area with comfortable bottom padding & sleek scrollbar */}
+        <div className="max-h-[60vh] sm:max-h-[65vh] overflow-y-auto p-3 sm:p-4 pb-5 sm:pb-6 space-y-3.5 [scrollbar-width:thin] [scrollbar-color:var(--color-border)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30">
           {/* Section: Dynamic Users Results */}
           {showUsers && (
             <div className="space-y-1">
-              <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="flex items-center gap-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
                 <Users className="size-3.5 text-primary" />
                 <span>Users ({results.users.length})</span>
               </div>
@@ -378,15 +379,15 @@ export function GlobalSearchDialog({
                   key={u.id}
                   type="button"
                   onClick={() => navigateTo(`/admin/users?q=${encodeURIComponent(u.email)}`)}
-                  className="w-full group flex items-center justify-between gap-3 rounded-2xl p-3 text-left transition-all hover:bg-muted/70 active:scale-[0.99] cursor-pointer"
+                  className="w-full group flex items-center justify-between gap-3 rounded-xl p-2.5 sm:p-3 text-left transition-all duration-150 border border-transparent hover:border-border/60 hover:bg-muted/50 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-xs font-bold text-primary">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-primary/10 text-xs font-bold text-primary shadow-2xs">
                       {u.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-foreground truncate">{u.name}</span>
+                        <span className="font-heading font-semibold text-sm text-foreground truncate">{u.name}</span>
                         <span
                           className={cn(
                             "size-2 rounded-full",
@@ -398,10 +399,10 @@ export function GlobalSearchDialog({
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant="secondary" className="text-[10px] uppercase font-bold">
+                    <Badge variant="outline" className="text-[10px] uppercase font-semibold border-border/70">
                       {u.role}
                     </Badge>
-                    <ArrowRight className="size-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="size-4 text-muted-foreground/30 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </button>
               ))}
@@ -411,7 +412,7 @@ export function GlobalSearchDialog({
           {/* Section: Dynamic Exams Results */}
           {showExams && (
             <div className="space-y-1">
-              <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="flex items-center gap-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
                 <BookOpen className="size-3.5 text-primary" />
                 <span>Exams ({results.exams.length})</span>
               </div>
@@ -420,22 +421,22 @@ export function GlobalSearchDialog({
                   key={ex.id}
                   type="button"
                   onClick={() => navigateTo("/admin")}
-                  className="w-full group flex items-center justify-between gap-3 rounded-2xl p-3 text-left transition-all hover:bg-muted/70 active:scale-[0.99] cursor-pointer"
+                  className="w-full group flex items-center justify-between gap-3 rounded-xl p-2.5 sm:p-3 text-left transition-all duration-150 border border-transparent hover:border-border/60 hover:bg-muted/50 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-2xs">
                       <BookOpen className="size-4.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="font-semibold text-foreground truncate block">{ex.title}</span>
+                      <span className="font-heading font-semibold text-sm text-foreground truncate block">{ex.title}</span>
                       <p className="text-xs text-muted-foreground">Total Marks: {ex.totalMarks}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant="outline" className="text-[10px]">
+                    <Badge variant="outline" className="text-[10px] font-semibold border-border/70">
                       {ex.status}
                     </Badge>
-                    <ArrowRight className="size-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="size-4 text-muted-foreground/30 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </button>
               ))}
@@ -445,7 +446,7 @@ export function GlobalSearchDialog({
           {/* Section: Dynamic Coupons Results */}
           {showCoupons && (
             <div className="space-y-1">
-              <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="flex items-center gap-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
                 <Ticket className="size-3.5 text-primary" />
                 <span>Coupons ({results.coupons.length})</span>
               </div>
@@ -454,24 +455,24 @@ export function GlobalSearchDialog({
                   key={c.id}
                   type="button"
                   onClick={() => navigateTo("/admin/coupons")}
-                  className="w-full group flex items-center justify-between gap-3 rounded-2xl p-3 text-left transition-all hover:bg-muted/70 active:scale-[0.99] cursor-pointer"
+                  className="w-full group flex items-center justify-between gap-3 rounded-xl p-2.5 sm:p-3 text-left transition-all duration-150 border border-transparent hover:border-border/60 hover:bg-muted/50 active:scale-[0.99] cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono font-bold text-xs">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono font-bold text-xs shadow-2xs">
                       %
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="font-mono font-bold text-foreground tracking-wide block">{c.code}</span>
+                      <span className="font-mono font-bold text-sm text-foreground tracking-wide block">{c.code}</span>
                       <p className="text-xs text-muted-foreground">
                         {c.discountType === "PERCENTAGE" ? `${c.discountValue}% OFF` : `৳${c.discountValue} OFF`}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant={c.isActive ? "default" : "secondary"} className="text-[10px]">
+                    <Badge variant={c.isActive ? "secondary" : "outline"} className="text-[10px] font-semibold border-border/70">
                       {c.isActive ? "Active" : "Disabled"}
                     </Badge>
-                    <ArrowRight className="size-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="size-4 text-muted-foreground/30 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </button>
               ))}
@@ -481,8 +482,8 @@ export function GlobalSearchDialog({
           {/* Section: Navigation / Pages */}
           {showPages && filteredPages.length > 0 && (
             <div className="space-y-1">
-              <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                <Sparkles className="size-3.5 text-primary" />
+              <div className="flex items-center gap-2 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                <Compass className="size-3.5 text-primary" />
                 <span>Console Navigation</span>
               </div>
               {filteredPages.map((page) => {
@@ -492,24 +493,24 @@ export function GlobalSearchDialog({
                     key={page.href}
                     type="button"
                     onClick={() => navigateTo(page.href)}
-                    className="w-full group flex items-center justify-between gap-3 rounded-2xl p-3 text-left transition-all hover:bg-muted/70 active:scale-[0.99] cursor-pointer"
+                    className="w-full group flex items-center justify-between gap-3 rounded-xl p-2.5 sm:p-3 text-left transition-all duration-150 border border-transparent hover:border-border/60 hover:bg-muted/50 active:scale-[0.99] cursor-pointer"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
-                        <PageIcon className="size-5" />
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-muted/40 text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-200 shadow-2xs">
+                        <PageIcon className="size-4.5 sm:size-5" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <span className="font-semibold text-foreground text-sm sm:text-base block">
+                        <span className="font-heading font-semibold text-sm sm:text-[15px] text-foreground tracking-tight block truncate">
                           {page.title}
                         </span>
                         <p className="text-xs text-muted-foreground truncate">{page.description}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant="secondary" className="text-[10px] font-semibold">
+                      <Badge variant="secondary" className="rounded-md border border-border/50 bg-muted/50 text-[11px] font-medium text-muted-foreground group-hover:text-foreground">
                         {page.badge}
                       </Badge>
-                      <ArrowRight className="size-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+                      <ArrowRight className="size-4 text-muted-foreground/30 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
                     </div>
                   </button>
                 )
@@ -519,33 +520,14 @@ export function GlobalSearchDialog({
 
           {/* Empty State */}
           {!hasAnyResults && (
-            <div className="py-12 text-center space-y-2">
-              <Search className="size-10 mx-auto text-muted-foreground/40" />
-              <p className="text-sm font-semibold text-foreground">No matches found</p>
+            <div className="py-12 sm:py-16 text-center space-y-2">
+              <Search className="size-9 mx-auto text-muted-foreground/40" />
+              <p className="font-heading text-sm font-semibold text-foreground">No matches found</p>
               <p className="text-xs text-muted-foreground max-w-sm mx-auto">
                 We couldn&apos;t find anything matching &quot;{query}&quot;. Try searching for users, plans, coupons, or page titles.
               </p>
             </div>
           )}
-        </div>
-
-        {/* World-Class Keyboard Navigation Footer */}
-        <div className="flex items-center justify-between border-t border-border/15 bg-muted/30 px-4 py-2.5 sm:px-6 text-xs text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5">
-              <kbd className="rounded bg-background px-1.5 py-0.5 font-mono text-[10px] shadow-2xs">↑</kbd>
-              <kbd className="rounded bg-background px-1.5 py-0.5 font-mono text-[10px] shadow-2xs">↓</kbd>
-              <span>navigate</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <kbd className="rounded bg-background px-1.5 py-0.5 font-mono text-[10px] shadow-2xs">↵</kbd>
-              <span>select</span>
-            </span>
-          </div>
-          <span className="flex items-center gap-1.5">
-            <kbd className="rounded bg-background px-1.5 py-0.5 font-mono text-[10px] shadow-2xs">ESC</kbd>
-            <span>close</span>
-          </span>
         </div>
       </DialogContent>
     </Dialog>

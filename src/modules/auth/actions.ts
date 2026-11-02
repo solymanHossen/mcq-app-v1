@@ -71,12 +71,16 @@ export async function registerAction(_state: unknown, formData: FormData) {
   const existing = await prisma.user.findUnique({ where: { email } })
 
   if (!existing) {
-    // Explicit field list, never a spread of raw input — `role` can never
-    // arrive from the client this way.
     const passwordHash = await hashPassword(password)
     try {
       const user = await prisma.user.create({
-        data: { name, email, passwordHash, isEmailVerified: !requireEmailVerification },
+        data: {
+          name,
+          email,
+          passwordHash,
+          role: "STUDENT",
+          isEmailVerified: !requireEmailVerification,
+        },
       })
       if (requireEmailVerification) await issueEmailVerificationOtp(user.id, email)
     } catch (e) {
