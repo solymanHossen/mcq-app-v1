@@ -611,6 +611,30 @@ export function ProfileTabs({ profile, billingEnabled }: ProfileTabsProps) {
                     )}
                   </CardContent>
                 </Card>
+
+                {/* Previous Student Exam & Learning History (if teacher was previously an active student) */}
+                {profile.recentAttempts && profile.recentAttempts.length > 0 && (
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                          Previous Student Exam History
+                        </h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          Assessments, tests, and mock exams you completed during your student journey
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="rounded-full px-3 py-0.5 text-xs font-semibold">
+                        {profile._count.examAttempts} Past Attempts
+                      </Badge>
+                    </div>
+
+                    <StudentActivityCard
+                      recentAttempts={profile.recentAttempts}
+                      bookmarksCount={profile._count.bookmarks}
+                    />
+                  </div>
+                )}
               </div>
             )}
 

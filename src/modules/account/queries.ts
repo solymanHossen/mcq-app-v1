@@ -186,6 +186,36 @@ export const getFullProfileData = cache(async (userId: string) => {
     teacherSubjects = rawQuestions
       .map((q) => q.subject.trim())
       .filter((s, idx, arr) => s.length > 0 && arr.indexOf(s) === idx)
+
+    // Preserve and display previous student exam history if this teacher was previously an active student
+    if (user._count.examAttempts > 0) {
+      const pastAttempts = await prisma.examAttempt.findMany({
+        where: { studentId: userId },
+        take: 6,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          status: true,
+          startedAt: true,
+          submittedAt: true,
+          exam: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
+          result: {
+            select: {
+              obtainedMarks: true,
+              totalMarks: true,
+              accuracy: true,
+              isPassed: true,
+            },
+          },
+        },
+      })
+      recentAttempts = pastAttempts
+    }
   } else if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
     const [totalUsers, totalPlatformExams, pendingVerifications] =
       await Promise.all([

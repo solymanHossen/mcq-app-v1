@@ -292,6 +292,19 @@ export function UserNav({
                     <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
                   </Link>
                 </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/profile?tab=activity"
+                    className="group flex cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-[14.5px] font-medium transition-all duration-200 hover:bg-muted/80 focus:bg-muted/80 active:scale-[0.99] sm:text-[15px]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="size-4.5 text-muted-foreground transition-all duration-200 group-hover:scale-105 group-hover:text-foreground" />
+                      <span>My Learning History</span>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground/60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                  </Link>
+                </DropdownMenuItem>
               </>
             )}
 
