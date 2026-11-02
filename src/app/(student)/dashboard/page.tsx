@@ -350,14 +350,29 @@ export default async function DashboardPage({
         <TabsContent value="attempts" className="mt-0">
           <Card className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-shadow hover:shadow-sm">
             <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
-              <div className="flex flex-col gap-1">
-                <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
-                  <h2>Exam Session History</h2>
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-                  Your recent assessment submissions, timestamps, and active
-                  attempt tracks.
-                </CardDescription>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex flex-col gap-1">
+                  <CardTitle className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
+                    <h2>Exam Session History</h2>
+                  </CardTitle>
+                  <CardDescription className="text-xs text-muted-foreground sm:text-sm">
+                    Your recent assessment submissions, timestamps, and active
+                    attempt tracks.
+                  </CardDescription>
+                </div>
+                {attemptCount > 0 && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="rounded-xl border-border/70 text-xs sm:text-sm font-semibold shadow-2xs hover:border-primary/40 shrink-0 self-start sm:self-auto gap-1.5 cursor-pointer"
+                  >
+                    <Link href="/exams?tab=history">
+                      <span>View All History ({attemptCount})</span>
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 lg:p-7">
