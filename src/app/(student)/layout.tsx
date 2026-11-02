@@ -7,7 +7,7 @@ import {
   Trophy,
   CreditCard,
 } from "lucide-react"
-import { requireUser } from "@/lib/authorization"
+import { canAccessRole, requireUser } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
 import type { SidebarNavItem } from "@/components/shared/sidebar-nav"
@@ -66,7 +66,7 @@ export default async function StudentLayout({
       badgeLabel={user.isGuest ? "Guest Candidate" : "Student"}
       mobileLabel={APP_NAME}
       navItems={navItems}
-      user={user}
+      user={canAccessRole(user, "STUDENT") ? { ...user, role: "STUDENT" } : user}
       breadcrumb={user.isGuest ? "Guest Assessment" : "Student Workspace"}
     >
       {children}

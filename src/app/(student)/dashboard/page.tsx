@@ -13,7 +13,7 @@ import {
   Target,
   GraduationCap,
 } from "lucide-react"
-import { requireUser, isAdminTier } from "@/lib/authorization"
+import { canAccessRole, requireUser, isAdminTier } from "@/lib/authorization"
 import { APP_NAME } from "@/lib/config"
 import { prisma } from "@/lib/prisma"
 import { getLearningSummary } from "@/modules/learning/queries"
@@ -122,7 +122,7 @@ export default async function DashboardPage({
     id: dbUser.id,
     name: dbUser.name,
     email: dbUser.email,
-    role: dbUser.role,
+    role: canAccessRole(user, "STUDENT") ? "STUDENT" as const : dbUser.role,
     isEmailVerified: dbUser.isEmailVerified,
     createdAt: dbUser.createdAt,
     lastLoginAt: dbUser.lastLoginAt,

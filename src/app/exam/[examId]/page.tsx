@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prisma } from "@/lib/prisma"
-import { getCurrentUser } from "@/lib/authorization"
+import { canAccessRole, getCurrentUser } from "@/lib/authorization"
 import { countAttempts } from "@/modules/attempts/queries"
 import { StudentExamEntryCard } from "@/modules/attempts/components/student-exam-entry-card"
 import { Badge } from "@/components/ui/badge"
@@ -243,7 +243,7 @@ export default async function PublicExamLandingPage({
                 startTime: exam.startTime,
                 endTime: exam.endTime,
               }}
-              user={user}
+              user={user && canAccessRole(user, "STUDENT") ? { ...user, role: "STUDENT" } : user}
               existingAttemptsCount={existingAttemptsCount}
             />
 

@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { Navbar } from "@/components/landing/navbar"
 import { Footer } from "@/components/landing/footer"
-import { requireUser } from "@/lib/authorization"
+import { canAccessRole, requireUser } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -23,7 +23,10 @@ export default async function ProfileLayout({
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground">
       {/* Exact Same Public Route Header Navbar (Floating Pill on Desktop, Flush Edge-to-Edge on Mobile) */}
-      <Navbar user={user} logoUrl={settings.logoUrl} />
+      <Navbar
+        user={canAccessRole(user, "STUDENT") ? { ...user, role: "STUDENT" } : user}
+        logoUrl={settings.logoUrl}
+      />
 
       {/* Dynamic Ambient Background Glows matching the Landing Hero Section */}
       <div
