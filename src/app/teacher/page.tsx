@@ -3,6 +3,7 @@ import { connection } from "next/server"
 import {
   AlertTriangle,
   ArrowRight,
+  Award,
   BookOpen,
   BookOpenCheck,
   Plus,
@@ -550,6 +551,17 @@ export default async function TeacherDashboardPage() {
               size="sm"
               className="h-10 w-full gap-2 rounded-xl border-border/70 bg-card px-4 text-sm font-semibold shadow-2xs hover:bg-muted sm:w-auto"
             >
+              <Link href="/teacher/results">
+                <Award className="size-4 text-primary" />
+                <span>Results &amp; Cohorts</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-10 w-full gap-2 rounded-xl border-border/70 bg-card px-4 text-sm font-semibold shadow-2xs hover:bg-muted sm:w-auto"
+            >
               <Link href="/teacher/exams">
                 <span>Manage Exams</span>
                 <ArrowRight data-icon="inline-end" />
@@ -702,6 +714,17 @@ export default async function TeacherDashboardPage() {
                     examinations.
                   </CardDescription>
                 </div>
+                <Button
+                  asChild
+                  size="sm"
+                  variant="ghost"
+                  className="self-start sm:self-auto text-xs font-semibold text-primary hover:bg-primary/10"
+                >
+                  <Link href="/teacher/results">
+                    <span>View all submissions</span>
+                    <ArrowRight className="ml-1 size-3.5" />
+                  </Link>
+                </Button>
               </div>
             </CardHeader>
             <CardContent className={dashboardCardContentClassName}>
@@ -758,6 +781,17 @@ export default async function TeacherDashboardPage() {
                             day: "numeric",
                           }).format(new Date(att.startedAt))}
                         </span>
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="h-8 rounded-lg px-2.5 text-xs font-semibold shadow-2xs hover:border-primary/40"
+                        >
+                          <Link href={`/teacher/exams/${att.exam.id}/results`}>
+                            <span>Exam Results</span>
+                            <ArrowRight className="ml-1 size-3" />
+                          </Link>
+                        </Button>
                       </div>
                     </div>
                   ))}

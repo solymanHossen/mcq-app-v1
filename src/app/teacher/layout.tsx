@@ -1,4 +1,4 @@
-import { GraduationCap, LayoutDashboard, ClipboardList, BookOpen, CreditCard, Settings } from "lucide-react"
+import { GraduationCap, LayoutDashboard, ClipboardList, BookOpen, Award, CreditCard, Settings } from "lucide-react"
 import { requireRole, TEACHER_ROLES } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { DashboardShell } from "@/components/shared/dashboard-shell"
@@ -53,6 +53,7 @@ export default async function TeacherLayout({
   const navItems: SidebarNavItem[] = [
     { href: "/teacher", label: "Dashboard", icon: <LayoutDashboard />, exact: true },
     { href: "/teacher/exams", label: "Exams", icon: <ClipboardList /> },
+    { href: "/teacher/results", label: "Results & Cohorts", icon: <Award /> },
     { href: "/teacher/questions", label: "Question bank", icon: <BookOpen /> },
     ...(billingEnabled
       ? [{ href: "/teacher/billing", label: "Billing", icon: <CreditCard /> }]
