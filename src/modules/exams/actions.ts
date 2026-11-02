@@ -38,6 +38,18 @@ export async function createExamAction(
 ): Promise<ExamFormState> {
   const user = await assertRole(...TEACHER_ROLES)
 
+  const { requireTeacherVerification } = await getSystemSettings()
+  if (
+    requireTeacherVerification &&
+    user.role === "TEACHER" &&
+    user.teacherVerificationStatus !== "VERIFIED"
+  ) {
+    return {
+      error:
+        "Your teacher account hasn't been verified yet — an admin needs to approve your faculty application before you can create exams.",
+    }
+  }
+
   const parsed = parseExamFormData(formData)
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }

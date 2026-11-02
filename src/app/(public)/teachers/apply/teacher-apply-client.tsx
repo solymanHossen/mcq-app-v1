@@ -49,6 +49,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
   const [isUpgrading, setIsUpgrading] = React.useState(false)
   const [upgradeError, setUpgradeError] = React.useState<string | null>(null)
   const [upgradeSuccess, setUpgradeSuccess] = React.useState(false)
+  const [isEditingApplication, setIsEditingApplication] = React.useState(false)
 
   async function handleStudentUpgrade(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -68,7 +69,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
       toast.success("Teacher application submitted successfully!")
 
       setTimeout(() => {
-        window.location.href = "/teacher"
+        window.location.href = "/dashboard"
       }, 1500)
     } catch {
       setUpgradeError("An unexpected error occurred. Please try again.")
@@ -144,12 +145,20 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                 </p>
               </div>
 
-              <Button asChild size="default" className="rounded-xl font-bold shadow-xs shrink-0">
-                <Link href="/teacher">
-                  <span>Open Teacher Workspace</span>
-                  <ArrowRight className="size-4 ml-1.5" />
-                </Link>
-              </Button>
+              {isVerified ? (
+                <Button asChild size="default" className="rounded-xl font-bold shadow-xs shrink-0">
+                  <Link href="/teacher">
+                    <span>Open Teacher Workspace</span>
+                    <ArrowRight className="size-4 ml-1.5" />
+                  </Link>
+                </Button>
+              ) : (
+                <Button asChild variant="outline" size="default" className="rounded-xl font-semibold border-border/70 shrink-0">
+                  <Link href="/dashboard">
+                    <span>Return to Dashboard</span>
+                  </Link>
+                </Button>
+              )}
             </div>
 
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -157,7 +166,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                 ? "Your teacher account is fully accredited. You can publish examinations, author questions in the question bank, and grade student submissions."
                 : isRejected
                 ? "Your faculty application was reviewed and could not be approved at this time. Please contact support or an administrator for details."
-                : "Your faculty account is pending review by the platform administrator. You can draft exams and questions right away; publishing them for live candidates will unlock once verified."}
+                : "Your faculty application is currently under administrative review. Once verified by an administrator, your Teacher Workspace and exam authoring features will automatically unlock."}
             </p>
           </div>
         </Card>
@@ -234,6 +243,90 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
 
   // CASE 2: LOGGED-IN STUDENT (UPGRADE MODE)
   if (currentUser && currentUser.role === "STUDENT") {
+    // If student has already submitted an application and it is pending
+    if (currentUser.institution && currentUser.teacherVerificationStatus === "PENDING" && !isEditingApplication) {
+      return (
+        <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
+          <div className="flex items-center justify-between">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs group gap-1.5 sm:gap-2"
+            >
+              <Link href="/teachers">
+                <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+                <span>Back to Directory</span>
+              </Link>
+            </Button>
+          </div>
+
+          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
+            <div className="px-5 py-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20">
+                  <Clock className="size-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    Faculty Accreditation Under Review
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Your application to become an accredited instructor is being reviewed
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 gap-1 rounded-full text-xs font-semibold self-start sm:self-auto">
+                <Clock className="size-3.5" />
+                <span>Pending Review</span>
+              </Badge>
+            </div>
+
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
+                  <span className="text-xs font-medium text-muted-foreground">Affiliated Institution</span>
+                  <p className="text-sm font-semibold text-foreground">{currentUser.institution}</p>
+                </div>
+                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
+                  <span className="text-xs font-medium text-muted-foreground">Department / Specialization</span>
+                  <p className="text-sm font-semibold text-foreground">{currentUser.department || "N/A"}</p>
+                </div>
+              </div>
+
+              {currentUser.bio && (
+                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
+                  <span className="text-xs font-medium text-muted-foreground">Academic Statement / Bio</span>
+                  <p className="text-xs sm:text-sm text-foreground leading-relaxed whitespace-pre-wrap">{currentUser.bio}</p>
+                </div>
+              )}
+
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                <strong className="text-foreground font-semibold">Active Student Access:</strong> You remain an active student! Your student dashboard, examination attempts, mistakes notebook, and progress tracking remain 100% active and accessible with zero interruption.
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                <Button asChild size="default" className="rounded-xl font-bold shadow-xs w-full sm:w-auto">
+                  <Link href="/dashboard">
+                    <span>Go to Student Dashboard</span>
+                    <ArrowRight className="size-4 ml-1.5" />
+                  </Link>
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditingApplication(true)}
+                  className="rounded-xl font-semibold border-border/70 w-full sm:w-auto"
+                >
+                  Update Application Details
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )
+    }
+
     return (
       <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
         {/* Top Header & Breadcrumb */}
@@ -250,12 +343,23 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                 <span>Back to Directory</span>
               </Link>
             </Button>
+            {isEditingApplication && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEditingApplication(false)}
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground"
+              >
+                Cancel Editing
+              </Button>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-border/60">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
-                Apply for Faculty Accreditation
+                {isEditingApplication ? "Update Faculty Application" : "Apply for Faculty Accreditation"}
               </h1>
               <Badge
                 variant="secondary"
@@ -283,7 +387,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
               <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
               <AlertTitle>Application Received</AlertTitle>
               <AlertDescription>
-                Your faculty account has been created and submitted for review. Redirecting to workspace...
+                Your faculty application has been submitted for review. Redirecting to your student dashboard...
               </AlertDescription>
             </Alert>
           )}
@@ -296,10 +400,10 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
               </div>
               <div className="space-y-1 text-xs sm:text-sm">
                 <span className="font-semibold text-foreground">
-                  Upgrading profile for: {currentUser.name}
+                  Faculty application for: {currentUser.name}
                 </span>
-                <p className="text-muted-foreground">
-                  Logged in as <strong className="text-foreground">{currentUser.email}</strong>. After submitting, your role will be upgraded to Faculty Instructor, and administrators will review your institution credentials.
+                <p className="text-muted-foreground leading-relaxed">
+                  Logged in as <strong className="text-foreground">{currentUser.email}</strong>. You will retain full, uninterrupted access to your student dashboard and exams while administrators review your credentials.
                 </p>
               </div>
             </div>

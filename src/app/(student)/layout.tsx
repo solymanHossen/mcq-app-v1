@@ -57,6 +57,7 @@ export default async function StudentLayout({
         ...(billingEnabled
           ? [{ href: "/billing", label: "Billing", icon: <CreditCard /> }]
           : []),
+        { href: "/teachers/apply", label: "Apply as Faculty", icon: <GraduationCap /> },
       ]
 
   return (

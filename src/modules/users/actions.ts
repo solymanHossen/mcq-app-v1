@@ -150,7 +150,9 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 1000) || null
 
@@ -158,6 +160,7 @@ export async function verifyTeacherAction(userId: string, _state: unknown, formD
     await tx.user.update({
       where: { id: userId },
       data: {
+        role: "TEACHER",
         teacherVerificationStatus: "VERIFIED",
         teacherVerifiedAt: new Date(),
         teacherVerifiedById: admin.id,
@@ -182,7 +185,9 @@ export async function rejectTeacherAction(userId: string, _state: unknown, formD
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   const parsed = reasonSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid request" }
@@ -215,7 +220,9 @@ export async function resetTeacherVerificationAction(userId: string) {
 
   const target = await prisma.user.findUnique({ where: { id: userId } })
   if (!target) return { error: "User not found" }
-  if (target.role !== "TEACHER") return { error: "Only teacher accounts can be verified" }
+  if (target.role !== "TEACHER" && !target.institution) {
+    return { error: "Only teacher accounts can be verified" }
+  }
 
   await prisma.$transaction(async (tx) => {
     await tx.user.update({
@@ -242,8 +249,8 @@ export async function resetTeacherVerificationAction(userId: string) {
 export async function applyForTeacherRoleAction(_state: unknown, formData: FormData) {
   const user = await requireUser()
 
-  if (user.role === "TEACHER") {
-    return { error: "Your account is already registered as a Teacher / Faculty." }
+  if (user.role === "TEACHER" && user.teacherVerificationStatus === "VERIFIED") {
+    return { error: "Your account is already accredited as a Verified Teacher." }
   }
 
   const parsed = teacherApplicationSchema.safeParse(Object.fromEntries(formData))
@@ -256,7 +263,8 @@ export async function applyForTeacherRoleAction(_state: unknown, formData: FormD
   await prisma.user.update({
     where: { id: user.id },
     data: {
-      role: "TEACHER",
+      // Keep their existing role (e.g. STUDENT) so their student dashboard, exams,
+      // and learning features remain 100% active while the application is under review.
       teacherVerificationStatus: "PENDING",
       teacherVerifiedAt: null,
       teacherVerifiedById: null,
@@ -267,6 +275,7 @@ export async function applyForTeacherRoleAction(_state: unknown, formData: FormD
     },
   })
 
+  safeRevalidatePath("/dashboard")
   safeRevalidatePath("/profile")
   safeRevalidatePath("/teachers")
   safeRevalidatePath("/teachers/apply")

@@ -11,8 +11,10 @@ import {
   Play,
   ChevronRight,
   Target,
+  GraduationCap,
 } from "lucide-react"
 import { requireUser, isAdminTier } from "@/lib/authorization"
+import { APP_NAME } from "@/lib/config"
 import { prisma } from "@/lib/prisma"
 import { getLearningSummary } from "@/modules/learning/queries"
 import { getPracticeRecommendations } from "@/modules/learning/recommendations"
@@ -60,7 +62,7 @@ export default async function DashboardPage({
   const user = await requireUser()
 
   if (isAdminTier(user.role)) redirect("/admin")
-  if (user.role === "TEACHER") redirect("/teacher")
+  if (user.role === "TEACHER" && user.teacherVerificationStatus === "VERIFIED") redirect("/teacher")
   if (user.isGuest) redirect("/exams")
 
   await connection()
@@ -80,6 +82,9 @@ export default async function DashboardPage({
           createdAt: true,
           lastLoginAt: true,
           isEmailVerified: true,
+          institution: true,
+          department: true,
+          teacherVerificationStatus: true,
         },
       }),
       getLearningSummary(user.id),
@@ -145,6 +150,19 @@ export default async function DashboardPage({
         user={heroUser}
         className="rounded-2xl border border-solid border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_button]:max-w-full [&_button_span]:break-all [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&>div:last-child]:min-w-0 lg:[&>div:last-child]:flex-col lg:[&>div:last-child]:items-stretch xl:[&>div:last-child]:flex-row xl:[&>div:last-child]:items-center [&>div:last-child>div:first-child]:min-w-0 [&>div[aria-hidden]]:hidden"
       />
+
+      {/* Faculty Application Pending Banner */}
+      {dbUser.institution && dbUser.teacherVerificationStatus === "PENDING" && (
+        <Alert className="rounded-2xl border-amber-500/30 bg-amber-500/10 text-foreground">
+          <Clock className="size-4 text-amber-600 dark:text-amber-400" />
+          <AlertTitle className="font-bold text-amber-800 dark:text-amber-300">
+            Faculty Instructor Application Under Review
+          </AlertTitle>
+          <AlertDescription className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+            Your application to become a Faculty Instructor ({dbUser.institution}{dbUser.department ? ` • ${dbUser.department}` : ""}) has been received and is currently under review by our administration. Your student dashboard, practice exams, question attempts, and progress remain 100% active.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* ================= QUICK LEARNER ACTION HUB ================= */}
       <div className="grid w-full grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-3">
@@ -568,6 +586,39 @@ export default async function DashboardPage({
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Faculty Accreditation Discovery Card */}
+      <Card className="rounded-2xl sm:rounded-3xl border border-primary/20 bg-gradient-to-r from-primary/5 via-card to-background p-5 sm:p-6 shadow-xs overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="size-11 sm:size-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/20 shadow-2xs">
+              <GraduationCap className="size-5 sm:size-6" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">
+                {dbUser.institution && dbUser.teacherVerificationStatus === "PENDING"
+                  ? "Faculty Application Under Review"
+                  : `Teach & Create Assessments on ${APP_NAME}`}
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {dbUser.institution && dbUser.teacherVerificationStatus === "PENDING"
+                  ? `Your faculty instructor application for ${dbUser.institution} is queued for administrative approval. You can check the status or review your submitted details.`
+                  : "Are you an educator, faculty member, or coaching instructor? Apply for faculty accreditation to author exams, manage question vaults, and evaluate candidate performance."}
+              </p>
+            </div>
+          </div>
+          <Button asChild size="default" className="rounded-xl font-bold shadow-xs shrink-0 self-start sm:self-center">
+            <Link href="/teachers/apply">
+              <span>
+                {dbUser.institution && dbUser.teacherVerificationStatus === "PENDING"
+                  ? "View Application"
+                  : "Apply as Faculty"}
+              </span>
+              <ArrowRight className="size-4 ml-1.5" />
+            </Link>
+          </Button>
+        </div>
+      </Card>
     </div>
   )
 }
