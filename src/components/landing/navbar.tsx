@@ -22,7 +22,6 @@ import {
   User as UserIcon,
   Users,
   X,
-  Zap,
 } from "lucide-react"
 
 import { APP_NAME } from "@/lib/config"
@@ -90,15 +89,21 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") setMobileMenuOpen(false)
       }
+      const desktopViewport = isHome ? window.matchMedia("(min-width: 64rem)") : null
+      const handleDesktopViewport = (event: MediaQueryListEvent) => {
+        if (event.matches) setMobileMenuOpen(false)
+      }
       window.addEventListener("keydown", handleKeyDown)
+      desktopViewport?.addEventListener("change", handleDesktopViewport)
       return () => {
         document.body.style.overflow = ""
         window.removeEventListener("keydown", handleKeyDown)
+        desktopViewport?.removeEventListener("change", handleDesktopViewport)
       }
     } else {
       document.body.style.overflow = ""
     }
-  }, [mobileMenuOpen])
+  }, [mobileMenuOpen, isHome])
 
   const homePath = user ? roleHomePath(user.role) : "/login"
 
@@ -162,7 +167,10 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           {/* Center: Desktop Navigation Links */}
           <nav
             aria-label="Main navigation"
-            className="hidden items-center gap-1 md:flex lg:gap-2"
+            className={cn(
+              "hidden items-center gap-1 md:flex lg:gap-2",
+              isHome && "md:hidden lg:flex"
+            )}
           >
             {NAV_LINKS.map(({ href, label }) => {
               const isActive = pathname === href || pathname.startsWith(href + "/")

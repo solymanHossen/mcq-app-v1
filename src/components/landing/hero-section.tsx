@@ -171,15 +171,21 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
   }, [])
 
   return (
-    <section className="relative isolate overflow-hidden bg-background pt-24 pb-8 text-foreground sm:pt-28 sm:pb-12 lg:min-h-[720px] lg:pt-36 lg:pb-16">
+    <section
+      aria-labelledby="home-title"
+      className="relative isolate bg-background pt-28 pb-8 text-foreground sm:pt-32 sm:pb-12 lg:pt-36 lg:pb-16"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid min-w-0 items-center gap-8 lg:min-h-[520px] lg:grid-cols-2">
-          <div className="relative z-10 min-w-0 space-y-6 lg:py-8 lg:pr-12">
-            <div className="space-y-5">
-              <h1 className="max-w-xl font-heading text-4xl leading-tight font-extrabold tracking-tight text-balance text-foreground sm:text-5xl xl:text-6xl">
+        <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="flex min-w-0 flex-col gap-6 sm:gap-8">
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <h1
+                id="home-title"
+                className="max-w-xl font-heading text-2xl leading-tight font-extrabold tracking-tight wrap-anywhere whitespace-pre-line text-balance text-foreground sm:text-3xl lg:text-4xl"
+              >
                 {renderHighlightedTitle(settings?.heroTitle)}
               </h1>
-              <p className="max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="max-w-lg text-sm leading-relaxed wrap-anywhere text-muted-foreground sm:text-base">
                 {settings?.heroSubtitle?.trim() ||
                   "Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."}
               </p>
@@ -187,42 +193,35 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button
                 asChild
-                className="h-12 rounded-full px-6 sm:px-7 text-sm font-semibold shadow-xs"
+                size="lg"
+                className="w-full rounded-xl font-semibold shadow-xs sm:w-auto sm:rounded-xl"
               >
-                <Link href="/teachers" className="inline-flex items-center gap-2">
-                  <GraduationCap className="size-4 shrink-0" />
+                <Link href="/teachers">
+                  <GraduationCap data-icon="inline-start" />
                   <span>Teacher List</span>
-                  <ArrowRight className="size-4 shrink-0" />
+                  <ArrowRight data-icon="inline-end" />
                 </Link>
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="h-12 rounded-full border-border/70 bg-card px-6 sm:px-7 text-sm font-semibold shadow-xs gap-2"
+                    size="lg"
+                    className="w-full rounded-xl border-border/70 bg-card font-semibold shadow-xs sm:w-auto sm:rounded-xl"
                   >
-                    <Play className="size-4 shrink-0" />
+                    <Play data-icon="inline-start" />
                     <span>Tour Our Work Process</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent
                   showCloseButton={false}
-                  className="w-full max-w-4xl p-0 overflow-hidden rounded-2xl border border-border/70 bg-black shadow-2xl ring-0 gap-0"
+                  aria-describedby={undefined}
+                  className="max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-4xl gap-0 overflow-hidden rounded-2xl border border-border/70 bg-black p-0 shadow-xs ring-0 sm:max-w-4xl"
                 >
                   <DialogTitle className="sr-only">
                     Platform Walkthrough Video
                   </DialogTitle>
-                  <DialogClose asChild>
-                    <button
-                      type="button"
-                      className="absolute top-3 right-3 z-30 flex size-8 items-center justify-center rounded-full bg-black/70 text-white/90 hover:bg-black hover:text-white backdrop-blur-md transition-all shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 cursor-pointer"
-                      aria-label="Close"
-                    >
-                      <X className="size-4" />
-                      <span className="sr-only">Close</span>
-                    </button>
-                  </DialogClose>
-                  <div className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center">
+                  <div className="relative flex aspect-video max-h-[calc(100dvh-2rem)] w-full items-center justify-center overflow-hidden bg-black">
                     {embedVideoUrl ? (
                       <iframe
                         src={embedVideoUrl}
@@ -245,51 +244,68 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                       </video>
                     )}
                   </div>
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="icon-lg"
+                      className="absolute top-3 right-3 rounded-xl shadow-xs sm:rounded-xl"
+                      aria-label="Close"
+                    >
+                      <X />
+                    </Button>
+                  </DialogClose>
                 </DialogContent>
               </Dialog>
             </div>
           </div>
-          <div className="relative min-w-0 pb-4 lg:static lg:pb-0">
-            <div className="relative h-80 overflow-hidden rounded-2xl bg-muted/20 sm:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:-z-10 lg:h-full lg:w-1/2 lg:rounded-none">
+          <div className="relative min-w-0">
+            <div className="relative aspect-video overflow-hidden rounded-2xl border border-border/70 bg-muted/20 shadow-xs">
               <Image
                 src={heroImage}
                 alt="Students taking online exam collaboratively"
                 fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover object-center lg:object-[60%_center]"
+                preload
+                sizes="(min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
+                className="object-cover object-center"
                 unoptimized={
                   heroImage.startsWith("/uploads/") ||
                   heroImage.startsWith("http")
                 }
               />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-0 hidden w-28 bg-gradient-to-r from-background to-transparent lg:block"
-              />
             </div>
-            <Card className="relative z-10 mx-4 -mt-24 max-w-sm gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-sm ring-0 sm:mx-6 lg:absolute lg:bottom-12 lg:left-[47%] lg:mx-0 lg:mt-0 lg:w-80">
-              <CardHeader className="flex flex-row items-center justify-between gap-3 px-5 pt-5">
+            <Card className="relative mx-4 -mt-6 min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0 sm:mx-6">
+              <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
                 <CardTitle className="text-base font-bold tracking-tight">
-                  Exam in Progress
+                  <h2>Exam in Progress</h2>
                 </CardTitle>
                 <MoreHorizontal
                   className="size-4 text-muted-foreground"
-                  aria-label="Card options"
+                  aria-hidden="true"
                 />
               </CardHeader>
-              <CardContent className="space-y-4 p-5 pt-3">
-                <p className="font-heading text-4xl font-extrabold tracking-tight text-foreground">
-                  {timerText}
-                </p>
-                <Separator />
-                <div className="space-y-3">
+              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-6 sm:p-6">
+                <div className="flex min-w-0 flex-col gap-3 sm:flex-1">
+                  <p className="font-heading text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
+                    {timerText}
+                  </p>
+                  <Badge
+                    variant="secondary"
+                    className="h-auto max-w-full gap-1.5 rounded-full whitespace-normal"
+                  >
+                    <Check data-icon="inline-start" className="shrink-0 text-primary" />
+                    AI proctoring active
+                  </Badge>
+                </div>
+                <Separator className="sm:hidden" />
+                <Separator orientation="vertical" className="hidden h-auto self-stretch sm:block" />
+                <div className="flex min-w-0 flex-col justify-center gap-3 sm:flex-1">
                   {[1, 2].map((number) => (
                     <div
                       key={number}
                       className="flex items-center justify-between gap-3 text-sm font-medium"
                     >
-                      <span className="inline-flex items-center gap-2">
+                      <span className="inline-flex min-w-0 items-center gap-2">
                         <Check className="size-4 shrink-0 text-primary" />
                         Live question {number}
                       </span>
@@ -297,13 +313,6 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                     </div>
                   ))}
                 </div>
-                <Badge
-                  variant="secondary"
-                  className="max-w-full gap-1.5 rounded-full whitespace-normal"
-                >
-                  <Check className="size-3.5 shrink-0 text-primary" />
-                  AI proctoring active
-                </Badge>
               </CardContent>
             </Card>
           </div>
