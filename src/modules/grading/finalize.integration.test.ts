@@ -188,6 +188,32 @@ describe("finalizeAndGradeAttempt — idempotency", () => {
     expect(result.status).toBe("PROVISIONAL")
     expect(result.publishedAt).toBeNull()
   })
+
+  it("upserts safely without throwing unique constraint error if ExamResult already exists", async () => {
+    const attempt = await makeInProgressAttempt(teacher.id, student.id)
+
+    // Pre-create an ExamResult row for this attempt (simulating retry or attempt reset)
+    await prisma.examResult.create({
+      data: {
+        attemptId: attempt.id,
+        totalMarks: 1,
+        obtainedMarks: 0,
+        correctCount: 0,
+        incorrectCount: 1,
+        skippedCount: 0,
+        cancelledCount: 0,
+        accuracy: 0,
+      },
+    })
+
+    const res = await finalizeAndGradeAttempt(attempt.id, "COMPLETED")
+    expect(res.graded).toBe(true)
+
+    const updated = await prisma.examResult.findUniqueOrThrow({
+      where: { attemptId: attempt.id },
+    })
+    expect(updated.obtainedMarks).toBe(1)
+  })
 })
 
 describe("finalizeAndGradeAttempt — learning-progress side effects", () => {
