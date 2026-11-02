@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Script from "next/script"
-import { Geist_Mono, Inter } from "next/font/google"
+import { Geist_Mono, Open_Sans } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
@@ -22,7 +22,11 @@ export const metadata: Metadata = {
   description: APP_DESCRIPTION,
 }
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -38,7 +42,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+      className={cn("antialiased", fontMono.variable, "font-sans", openSans.variable)}
     >
       <body>
         <ThemeProvider>
