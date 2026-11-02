@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import { StartExamButton } from "@/modules/attempts/components/start-exam-button"
 import {
   ArrowLeft,
+  ArrowRight,
   Clock,
   RefreshCw,
   Trophy,
@@ -212,7 +213,7 @@ export default async function ExamInfoPage({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 self-start sm:self-auto">
+                    <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
                       <Badge
                         variant={
                           a.status === "IN_PROGRESS"
@@ -229,6 +230,19 @@ export default async function ExamInfoPage({
                         <span className="text-[11px] sm:text-xs text-muted-foreground">
                           Submitted: {a.submittedAt.toLocaleDateString()}
                         </span>
+                      )}
+                      {a.status !== "IN_PROGRESS" && (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-3 rounded-xl text-xs font-semibold gap-1.5 shadow-2xs hover:border-primary/40 active:scale-95 transition-all cursor-pointer"
+                        >
+                          <Link href={`/exams/${examId}/attempt/${a.id}`}>
+                            <span>View Result</span>
+                            <ArrowRight className="size-3" />
+                          </Link>
+                        </Button>
                       )}
                     </div>
                   </div>

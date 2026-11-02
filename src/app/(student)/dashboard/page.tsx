@@ -437,10 +437,20 @@ export default async function DashboardPage({
                           asChild
                           variant="outline"
                           size="sm"
-                          className="h-10 rounded-xl border-border/70 px-3 text-xs font-semibold shadow-2xs hover:border-primary/40 sm:text-sm"
+                          className="h-10 rounded-xl border-border/70 px-3 text-xs font-semibold shadow-2xs hover:border-primary/40 sm:text-sm cursor-pointer"
                         >
-                          <Link href={`/exams/${attempt.examId}`}>
-                            <span>View Test</span>
+                          <Link
+                            href={
+                              attempt.status === "COMPLETED" || attempt.status === "TIMEOUT"
+                                ? `/exams/${attempt.examId}/attempt/${attempt.id}`
+                                : `/exams/${attempt.examId}`
+                            }
+                          >
+                            <span>
+                              {attempt.status === "COMPLETED" || attempt.status === "TIMEOUT"
+                                ? "View Result"
+                                : "View Test"}
+                            </span>
                             <ArrowRight data-icon="inline-end" />
                           </Link>
                         </Button>
