@@ -507,23 +507,23 @@ export function TeacherResultsClient({
               </div>
 
               {/* Dropdown Filters Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-0">
                 {/* Exam Filter */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <div className="space-y-1.5 min-w-0">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block truncate">
                     Assessment
                   </label>
                   <Select
                     value={selectedExamId}
                     onValueChange={(val) => setSelectedExamId(val)}
                   >
-                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium">
+                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium w-full min-w-0 overflow-hidden">
                       <SelectValue placeholder="All Assessments" />
                     </SelectTrigger>
                     <SelectContent className="max-h-72 rounded-xl">
-                      <SelectItem value="ALL">All Assessments ({exams.length})</SelectItem>
+                      <SelectItem value="ALL" className="truncate">All Assessments ({exams.length})</SelectItem>
                       {exams.map((ex) => (
-                        <SelectItem key={ex.id} value={ex.id}>
+                        <SelectItem key={ex.id} value={ex.id} className="truncate">
                           {ex.title} ({ex.attemptsCount})
                         </SelectItem>
                       ))}
@@ -532,47 +532,47 @@ export function TeacherResultsClient({
                 </div>
 
                 {/* Status Filter */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <div className="space-y-1.5 min-w-0">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block truncate">
                     Evaluation
                   </label>
                   <Select
                     value={statusFilter}
                     onValueChange={(val) => setStatusFilter(val)}
                   >
-                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium">
+                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium w-full min-w-0 overflow-hidden">
                       <SelectValue placeholder="Status: All" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      <SelectItem value="ALL">Status: All</SelectItem>
-                      <SelectItem value="PASSED">Passed Only</SelectItem>
-                      <SelectItem value="FAILED">Failed Only</SelectItem>
-                      <SelectItem value="COMPLETED">Completed</SelectItem>
-                      <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                      <SelectItem value="TIMEOUT">Timed Out</SelectItem>
-                      <SelectItem value="DISQUALIFIED">Disqualified</SelectItem>
+                      <SelectItem value="ALL" className="truncate">Status: All</SelectItem>
+                      <SelectItem value="PASSED" className="truncate">Passed Only</SelectItem>
+                      <SelectItem value="FAILED" className="truncate">Failed Only</SelectItem>
+                      <SelectItem value="COMPLETED" className="truncate">Completed</SelectItem>
+                      <SelectItem value="IN_PROGRESS" className="truncate">In Progress</SelectItem>
+                      <SelectItem value="TIMEOUT" className="truncate">Timed Out</SelectItem>
+                      <SelectItem value="DISQUALIFIED" className="truncate">Disqualified</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Sort Order */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <div className="space-y-1.5 min-w-0">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block truncate">
                     Sort Sequence
                   </label>
                   <Select
                     value={sortBy}
                     onValueChange={(val) => setSortBy(val)}
                   >
-                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium">
+                    <SelectTrigger className="h-11 rounded-xl text-xs sm:text-sm font-medium w-full min-w-0 overflow-hidden">
                       <SelectValue placeholder="Sort Sequence" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      <SelectItem value="LATEST">Latest Submissions</SelectItem>
-                      <SelectItem value="SCORE_HIGH">Highest Score</SelectItem>
-                      <SelectItem value="SCORE_LOW">Lowest Score</SelectItem>
-                      <SelectItem value="ACCURACY_HIGH">Highest Accuracy</SelectItem>
-                      <SelectItem value="NAME_ASC">Candidate Name (A-Z)</SelectItem>
+                      <SelectItem value="LATEST" className="truncate">Latest Submissions</SelectItem>
+                      <SelectItem value="SCORE_HIGH" className="truncate">Highest Score</SelectItem>
+                      <SelectItem value="SCORE_LOW" className="truncate">Lowest Score</SelectItem>
+                      <SelectItem value="ACCURACY_HIGH" className="truncate">Highest Accuracy</SelectItem>
+                      <SelectItem value="NAME_ASC" className="truncate">Candidate Name (A-Z)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

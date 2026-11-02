@@ -25,9 +25,16 @@ function SelectGroup({
 }
 
 function SelectValue({
+  className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} />
+  return (
+    <SelectPrimitive.Value
+      data-slot="select-value"
+      className={cn("truncate min-w-0 flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis", className)}
+      {...props}
+    />
+  )
 }
 
 function SelectTrigger({
@@ -43,7 +50,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-xl border border-input/60 bg-muted/20 px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-medium transition-all duration-200 outline-none select-none focus-visible:border-primary/50 focus-visible:bg-background focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground/60 data-[size=default]:h-10 data-[size=default]:sm:h-12 data-[size=sm]:h-8 data-[size=lg]:h-13 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 dark:bg-input/20 dark:hover:border-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 sm:[&_svg:not([class*='size-'])]:size-4.5",
+        "flex w-full min-w-0 items-center justify-between gap-2 rounded-xl border border-input/60 bg-muted/20 px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-medium transition-all duration-200 outline-none select-none focus-visible:border-primary/50 focus-visible:bg-background focus-visible:ring-4 focus-visible:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground/60 data-[size=default]:h-10 data-[size=default]:sm:h-12 data-[size=sm]:h-8 data-[size=lg]:h-13 [&_[data-slot=select-value]]:min-w-0 [&_[data-slot=select-value]]:flex-1 [&_[data-slot=select-value]]:truncate [&_[data-slot=select-value]]:text-left [&_[data-slot=select-value]]:whitespace-nowrap [&_[data-slot=select-value]]:overflow-hidden [&_[data-slot=select-value]]:text-ellipsis [&>span]:min-w-0 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left [&>span]:whitespace-nowrap [&>span]:overflow-hidden [&>span]:text-ellipsis dark:bg-input/20 dark:hover:border-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 sm:[&_svg:not([class*='size-'])]:size-4.5",
         className
       )}
       {...props}
@@ -122,7 +129,7 @@ function SelectItem({
           <CheckIcon className="pointer-events-none size-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
-      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+      <SelectPrimitive.ItemText className="truncate block min-w-0">{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   )
 }
