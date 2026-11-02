@@ -50,14 +50,7 @@ export default function RootLayout({
         </ThemeProvider>
         <Toaster />
 
-        {/* Mediusware AI Chat Widget */}
-        <Script
-          src="http://localhost:3001/widget.js"
-          data-tenant-id="c9da6d8f-cb84-4183-b2fb-8b8091dd12f4"
-          data-api-host="http://localhost:8000"
-          data-color="#4F46E5"
-          strategy="afterInteractive"
-        />
+
       </body>
     </html>
   )
