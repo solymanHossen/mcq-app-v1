@@ -104,21 +104,18 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/15 dark:from-card dark:via-card dark:to-primary/20 p-6 sm:p-7 shadow-xs backdrop-blur-xl transition-all",
+        "relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-7 shadow-xs backdrop-blur-xl transition-all",
         className
       )}
     >
-      {/* Ambient System Gradient Flow matching platform design */}
+      {/* Soft Ambient System Gradient Bloom - Light & Clean */}
       <div
-        className="pointer-events-none absolute -top-16 -right-16 size-80 rounded-full bg-primary/20 blur-3xl dark:bg-primary/25"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 -left-16 size-80 rounded-full bg-emerald-500/15 blur-3xl dark:bg-emerald-500/20"
+        className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/[0.08] blur-3xl dark:bg-primary/[0.12]"
       />
 
       {/* Subtle Radiant Top Accent */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent"
       />
 
       <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
