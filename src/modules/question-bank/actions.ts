@@ -139,6 +139,133 @@ export async function setQuestionStatusAction(
   return { success: true }
 }
 
+export async function bulkSetQuestionStatusAction(
+  questionIds: string[],
+  nextStatus: "DRAFT" | "ACTIVE" | "ARCHIVED"
+): Promise<{ success: true; count: number } | { error: string }> {
+  const user = await assertRole(...TEACHER_ROLES)
+  if (!Array.isArray(questionIds) || questionIds.length === 0) {
+    return { error: "No questions selected" }
+  }
+
+  const questions = await prisma.question.findMany({
+    where: {
+      id: { in: questionIds },
+      teacherId: user.id,
+    },
+    select: { id: true, status: true },
+  })
+
+  if (questions.length === 0) {
+    return { error: "No matching questions found" }
+  }
+
+  // Determine which questions can legally transition
+  const validIds = questions
+    .filter(
+      (q) =>
+        ALLOWED_TRANSITIONS[q.status]?.includes(nextStatus) ||
+        q.status === nextStatus
+    )
+    .map((q) => q.id)
+
+  if (validIds.length === 0) {
+    return {
+      error: `None of the selected questions can be moved to ${nextStatus.toLowerCase()}`,
+    }
+  }
+
+  await prisma.question.updateMany({
+    where: {
+      id: { in: validIds },
+      teacherId: user.id,
+    },
+    data: { status: nextStatus },
+  })
+
+  safeRevalidatePath("/teacher/questions")
+  return { success: true, count: validIds.length }
+}
+
+export async function bulkPublishFilteredQuestionsAction(filters: {
+  subject?: string
+  topic?: string
+  difficulty?: "EASY" | "MEDIUM" | "HARD"
+  search?: string
+}): Promise<{ success: true; count: number } | { error: string }> {
+  const user = await assertRole(...TEACHER_ROLES)
+
+  const where = {
+    teacherId: user.id,
+    status: "DRAFT" as const,
+    ...(filters.subject ? { subject: filters.subject } : {}),
+    ...(filters.topic ? { topic: filters.topic } : {}),
+    ...(filters.difficulty ? { difficulty: filters.difficulty } : {}),
+    ...(filters.search
+      ? { questionText: { contains: filters.search, mode: "insensitive" as const } }
+      : {}),
+  }
+
+  const result = await prisma.question.updateMany({
+    where,
+    data: { status: "ACTIVE" },
+  })
+
+  safeRevalidatePath("/teacher/questions")
+  return { success: true, count: result.count }
+}
+
+export async function bulkDeleteQuestionsAction(questionIds: string[]): Promise<
+  | { success: true; deletedCount: number; skippedCount: number }
+  | { error: string }
+> {
+  const user = await assertRole(...TEACHER_ROLES)
+  if (!Array.isArray(questionIds) || questionIds.length === 0) {
+    return { error: "No questions selected" }
+  }
+
+  // Ensure questions belong to this teacher
+  const questions = await prisma.question.findMany({
+    where: {
+      id: { in: questionIds },
+      teacherId: user.id,
+    },
+    select: { id: true },
+  })
+  const ownedIds = questions.map((q) => q.id)
+  if (ownedIds.length === 0) {
+    return { error: "No questions found to delete" }
+  }
+
+  // Check which questions are used in exams
+  const usedQuestions = await prisma.examQuestion.findMany({
+    where: { questionId: { in: ownedIds } },
+    select: { questionId: true },
+  })
+  const usedIds = new Set(usedQuestions.map((q) => q.questionId))
+  const deletableIds = ownedIds.filter((id) => !usedIds.has(id))
+
+  if (deletableIds.length === 0) {
+    return {
+      error: `All selected questions are currently linked to exams and cannot be deleted. Archive them instead.`,
+    }
+  }
+
+  await prisma.question.deleteMany({
+    where: {
+      id: { in: deletableIds },
+      teacherId: user.id,
+    },
+  })
+
+  safeRevalidatePath("/teacher/questions")
+  return {
+    success: true,
+    deletedCount: deletableIds.length,
+    skippedCount: usedIds.size,
+  }
+}
+
 // ─── Delete ────────────────────────────────────────────
 export async function deleteQuestionAction(questionId: string) {
   const user = await assertRole(...TEACHER_ROLES)
@@ -306,10 +433,20 @@ export async function bulkImportQuestionsAction(
   )
   const skippedDuplicates = toInsert.length - rowsToCreate.length
 
+  const publishImmediately =
+    formData.get("publishImmediately") === "true" ||
+    formData.get("publishImmediately") === "on"
+  const targetStatus = publishImmediately ? "ACTIVE" : "DRAFT"
+
   await prisma.$transaction(
     rowsToCreate.map((r) =>
       prisma.question.create({
-        data: { ...r.data, teacherId: user.id, contentHash: r.contentHash },
+        data: {
+          ...r.data,
+          status: targetStatus,
+          teacherId: user.id,
+          contentHash: r.contentHash,
+        },
       })
     )
   )

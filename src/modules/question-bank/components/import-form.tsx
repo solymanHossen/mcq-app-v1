@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Spinner } from "@/components/ui/spinner"
 import {
@@ -384,6 +385,27 @@ export function ImportForm() {
                     </Button>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Auto-publish toggle */}
+            <div className="flex items-start gap-3 rounded-xl border border-border/70 bg-muted/20 p-3.5 sm:p-4 shadow-2xs">
+              <Checkbox
+                id="publishImmediately"
+                name="publishImmediately"
+                defaultChecked={true}
+                className="mt-0.5"
+              />
+              <div className="flex flex-col gap-0.5">
+                <label
+                  htmlFor="publishImmediately"
+                  className="text-xs sm:text-sm font-semibold text-foreground cursor-pointer select-none"
+                >
+                  Publish to Question Bank immediately (Active)
+                </label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+                  Mark imported questions as ACTIVE right away so you can add them to assessments immediately. If unchecked, questions will be saved as DRAFT.
+                </p>
               </div>
             </div>
 
