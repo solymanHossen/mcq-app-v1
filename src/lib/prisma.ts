@@ -1,7 +1,7 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 
-const SCHEMA_VERSION = 4
+const SCHEMA_VERSION = 5
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -22,7 +22,7 @@ function getPrismaClientInstance(): PrismaClient {
   if (
     !existing ||
     globalForPrisma.schemaVersion !== SCHEMA_VERSION ||
-    !("examTitleTemplate" in (existing as unknown as Record<string, unknown>))
+    !("newsletterSubscriber" in (existing as unknown as Record<string, unknown>))
   ) {
     const client = createPrismaClient()
     if (process.env.NODE_ENV !== "production") {

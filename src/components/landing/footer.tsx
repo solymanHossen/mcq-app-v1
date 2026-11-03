@@ -14,6 +14,8 @@ import {
 
 import { APP_NAME } from "@/lib/config"
 import { BrandLogo } from "@/components/shared/brand-logo"
+import { toast } from "sonner"
+import { subscribeNewsletterAction } from "@/modules/newsletter/actions"
 
 // Social media SVG icons matching Lucide 24x24 geometry
 function TwitterXIcon({ className }: { className?: string }) {
@@ -95,15 +97,29 @@ export function Footer({ logoUrl, socialLinks }: FooterProps = {}) {
   const [isSubscribed, setIsSubscribed] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !email.includes("@")) return
+    const cleanEmail = email.trim()
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      toast.error("Please provide a valid email address.")
+      return
+    }
+
     setIsSubmitting(true)
-    setTimeout(() => {
+    try {
+      const res = await subscribeNewsletterAction(cleanEmail)
+      if (res.success) {
+        setIsSubscribed(true)
+        setEmail("")
+        toast.success(res.message)
+      } else {
+        toast.error(res.error)
+      }
+    } catch {
+      toast.error("Failed to subscribe. Please try again later.")
+    } finally {
       setIsSubmitting(false)
-      setIsSubscribed(true)
-      setEmail("")
-    }, 600)
+    }
   }
 
   const scrollToTop = () => {
