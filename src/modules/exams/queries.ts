@@ -61,3 +61,63 @@ export function getExamTotalMarks(
 ) {
   return examQuestions.reduce((sum, q) => sum + q.marks, 0)
 }
+
+export type PopularHeroExam = {
+  id: string
+  title: string
+  durationMinutes: number
+  passingMarks: number | null
+  teacherName: string
+  institution: string | null
+  totalAttempts: number
+  questionCount: number
+}
+
+export async function getPopularHeroExams(limit = 2): Promise<PopularHeroExam[]> {
+  try {
+    const exams = await prisma.exam.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      select: {
+        id: true,
+        title: true,
+        durationMinutes: true,
+        passingMarks: true,
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            institution: true,
+          },
+        },
+        _count: {
+          select: {
+            attempts: true,
+            examQuestions: true,
+          },
+        },
+      },
+      orderBy: [
+        { attempts: { _count: "desc" } },
+        { createdAt: "desc" },
+      ],
+      take: limit,
+    })
+
+    return exams.map((exam) => ({
+      id: exam.id,
+      title: exam.title,
+      durationMinutes: exam.durationMinutes,
+      passingMarks: exam.passingMarks,
+      teacherName: exam.teacher?.name || "Faculty Instructor",
+      institution: exam.teacher?.institution || null,
+      totalAttempts: exam._count.attempts,
+      questionCount: exam._count.examQuestions,
+    }))
+  } catch (error) {
+    console.error("Failed to fetch popular hero exams:", error)
+    return []
+  }
+}
+

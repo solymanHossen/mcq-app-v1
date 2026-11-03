@@ -5,10 +5,11 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRight,
-  Check,
+  Clock,
   GraduationCap,
-  MoreHorizontal,
   Play,
+  TrendingUp,
+  Users,
   X,
 } from "lucide-react"
 
@@ -20,10 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import type { SystemSettings } from "@/modules/settings/queries"
+import type { PopularHeroExam } from "@/modules/exams/queries"
 
 function getEmbedVideoUrl(url: string | null | undefined): string | null {
   if (!url) return null
@@ -135,11 +134,13 @@ function renderHighlightedTitle(title?: string | null) {
 
 export interface HeroSectionProps {
   settings?: Partial<SystemSettings> | null
+  popularExams?: PopularHeroExam[]
 }
 
-export function HeroSection({ settings }: HeroSectionProps = {}) {
-  const [timerText, setTimerText] = React.useState("01:42:15")
-
+export function HeroSection({
+  settings,
+  popularExams = [],
+}: HeroSectionProps = {}) {
   const heroImage =
     settings?.heroImageUrl?.trim() || "/images/hero-students.webp"
   const heroVideo =
@@ -147,28 +148,28 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
     "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
   const embedVideoUrl = getEmbedVideoUrl(heroVideo)
 
-  // Live timer tick simulation
-  React.useEffect(() => {
-    let seconds = 15
-    let minutes = 42
-    let hours = 1
+  // Use top 2 attempted exams with graceful fallback
+  const firstExam: PopularHeroExam = popularExams[0] ?? {
+    id: "explore",
+    title: "Computer Science Assessment",
+    durationMinutes: 30,
+    passingMarks: 50,
+    teacherName: "Faculty Instructor",
+    institution: null,
+    totalAttempts: 12,
+    questionCount: 15,
+  }
 
-    const interval = setInterval(() => {
-      seconds--
-      if (seconds < 0) {
-        seconds = 59
-        minutes--
-        if (minutes < 0) {
-          minutes = 59
-          hours--
-        }
-      }
-      const pad = (n: number) => n.toString().padStart(2, "0")
-      setTimerText(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const secondExam: PopularHeroExam = popularExams[1] ?? {
+    id: "explore",
+    title: "Engineering Aptitude Test",
+    durationMinutes: 45,
+    passingMarks: 60,
+    teacherName: "Academic Board",
+    institution: null,
+    totalAttempts: 8,
+    questionCount: 20,
+  }
 
   return (
     <section
@@ -259,8 +260,9 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
               </Dialog>
             </div>
           </div>
-          <div className="relative min-w-0">
-            <div className="relative aspect-video overflow-hidden rounded-2xl border border-border/70 bg-muted/20 shadow-xs">
+          <div className="relative min-w-0 py-6 sm:py-8 lg:py-6">
+            {/* Main Students Hero Image with Master Reference Border & Radius */}
+            <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-muted/20 shadow-md">
               <Image
                 src={heroImage}
                 alt="Students taking online exam collaboratively"
@@ -274,47 +276,80 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                 }
               />
             </div>
-            <Card className="relative mx-4 -mt-6 min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0 sm:mx-6">
-              <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
-                <CardTitle className="text-base font-bold tracking-tight">
-                  <h2>Exam in Progress</h2>
-                </CardTitle>
-                <MoreHorizontal
-                  className="size-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-6 sm:p-6">
-                <div className="flex min-w-0 flex-col gap-3 sm:flex-1">
-                  <p className="font-heading text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-                    {timerText}
-                  </p>
-                  <Badge
-                    variant="secondary"
-                    className="h-auto max-w-full gap-1.5 rounded-full whitespace-normal"
-                  >
-                    <Check data-icon="inline-start" className="shrink-0 text-primary" />
-                    AI proctoring active
-                  </Badge>
+
+            {/* Master Reference Card 1: Top-Left Floating Minimal Card */}
+            <Link
+              href={firstExam.id === "explore" ? "/exam-list" : `/exam/${firstExam.id}`}
+              className="group absolute -top-3 left-1.5 sm:-top-4 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] xs:w-[260px] sm:w-[285px] lg:w-[310px] rounded-2xl border border-border/80 bg-card/90 sm:bg-card/95 p-2.5 sm:p-3.5 shadow-xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-2xl"
+              aria-label={`View top assessment: ${firstExam.title}`}
+            >
+              <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Top Assessment</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
+                  <Users className="size-3 text-muted-foreground/80 shrink-0" />
+                  <span>{firstExam.totalAttempts} attempted</span>
+                </span>
+              </div>
+
+              <h3
+                className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
+                title={firstExam.title}
+              >
+                {firstExam.title}
+              </h3>
+
+              <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-1.5 sm:pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <GraduationCap className="size-3 sm:size-3.5 text-primary shrink-0" />
+                  <span className="truncate font-medium text-foreground/85">
+                    {firstExam.teacherName}
+                  </span>
                 </div>
-                <Separator className="sm:hidden" />
-                <Separator orientation="vertical" className="hidden h-auto self-stretch sm:block" />
-                <div className="flex min-w-0 flex-col justify-center gap-3 sm:flex-1">
-                  {[1, 2].map((number) => (
-                    <div
-                      key={number}
-                      className="flex items-center justify-between gap-3 text-sm font-medium"
-                    >
-                      <span className="inline-flex min-w-0 items-center gap-2">
-                        <Check className="size-4 shrink-0 text-primary" />
-                        Live question {number}
-                      </span>
-                      <Check className="size-4 shrink-0 text-primary" />
-                    </div>
-                  ))}
+                <div className="flex size-5 sm:size-6 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs">
+                  <ArrowRight className="size-2.5 sm:size-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
+
+            {/* Master Reference Card 2: Bottom-Right Floating Minimal Card */}
+            <Link
+              href={secondExam.id === "explore" ? "/exam-list" : `/exam/${secondExam.id}`}
+              className="group absolute -bottom-3 right-1.5 sm:-bottom-4 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] xs:w-[260px] sm:w-[285px] lg:w-[310px] rounded-2xl border border-border/80 bg-card/90 sm:bg-card/95 p-2.5 sm:p-3.5 shadow-xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-2xl"
+              aria-label={`View assessment: ${secondExam.title}`}
+            >
+              <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-primary">
+                  <TrendingUp className="size-3 shrink-0" />
+                  <span>Trending Test</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
+                  <Clock className="size-3 text-muted-foreground/80 shrink-0" />
+                  <span>{secondExam.durationMinutes} mins</span>
+                </span>
+              </div>
+
+              <h3
+                className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
+                title={secondExam.title}
+              >
+                {secondExam.title}
+              </h3>
+
+              <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-1.5 sm:pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <GraduationCap className="size-3 sm:size-3.5 text-primary shrink-0" />
+                  <span className="truncate font-medium text-foreground/85">
+                    {secondExam.teacherName}
+                  </span>
+                </div>
+                <div className="flex size-5 sm:size-6 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs">
+                  <ArrowRight className="size-2.5 sm:size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
