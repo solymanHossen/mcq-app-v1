@@ -261,6 +261,16 @@ export function HeroSection({
             </div>
           </div>
           <div className="relative min-w-0 py-6 sm:py-8 lg:py-6">
+            {/* Ambient System Gradient Glow matching platform design */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-12 -right-12 size-72 rounded-full bg-primary/10 blur-3xl -z-10"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-12 -left-12 size-72 rounded-full bg-emerald-500/10 blur-3xl -z-10"
+            />
+
             {/* Main Students Hero Image with Master Reference Border & Radius */}
             <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-muted/20 shadow-md">
               <Image
@@ -277,76 +287,102 @@ export function HeroSection({
               />
             </div>
 
-            {/* Master Reference Card 1: Top-Left Floating Minimal Card */}
+            {/* Platform System Floating Card 1: Top-Left (Matching ExamHub System Gradient & UI) */}
             <Link
               href={firstExam.id === "explore" ? "/exam-list" : `/exam/${firstExam.id}`}
-              className="group absolute -top-3 left-1.5 sm:-top-4 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] xs:w-[260px] sm:w-[285px] lg:w-[310px] rounded-2xl border border-border/80 bg-card/90 sm:bg-card/95 p-2.5 sm:p-3.5 shadow-xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-2xl"
+              className="group absolute -top-3.5 left-2 sm:-top-5 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               aria-label={`View top assessment: ${firstExam.title}`}
             >
-              <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Top Assessment</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
-                  <Users className="size-3 text-muted-foreground/80 shrink-0" />
-                  <span>{firstExam.totalAttempts} attempted</span>
-                </span>
-              </div>
+              {/* Ambient radial gradient bloom matching platform system */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full bg-emerald-500/15 blur-2xl transition-opacity duration-300 group-hover:bg-emerald-500/25"
+              />
 
-              <h3
-                className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
-                title={firstExam.title}
-              >
-                {firstExam.title}
-              </h3>
-
-              <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-1.5 sm:pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <GraduationCap className="size-3 sm:size-3.5 text-primary shrink-0" />
-                  <span className="truncate font-medium text-foreground/85">
-                    {firstExam.teacherName}
+              <div className="relative flex flex-col gap-2 sm:gap-2.5">
+                {/* Top row: Badge + Attempts */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Top Assessment</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-muted-foreground">
+                    <Users className="size-3 text-muted-foreground/80 shrink-0" />
+                    <span>{firstExam.totalAttempts} attempted</span>
                   </span>
                 </div>
-                <div className="flex size-5 sm:size-6 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs">
-                  <ArrowRight className="size-2.5 sm:size-3 transition-transform group-hover:translate-x-0.5" />
+
+                {/* Title */}
+                <h3
+                  className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors"
+                  title={firstExam.title}
+                >
+                  {firstExam.title}
+                </h3>
+
+                {/* Bottom row: Teacher + Arrow Action */}
+                <div className="flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                      <GraduationCap className="size-3.5" />
+                    </span>
+                    <span className="truncate font-semibold text-foreground/85">
+                      {firstExam.teacherName}
+                    </span>
+                  </div>
+                  <div className="flex size-7 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-emerald-600 group-hover:text-white dark:group-hover:bg-emerald-500 shrink-0 shadow-2xs ring-1 ring-border/50">
+                    <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
                 </div>
               </div>
             </Link>
 
-            {/* Master Reference Card 2: Bottom-Right Floating Minimal Card */}
+            {/* Platform System Floating Card 2: Bottom-Right (Matching ExamHub System Gradient & UI) */}
             <Link
               href={secondExam.id === "explore" ? "/exam-list" : `/exam/${secondExam.id}`}
-              className="group absolute -bottom-3 right-1.5 sm:-bottom-4 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] xs:w-[260px] sm:w-[285px] lg:w-[310px] rounded-2xl border border-border/80 bg-card/90 sm:bg-card/95 p-2.5 sm:p-3.5 shadow-xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-2xl"
+              className="group absolute -bottom-3.5 right-2 sm:-bottom-5 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={`View assessment: ${secondExam.title}`}
             >
-              <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-primary">
-                  <TrendingUp className="size-3 shrink-0" />
-                  <span>Trending Test</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
-                  <Clock className="size-3 text-muted-foreground/80 shrink-0" />
-                  <span>{secondExam.durationMinutes} mins</span>
-                </span>
-              </div>
+              {/* Ambient radial gradient bloom matching platform system */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full bg-primary/15 blur-2xl transition-opacity duration-300 group-hover:bg-primary/25"
+              />
 
-              <h3
-                className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
-                title={secondExam.title}
-              >
-                {secondExam.title}
-              </h3>
-
-              <div className="mt-2 sm:mt-2.5 flex items-center justify-between gap-2 border-t border-border/50 pt-1.5 sm:pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <GraduationCap className="size-3 sm:size-3.5 text-primary shrink-0" />
-                  <span className="truncate font-medium text-foreground/85">
-                    {secondExam.teacherName}
+              <div className="relative flex flex-col gap-2 sm:gap-2.5">
+                {/* Top row: Badge + Duration */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-primary">
+                    <TrendingUp className="size-3 shrink-0" />
+                    <span>Trending Test</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-muted-foreground">
+                    <Clock className="size-3 text-muted-foreground/80 shrink-0" />
+                    <span>{secondExam.durationMinutes} mins</span>
                   </span>
                 </div>
-                <div className="flex size-5 sm:size-6 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs">
-                  <ArrowRight className="size-2.5 sm:size-3 transition-transform group-hover:translate-x-0.5" />
+
+                {/* Title */}
+                <h3
+                  className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
+                  title={secondExam.title}
+                >
+                  {secondExam.title}
+                </h3>
+
+                {/* Bottom row: Teacher + Arrow Action */}
+                <div className="flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                      <GraduationCap className="size-3.5" />
+                    </span>
+                    <span className="truncate font-semibold text-foreground/85">
+                      {secondExam.teacherName}
+                    </span>
+                  </div>
+                  <div className="flex size-7 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs ring-1 ring-border/50">
+                    <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
                 </div>
               </div>
             </Link>
