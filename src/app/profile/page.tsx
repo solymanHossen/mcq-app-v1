@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { FormSkeleton } from "@/components/shared/skeletons"
 import { Suspense } from "react"
 import { requireUser } from "@/lib/authorization"
 import { getFullProfileData } from "@/modules/account/queries"
@@ -28,13 +28,10 @@ export default async function ProfilePage() {
       <ProfileHero user={profile} className="rounded-2xl border border-solid border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&_button]:max-w-full [&_button_span]:break-all [&>div[aria-hidden]]:hidden" />
 
       {/* Ultra-Smooth Large-Size Tabs System */}
-      <Suspense
-        fallback={
-          <Skeleton className="h-48 w-full rounded-2xl" />
-        }
-      >
+      <Suspense fallback={<FormSkeleton twoColumn={false} />}>
         <ProfileTabs profile={profile} billingEnabled={billingEnabled} />
       </Suspense>
     </div>
   )
 }
+
