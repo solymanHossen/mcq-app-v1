@@ -25,7 +25,7 @@ WORKDIR /app
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 COPY package.json package-lock.json* prisma.config.ts ./
 COPY prisma ./prisma
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # ---- builder: generate the Prisma client and build the Next.js app
 FROM base AS builder
