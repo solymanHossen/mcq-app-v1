@@ -40,6 +40,11 @@ import {
   AlertTriangle,
   Send,
   HelpCircle,
+  Cloud,
+  CloudOff,
+  RefreshCw,
+  Maximize2,
+  Minimize2,
 } from "lucide-react"
 
 type AttemptQuestion = {
@@ -68,6 +73,25 @@ export function ExamAttemptClient({
   const [submitting, setSubmitting] = useState(false)
   const [ended, setEnded] = useState(false)
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false)
+  const [navFilter, setNavFilter] = useState<"all" | "unanswered" | "marked">("all")
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // Fullscreen event listener
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement))
+    }
+    document.addEventListener("fullscreenchange", onFullscreenChange)
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange)
+  }, [])
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {})
+    } else {
+      document.exitFullscreen().catch(() => {})
+    }
+  }, [])
 
   const { answers, update, flushPending } = useAttemptSync(
     attemptId,
@@ -133,6 +157,13 @@ export function ExamAttemptClient({
     [answeredCount, questions.length]
   )
 
+  const syncState = useMemo(() => {
+    const list = Object.values(answers)
+    if (list.some((a) => a.syncStatus === "error")) return "error"
+    if (list.some((a) => a.syncStatus === "pending")) return "pending"
+    return "synced"
+  }, [answers])
+
   function selectOption(option: OptionChoice) {
     if (disabled) return
     // Allow toggle to deselect if user clicks the currently selected option
@@ -165,15 +196,20 @@ export function ExamAttemptClient({
       )
         return
       const key = e.key.toUpperCase()
+      // A-D or 1-4 selection
       if (["A", "B", "C", "D"].includes(key)) {
         const slot = ["A", "B", "C", "D"].indexOf(key)
         const option = current.optionOrder[slot]
         if (option) selectOption(option)
+      } else if (["1", "2", "3", "4"].includes(e.key)) {
+        const slot = parseInt(e.key, 10) - 1
+        const option = current.optionOrder[slot]
+        if (option) selectOption(option)
       } else if (key === "R") {
         toggleReview()
-      } else if (key === "N" && index < questions.length - 1) {
+      } else if ((key === "N" || e.key === "ArrowRight") && index < questions.length - 1) {
         setIndex((i) => i + 1)
-      } else if (key === "P" && index > 0) {
+      } else if ((key === "P" || e.key === "ArrowLeft") && index > 0) {
         setIndex((i) => i - 1)
       }
     }
@@ -194,25 +230,80 @@ export function ExamAttemptClient({
         className="pointer-events-none absolute top-48 -left-12 size-72 rounded-full bg-primary/[0.025] blur-3xl dark:bg-primary/[0.05]"
       />
 
-      {/* ================= TOP HEADER STRIP ================= */}
-      <header className="relative space-y-4 pb-4 sm:pb-5 border-b border-border/60">
+      {/* ================= TOP STICKY HEADER HUD ================= */}
+      <header className="sticky top-0 z-30 space-y-3 pb-3.5 pt-1 bg-background/90 backdrop-blur-md border-b border-border/60 transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
           <div className="space-y-1.5 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground wrap-anywhere">
+              <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground wrap-anywhere">
                 {examTitle}
               </h1>
-              <Badge
-                variant="secondary"
-                className="rounded-full px-3 py-1 text-xs font-semibold border border-primary/20 bg-primary/5 text-primary flex items-center gap-1.5 shadow-2xs"
-              >
-                <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-                <span>{answeredCount} of {questions.length} answered ({progressPercent}%)</span>
-              </Badge>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge
+                  variant="secondary"
+                  className="rounded-full px-3 py-1 text-xs font-semibold border border-primary/20 bg-primary/5 text-primary flex items-center gap-1.5 shadow-2xs"
+                >
+                  <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+                  <span>{answeredCount} of {questions.length} answered ({progressPercent}%)</span>
+                </Badge>
+
+                {/* Real-time Cloud Autosave Sync Status */}
+                <div
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold shadow-2xs transition-all",
+                    syncState === "pending"
+                      ? "border-primary/30 bg-primary/10 text-primary"
+                      : syncState === "error"
+                      ? "border-destructive/30 bg-destructive/10 text-destructive"
+                      : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                  )}
+                  title={
+                    syncState === "pending"
+                      ? "Autosaving answer to cloud database..."
+                      : syncState === "error"
+                      ? "Offline mode: answer stored locally, retrying sync..."
+                      : "All answers securely saved in real-time"
+                  }
+                >
+                  {syncState === "pending" ? (
+                    <>
+                      <RefreshCw className="size-3 text-primary animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : syncState === "error" ? (
+                    <>
+                      <CloudOff className="size-3 text-destructive" />
+                      <span>Offline sync</span>
+                    </>
+                  ) : (
+                    <>
+                      <Cloud className="size-3 text-emerald-600 dark:text-emerald-400" />
+                      <span>All saved</span>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 self-start sm:self-auto">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 self-start sm:self-auto">
+            {/* Fullscreen Zen Mode Button */}
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen (Zen Focus Mode)"}
+              aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen (Zen Focus Mode)"}
+              className="size-9 sm:size-10 rounded-xl sm:rounded-2xl border-border/70 bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-2xs cursor-pointer shrink-0"
+            >
+              {isFullscreen ? (
+                <Minimize2 className="size-4" />
+              ) : (
+                <Maximize2 className="size-4" />
+              )}
+            </Button>
+
             {/* Live Countdown Badge */}
             <div
               className={cn(
@@ -339,17 +430,52 @@ export function ExamAttemptClient({
           aria-hidden="true"
           className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-primary/[0.04] blur-2xl dark:bg-primary/[0.07]"
         />
-        <div className="relative flex items-center justify-between pb-3 mb-3.5 border-b border-border/50 text-xs font-semibold text-muted-foreground">
-          <div className="flex items-center gap-2">
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-3 mb-3.5 border-b border-border/50 text-xs font-semibold text-muted-foreground">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-foreground font-bold text-xs sm:text-sm">Question Navigator</span>
-            <Badge
-              variant="outline"
-              className="rounded-full px-2 py-0 text-[10px] font-semibold text-muted-foreground border-border/70 bg-card"
-            >
-              {questions.length} Questions
-            </Badge>
+            {/* Interactive Filter Pills */}
+            <div className="flex items-center gap-1 bg-muted/60 p-0.5 rounded-xl border border-border/60">
+              <button
+                type="button"
+                onClick={() => setNavFilter("all")}
+                className={cn(
+                  "px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                  navFilter === "all"
+                    ? "bg-background text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                All ({questions.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setNavFilter("unanswered")}
+                className={cn(
+                  "px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                  navFilter === "unanswered"
+                    ? "bg-background text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Unanswered ({questions.length - answeredCount})
+              </button>
+              {markedCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setNavFilter("marked")}
+                  className={cn(
+                    "px-2.5 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                    navFilter === "marked"
+                      ? "bg-background text-amber-700 dark:text-amber-400 shadow-2xs"
+                      : "text-muted-foreground hover:text-amber-600"
+                  )}
+                >
+                  Flagged ({markedCount})
+                </button>
+              )}
+            </div>
           </div>
-          <span className="text-[11px] text-muted-foreground hidden xs:inline-block">Click any number to jump</span>
+          <span className="text-[11px] text-muted-foreground hidden sm:inline-block">Click any number to jump</span>
         </div>
 
         <div className="relative flex min-w-0 flex-wrap gap-2 sm:gap-2.5">
@@ -358,6 +484,11 @@ export function ExamAttemptClient({
             const isAnswered = (a?.selectedOption ?? q.selectedOption) !== null
             const isMarked = a?.isMarkedForReview ?? q.isMarkedForReview
             const isCurrent = i === index
+
+            // Highlight & Dim logic according to active filter
+            const isDimmed =
+              (navFilter === "unanswered" && isAnswered) ||
+              (navFilter === "marked" && !isMarked)
 
             return (
               <Button
@@ -370,6 +501,7 @@ export function ExamAttemptClient({
                 aria-label={`Question ${i + 1}${isAnswered ? ", answered" : ", unanswered"}${isMarked ? ", marked for review" : ""}`}
                 className={cn(
                   "relative size-9 sm:size-10 p-0 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95",
+                  isDimmed && "opacity-35 hover:opacity-100 scale-95",
                   // Current Question Focus
                   isCurrent && "ring-2 ring-offset-2 ring-offset-background ring-primary scale-105 font-black z-10 shadow-xs",
                   // Marked for Review State
@@ -416,7 +548,12 @@ export function ExamAttemptClient({
 
       {/* ================= MAIN ACTIVE QUESTION CARD ================= */}
       <Card
-        className="relative rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden"
+        className={cn(
+          "relative rounded-2xl sm:rounded-3xl border bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden",
+          currentAnswer.isMarkedForReview
+            ? "border-amber-500/50 dark:border-amber-500/40 shadow-[0_0_24px_-8px_rgba(245,158,11,0.22)]"
+            : "border-border/60"
+        )}
         aria-live="polite"
       >
         <div
@@ -448,6 +585,12 @@ export function ExamAttemptClient({
                 className="rounded-full text-[11px] font-medium text-muted-foreground border-border/70 px-2.5 py-0.5 shadow-2xs"
               >
                 Unanswered
+              </Badge>
+            )}
+            {currentAnswer.isMarkedForReview && (
+              <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30 gap-1 rounded-full text-[11px] font-semibold px-2.5 py-0.5 shadow-2xs">
+                <Flag className="size-3 fill-amber-500 text-amber-500" />
+                <span>Marked for Review</span>
               </Badge>
             )}
           </div>
@@ -493,7 +636,7 @@ export function ExamAttemptClient({
           </div>
         </CardHeader>
 
-        <CardContent className="relative p-5 sm:p-7 lg:p-8 space-y-6 sm:space-y-7">
+        <CardContent key={current.examQuestionId} className="relative p-5 sm:p-7 lg:p-8 space-y-6 sm:space-y-7 animate-in fade-in-50 duration-150 ease-out">
           {/* Question Text */}
           <div className="text-base sm:text-lg lg:text-xl leading-relaxed font-bold text-foreground tracking-tight wrap-anywhere">
             <LatexText
@@ -614,7 +757,7 @@ export function ExamAttemptClient({
         <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border/60 bg-muted/30 text-xs text-muted-foreground font-medium shadow-2xs">
           <HelpCircle className="size-3.5 text-muted-foreground/70 shrink-0" />
           <span>
-            Shortcuts: <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">A–D</kbd> select · <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">R</kbd> review · <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">N</kbd>/<kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">P</kbd> navigate
+            Shortcuts: <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">1–4</kbd> / <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">A–D</kbd> select · <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">←</kbd> <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">→</kbd> navigate · <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border/80 font-mono text-[10px] font-bold text-foreground shadow-2xs">R</kbd> review
           </span>
         </div>
 
