@@ -10,11 +10,11 @@ export function AuthHeader({ title, description, className }: AuthHeaderProps) {
   return (
     <header
       className={cn(
-        "flex min-w-0 flex-col gap-2 border-b border-border/60 pb-3 sm:pb-4",
+        "flex min-w-0 flex-col gap-1.5 border-b border-border/60 pb-2.5 sm:gap-2 sm:pb-4",
         className
       )}
     >
-      <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+      <h1 className="font-heading text-xl font-extrabold tracking-tight text-foreground xs:text-2xl sm:text-3xl lg:text-4xl">
         {title}
       </h1>
       {description && (

@@ -36,7 +36,7 @@ export function VerifyEmailForm() {
   }
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-6 sm:gap-8">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-8">
       <AuthHeader
         title="Verify your ExamHub account"
         description={
@@ -46,28 +46,28 @@ export function VerifyEmailForm() {
         }
       />
 
-      <Card className="gap-0 rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs">
+      <Card className="gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 py-0 shadow-xs sm:shadow-sm">
         <CardContent className="p-4 sm:p-6 lg:p-7">
           <form action={action} aria-busy={isPending || resendPending}>
             <input type="hidden" name="email" value={email} />
             <input type="hidden" name="otp" value={otp} />
 
-            <FieldGroup className="gap-5 sm:gap-6">
+            <FieldGroup className="gap-4 sm:gap-6">
               {state?.error && (
                 <Alert
                   variant="destructive"
-                  className="rounded-2xl border-destructive/30 shadow-xs"
+                  className="rounded-xl sm:rounded-2xl border-destructive/30 shadow-xs py-2.5 px-3 sm:p-4"
                 >
-                  <AlertDescription>{state.error}</AlertDescription>
+                  <AlertDescription className="text-xs sm:text-sm leading-relaxed">{state.error}</AlertDescription>
                 </Alert>
               )}
               {resendMsg && (
-                <Alert>
-                  <AlertDescription>{resendMsg}</AlertDescription>
+                <Alert className="rounded-xl sm:rounded-2xl py-2.5 px-3 sm:p-4">
+                  <AlertDescription className="text-xs sm:text-sm leading-relaxed">{resendMsg}</AlertDescription>
                 </Alert>
               )}
 
-              <Field className="items-center py-2">
+              <Field className="items-center py-1 sm:py-2">
                 <InputOTP
                   maxLength={6}
                   value={otp}
@@ -75,23 +75,23 @@ export function VerifyEmailForm() {
                   aria-label="6-digit verification code"
                   containerClassName="w-full justify-center"
                 >
-                  <InputOTPGroup className="w-full max-w-sm gap-1.5 sm:gap-2">
+                  <InputOTPGroup className="w-full max-w-xs sm:max-w-sm gap-1 sm:gap-2 justify-center">
                     {[...Array(6)].map((_, i) => (
                       <InputOTPSlot
                         key={i}
                         index={i}
-                        className="h-11 min-w-0 flex-1 rounded-xl border border-input/60 bg-muted/20 text-base font-medium shadow-2xs first:rounded-xl last:rounded-xl data-[active=true]:border-primary/50 data-[active=true]:ring-4 data-[active=true]:ring-primary/15 sm:h-12"
+                        className="size-10 xs:size-11 sm:size-12 min-w-0 flex-1 rounded-lg sm:rounded-xl border border-input/60 bg-muted/20 text-base sm:text-lg font-bold shadow-2xs first:rounded-lg first:sm:rounded-xl last:rounded-lg last:sm:rounded-xl data-[active=true]:border-primary/50 data-[active=true]:ring-4 data-[active=true]:ring-primary/15"
                       />
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
               </Field>
 
-              <div className="flex flex-col gap-4 border-t border-border/60 pt-4 sm:pt-5">
+              <div className="flex flex-col gap-3.5 border-t border-border/60 pt-4 sm:gap-4 sm:pt-5">
                 <Button
                   type="submit"
                   size="lg"
-                  className="h-12 w-full rounded-xl font-bold shadow-md sm:h-13 sm:text-lg"
+                  className="h-11.5 sm:h-13 w-full rounded-xl sm:rounded-2xl font-bold shadow-md text-sm sm:text-lg active:scale-[0.99] transition-all cursor-pointer"
                   disabled={isPending || otp.length !== 6}
                 >
                   {isPending ? (
@@ -107,8 +107,8 @@ export function VerifyEmailForm() {
                 <Button
                   type="button"
                   variant="ghost"
-                  size="lg"
-                  className="w-full whitespace-normal"
+                  size="sm"
+                  className="h-10 sm:h-11 w-full text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground active:bg-muted/60 transition-colors whitespace-normal rounded-xl cursor-pointer"
                   onClick={handleResend}
                   disabled={resendPending}
                 >
@@ -125,7 +125,7 @@ export function VerifyEmailForm() {
                 <p className="text-center text-xs text-muted-foreground sm:text-sm">
                   <Link
                     href="/login"
-                    className="font-semibold text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline"
+                    className="font-semibold text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline py-1 inline-block"
                   >
                     Back to sign in
                   </Link>
