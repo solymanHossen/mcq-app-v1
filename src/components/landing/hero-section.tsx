@@ -141,7 +141,7 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
   const [timerText, setTimerText] = React.useState("01:42:15")
 
   const heroImage =
-    settings?.heroImageUrl?.trim() || "/images/hero-students-v2.jpg"
+    settings?.heroImageUrl?.trim() || "/images/hero-students.webp"
   const heroVideo =
     settings?.heroVideoUrl?.trim() ||
     "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
@@ -265,7 +265,7 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                 src={heroImage}
                 alt="Students taking online exam collaboratively"
                 fill
-                preload
+                priority
                 sizes="(min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
                 className="object-cover object-center"
                 unoptimized={

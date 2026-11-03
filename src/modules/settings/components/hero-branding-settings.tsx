@@ -65,7 +65,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
     heroTitle !== lastSaved.heroTitle ||
     heroSubtitle !== lastSaved.heroSubtitle
 
-  const DEFAULT_HERO_IMAGE = "/images/hero-students-v2.jpg"
+  const DEFAULT_HERO_IMAGE = "/images/hero-students.webp"
   const DEFAULT_HERO_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
 
   const effectiveHeroImage = heroImageUrl.trim() || DEFAULT_HERO_IMAGE
