@@ -148,7 +148,7 @@ export default async function DashboardPage({
       {/* ================= GRAND PROFILE HERO ================= */}
       <ProfileHero
         user={heroUser}
-        className="rounded-2xl border border-solid border-border/70 p-4 shadow-xs backdrop-blur-none sm:p-6 lg:p-7 dark:shadow-xs [&_button]:max-w-full [&_button_span]:break-all [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&>div:last-child]:min-w-0 lg:[&>div:last-child]:flex-col lg:[&>div:last-child]:items-stretch xl:[&>div:last-child]:flex-row xl:[&>div:last-child]:items-center [&>div:last-child>div:first-child]:min-w-0 [&>div[aria-hidden]]:hidden"
+        className="rounded-2xl sm:rounded-3xl border border-solid border-border/70 p-4 shadow-xs sm:p-6 lg:p-7 dark:shadow-xs [&_button]:max-w-full [&_button_span]:break-all [&_h1]:text-2xl [&_h1]:break-words sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl [&>div:last-child]:min-w-0 lg:[&>div:last-child]:flex-col lg:[&>div:last-child]:items-stretch xl:[&>div:last-child]:flex-row xl:[&>div:last-child]:items-center [&>div:last-child>div:first-child]:min-w-0"
       />
 
       {/* Faculty Application Pending Banner */}

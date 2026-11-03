@@ -104,24 +104,21 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-7 shadow-xs backdrop-blur-xl transition-all",
+        "relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/15 dark:from-card dark:via-card dark:to-primary/20 p-6 sm:p-7 shadow-xs backdrop-blur-xl transition-all",
         className
       )}
     >
       {/* Ambient System Gradient Flow matching platform design */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/10 blur-3xl"
+        className="pointer-events-none absolute -top-16 -right-16 size-80 rounded-full bg-primary/20 blur-3xl dark:bg-primary/25"
       />
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/10 blur-3xl"
+        className="pointer-events-none absolute -bottom-16 -left-16 size-80 rounded-full bg-emerald-500/15 blur-3xl dark:bg-emerald-500/20"
       />
 
       {/* Subtle Radiant Top Accent */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
       />
 
       <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
