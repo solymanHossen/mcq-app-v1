@@ -15,7 +15,7 @@ export default function LoginPage() {
 function LoginCardSkeleton() {
   return (
     <div
-      className="flex w-full min-w-0 flex-col gap-4 sm:gap-8"
+      className="flex w-full min-w-0 flex-col gap-4 sm:gap-6"
       aria-busy="true"
     >
       <AuthHeader

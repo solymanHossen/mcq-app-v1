@@ -45,7 +45,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-8">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
         title="Sign in to ExamHub"
         description="Access your exams, question banks, and live results"

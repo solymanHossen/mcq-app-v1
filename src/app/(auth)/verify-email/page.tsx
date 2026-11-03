@@ -15,7 +15,7 @@ export default function VerifyEmailPage() {
 
 function VerifyEmailCardSkeleton() {
   return (
-    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-8">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
         title="Verify your ExamHub account"
         description="Loading verification details..."

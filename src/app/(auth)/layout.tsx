@@ -73,7 +73,7 @@ export default async function AuthLayout({
         </div>
       </header>
 
-      <main className="flex w-full min-w-0 flex-1 items-center justify-center px-3.5 py-6 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <main className="flex w-full min-w-0 flex-1 items-start justify-center px-3.5 pt-4 pb-8 sm:px-6 sm:pt-8 sm:pb-14 lg:px-8 lg:pt-10 lg:pb-16">
         <div className="w-full max-w-xl min-w-0">{children}</div>
       </main>
     </div>

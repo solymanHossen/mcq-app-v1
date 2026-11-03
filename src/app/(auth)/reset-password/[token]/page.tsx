@@ -28,7 +28,7 @@ async function ResetPasswordLoader({
 
 function ResetPasswordCardSkeleton() {
   return (
-    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-8">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
         title="Create new password"
         description="Choose a strong password for your ExamHub account"
