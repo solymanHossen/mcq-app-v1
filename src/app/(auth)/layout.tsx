@@ -3,6 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft, GraduationCap } from "lucide-react"
 import { APP_NAME } from "@/lib/config"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { getSystemSettings } from "@/modules/settings/queries"
 import { Button } from "@/components/ui/button"
 
@@ -24,33 +25,10 @@ export default async function AuthLayout({
         <div className="mx-auto flex h-16 w-full items-center justify-between gap-2.5 px-3.5 sm:h-20 sm:gap-3 sm:px-6 lg:px-8">
           <Link
             href="/"
-            className="group flex min-w-0 items-center gap-2 rounded-xl transition-opacity hover:opacity-90 focus-visible:outline-ring sm:gap-3"
+            className="group flex min-w-0 items-center transition-opacity hover:opacity-90 focus-visible:outline-ring"
             title={`Go to ${APP_NAME} home`}
           >
-            {settings?.logoUrl ? (
-              <div className="relative flex size-8.5 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/80 bg-card p-1 shadow-xs sm:size-10">
-                <Image
-                  src={settings.logoUrl}
-                  alt={APP_NAME}
-                  width={40}
-                  height={40}
-                  className="size-full object-contain"
-                  unoptimized={
-                    settings.logoUrl.startsWith("/uploads/") ||
-                    settings.logoUrl.startsWith("http")
-                  }
-                />
-              </div>
-            ) : (
-              <div className="flex size-8.5 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-                <GraduationCap className="size-4.5 sm:size-5" />
-              </div>
-            )}
-            <div className="flex min-w-0 flex-col">
-              <span className="truncate font-heading text-lg font-bold tracking-tight text-foreground xs:text-xl sm:text-2xl">
-                {APP_NAME}
-              </span>
-            </div>
+            <BrandLogo logoUrl={settings?.logoUrl} className="h-8.5 sm:h-9.5 w-auto" priority />
           </Link>
 
           <nav

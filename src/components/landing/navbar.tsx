@@ -24,6 +24,7 @@ import {
   X,
 } from "lucide-react"
 
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { APP_NAME } from "@/lib/config"
 import { cn } from "@/lib/utils"
 import { UserNav } from "@/components/shared/user-nav"
@@ -138,30 +139,10 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
           {/* Left: Brand Logo */}
           <Link
             href="/"
-            className="group flex items-center gap-3 transition-opacity hover:opacity-95"
+            className="group flex items-center transition-opacity hover:opacity-90 outline-none"
+            title={APP_NAME}
           >
-            {logoUrl ? (
-              <div className="relative flex size-9.5 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-card p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-                <Image
-                  src={logoUrl}
-                  alt={APP_NAME}
-                  width={40}
-                  height={40}
-                  className="size-full object-contain"
-                  unoptimized={
-                    logoUrl.startsWith("/uploads/") ||
-                    logoUrl.startsWith("http")
-                  }
-                />
-              </div>
-            ) : (
-              <span className="flex size-9.5 items-center justify-center rounded-xl bg-foreground text-background shadow-xs transition-transform duration-200 group-hover:scale-105 sm:size-10">
-                <GraduationCap className="size-5" />
-              </span>
-            )}
-            <span className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-[22px]">
-              {APP_NAME}
-            </span>
+            <BrandLogo logoUrl={logoUrl} className="h-8.5 sm:h-9.5 w-auto" priority />
           </Link>
 
           {/* Center: Desktop Navigation Links */}

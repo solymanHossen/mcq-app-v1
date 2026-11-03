@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 
 import { APP_NAME } from "@/lib/config"
+import { BrandLogo } from "@/components/shared/brand-logo"
 
 // Social media SVG icons matching Lucide 24x24 geometry
 function GithubIcon({ className }: { className?: string }) {
@@ -247,27 +248,10 @@ export function Footer({ logoUrl, socialLinks }: FooterProps = {}) {
           <div className="lg:col-span-2 flex flex-col gap-5 lg:pr-8">
             <Link
               href="/"
-              className="group inline-flex items-center gap-3 transition-opacity hover:opacity-95"
+              className="group inline-flex items-center transition-opacity hover:opacity-95"
+              title={APP_NAME}
             >
-              {logoUrl ? (
-                <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border border-border/70 bg-card p-1 shadow-2xs ring-1 ring-border/50 transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
-                  <Image
-                    src={logoUrl}
-                    alt={APP_NAME}
-                    width={40}
-                    height={40}
-                    className="size-full object-contain"
-                    unoptimized={logoUrl.startsWith("/uploads/") || logoUrl.startsWith("http")}
-                  />
-                </div>
-              ) : (
-                <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs ring-1 ring-primary/20 transition-transform duration-200 group-hover:scale-105">
-                  <GraduationCap className="size-5" />
-                </span>
-              )}
-              <span className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
-                {APP_NAME}
-              </span>
+              <BrandLogo logoUrl={logoUrl} className="h-9 sm:h-10 w-auto" />
             </Link>
 
             <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-sm">
