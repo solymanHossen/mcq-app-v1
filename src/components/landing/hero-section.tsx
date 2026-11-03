@@ -57,10 +57,10 @@ function renderHighlightedTitle(title?: string | null) {
     return (
       <>
         The Elite Standard
-        <span className="mt-1 block font-extrabold">
+        <span className="mt-1 sm:mt-2 block font-extrabold">
           for <span className="text-primary">Online</span>
         </span>
-        <span className="mt-1 block text-primary">Examinations</span>
+        <span className="mt-1 sm:mt-2 block text-primary">Examinations</span>
       </>
     )
   }
@@ -101,7 +101,7 @@ function renderHighlightedTitle(title?: string | null) {
           return (
             <span
               key={lineIdx}
-              className={lineIdx > 0 ? "mt-1 block" : "inline"}
+              className={lineIdx > 0 ? "mt-1 sm:mt-2 block" : "inline"}
             >
               {parts}
             </span>
@@ -178,14 +178,14 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex min-w-0 flex-col gap-6 sm:gap-8">
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col gap-4 sm:gap-5">
               <h1
                 id="home-title"
-                className="max-w-xl font-heading text-2xl leading-tight font-extrabold tracking-tight wrap-anywhere whitespace-pre-line text-balance text-foreground sm:text-3xl lg:text-4xl"
+                className="max-w-2xl font-heading text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.12] sm:leading-[1.08] wrap-anywhere whitespace-pre-line text-balance text-foreground"
               >
                 {renderHighlightedTitle(settings?.heroTitle)}
               </h1>
-              <p className="max-w-lg text-sm leading-relaxed wrap-anywhere text-muted-foreground sm:text-base">
+              <p className="max-w-xl text-base leading-relaxed wrap-anywhere text-muted-foreground/90 sm:text-lg lg:text-xl">
                 {settings?.heroSubtitle?.trim() ||
                   "Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."}
               </p>
