@@ -18,14 +18,17 @@ export function isAdminRole(role: string | undefined): boolean {
   return role !== undefined && (ADMIN_ROLES as readonly string[]).includes(role)
 }
 
-// Single source of truth for "where does this role live" — used by proxy.ts
-// (Edge, JWT-only) to redirect straight there instead of bouncing everyone
-// through /dashboard first, and by the login form for the same reason right
-// after sign-in. /dashboard itself still redirects ADMIN/TEACHER onward too,
-// as a fallback for any other entry point that lands there directly.
-export function roleHomePath(role: string | undefined): string {
+// Use the DB-backed verification status when choosing an applicant's home.
+// Older applications may already have the TEACHER role before approval.
+export function roleHomePath(
+  role: string | undefined,
+  teacherVerificationStatus?: string
+): string {
   if (isAdminRole(role)) return "/admin"
-  if (role === "TEACHER") return "/teacher"
+  if (
+    role === "TEACHER" &&
+    (teacherVerificationStatus === undefined || teacherVerificationStatus === "VERIFIED")
+  ) return "/teacher"
   return "/dashboard"
 }
 

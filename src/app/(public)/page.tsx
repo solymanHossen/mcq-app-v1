@@ -145,7 +145,7 @@ export default async function LandingPage() {
       >
         <div className={containerClassName}>
           <div className="grid items-start gap-6 sm:gap-8 lg:grid-cols-12">
-            <div className="space-y-4 lg:col-span-4">
+            <div className="flex min-w-0 flex-col gap-4 lg:col-span-4">
               <SectionHeading
                 badge="Features"
                 title="Everything your next assessment needs"
@@ -160,13 +160,13 @@ export default async function LandingPage() {
                 {FEATURES.map(({ icon: Icon, title, description }) => (
                   <div
                     key={title}
-                    className="flex min-w-0 items-start gap-3 border-b border-border/50 p-4 last:border-b-0 sm:p-6 sm:odd:border-r lg:p-7 sm:[&:nth-last-child(2)]:border-b-0"
+                    className="flex min-w-0 items-start gap-3 border-b border-border/50 p-4 last:border-b-0 sm:gap-4 sm:p-6 sm:odd:border-r lg:p-7 sm:[&:nth-last-child(2)]:border-b-0"
                   >
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
                       <Icon className="size-4 sm:size-5" />
                     </span>
-                    <div className="min-w-0 space-y-2">
-                      <h3 className="font-heading text-base font-bold tracking-tight text-foreground">
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <h3 className="font-heading text-base leading-snug font-bold tracking-tight text-foreground">
                         {title}
                       </h3>
                       <p className="text-sm leading-relaxed text-muted-foreground">
@@ -197,8 +197,8 @@ export default async function LandingPage() {
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 font-heading text-sm font-bold text-primary ring-1 ring-primary/20">
                     {step}
                   </span>
-                  <CardTitle className="self-center text-base font-bold tracking-tight sm:text-xl">
-                    {title}
+                  <CardTitle className="min-w-0 self-center text-base font-bold tracking-tight sm:text-xl">
+                    <h3>{title}</h3>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 text-sm leading-relaxed text-muted-foreground sm:p-6 lg:p-7">
@@ -258,7 +258,7 @@ export default async function LandingPage() {
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
                     <Icon className="size-4 sm:size-5" />
                   </span>
-                  <div className="space-y-2">
+                  <div className="flex min-w-0 flex-col gap-2">
                     <h3 className="font-heading text-base font-bold tracking-tight">
                       {title}
                     </h3>
@@ -275,23 +275,14 @@ export default async function LandingPage() {
 
       <section className="pb-12 sm:pb-16 lg:pb-20">
         <div className={containerClassName}>
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-6 sm:p-8 lg:p-10 shadow-xs hover:shadow-md transition-all duration-300">
-            {/* Subtle radiant highlight along the top border */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-            {/* Subtle atmospheric corner glow */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/5 blur-3xl"
-            />
-
-            <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-4 sm:gap-5">
-                <div className="size-12 sm:size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
-                  <Timer className="size-6 sm:size-7" />
-                </div>
-                <div className="space-y-1 sm:space-y-1.5">
-                  <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+          <Card className={cardClassName}>
+            <CardContent className="flex flex-col gap-6 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:p-7">
+              <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20 sm:size-11">
+                  <Timer className="size-4 sm:size-5" />
+                </span>
+                <div className="flex min-w-0 flex-col gap-1.5">
+                  <h2 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                     Ready to run your first exam?
                   </h2>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium">
@@ -302,15 +293,15 @@ export default async function LandingPage() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 sm:h-13 w-full sm:w-auto rounded-xl px-7 text-sm sm:text-base font-bold shadow-xs hover:shadow-md active:scale-98 transition-all gap-2 group shrink-0 cursor-pointer"
+                className="h-11 w-full shrink-0 gap-2 rounded-xl px-5 text-sm font-semibold shadow-xs sm:h-12 sm:w-auto sm:self-start sm:rounded-xl sm:text-base lg:self-auto"
               >
                 <Link href="/register">
                   <span>Get started for free</span>
-                  <ArrowRight className="size-4.5 transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight data-icon="inline-end" />
                 </Link>
               </Button>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </main>
@@ -319,14 +310,14 @@ export default async function LandingPage() {
 
 function SectionHeading({ badge, title }: { badge: string; title: string }) {
   return (
-    <div className="space-y-3">
+    <div className="flex min-w-0 flex-col items-start gap-3">
       <Badge
         variant="outline"
         className="rounded-full border-border/70 bg-card px-3 py-1 text-xs font-semibold text-muted-foreground"
       >
         {badge}
       </Badge>
-      <h2 className="max-w-2xl font-heading text-2xl font-extrabold tracking-tight text-balance text-foreground sm:text-3xl lg:text-4xl">
+      <h2 className="max-w-2xl font-heading text-xl font-bold tracking-tight text-balance text-foreground sm:text-2xl">
         {title}
       </h2>
     </div>
@@ -348,7 +339,7 @@ function AudiencePanel({
     <Card className={cardClassName}>
       <CardHeader className="gap-3 border-b border-border/50 bg-muted/20 p-4 sm:p-6 lg:p-7">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 sm:size-11">
             <Icon className="size-4 sm:size-5" />
           </span>
           <Badge variant="secondary" className="rounded-full">
@@ -356,7 +347,7 @@ function AudiencePanel({
           </Badge>
         </div>
         <CardTitle className="font-heading text-base font-bold tracking-tight sm:text-xl">
-          {title}
+          <h3>{title}</h3>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 sm:p-6 lg:p-7">

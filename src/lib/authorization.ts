@@ -29,6 +29,18 @@ export type CurrentUser = {
   teacherVerificationStatus: TeacherVerificationStatus
 }
 
+/** Pending applicants retain student access, including older TEACHER accounts. */
+export function canAccessRole(
+  user: Pick<CurrentUser, "role" | "teacherVerificationStatus">,
+  ...roles: Role[]
+): boolean {
+  return roles.includes(user.role) || (
+    roles.includes("STUDENT") &&
+    user.role === "TEACHER" &&
+    user.teacherVerificationStatus !== "VERIFIED"
+  )
+}
+
 type SessionIdentity = { id: string; tokenVersion: number }
 
 /**
@@ -99,13 +111,11 @@ export async function requireUser(): Promise<CurrentUser> {
 
 export async function requireRole(...roles: Role[]): Promise<CurrentUser> {
   const user = await requireUser()
-  // Straight to this user's own home, not a blanket /dashboard — proxy.ts
-  // already blocks most cross-role access to /admin and /teacher before a
-  // page ever renders, but routes outside those two namespaces (e.g. a
-  // STUDENT-only page under /exams) rely on this check instead, and a
-  // mismatched admin/teacher landing on /dashboard would otherwise just
-  // bounce through a second redirect to get to their real home.
-  if (!roles.includes(user.role)) redirect(roleHomePath(user.role))
+  // Resolve access from the current DB role and verification status, so
+  // approval takes effect even when the session still carries the old role.
+  if (!canAccessRole(user, ...roles)) {
+    redirect(roleHomePath(user.role, user.teacherVerificationStatus))
+  }
   return user
 }
 
@@ -119,7 +129,7 @@ export async function assertUser(): Promise<CurrentUser> {
 
 export async function assertRole(...roles: Role[]): Promise<CurrentUser> {
   const user = await assertUser()
-  if (!roles.includes(user.role)) throw new ForbiddenError()
+  if (!canAccessRole(user, ...roles)) throw new ForbiddenError()
   return user
 }
 

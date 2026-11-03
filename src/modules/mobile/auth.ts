@@ -1,4 +1,4 @@
-import { resolveCurrentUser, assertOwner, type CurrentUser } from "@/lib/authorization"
+import { resolveCurrentUser, assertOwner, canAccessRole, type CurrentUser } from "@/lib/authorization"
 import { UnauthorizedError, ForbiddenError } from "@/lib/errors"
 import { verifyAccessToken } from "@/modules/mobile/tokens"
 import type { Role } from "@/prisma/generated/prisma/client"
@@ -30,7 +30,7 @@ export async function requireApiUser(request: Request): Promise<CurrentUser> {
 }
 
 export function requireApiRole(user: CurrentUser, ...roles: Role[]): CurrentUser {
-  if (!roles.includes(user.role)) throw new ForbiddenError()
+  if (!canAccessRole(user, ...roles)) throw new ForbiddenError()
   return user
 }
 

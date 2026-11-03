@@ -6,8 +6,6 @@ import {
   isAdminRoute,
   isOpenRoute,
   isPublicRoute,
-  isTeacherRoute,
-  roleHomePath,
 } from './lib/auth.config';
 
 export async function proxy(request: NextRequest) {
@@ -37,20 +35,17 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isPublicRoute(pathname) && token) {
-    return NextResponse.redirect(new URL(roleHomePath(token.role), request.url));
+    // /dashboard uses the current DB role, including newly approved teachers.
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   if (isAdminRoute(pathname) && !isAdminRole(token?.role)) {
-    return NextResponse.redirect(new URL(roleHomePath(token?.role), request.url));
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  if (
-    isTeacherRoute(pathname) &&
-    token?.role !== 'TEACHER' &&
-    !isAdminRole(token?.role)
-  ) {
-    return NextResponse.redirect(new URL(roleHomePath(token?.role), request.url));
-  }
+  // TeacherLayout and teacher actions enforce the current DB role. Checking
+  // the old JWT role here would send approved students back to /dashboard,
+  // which redirects them to /teacher again, creating a redirect loop.
 
   return NextResponse.next();
 }

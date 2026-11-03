@@ -1,5 +1,7 @@
 import { cache } from "react"
 import { prisma } from "@/lib/prisma"
+import { canAccessRole } from "@/lib/authorization"
+import type { Role } from "@/prisma/generated/prisma/client"
 
 // Separate from CurrentUser (lib/authorization.ts) on purpose: that type is
 // re-fetched on every guarded request, so it only carries the fields guards
@@ -70,6 +72,8 @@ export const getFullProfileData = cache(async (userId: string) => {
     },
   })
 
+  const profileRole: Role = canAccessRole(user, "STUDENT") ? "STUDENT" : user.role
+
   // For students, fetch recent attempts and total XP
   let recentAttempts: Array<{
     id: string
@@ -107,7 +111,7 @@ export const getFullProfileData = cache(async (userId: string) => {
     pendingVerifications: number
   } | null = null
 
-  if (user.role === "STUDENT") {
+  if (profileRole === "STUDENT") {
     const [attempts, xpAggregate] = await Promise.all([
       prisma.examAttempt.findMany({
         where: { studentId: userId },
@@ -235,6 +239,7 @@ export const getFullProfileData = cache(async (userId: string) => {
 
   return {
     ...user,
+    role: profileRole,
     recentAttempts,
     xpTotal,
     teacherExams,

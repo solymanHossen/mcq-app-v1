@@ -46,7 +46,9 @@ export async function createCheckoutSessionAction(input: unknown) {
 
   const provider = getPaymentProvider()
   const origin = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
-  const returnPath = user.role === "TEACHER" ? "/teacher/billing" : "/billing"
+  const returnPath = user.role === "TEACHER" && user.teacherVerificationStatus === "VERIFIED"
+    ? "/teacher/billing"
+    : "/billing"
   const result = await provider.createCheckoutSession({
     userId: user.id,
     planKey,

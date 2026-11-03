@@ -2,7 +2,7 @@ import * as React from "react"
 import { connection } from "next/server"
 import { Navbar } from "@/components/landing/navbar"
 import { Footer } from "@/components/landing/footer"
-import { getCurrentUser } from "@/lib/authorization"
+import { canAccessRole, getCurrentUser } from "@/lib/authorization"
 import { getSystemSettings } from "@/modules/settings/queries"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -25,7 +25,10 @@ export default async function PublicLayout({
 
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">
-      <Navbar user={user} logoUrl={settings.logoUrl} />
+      <Navbar
+        user={user && canAccessRole(user, "STUDENT") ? { ...user, role: "STUDENT" } : user}
+        logoUrl={settings.logoUrl}
+      />
       <div className="flex flex-1 flex-col">{children}</div>
       <Footer
         logoUrl={settings.logoUrl}

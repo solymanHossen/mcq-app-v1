@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { signIn, getSession } from "next-auth/react"
-import { roleHomePath } from "@/lib/auth.config"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
@@ -14,6 +13,7 @@ import { AuthHeader } from "@/components/auth/auth-header"
 import { Spinner } from "@/components/ui/spinner"
 
 export function LoginForm() {
+  const router = useRouter()
   const params = useSearchParams()
   const [error, setError] = useState("")
   const [isPending, startTransition] = useTransition()
@@ -38,8 +38,9 @@ export function LoginForm() {
         return
       }
 
-      const session = await getSession()
-      window.location.href = roleHomePath(session?.user?.role)
+      // The dashboard resolves pending applications and approvals from the DB.
+      router.push("/dashboard")
+      router.refresh()
     })
   }
 
