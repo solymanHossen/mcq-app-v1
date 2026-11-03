@@ -589,10 +589,10 @@ export function ExamAttemptClient({
         <div
           ref={navContainerRef}
           className={cn(
-            "relative flex min-w-0 gap-1.5 sm:gap-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth",
+            "relative flex min-w-0 items-center gap-2 sm:gap-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth",
             showGridOnMobile
-              ? "flex-wrap"
-              : "overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap"
+              ? "flex-wrap py-1.5 px-1"
+              : "overflow-x-auto py-2 px-1 sm:py-1.5 sm:flex-wrap"
           )}
         >
           {questions.map((q, i) => {
@@ -617,11 +617,11 @@ export function ExamAttemptClient({
                 aria-current={isCurrent}
                 aria-label={`Question ${i + 1}${isAnswered ? ", answered" : ", unanswered"}${isMarked ? ", marked for review" : ""}`}
                 className={cn(
-                  "relative size-8 sm:size-10 p-0 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95",
+                  "relative size-8.5 sm:size-10 p-0 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95",
                   isDimmed && "opacity-35 hover:opacity-100 scale-95",
-                  // Current Question Focus
+                  // Current Question Focus (crisp ring without scale distortion or clipping)
                   isCurrent &&
-                    "ring-2 ring-offset-2 ring-offset-background ring-primary scale-105 font-black z-10 shadow-xs",
+                    "ring-2 ring-offset-2 ring-offset-background ring-primary font-black z-10 shadow-xs",
                   // Marked for Review State
                   isMarked
                     ? "border-amber-500 bg-amber-500/15 text-amber-800 dark:text-amber-300 font-extrabold"
@@ -634,7 +634,7 @@ export function ExamAttemptClient({
               >
                 <span>{i + 1}</span>
                 {isMarked && (
-                  <span className="absolute -top-1 -right-1 size-2 sm:size-2.5 rounded-full bg-amber-500 ring-2 ring-background shadow-xs" />
+                  <span className="absolute -top-0.5 -right-0.5 size-2 sm:size-2.5 rounded-full bg-amber-500 ring-2 ring-background shadow-xs pointer-events-none" />
                 )}
               </Button>
             )
