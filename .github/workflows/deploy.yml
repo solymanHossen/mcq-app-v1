@@ -1,0 +1,46 @@
+name: CD - Production Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    # CI পাস করলে অথবা সরাসরি main-এ পুশ হলে ডিপ্লয় হবে
+    if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy to Local Production Server
+        run: |
+          set -e
+
+          echo "🚀 Moving to project directory..."
+          cd ~/infrastructure/mcq-app/mcq-app-v1
+
+          echo "📥 Pulling latest code..."
+          git pull origin main
+
+          echo "🐳 Rebuilding Docker containers..."
+          docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+
+          echo "🗄️ Running Prisma migration..."
+          docker run --rm \
+            --network devops-stack_production_net \
+            -v "$PWD":/app \
+            -w /app \
+            -e DATABASE_URL="postgresql://mcq:mcq@postgres:5432/mcq_platform?schema=public" \
+            node:22-alpine \
+            npx prisma@7.10.1 db push
+
+          echo "🔄 Restarting app container..."
+          docker restart mcq-app-production
+
+          echo "🧹 Cleaning unused images..."
+          docker image prune -f
+
+          echo "✅ Deployed successfully on production server!"
