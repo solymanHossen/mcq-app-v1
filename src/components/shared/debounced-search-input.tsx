@@ -138,8 +138,8 @@ export function DebouncedSearchInput({
     <div className={cn("relative w-full", className)}>
       <Search
         className={cn(
-          "pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 transition-colors",
-          size === "sm" ? "size-3.5" : "size-4",
+          "pointer-events-none absolute top-1/2 -translate-y-1/2 transition-colors",
+          size === "sm" ? "left-3 size-3.5" : size === "lg" ? "left-4 size-4.5" : "left-3.5 size-4",
           isBusy ? "text-primary animate-pulse" : "text-muted-foreground"
         )}
       />
@@ -153,27 +153,46 @@ export function DebouncedSearchInput({
         disabled={disabled}
         autoFocus={autoFocus}
         className={cn(
-          "w-full rounded-2xl border border-border/70 bg-card pl-10 pr-10 text-xs sm:text-sm shadow-xs transition-all duration-200 placeholder:text-muted-foreground/75 focus-visible:bg-background focus-visible:border-primary/50 focus-visible:ring-1 focus-visible:ring-primary/40",
-          size === "sm" && "h-9 rounded-xl pl-9 pr-9 text-xs",
+          "w-full rounded-2xl border border-border/70 bg-card text-xs sm:text-sm shadow-xs transition-all duration-200 placeholder:text-muted-foreground/75 focus-visible:bg-background focus-visible:border-primary/50 focus-visible:ring-1 focus-visible:ring-primary/40 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none",
+          size === "sm" && "h-9 rounded-xl text-xs",
           size === "default" && "h-11",
-          size === "lg" && "h-12 text-base pl-11 pr-11",
-          inputClassName
+          size === "lg" && "h-12 text-base",
+          inputClassName,
+          // CRITICAL: Always enforce icon clearance padding AFTER inputClassName so px-* cannot override it
+          size === "sm"
+            ? "pl-9 pr-9"
+            : size === "lg"
+            ? "pl-11 pr-11"
+            : "pl-10 pr-10"
         )}
       />
 
       {/* Right Indicator: Active Spinner or Quick Clear button */}
-      <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center gap-1">
+      <div
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 flex items-center gap-1",
+          size === "sm" ? "right-2.5" : size === "lg" ? "right-3.5" : "right-3"
+        )}
+      >
         {isBusy ? (
-          <Loader2 className="size-4 animate-spin text-primary/70 pointer-events-none" />
+          <Loader2
+            className={cn(
+              "animate-spin text-primary/70 pointer-events-none",
+              size === "sm" ? "size-3.5" : "size-4"
+            )}
+          />
         ) : showClear && value ? (
           <button
             type="button"
             onClick={handleClear}
-            className="flex size-5 items-center justify-center rounded-full bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+            className={cn(
+              "flex items-center justify-center rounded-full bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer",
+              size === "sm" ? "size-4.5" : "size-5"
+            )}
             title="Clear search (Esc)"
             aria-label="Clear search"
           >
-            <X className="size-3" />
+            <X className={size === "sm" ? "size-2.5" : "size-3"} />
           </button>
         ) : null}
       </div>

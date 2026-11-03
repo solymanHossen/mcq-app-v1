@@ -139,7 +139,7 @@ export function ExamCatalogClient({
               onSearch={setSearchTerm}
               placeholder="Search exams by title, subject, or instructor name..."
               className="w-full"
-              inputClassName="h-11 sm:h-12 rounded-xl sm:rounded-2xl border-input/60 bg-muted/20 px-4 text-sm sm:text-base focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-primary/25"
+              inputClassName="h-11 sm:h-12 rounded-xl sm:rounded-2xl border-input/60 bg-muted/20 text-sm sm:text-base focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-primary/25"
             />
           </div>
 
