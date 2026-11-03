@@ -22,7 +22,6 @@ import {
 import { toast } from "sonner"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type {
   Role,
@@ -105,49 +104,56 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl border-none bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all sm:p-7 dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]",
+        "relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-7 shadow-xs backdrop-blur-xl transition-all",
         className
       )}
     >
+      {/* Ambient System Gradient Flow matching platform design */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/10 blur-3xl"
+      />
+
       {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
       />
 
-      <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+      <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
         {/* ================= LEFT: CRISP IDENTITY ================= */}
         <div className="flex items-center gap-4 sm:gap-5">
           {/* Avatar */}
           <div className="relative shrink-0">
-            <Avatar className="size-16 ring-2 ring-primary/15 sm:size-18">
+            <Avatar className="size-16 ring-2 ring-primary/20 shadow-xs sm:size-18">
               <AvatarFallback className="bg-primary/10 font-heading text-xl font-extrabold tracking-tight text-primary sm:text-2xl">
                 {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
           </div>
 
-          <div className="min-w-0 space-y-1.5">
+          <div className="min-w-0 space-y-2">
             {/* Name + Single Role Badge */}
             <div className="flex flex-wrap items-center gap-2.5">
               <h1 className="font-heading text-xl font-extrabold tracking-tight text-foreground sm:text-2xl md:text-3xl">
                 {user.name}
               </h1>
-              <Badge
-                variant="secondary"
-                className="gap-1.5 rounded-lg px-2.5 py-0.5 text-xs font-semibold"
-              >
-                <RoleIcon className="size-3 text-primary" />
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                <RoleIcon className="size-3" />
                 <span>{roleInfo.label}</span>
-              </Badge>
+              </div>
             </div>
 
             {/* Clean Meta Row (Email, Verification, Joined) */}
-            <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground sm:text-sm">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs text-muted-foreground sm:text-sm">
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="group inline-flex items-center gap-1.5 rounded-lg bg-muted/40 px-2.5 py-1 font-medium transition-colors hover:bg-muted/70 hover:text-foreground"
+                className="group inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 px-2.5 py-1 font-medium transition-all hover:border-primary/40 hover:bg-muted/50 hover:text-foreground"
                 title="Click to copy email address"
               >
                 <Mail className="size-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
@@ -162,12 +168,12 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               <span className="text-muted-foreground/30">•</span>
 
               {user.isEmailVerified ? (
-                <span className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                   <CheckCircle2 className="size-3.5" />
                   <span>Verified</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
                   <Clock className="size-3.5" />
                   <span>Unverified</span>
                 </span>
@@ -177,8 +183,8 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
                 •
               </span>
 
-              <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:inline-flex">
-                <Calendar className="size-3 text-muted-foreground" />
+              <span className="hidden items-center gap-1.5 text-xs font-medium text-muted-foreground sm:inline-flex">
+                <Calendar className="size-3.5 text-muted-foreground/80" />
                 <span>Joined {joinedFormatted}</span>
               </span>
             </div>
@@ -189,11 +195,11 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
         <div className="shrink-0 self-stretch sm:self-auto">
           {/* STUDENT STATS CHIPS */}
           {user.role === "STUDENT" && (
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               {/* Streak */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Flame className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs transition-all duration-200 hover:border-amber-500/40 hover:bg-muted/30">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-2xs ring-1 ring-amber-500/20">
+                  <Flame className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -206,9 +212,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* XP */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Zap className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs transition-all duration-200 hover:border-primary/40 hover:bg-muted/30">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                  <Zap className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -221,9 +227,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                  <ClipboardList className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs transition-all duration-200 hover:border-emerald-500/40 hover:bg-muted/30">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                  <ClipboardList className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -236,9 +242,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Badges */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Trophy className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs transition-all duration-200 hover:border-amber-500/40 hover:bg-muted/30">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-2xs ring-1 ring-amber-500/20">
+                  <Trophy className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -254,18 +260,18 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
 
           {/* TEACHER STATS CHIPS */}
           {user.role === "TEACHER" && (
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               {/* Status */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:bg-muted/30 transition-all">
                 <span
                   className={cn(
-                    "flex size-8 shrink-0 items-center justify-center rounded-xl",
+                    "flex size-9 shrink-0 items-center justify-center rounded-xl shadow-2xs ring-1",
                     user.teacherVerificationStatus === "VERIFIED"
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-emerald-500/20"
+                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-amber-500/20"
                   )}
                 >
-                  <ShieldCheck className="size-4" />
+                  <ShieldCheck className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span
@@ -285,9 +291,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <ClipboardList className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                  <ClipboardList className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -300,9 +306,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Questions */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                  <BookOpen className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-indigo-500/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400 shadow-2xs ring-1 ring-indigo-500/20">
+                  <BookOpen className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -315,9 +321,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Takers */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  <Users className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                  <Users className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -333,11 +339,11 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
 
           {/* ADMIN STATS CHIPS */}
           {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               {/* Users */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Users className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                  <Users className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -350,9 +356,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Live Exams */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/60 text-primary">
-                  <ClipboardList className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                  <ClipboardList className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
@@ -365,9 +371,9 @@ export function ProfileHero({ user, className }: ProfileHeroProps) {
               </div>
 
               {/* Queue */}
-              <div className="flex items-center gap-2.5 rounded-2xl bg-muted/40 px-3.5 py-2 transition-all duration-200 hover:bg-muted/60">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Clock className="size-4" />
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/70 bg-muted/20 px-3.5 py-2.5 shadow-2xs hover:border-amber-500/40 hover:bg-muted/30 transition-all">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-2xs ring-1 ring-amber-500/20">
+                  <Clock className="size-4.5" />
                 </span>
                 <div className="leading-tight">
                   <span className="block font-heading text-base font-black text-foreground sm:text-lg">
