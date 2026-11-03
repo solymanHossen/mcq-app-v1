@@ -32,7 +32,7 @@ export function BrandLogo({
           height={36}
           priority={priority}
           unoptimized={isExternalOrUpload}
-          className="size-full object-contain"
+          className="h-full w-auto max-h-full object-contain"
         />
       </div>
     )
