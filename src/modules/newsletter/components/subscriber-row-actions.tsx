@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { toggleSubscriberStatusAction, deleteSubscriberAction } from "@/modules/newsletter/actions"
 import type { NewsletterStatus } from "@/modules/newsletter/types"
+import { cn } from "@/lib/utils"
 
 export function SubscriberRowActions({
   subscriberId,
@@ -27,15 +28,16 @@ export function SubscriberRowActions({
 }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const isSubscribed = status === "SUBSCRIBED"
 
   const handleToggle = () => {
-    const nextStatus: NewsletterStatus = status === "SUBSCRIBED" ? "UNSUBSCRIBED" : "SUBSCRIBED"
+    const nextStatus: NewsletterStatus = isSubscribed ? "UNSUBSCRIBED" : "SUBSCRIBED"
     startTransition(async () => {
       const res = await toggleSubscriberStatusAction(subscriberId, nextStatus)
       if (res.success) {
         toast.success(
           nextStatus === "SUBSCRIBED"
-            ? `Subscribed ${email}`
+            ? `Reactivated subscription for ${email}`
             : `Unsubscribed ${email}`
         )
       } else {
@@ -64,12 +66,17 @@ export function SubscriberRowActions({
         size="sm"
         disabled={isPending}
         onClick={handleToggle}
-        className="h-8 px-2.5 rounded-lg text-xs font-semibold gap-1.5 border-border/70 shadow-2xs hover:bg-muted"
-        title={status === "SUBSCRIBED" ? "Set to Unsubscribed" : "Reactivate Subscription"}
+        className={cn(
+          "h-8 sm:h-8.5 px-2.5 sm:px-3 rounded-xl text-xs font-semibold gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer",
+          isSubscribed
+            ? "border-border/70 bg-card hover:bg-muted text-muted-foreground hover:text-foreground"
+            : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20"
+        )}
+        title={isSubscribed ? "Set to Unsubscribed" : "Reactivate Subscription"}
       >
         {isPending ? (
           <Spinner className="size-3.5" />
-        ) : status === "SUBSCRIBED" ? (
+        ) : isSubscribed ? (
           <>
             <Ban className="size-3.5 text-amber-600 dark:text-amber-400" />
             <span className="hidden sm:inline">Unsubscribe</span>
@@ -88,7 +95,7 @@ export function SubscriberRowActions({
         size="sm"
         disabled={isPending}
         onClick={() => setDeleteOpen(true)}
-        className="h-8 size-8 p-0 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+        className="h-8 sm:h-8.5 size-8 sm:size-8.5 p-0 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer"
         title="Delete subscriber"
         aria-label={`Delete subscriber ${email}`}
       >
@@ -96,23 +103,23 @@ export function SubscriberRowActions({
       </Button>
 
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent className="max-w-md rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-bold">
+        <DialogContent className="max-w-md rounded-2xl border-border/70 bg-card shadow-lg p-5 sm:p-6">
+          <DialogHeader className="space-y-2">
+            <DialogTitle className="font-heading text-lg font-bold text-foreground">
               Delete Subscriber?
             </DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground pt-1.5">
+            <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
               Are you sure you want to permanently delete <strong className="text-foreground">{email}</strong> from the newsletter subscriber list? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
 
-          <DialogFooter className="gap-2 sm:gap-0 pt-3">
+          <DialogFooter className="gap-2 sm:gap-2.5 pt-4">
             <Button
               type="button"
               variant="outline"
               disabled={isPending}
               onClick={() => setDeleteOpen(false)}
-              className="rounded-xl"
+              className="rounded-xl h-10 px-4 text-sm font-semibold border-border/70"
             >
               Cancel
             </Button>
@@ -121,7 +128,7 @@ export function SubscriberRowActions({
               variant="destructive"
               disabled={isPending}
               onClick={handleDelete}
-              className="rounded-xl gap-2"
+              className="rounded-xl h-10 px-4 text-sm font-bold gap-2 cursor-pointer shadow-xs"
             >
               {isPending && <Spinner className="size-3.5" />}
               <span>Delete Subscriber</span>
@@ -132,4 +139,3 @@ export function SubscriberRowActions({
     </div>
   )
 }
-

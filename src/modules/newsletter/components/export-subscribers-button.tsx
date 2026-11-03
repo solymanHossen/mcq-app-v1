@@ -62,11 +62,10 @@ export function ExportSubscribersButton() {
       size="sm"
       disabled={isExporting}
       onClick={handleExport}
-      className="h-9 px-3.5 rounded-xl text-xs sm:text-sm font-semibold gap-2 border-border/70 bg-card hover:bg-muted shadow-2xs cursor-pointer"
+      className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl border border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-foreground shadow-2xs transition-all active:scale-95 gap-1.5 sm:gap-2 cursor-pointer shrink-0"
     >
-      {isExporting ? <Spinner className="size-4" /> : <Download className="size-4" />}
+      {isExporting ? <Spinner className="size-3.5" /> : <Download className="size-3.5" />}
       <span>Export CSV</span>
     </Button>
   )
 }
-
