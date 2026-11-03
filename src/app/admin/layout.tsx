@@ -11,6 +11,7 @@ import {
   Settings,
   Palette,
   Share2,
+  Mail,
 } from 'lucide-react';
 import { requireRole, ADMIN_ROLES } from '@/lib/authorization';
 import { DashboardShell } from '@/components/shared/dashboard-shell';
@@ -78,6 +79,7 @@ export default async function AdminLayout({
           { href: '/admin/payments', label: 'Payments', icon: <Receipt /> },
         ]
       : []),
+    { href: '/admin/subscribers', label: 'Subscribers', icon: <Mail /> },
     { href: '/admin/audit-log', label: 'Audit log', icon: <ScrollText /> },
   ];
 

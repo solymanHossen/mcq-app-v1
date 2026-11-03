@@ -7,6 +7,9 @@ import { StudentExamEntryCard } from "@/modules/attempts/components/student-exam
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
+import { BrandLogo } from "@/components/shared/brand-logo"
+import { getSystemSettings } from "@/modules/settings/queries"
+import { APP_NAME } from "@/lib/config"
 import {
   Clock,
   HelpCircle,
@@ -14,11 +17,7 @@ import {
   ShieldAlert,
   Calendar,
   CheckCircle2,
-  BookOpen,
   User,
-  ArrowRight,
-  ShieldCheck,
-  FileText,
 } from "lucide-react"
 
 // @next-codemod-ignore Cache Components adoption
@@ -30,26 +29,28 @@ export default async function PublicExamLandingPage({
   params: Promise<{ examId: string }>
 }) {
   const { examId } = await params
-  const user = await getCurrentUser()
-
-  const exam = await prisma.exam.findUnique({
-    where: { id: examId },
-    include: {
-      teacher: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+  const [user, settings, exam] = await Promise.all([
+    getCurrentUser(),
+    getSystemSettings().catch(() => null),
+    prisma.exam.findUnique({
+      where: { id: examId },
+      include: {
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        examQuestions: {
+          select: {
+            id: true,
+            marks: true,
+          },
         },
       },
-      examQuestions: {
-        select: {
-          id: true,
-          marks: true,
-        },
-      },
-    },
-  })
+    }),
+  ])
 
   if (!exam || exam.status !== "PUBLISHED") {
     notFound()
@@ -68,17 +69,25 @@ export default async function PublicExamLandingPage({
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Top Navigation Strip matching Dashboard Header */}
+      {/* Top Navigation Strip matching Platform Header */}
       <header className="h-16 border-b border-border/60 bg-background/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2.5 font-heading font-bold text-foreground text-sm sm:text-base hover:opacity-90 transition-opacity"
+            className="group flex items-center gap-2.5 sm:gap-3 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
+            title={`Back to ${APP_NAME} home`}
           >
-            <div className="size-8.5 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-extrabold text-xs shadow-2xs">
-              EH
+            <BrandLogo
+              logoUrl={settings?.logoUrl}
+              className="h-7.5 sm:h-8.5 w-auto"
+              priority
+            />
+            <div className="hidden xs:flex items-center gap-2 pl-2.5 sm:pl-3 border-l border-border/60">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold tracking-wide text-primary uppercase">
+                <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+                <span>Assessment</span>
+              </span>
             </div>
-            <span className="tracking-tight">ExamHub Assessment</span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-2.5">
@@ -154,7 +163,7 @@ export default async function PublicExamLandingPage({
               {exam.title}
             </h1>
             <div className="mt-2 text-xs sm:text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
-              <div className="size-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[11px] border border-border/60">
+              <div className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px] ring-1 ring-primary/25 shadow-2xs">
                 {exam.teacher.name.slice(0, 2).toUpperCase()}
               </div>
               <span>

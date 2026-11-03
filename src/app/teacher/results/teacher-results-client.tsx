@@ -489,7 +489,7 @@ export function TeacherResultsClient({
             <div className="p-4 sm:p-6 lg:p-7 space-y-4">
               {/* Search Bar */}
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                 <Input
                   placeholder="Search by candidate name, email, or assessment title..."
                   value={searchQuery}

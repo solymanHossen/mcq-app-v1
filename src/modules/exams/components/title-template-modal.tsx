@@ -618,7 +618,7 @@ export function TitleTemplateModal({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search templates by subject, title or term..."
-                  className="h-10 pl-9.5 pr-9 rounded-xl text-xs sm:text-sm bg-background border-border/80"
+                  className="h-10 pl-10 pr-9 rounded-xl text-xs sm:text-sm bg-background border-border/80"
                 />
                 {searchQuery && (
                   <Button

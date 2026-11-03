@@ -1240,3 +1240,25 @@ model SystemSettings {
   updatedById String?
   updatedBy   User?    @relation("SystemSettingsUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
 }
+
+// ============================================================================
+// Phase 7 — Marketing & Newsletter Subscriptions
+// ============================================================================
+
+enum NewsletterStatus {
+  SUBSCRIBED
+  UNSUBSCRIBED
+}
+
+model NewsletterSubscriber {
+  id        String           @id @default(uuid())
+  email     String           @unique
+  status    NewsletterStatus @default(SUBSCRIBED)
+  source    String?          @default("footer")
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([email])
+  @@index([status, createdAt])
+}
+

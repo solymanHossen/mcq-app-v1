@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/card"
 import { HeroSection } from "@/components/landing/hero-section"
 import { getSystemSettings } from "@/modules/settings/queries"
+import { getPopularHeroExams } from "@/modules/exams/queries"
 
 export const instant = false
 
@@ -133,11 +134,14 @@ const cardClassName =
   "min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0"
 
 export default async function LandingPage() {
-  const settings = await getSystemSettings()
+  const [settings, popularExams] = await Promise.all([
+    getSystemSettings(),
+    getPopularHeroExams(2),
+  ])
 
   return (
     <main className="min-w-0">
-      <HeroSection settings={settings} />
+      <HeroSection settings={settings} popularExams={popularExams} />
 
       <section
         id="features"

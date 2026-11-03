@@ -10,14 +10,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "@/components/ui/table"
-import {
   Empty,
   EmptyHeader,
   EmptyMedia,
@@ -25,8 +17,8 @@ import {
   EmptyDescription,
   EmptyContent,
 } from "@/components/ui/empty"
-import { LatexText } from "@/components/shared/latex-text"
 import { QuestionFilters } from "@/modules/question-bank/components/question-filters"
+import { QuestionBankTable } from "@/modules/question-bank/components/question-bank-table"
 import { PagePagination } from "@/components/shared/page-pagination"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
@@ -152,96 +144,11 @@ export default async function QuestionBankPage({
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="w-full max-w-full min-w-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-2xs">
-            <Table>
-              <TableHeader className="bg-muted/30 border-b border-border/70">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Question
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Subject / Topic
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Difficulty
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Status
-                  </TableHead>
-                  <TableHead className="h-11 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Used In
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {items.map((q) => (
-                  <TableRow
-                    key={q.id}
-                    className="border-b border-border/40 hover:bg-muted/30 transition-colors"
-                  >
-                    <TableCell className="max-w-md py-4 px-4">
-                      <Link
-                        href={`/teacher/questions/${q.id}`}
-                        className="font-medium text-foreground transition-colors line-clamp-2 hover:text-primary leading-snug"
-                      >
-                        <LatexText text={q.questionText} />
-                      </Link>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs sm:text-sm text-muted-foreground">
-                      <span className="font-semibold text-foreground">{q.subject}</span>
-                      <span className="mx-1.5 text-muted-foreground/50">/</span>
-                      <span>{q.topic}</span>
-                    </TableCell>
-                    <TableCell className="py-4 px-4">
-                      {q.difficulty === "EASY" ? (
-                        <span className="inline-flex items-center rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 text-xs font-semibold">
-                          Easy
-                        </span>
-                      ) : q.difficulty === "HARD" ? (
-                        <span className="inline-flex items-center rounded-full border border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2.5 py-0.5 text-xs font-semibold">
-                          Hard
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full border border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2.5 py-0.5 text-xs font-semibold">
-                          Medium
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="py-4 px-4">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {q.status === "ACTIVE" ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
-                            <span className="size-1.5 rounded-full bg-emerald-500" />
-                            Active
-                          </span>
-                        ) : q.status === "DRAFT" ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/80 text-secondary-foreground px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">
-                            <span className="size-1.5 rounded-full bg-amber-500" />
-                            Draft
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full border border-border/70 bg-muted text-muted-foreground px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider">
-                            Archived
-                          </span>
-                        )}
-
-                        {q._count.reports > 0 && (
-                          <span className="inline-flex items-center rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/25 px-2 py-0.5 text-[11px] font-bold">
-                            {q._count.reports} report
-                            {q._count.reports === 1 ? "" : "s"}
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs sm:text-sm font-medium text-muted-foreground tabular-nums">
-                      {q._count.examQuestions} exam
-                      {q._count.examQuestions === 1 ? "" : "s"}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <QuestionBankTable
+            questions={items}
+            total={total}
+            filters={filters}
+          />
           <PagePagination page={page} pageCount={pageCount} searchParams={params} />
         </div>
       )}

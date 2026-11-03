@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { updateHeroBrandingSettingsAction } from "@/modules/settings/actions"
 import type { SystemSettings } from "@/modules/settings/queries"
 import { APP_NAME } from "@/lib/config"
+import { BrandLogo } from "@/components/shared/brand-logo"
 
 interface HeroBrandingSettingsProps {
   settings: SystemSettings
@@ -65,7 +66,7 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
     heroTitle !== lastSaved.heroTitle ||
     heroSubtitle !== lastSaved.heroSubtitle
 
-  const DEFAULT_HERO_IMAGE = "/images/hero-students-v2.jpg"
+  const DEFAULT_HERO_IMAGE = "/images/hero-students.webp"
   const DEFAULT_HERO_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
 
   const effectiveHeroImage = heroImageUrl.trim() || DEFAULT_HERO_IMAGE
@@ -554,53 +555,23 @@ export function HeroBrandingSettings({ settings }: HeroBrandingSettingsProps) {
 
             {/* PREVIEW TILES */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl pt-2">
-              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-2xs">
-                {logoUrl ? (
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1 flex items-center justify-center">
-                    <Image
-                      src={logoUrl}
-                      alt="Logo"
-                      width={48}
-                      height={48}
-                      className="size-full object-contain"
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs">
-                    <Shapes className="size-6" />
-                  </span>
-                )}
-                <div>
-                  <span className="font-heading text-base font-bold text-slate-900 block">
-                    {APP_NAME}
-                  </span>
-                  <span className="text-xs text-slate-500">Light theme</span>
+              <div className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-4 shadow-2xs">
+                <span className="text-xs font-semibold text-slate-500">Light theme preview</span>
+                <div className="flex items-center min-h-[44px]">
+                  <BrandLogo
+                    logoUrl={logoUrl.trim().length > 0 ? logoUrl : "/images/logo.png"}
+                    className="h-8.5 w-auto"
+                  />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 rounded-xl border border-slate-800 bg-slate-950 p-4 shadow-2xs">
-                {logoUrl ? (
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-1 flex items-center justify-center">
-                    <Image
-                      src={logoUrl}
-                      alt="Logo Dark"
-                      width={48}
-                      height={48}
-                      className="size-full object-contain"
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-white text-slate-950 shadow-xs">
-                    <Shapes className="size-6" />
-                  </span>
-                )}
-                <div>
-                  <span className="font-heading text-base font-bold text-white block">
-                    {APP_NAME}
-                  </span>
-                  <span className="text-xs text-slate-400">Dark theme</span>
+              <div className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-950 p-4 shadow-2xs">
+                <span className="text-xs font-semibold text-slate-400">Dark theme preview</span>
+                <div className="flex items-center min-h-[44px]">
+                  <BrandLogo
+                    logoUrl={logoUrl.trim().length > 0 ? logoUrl : "/images/logo-dark.png"}
+                    className="h-8.5 w-auto"
+                  />
                 </div>
               </div>
             </div>

@@ -6,17 +6,15 @@ import { useRouter } from "next/navigation"
 import {
   ArrowLeft,
   Building2,
-  BookOpen,
   FileText,
   GraduationCap,
   CheckCircle2,
   Clock,
   AlertTriangle,
-  Lock,
   User,
-  Mail,
   ArrowRight,
   ShieldCheck,
+  Pencil,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -246,79 +244,141 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
     // If student has already submitted an application and it is pending
     if (currentUser.institution && currentUser.teacherVerificationStatus === "PENDING" && !isEditingApplication) {
       return (
-        <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
-          <div className="flex items-center justify-between">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs group gap-1.5 sm:gap-2"
-            >
-              <Link href="/teachers">
-                <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-                <span>Back to Directory</span>
-              </Link>
-            </Button>
+        <div className="relative w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
+          {/* Ambient background bloom matching platform visual standard */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 right-8 size-80 rounded-full bg-primary/[0.04] blur-3xl dark:bg-primary/[0.07]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-48 -left-12 size-72 rounded-full bg-amber-500/[0.03] blur-3xl dark:bg-amber-500/[0.06]"
+          />
+
+          {/* Top Header & Breadcrumb */}
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center justify-between">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-full border-border/70 bg-card hover:bg-muted text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-all shadow-2xs active:scale-95 group gap-1.5 sm:gap-2 cursor-pointer"
+              >
+                <Link href="/teachers">
+                  <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+                  <span>Back to Directory</span>
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs overflow-hidden">
-            <div className="px-5 py-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/20">
-                  <Clock className="size-5" />
+          <Card className="relative rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
+            {/* Ambient card bloom matching /teacher/exams/new */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full bg-amber-500/[0.04] blur-3xl dark:bg-amber-500/[0.08]"
+            />
+
+            {/* Card Header matching /teacher/exams/new standards */}
+            <div className="relative px-5 sm:px-7 py-4.5 sm:py-5 border-b border-border/50 bg-muted/20 backdrop-blur-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                <div className="size-10 sm:size-12 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-amber-500/20">
+                  <Clock className="size-5 sm:size-6" />
                 </div>
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                <div className="min-w-0">
+                  <h2 className="font-heading text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-foreground truncate sm:whitespace-normal">
                     Faculty Accreditation Under Review
                   </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 leading-relaxed font-medium">
                     Your application to become an accredited instructor is being reviewed
                   </p>
                 </div>
               </div>
-              <Badge className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 gap-1 rounded-full text-xs font-semibold self-start sm:self-auto">
+              <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase flex items-center shadow-2xs self-start sm:self-auto shrink-0">
+                <span className="size-1.5 sm:size-2 rounded-full bg-amber-500 animate-pulse" />
                 <Clock className="size-3.5" />
                 <span>Pending Review</span>
               </Badge>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Affiliated Institution</span>
-                  <p className="text-sm font-semibold text-foreground">{currentUser.institution}</p>
+            {/* Card Body */}
+            <div className="relative p-5 sm:p-7 lg:p-8 space-y-5 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4.5">
+                <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-border/60 bg-muted/25 dark:bg-muted/15 space-y-1.5 transition-all shadow-2xs hover:border-primary/30">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <Building2 className="size-3.5 text-primary/70 shrink-0" />
+                    <span>Affiliated Institution</span>
+                  </div>
+                  <p className="text-sm sm:text-base font-bold text-foreground tracking-tight">
+                    {currentUser.institution}
+                  </p>
                 </div>
-                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Department / Specialization</span>
-                  <p className="text-sm font-semibold text-foreground">{currentUser.department || "N/A"}</p>
+
+                <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-border/60 bg-muted/25 dark:bg-muted/15 space-y-1.5 transition-all shadow-2xs hover:border-primary/30">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <GraduationCap className="size-3.5 text-primary/70 shrink-0" />
+                    <span>Department / Specialization</span>
+                  </div>
+                  <p className="text-sm sm:text-base font-bold text-foreground tracking-tight">
+                    {currentUser.department || "General Academic Faculty"}
+                  </p>
                 </div>
               </div>
 
               {currentUser.bio && (
-                <div className="p-4 rounded-xl border border-border/70 bg-muted/15 space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">Academic Statement / Bio</span>
-                  <p className="text-xs sm:text-sm text-foreground leading-relaxed whitespace-pre-wrap">{currentUser.bio}</p>
+                <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-border/60 bg-muted/25 dark:bg-muted/15 space-y-1.5 transition-all shadow-2xs hover:border-primary/30">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <FileText className="size-3.5 text-primary/70 shrink-0" />
+                    <span>Academic Statement / Bio</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap font-medium">
+                    {currentUser.bio}
+                  </p>
                 </div>
               )}
 
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-foreground font-semibold">Active Student Access:</strong> You remain an active student! Your student dashboard, examination attempts, mistakes notebook, and progress tracking remain 100% active and accessible with zero interruption.
+              {/* Active Student Access Notice */}
+              <div className="rounded-xl sm:rounded-2xl border border-primary/25 bg-primary/[0.04] dark:bg-primary/[0.08] p-4 sm:p-5 flex items-start gap-3.5 sm:gap-4 shadow-2xs">
+                <div className="size-9 sm:size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5 shadow-2xs ring-1 ring-primary/20">
+                  <ShieldCheck className="size-4.5 sm:size-5" />
+                </div>
+                <div className="space-y-1 text-xs sm:text-sm leading-relaxed flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-foreground">Active Student Access:</span>
+                    <Badge
+                      variant="secondary"
+                      className="rounded-full px-2 py-0 text-[10px] font-bold text-primary border-primary/20 bg-primary/10 shadow-2xs"
+                    >
+                      100% Active &amp; Uninterrupted
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    You remain an active student! Your student dashboard, examination attempts, mistakes notebook, and progress tracking remain 100% active and accessible with zero interruption.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                <Button asChild size="default" className="rounded-xl font-bold shadow-xs w-full sm:w-auto">
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-10 sm:h-11 px-5 sm:px-6 rounded-xl sm:rounded-2xl font-bold shadow-xs hover:shadow-sm active:scale-95 transition-all text-xs sm:text-sm cursor-pointer gap-2 group w-full sm:w-auto"
+                >
                   <Link href="/dashboard">
                     <span>Go to Student Dashboard</span>
-                    <ArrowRight className="size-4 ml-1.5" />
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
+                  size="lg"
                   onClick={() => setIsEditingApplication(true)}
-                  className="rounded-xl font-semibold border-border/70 w-full sm:w-auto"
+                  className="h-10 sm:h-11 px-5 sm:px-6 rounded-xl sm:rounded-2xl font-semibold border-border/70 hover:bg-muted text-xs sm:text-sm active:scale-95 transition-all cursor-pointer gap-2 w-full sm:w-auto"
                 >
-                  Update Application Details
+                  <Pencil className="size-3.5 text-muted-foreground" />
+                  <span>Update Application Details</span>
                 </Button>
               </div>
             </div>

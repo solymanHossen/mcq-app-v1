@@ -5,10 +5,11 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRight,
-  Check,
+  Clock,
   GraduationCap,
-  MoreHorizontal,
   Play,
+  TrendingUp,
+  Users,
   X,
 } from "lucide-react"
 
@@ -20,10 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import type { SystemSettings } from "@/modules/settings/queries"
+import type { PopularHeroExam } from "@/modules/exams/queries"
 
 function getEmbedVideoUrl(url: string | null | undefined): string | null {
   if (!url) return null
@@ -57,10 +56,10 @@ function renderHighlightedTitle(title?: string | null) {
     return (
       <>
         The Elite Standard
-        <span className="mt-1 block font-extrabold">
+        <span className="mt-1 sm:mt-2 block font-extrabold">
           for <span className="text-primary">Online</span>
         </span>
-        <span className="mt-1 block text-primary">Examinations</span>
+        <span className="mt-1 sm:mt-2 block text-primary">Examinations</span>
       </>
     )
   }
@@ -101,7 +100,7 @@ function renderHighlightedTitle(title?: string | null) {
           return (
             <span
               key={lineIdx}
-              className={lineIdx > 0 ? "mt-1 block" : "inline"}
+              className={lineIdx > 0 ? "mt-1 sm:mt-2 block" : "inline"}
             >
               {parts}
             </span>
@@ -135,40 +134,42 @@ function renderHighlightedTitle(title?: string | null) {
 
 export interface HeroSectionProps {
   settings?: Partial<SystemSettings> | null
+  popularExams?: PopularHeroExam[]
 }
 
-export function HeroSection({ settings }: HeroSectionProps = {}) {
-  const [timerText, setTimerText] = React.useState("01:42:15")
-
+export function HeroSection({
+  settings,
+  popularExams = [],
+}: HeroSectionProps = {}) {
   const heroImage =
-    settings?.heroImageUrl?.trim() || "/images/hero-students-v2.jpg"
+    settings?.heroImageUrl?.trim() || "/images/hero-students.webp"
   const heroVideo =
     settings?.heroVideoUrl?.trim() ||
     "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
   const embedVideoUrl = getEmbedVideoUrl(heroVideo)
 
-  // Live timer tick simulation
-  React.useEffect(() => {
-    let seconds = 15
-    let minutes = 42
-    let hours = 1
+  // Use top 2 attempted exams with graceful fallback
+  const firstExam: PopularHeroExam = popularExams[0] ?? {
+    id: "explore",
+    title: "Computer Science Assessment",
+    durationMinutes: 30,
+    passingMarks: 50,
+    teacherName: "Faculty Instructor",
+    institution: null,
+    totalAttempts: 12,
+    questionCount: 15,
+  }
 
-    const interval = setInterval(() => {
-      seconds--
-      if (seconds < 0) {
-        seconds = 59
-        minutes--
-        if (minutes < 0) {
-          minutes = 59
-          hours--
-        }
-      }
-      const pad = (n: number) => n.toString().padStart(2, "0")
-      setTimerText(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const secondExam: PopularHeroExam = popularExams[1] ?? {
+    id: "explore",
+    title: "Engineering Aptitude Test",
+    durationMinutes: 45,
+    passingMarks: 60,
+    teacherName: "Academic Board",
+    institution: null,
+    totalAttempts: 8,
+    questionCount: 20,
+  }
 
   return (
     <section
@@ -178,14 +179,14 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex min-w-0 flex-col gap-6 sm:gap-8">
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col gap-4 sm:gap-5">
               <h1
                 id="home-title"
-                className="max-w-xl font-heading text-2xl leading-tight font-extrabold tracking-tight wrap-anywhere whitespace-pre-line text-balance text-foreground sm:text-3xl lg:text-4xl"
+                className="max-w-2xl font-heading text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.12] sm:leading-[1.08] wrap-anywhere whitespace-pre-line text-balance text-foreground"
               >
                 {renderHighlightedTitle(settings?.heroTitle)}
               </h1>
-              <p className="max-w-lg text-sm leading-relaxed wrap-anywhere text-muted-foreground sm:text-base">
+              <p className="max-w-xl text-base leading-relaxed wrap-anywhere text-muted-foreground/90 sm:text-lg lg:text-xl">
                 {settings?.heroSubtitle?.trim() ||
                   "Empower your institution with a secure, intuitive, and frictionless testing platform built for the modern era."}
               </p>
@@ -259,13 +260,24 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
               </Dialog>
             </div>
           </div>
-          <div className="relative min-w-0">
-            <div className="relative aspect-video overflow-hidden rounded-2xl border border-border/70 bg-muted/20 shadow-xs">
+          <div className="relative min-w-0 py-6 sm:py-8 lg:py-6">
+            {/* Ambient System Gradient Glow matching platform design */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-12 -right-12 size-72 rounded-full bg-primary/10 blur-3xl -z-10"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-12 -left-12 size-72 rounded-full bg-emerald-500/10 blur-3xl -z-10"
+            />
+
+            {/* Main Students Hero Image with Master Reference Border & Radius */}
+            <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-muted/20 shadow-md">
               <Image
                 src={heroImage}
                 alt="Students taking online exam collaboratively"
                 fill
-                preload
+                priority
                 sizes="(min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
                 className="object-cover object-center"
                 unoptimized={
@@ -274,47 +286,106 @@ export function HeroSection({ settings }: HeroSectionProps = {}) {
                 }
               />
             </div>
-            <Card className="relative mx-4 -mt-6 min-w-0 gap-0 rounded-2xl border border-border/70 bg-card py-0 shadow-xs ring-0 sm:mx-6">
-              <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border/50 bg-muted/20 px-4 py-3.5 sm:px-6 sm:py-4.5">
-                <CardTitle className="text-base font-bold tracking-tight">
-                  <h2>Exam in Progress</h2>
-                </CardTitle>
-                <MoreHorizontal
-                  className="size-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-6 sm:p-6">
-                <div className="flex min-w-0 flex-col gap-3 sm:flex-1">
-                  <p className="font-heading text-3xl font-extrabold tracking-tight text-foreground tabular-nums">
-                    {timerText}
-                  </p>
-                  <Badge
-                    variant="secondary"
-                    className="h-auto max-w-full gap-1.5 rounded-full whitespace-normal"
-                  >
-                    <Check data-icon="inline-start" className="shrink-0 text-primary" />
-                    AI proctoring active
-                  </Badge>
+
+            {/* Platform System Floating Card 1: Top-Left (Matching ExamHub System Gradient & UI) */}
+            <Link
+              href={firstExam.id === "explore" ? "/exam-list" : `/exam/${firstExam.id}`}
+              className="group absolute -top-3.5 left-2 sm:-top-5 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              aria-label={`View top assessment: ${firstExam.title}`}
+            >
+              {/* Ambient radial gradient bloom matching platform system */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full bg-emerald-500/15 blur-2xl transition-opacity duration-300 group-hover:bg-emerald-500/25"
+              />
+
+              <div className="relative flex flex-col gap-2 sm:gap-2.5">
+                {/* Top row: Badge + Attempts */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Top Assessment</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-muted-foreground">
+                    <Users className="size-3 text-muted-foreground/80 shrink-0" />
+                    <span>{firstExam.totalAttempts} attempted</span>
+                  </span>
                 </div>
-                <Separator className="sm:hidden" />
-                <Separator orientation="vertical" className="hidden h-auto self-stretch sm:block" />
-                <div className="flex min-w-0 flex-col justify-center gap-3 sm:flex-1">
-                  {[1, 2].map((number) => (
-                    <div
-                      key={number}
-                      className="flex items-center justify-between gap-3 text-sm font-medium"
-                    >
-                      <span className="inline-flex min-w-0 items-center gap-2">
-                        <Check className="size-4 shrink-0 text-primary" />
-                        Live question {number}
-                      </span>
-                      <Check className="size-4 shrink-0 text-primary" />
-                    </div>
-                  ))}
+
+                {/* Title */}
+                <h3
+                  className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors"
+                  title={firstExam.title}
+                >
+                  {firstExam.title}
+                </h3>
+
+                {/* Bottom row: Teacher + Arrow Action */}
+                <div className="flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                      <GraduationCap className="size-3.5" />
+                    </span>
+                    <span className="truncate font-semibold text-foreground/85">
+                      {firstExam.teacherName}
+                    </span>
+                  </div>
+                  <div className="flex size-7 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-emerald-600 group-hover:text-white dark:group-hover:bg-emerald-500 shrink-0 shadow-2xs ring-1 ring-border/50">
+                    <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
+
+            {/* Platform System Floating Card 2: Bottom-Right (Matching ExamHub System Gradient & UI) */}
+            <Link
+              href={secondExam.id === "explore" ? "/exam-list" : `/exam/${secondExam.id}`}
+              className="group absolute -bottom-3.5 right-2 sm:-bottom-5 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label={`View assessment: ${secondExam.title}`}
+            >
+              {/* Ambient radial gradient bloom matching platform system */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full bg-primary/15 blur-2xl transition-opacity duration-300 group-hover:bg-primary/25"
+              />
+
+              <div className="relative flex flex-col gap-2 sm:gap-2.5">
+                {/* Top row: Badge + Duration */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-primary">
+                    <TrendingUp className="size-3 shrink-0" />
+                    <span>Trending Test</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-muted-foreground">
+                    <Clock className="size-3 text-muted-foreground/80 shrink-0" />
+                    <span>{secondExam.durationMinutes} mins</span>
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="font-heading text-xs sm:text-sm font-bold tracking-tight text-foreground truncate group-hover:text-primary transition-colors"
+                  title={secondExam.title}
+                >
+                  {secondExam.title}
+                </h3>
+
+                {/* Bottom row: Teacher + Arrow Action */}
+                <div className="flex items-center justify-between gap-2 border-t border-border/50 pt-2 text-[10px] sm:text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                      <GraduationCap className="size-3.5" />
+                    </span>
+                    <span className="truncate font-semibold text-foreground/85">
+                      {secondExam.teacherName}
+                    </span>
+                  </div>
+                  <div className="flex size-7 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground shrink-0 shadow-2xs ring-1 ring-border/50">
+                    <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

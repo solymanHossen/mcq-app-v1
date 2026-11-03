@@ -32,6 +32,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -93,31 +94,18 @@ export function AppSidebar({
         >
           <Link
             href="/"
-            className="flex min-w-0 items-center gap-3 rounded-xl transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+            className="flex min-w-0 items-center rounded-xl transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
             title={brandName}
           >
-            {logoUrl ? (
-              <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-sidebar-border/60 bg-sidebar-accent/50 p-1 shadow-2xs">
-                <Image
-                  src={logoUrl}
-                  alt={brandName}
-                  width={36}
-                  height={36}
-                  className="size-full object-contain"
-                  unoptimized={
-                    logoUrl.startsWith("/uploads/") ||
-                    logoUrl.startsWith("http")
-                  }
-                />
-              </div>
-            ) : (
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs">
-                {brandIcon}
-              </span>
-            )}
-            <span className="min-w-0 truncate font-heading text-base font-bold tracking-tight text-foreground group-data-[collapsible=icon]:hidden">
-              {brandName}
-            </span>
+            <BrandLogo
+              logoUrl={logoUrl}
+              className="h-8 w-auto max-w-[140px] group-data-[collapsible=icon]:hidden"
+            />
+            <BrandLogo
+              logoUrl={logoUrl}
+              iconOnly
+              className="hidden group-data-[collapsible=icon]:flex size-8"
+            />
           </Link>
           <Badge
             variant="secondary"
