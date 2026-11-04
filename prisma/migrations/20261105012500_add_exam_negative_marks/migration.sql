@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Exam" ADD COLUMN "negativeMarks" DOUBLE PRECISION NOT NULL DEFAULT 0;
+
