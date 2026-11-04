@@ -9,15 +9,13 @@ import { Spinner } from "@/components/ui/spinner"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { LatexText } from "@/components/shared/latex-text"
 import { submitAttemptAction } from "@/modules/attempts/actions"
 import {
@@ -547,33 +545,8 @@ export function ExamAttemptClient({
           )
         })}
 
-        {/* Bottom Finish Trigger */}
-        <div className="pt-4 pb-20 sm:pb-24 text-center">
-          <Card className="p-6 sm:p-8 rounded-2xl border border-border/70 bg-card shadow-2xs space-y-4 max-w-xl mx-auto">
-            <div className="size-12 rounded-2xl bg-primary/10 text-primary mx-auto flex items-center justify-center ring-1 ring-primary/25">
-              <CheckCircle2 className="size-6" />
-            </div>
-            <div>
-              <h2 className="font-heading text-lg font-bold text-[#172B2B] dark:text-foreground">
-                You have reached the end of the examination
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                Completed {answeredCount} of {questions.length} questions. You can scroll up to review your answers or submit now.
-              </p>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <Button
-                type="button"
-                onClick={() => setSubmitDialogOpen(true)}
-                disabled={submitting || disabled}
-                className="h-10 sm:h-11 px-6 rounded-xl font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs cursor-pointer gap-2"
-              >
-                <Send className="size-4" />
-                <span>Finish &amp; Submit Examination</span>
-              </Button>
-            </div>
-          </Card>
-        </div>
+        {/* Bottom spacing for floating progress bar */}
+        <div className="pb-20 sm:pb-24" />
       </main>
 
       {/* ================= FLOATING SUBTLE EXAM PROGRESS ================= */}
@@ -617,31 +590,31 @@ export function ExamAttemptClient({
       </div>
 
       {/* ================= FINISH & SUBMIT CONFIRMATION MODAL ================= */}
-      <AlertDialog open={submitDialogOpen} onOpenChange={setSubmitDialogOpen}>
-        <AlertDialogContent className="max-w-md rounded-2xl sm:rounded-3xl p-5 sm:p-7 border-border/70 bg-card">
-          <AlertDialogHeader>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="size-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+      <Dialog open={submitDialogOpen} onOpenChange={setSubmitDialogOpen}>
+        <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md rounded-2xl p-5 sm:p-6 border border-border/70 bg-card shadow-xl gap-4">
+          <DialogHeader className="text-left space-y-1.5">
+            <div className="flex items-start gap-3">
+              <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
                 <Send className="size-5" />
               </div>
-              <div className="min-w-0">
-                <AlertDialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+              <div className="min-w-0 flex-1 pr-6">
+                <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
                   Finish &amp; Submit Examination
-                </AlertDialogTitle>
-                <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                </DialogTitle>
+                <p className="text-xs text-muted-foreground font-medium mt-0.5 truncate">
                   {examTitle}
                 </p>
               </div>
             </div>
-            <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
+            <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
               Please review your completion status before final submission. Once confirmed, your answers cannot be altered and will be graded immediately.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
 
           {/* Metric Overview Grid */}
-          <div className="grid grid-cols-4 gap-2 my-3 p-3 rounded-2xl bg-muted/40 border border-border/60 text-center">
+          <div className="grid grid-cols-4 gap-2 my-1 p-3 rounded-xl bg-muted/20 border border-border/60 text-center">
             <div className="space-y-0.5">
-              <span className="text-base sm:text-xl font-extrabold text-foreground">
+              <span className="text-base sm:text-lg font-bold text-foreground">
                 {questions.length}
               </span>
               <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
@@ -649,7 +622,7 @@ export function ExamAttemptClient({
               </p>
             </div>
             <div className="space-y-0.5">
-              <span className="text-base sm:text-xl font-extrabold text-primary">
+              <span className="text-base sm:text-lg font-bold text-primary">
                 {answeredCount}
               </span>
               <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">
@@ -659,7 +632,7 @@ export function ExamAttemptClient({
             <div className="space-y-0.5">
               <span
                 className={cn(
-                  "text-base sm:text-xl font-extrabold",
+                  "text-base sm:text-lg font-bold",
                   unansweredCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
                 )}
               >
@@ -672,7 +645,7 @@ export function ExamAttemptClient({
             <div className="space-y-0.5">
               <span
                 className={cn(
-                  "text-base sm:text-xl font-extrabold",
+                  "text-base sm:text-lg font-bold",
                   markedCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
                 )}
               >
@@ -693,20 +666,21 @@ export function ExamAttemptClient({
             </Alert>
           )}
 
-          <AlertDialogFooter className="gap-2 sm:gap-3 pt-3">
-            <AlertDialogCancel
+          <DialogFooter className="gap-2 sm:gap-2.5 pt-2 flex flex-col-reverse sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
               disabled={submitting}
-              className="h-10 sm:h-11 rounded-xl cursor-pointer font-semibold border-border/70 text-xs sm:text-sm hover:bg-muted"
+              onClick={() => setSubmitDialogOpen(false)}
+              className="h-10 rounded-xl px-4 font-semibold border-border/70 text-xs sm:text-sm hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
             >
               Continue Examination
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault()
-                submit()
-              }}
+            </Button>
+            <Button
+              type="button"
+              onClick={submit}
               disabled={submitting}
-              className="h-10 sm:h-11 rounded-xl bg-primary text-primary-foreground font-bold cursor-pointer shadow-xs hover:bg-primary/90 text-xs sm:text-sm gap-2"
+              className="h-10 rounded-xl px-4.5 bg-primary text-primary-foreground font-semibold cursor-pointer shadow-2xs hover:bg-primary/90 text-xs sm:text-sm gap-2"
             >
               {submitting ? (
                 <>
@@ -719,10 +693,10 @@ export function ExamAttemptClient({
                   <span>Confirm &amp; Submit</span>
                 </>
               )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
