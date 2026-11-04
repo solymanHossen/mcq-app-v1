@@ -338,9 +338,6 @@ export default async function DashboardPage() {
               <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
                 Recent Exam Activity
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
-                Your latest assessment submissions, scores, and evaluation records
-              </p>
             </div>
           </div>
 

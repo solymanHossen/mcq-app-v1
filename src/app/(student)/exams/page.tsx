@@ -486,9 +486,6 @@ export default async function AvailableExamsPage({
             <span>Live Assessment Center</span>
           </Badge>
         </div>
-        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-          Browse published examinations to take or inspect your full historical performance and scorecards.
-        </p>
       </div>
 
       {/* ================= KPI STATS SUMMARY GRID ================= */}
