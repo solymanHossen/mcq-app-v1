@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -214,12 +214,12 @@ export function ExamAttemptClient({
             </div>
             <div className="min-w-0">
               <h1
-                className="font-heading text-sm sm:text-base font-bold tracking-tight text-[#172B2B] dark:text-foreground truncate"
+                className="font-heading text-base sm:text-base font-bold tracking-tight text-[#172B2B] dark:text-foreground truncate"
                 title={examTitle}
               >
                 {examTitle}
               </h1>
-              <p className="text-[10px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <p className="text-[11px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Live Assessment</span>
               </p>
@@ -337,10 +337,10 @@ export function ExamAttemptClient({
         </div>
 
         {/* ================= COMPACT EXAM PROGRESS ================= */}
-        <div className="w-full border-t border-border/40 bg-muted/20 px-4 sm:px-6 py-1.5">
-          <div className="max-w-4xl mx-auto flex items-center justify-between gap-3 text-xs">
+        <div className="w-full border-t border-border/40 bg-muted/20 px-4 sm:px-6 py-2 sm:py-1.5">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-3 text-xs sm:text-xs">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-[#172B2B] dark:text-foreground">
+              <span className="font-bold text-[#172B2B] dark:text-foreground text-[13px] sm:text-xs">
                 {answeredCount} of {questions.length} questions completed
               </span>
               <span className="text-muted-foreground font-medium hidden sm:inline">
@@ -349,7 +349,7 @@ export function ExamAttemptClient({
             </div>
 
             {markedCount > 0 && (
-              <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
+              <span className="text-xs sm:text-[11px] font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
                 <Flag className="size-3 fill-amber-500 text-amber-500" />
                 <span>{markedCount} marked for review</span>
               </span>
@@ -390,12 +390,12 @@ export function ExamAttemptClient({
               {/* Card Header: QUESTION NUMBER + MARKS + STATUS */}
               <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-border/60 bg-muted/20 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                  <span className="font-mono text-xs sm:text-sm font-extrabold tracking-wider text-muted-foreground uppercase">
+                  <span className="font-mono text-[13px] sm:text-sm font-extrabold tracking-wider text-muted-foreground uppercase">
                     QUESTION {formatQuestionIndex(i)}
                   </span>
                   <Badge
                     variant="outline"
-                    className="rounded-full text-[10px] sm:text-[11px] font-semibold border-border/70 bg-card px-2 py-0 shadow-2xs text-muted-foreground"
+                    className="rounded-full text-[11px] sm:text-[11px] font-semibold border-border/70 bg-card px-2 py-0.5 shadow-2xs text-muted-foreground"
                   >
                     {q.marks} {q.marks === 1 ? "MARK" : "MARKS"}
                   </Badge>
@@ -403,17 +403,17 @@ export function ExamAttemptClient({
 
                 <div className="flex items-center gap-2 shrink-0">
                   {isMarked ? (
-                    <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30 gap-1 rounded-full text-[11px] font-semibold px-2.5 py-0.5 shadow-2xs">
+                    <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30 gap-1 rounded-full text-xs sm:text-[11px] font-semibold px-2.5 py-0.5 shadow-2xs">
                       <Flag className="size-3 fill-amber-500 text-amber-500" />
                       <span>Review</span>
                     </Badge>
                   ) : isAnswered ? (
-                    <Badge className="bg-primary/10 text-primary border-primary/25 gap-1 rounded-full text-[11px] font-semibold px-2.5 py-0.5 shadow-2xs">
+                    <Badge className="bg-primary/10 text-primary border-primary/25 gap-1 rounded-full text-xs sm:text-[11px] font-semibold px-2.5 py-0.5 shadow-2xs">
                       <Check className="size-3 stroke-[2.5]" />
                       <span>Answered</span>
                     </Badge>
                   ) : (
-                    <span className="text-[11px] font-medium text-muted-foreground/70">
+                    <span className="text-xs sm:text-[11px] font-medium text-muted-foreground/70">
                       Unanswered
                     </span>
                   )}
@@ -423,7 +423,7 @@ export function ExamAttemptClient({
               {/* Card Content: Question Text & Answer Options */}
               <div className="p-4 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
                 {/* Question Statement */}
-                <div className="text-base sm:text-lg font-bold text-[#172B2B] dark:text-foreground leading-relaxed tracking-tight wrap-anywhere font-bengali">
+                <div className="text-[17.5px] sm:text-lg font-bold text-[#172B2B] dark:text-foreground leading-relaxed tracking-tight wrap-anywhere font-bengali">
                   <LatexText
                     text={q.questionText}
                     className="min-w-0 [&_.katex-display]:overflow-x-auto"
@@ -477,14 +477,14 @@ export function ExamAttemptClient({
                           </div>
 
                           {/* Option Prefix & Text */}
-                          <div className="min-w-0 flex-1 flex items-baseline gap-2 text-xs sm:text-sm sm:text-base leading-relaxed font-bengali wrap-anywhere">
+                          <div className="min-w-0 flex-1 flex items-baseline gap-2 text-[15px] sm:text-base leading-relaxed font-bengali wrap-anywhere">
                             <span className="font-bold text-muted-foreground shrink-0 select-none hidden sm:inline">
                               {optionLabel} —
                             </span>
-                            <span className="font-bold text-muted-foreground shrink-0 select-none sm:hidden">
+                            <span className="font-bold text-muted-foreground shrink-0 select-none sm:hidden text-[15px]">
                               {String.fromCharCode(65 + slot)}.
                             </span>
-                            <span className="font-normal text-[#172B2B] dark:text-foreground">
+                            <span className="font-normal text-[#172B2B] dark:text-foreground text-[15px] sm:text-base">
                               <LatexText
                                 text={q.optionText[option]}
                                 className="min-w-0 [&_.katex-display]:overflow-x-auto"
@@ -606,7 +606,7 @@ export function ExamAttemptClient({
                 </p>
               </div>
             </div>
-            <DialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
+            <DialogDescription className="text-sm sm:text-sm text-muted-foreground leading-relaxed pt-1">
               Please review your completion status before final submission. Once confirmed, your answers cannot be altered and will be graded immediately.
             </DialogDescription>
           </DialogHeader>
@@ -614,44 +614,44 @@ export function ExamAttemptClient({
           {/* Metric Overview Grid */}
           <div className="grid grid-cols-4 gap-2 my-1 p-3 rounded-xl bg-muted/20 border border-border/60 text-center">
             <div className="space-y-0.5">
-              <span className="text-base sm:text-lg font-bold text-foreground">
+              <span className="text-lg sm:text-lg font-bold text-foreground">
                 {questions.length}
               </span>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                 Total
               </p>
             </div>
             <div className="space-y-0.5">
-              <span className="text-base sm:text-lg font-bold text-primary">
+              <span className="text-lg sm:text-lg font-bold text-primary">
                 {answeredCount}
               </span>
-              <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">
+              <p className="text-[11px] sm:text-[10px] text-primary font-semibold uppercase tracking-wider">
                 Answered
               </p>
             </div>
             <div className="space-y-0.5">
               <span
                 className={cn(
-                  "text-base sm:text-lg font-bold",
+                  "text-lg sm:text-lg font-bold",
                   unansweredCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
                 )}
               >
                 {unansweredCount}
               </span>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                 Unanswered
               </p>
             </div>
             <div className="space-y-0.5">
               <span
                 className={cn(
-                  "text-base sm:text-lg font-bold",
+                  "text-lg sm:text-lg font-bold",
                   markedCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
                 )}
               >
                 {markedCount}
               </span>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                 Review
               </p>
             </div>
@@ -660,7 +660,7 @@ export function ExamAttemptClient({
           {unansweredCount > 0 && (
             <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10 p-3 text-amber-900 dark:text-amber-200">
               <AlertTriangle className="size-4 text-amber-600 shrink-0" />
-              <AlertDescription className="text-xs leading-relaxed font-medium">
+              <AlertDescription className="text-sm sm:text-xs leading-relaxed font-medium">
                 You have <strong>{unansweredCount} unanswered</strong> question(s). Unanswered questions receive zero marks.
               </AlertDescription>
             </Alert>
@@ -672,7 +672,7 @@ export function ExamAttemptClient({
               variant="outline"
               disabled={submitting}
               onClick={() => setSubmitDialogOpen(false)}
-              className="h-10 rounded-xl px-4 font-semibold border-border/70 text-xs sm:text-sm hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+              className="h-10 rounded-xl px-4 font-semibold border-border/70 text-sm sm:text-sm hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
             >
               Continue Examination
             </Button>
@@ -680,7 +680,7 @@ export function ExamAttemptClient({
               type="button"
               onClick={submit}
               disabled={submitting}
-              className="h-10 rounded-xl px-4.5 bg-primary text-primary-foreground font-semibold cursor-pointer shadow-2xs hover:bg-primary/90 text-xs sm:text-sm gap-2"
+              className="h-10 rounded-xl px-4.5 bg-primary text-primary-foreground font-semibold cursor-pointer shadow-2xs hover:bg-primary/90 text-sm sm:text-sm gap-2"
             >
               {submitting ? (
                 <>

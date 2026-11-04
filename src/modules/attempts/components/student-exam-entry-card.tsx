@@ -11,10 +11,7 @@ import {
   Camera,
   Play,
   ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
   AlertTriangle,
-  Zap,
   Clock,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -151,10 +148,10 @@ export function StudentExamEntryCard({
                 {user.name.slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <CardTitle className="font-heading text-sm sm:text-base font-bold text-foreground">
+                <CardTitle className="font-heading text-base sm:text-base font-bold text-foreground">
                   Logged in as {user.name}
                 </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">
+                <CardDescription className="text-xs sm:text-xs text-muted-foreground">
                   {user.email} · <span className="uppercase font-semibold tracking-wider">{user.role}</span>
                 </CardDescription>
               </div>
@@ -170,7 +167,7 @@ export function StudentExamEntryCard({
 
         <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
           {errorMessage && (
-            <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-sm sm:text-sm font-semibold flex items-center gap-2">
               <AlertTriangle className="size-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -178,7 +175,7 @@ export function StudentExamEntryCard({
 
           {exam.accessCode && (
             <div className="space-y-1.5">
-              <Label htmlFor="loggedInAccessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Label htmlFor="loggedInAccessCode" className="text-sm sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
                 <Lock className="size-3.5 text-muted-foreground" />
                 <span>Exam Passcode (Required)</span>
               </Label>
@@ -187,7 +184,7 @@ export function StudentExamEntryCard({
                 placeholder="Enter passcode provided by teacher"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
-                className="h-10 sm:h-11 text-sm font-mono rounded-xl border border-border/70 bg-background"
+                className="h-11 sm:h-11 text-base sm:text-sm font-mono rounded-xl border border-border/70 bg-background"
               />
             </div>
           )}
@@ -200,12 +197,12 @@ export function StudentExamEntryCard({
                 onChange={(e) => setWebcamConsent(e.target.checked)}
                 className="size-4 mt-0.5 rounded text-primary focus:ring-primary"
               />
-              <div className="text-xs text-foreground">
+              <div className="text-sm sm:text-xs text-foreground">
                 <span className="font-bold flex items-center gap-1.5">
                   <Camera className="size-3.5 text-primary" />
                   <span>Webcam Consent Required</span>
                 </span>
-                <p className="text-muted-foreground text-[11px] sm:text-xs mt-0.5">
+                <p className="text-muted-foreground text-xs sm:text-xs mt-0.5">
                   I agree to webcam proctoring during this assessment.
                 </p>
               </div>
@@ -214,10 +211,10 @@ export function StudentExamEntryCard({
 
           {attemptsLeft <= 0 ? (
             <div className="text-center py-3 space-y-2">
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+              <p className="text-sm sm:text-sm text-muted-foreground font-medium">
                 You have reached the maximum allowed attempts for this exam.
               </p>
-              <Button asChild variant="outline" className="rounded-xl font-bold text-xs h-9">
+              <Button asChild variant="outline" className="rounded-xl font-bold text-xs sm:text-xs h-9">
                 <Link href={`/exams/${exam.id}`}>View Your Results & History</Link>
               </Button>
             </div>
@@ -227,7 +224,7 @@ export function StudentExamEntryCard({
               size="lg"
               onClick={handleStartForLoggedInUser}
               disabled={isPending || (exam.webcamMonitoringRequired && !webcamConsent)}
-              className="w-full h-11 sm:h-12 rounded-xl font-heading font-bold text-sm sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group"
+              className="w-full h-12 sm:h-12 rounded-xl font-heading font-bold text-base sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group"
             >
               {isPending ? (
                 <>
@@ -266,10 +263,10 @@ export function StudentExamEntryCard({
         <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+              <CardTitle className="font-heading text-xl sm:text-xl font-bold tracking-tight text-foreground">
                 Enter Your Details
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+              <CardDescription className="text-sm sm:text-sm text-muted-foreground mt-0.5">
                 Provide your name and email to begin the exam.
               </CardDescription>
             </div>
@@ -287,7 +284,7 @@ export function StudentExamEntryCard({
         <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
           <form onSubmit={handleStartForGuest} className="space-y-4">
             {errorMessage && (
-              <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
+              <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-sm sm:text-sm font-semibold flex items-center gap-2">
                 <AlertTriangle className="size-4 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -295,7 +292,7 @@ export function StudentExamEntryCard({
 
             {/* Student Full Name */}
             <div className="space-y-1.5">
-              <Label htmlFor="guestName" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Label htmlFor="guestName" className="text-sm sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
                 <User className="size-3.5 text-muted-foreground" />
                 <span>Your Full Name <span className="text-destructive">*</span></span>
               </Label>
@@ -306,7 +303,7 @@ export function StudentExamEntryCard({
                 placeholder="e.g. Solyman Hossen"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-10 sm:h-11 rounded-xl text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
+                className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
                 disabled={isPending}
                 autoFocus
               />
@@ -314,7 +311,7 @@ export function StudentExamEntryCard({
 
             {/* Student Email Address */}
             <div className="space-y-1.5">
-              <Label htmlFor="guestEmail" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Label htmlFor="guestEmail" className="text-sm sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
                 <Mail className="size-3.5 text-muted-foreground" />
                 <span>Your Email Address <span className="text-destructive">*</span></span>
               </Label>
@@ -326,10 +323,10 @@ export function StudentExamEntryCard({
                 placeholder="e.g. solyman@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-10 sm:h-11 rounded-xl text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
+                className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
                 disabled={isPending}
               />
-              <p className="text-[11px] sm:text-xs text-muted-foreground">
+              <p className="text-xs sm:text-xs text-muted-foreground">
                 Your exam result and score summary will be linked to this email.
               </p>
             </div>
@@ -337,7 +334,7 @@ export function StudentExamEntryCard({
             {/* Optional Passcode if set by teacher */}
             {exam.accessCode && (
               <div className="space-y-1.5 pt-1">
-                <Label htmlFor="guestAccessCode" className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
+                <Label htmlFor="guestAccessCode" className="text-sm sm:text-sm font-semibold text-foreground flex items-center gap-1.5">
                   <Lock className="size-3.5 text-amber-500" />
                   <span>Exam Passcode / PIN <span className="text-destructive">*</span></span>
                 </Label>
@@ -348,7 +345,7 @@ export function StudentExamEntryCard({
                   placeholder="Enter passcode provided by your teacher"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  className="h-10 sm:h-11 rounded-xl text-sm font-mono bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20"
+                  className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-mono bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20"
                   disabled={isPending}
                 />
               </div>
@@ -364,12 +361,12 @@ export function StudentExamEntryCard({
                   className="size-4 mt-0.5 rounded text-primary focus:ring-primary"
                   required
                 />
-                <div className="text-xs text-foreground">
+                <div className="text-sm sm:text-xs text-foreground">
                   <span className="font-bold flex items-center gap-1.5">
                     <Camera className="size-3.5 text-primary" />
                     <span>Webcam Proctoring Required</span>
                   </span>
-                  <p className="text-muted-foreground text-[11px] sm:text-xs mt-0.5">
+                  <p className="text-muted-foreground text-xs sm:text-xs mt-0.5">
                     I agree to camera proctoring during this assessment.
                   </p>
                 </div>
@@ -381,7 +378,7 @@ export function StudentExamEntryCard({
               type="submit"
               size="lg"
               disabled={isPending || (exam.webcamMonitoringRequired && !webcamConsent)}
-              className="w-full h-11 sm:h-12 rounded-xl font-heading font-bold text-sm sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group mt-2"
+              className="w-full h-12 sm:h-12 rounded-xl font-heading font-bold text-base sm:text-base cursor-pointer shadow-xs hover:shadow-sm active:scale-98 transition-all gap-2 group mt-2"
             >
               {isPending ? (
                 <>
