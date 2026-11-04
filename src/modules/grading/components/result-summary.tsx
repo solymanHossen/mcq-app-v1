@@ -16,6 +16,7 @@ import {
   Award,
   Info,
   FileCheck2,
+  Target,
 } from "lucide-react"
 
 export function ResultSummary({ result }: { result: ResultForStudent }) {
@@ -25,9 +26,19 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
   if (!result.result || result.result.status !== "PUBLISHED") {
     return (
       <div className="flex min-w-0 flex-col gap-6">
-        {/* Prominent Pending Notice Banner */}
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/[0.08] dark:bg-amber-500/15 p-5 sm:p-6 space-y-3">
-          <div className="flex items-start gap-3.5 sm:gap-4">
+        {/* Prominent Pending Notice Banner (Matching Teacher Directory Gradient Hero) */}
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/25 bg-gradient-to-r from-card via-card to-amber-500/10 dark:from-card dark:via-card dark:to-amber-500/15 p-5 sm:p-7 space-y-3 shadow-2xs">
+          {/* Ambient Glow */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-amber-500/15 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-16 -left-16 size-56 rounded-full bg-primary/10 blur-3xl"
+          />
+
+          <div className="relative z-10 flex items-start gap-3.5 sm:gap-4">
             <div className="size-10 sm:size-11 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/30 shadow-2xs">
               <Clock className="size-5 sm:size-6" />
             </div>
@@ -141,91 +152,126 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      {/* Official Results Score Header Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl border border-primary/25 bg-primary/5 dark:bg-primary/10 shadow-2xs">
-        <div className="flex items-center gap-3.5">
-          <div className="size-11 sm:size-12 rounded-2xl bg-primary/15 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/30 shadow-2xs">
-            <Award className="size-6" />
-          </div>
-          <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-primary">
-              Official Assessment Score
-            </span>
-            <h3 className="font-heading text-xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-              Score: {r.obtainedMarks} / {r.totalMarks}
-            </h3>
-          </div>
-        </div>
+      {/* Official Results Score Hero Card (Matching Picture 1 Teacher Directory Gradient Hero) */}
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-r from-card via-card to-primary/10 dark:from-card dark:via-card dark:to-primary/15 p-5 sm:p-7 lg:p-8 shadow-xs">
+        {/* Ambient System Gradient Flow matching platform design */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/15 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/15 blur-3xl"
+        />
 
-        <div className="flex items-center gap-2">
-          {r.isPassed !== null && (
-            <Badge
-              className={cn(
-                "rounded-full px-3.5 py-1 text-xs sm:text-sm font-bold shadow-2xs gap-1.5",
-                r.isPassed
-                  ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                  : "border-destructive/30 bg-destructive/15 text-destructive"
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          {/* Left: Score & Pass/Fail Status */}
+          <div className="space-y-2.5 sm:space-y-3 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-2xs">
+                <Award className="size-3.5" />
+                <span>Official Assessment Score</span>
+              </div>
+
+              {r.isPassed !== null && (
+                <Badge
+                  className={cn(
+                    "rounded-full px-3 py-0.5 text-xs font-bold shadow-2xs gap-1.5",
+                    r.isPassed
+                      ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      : "border-destructive/30 bg-destructive/15 text-destructive"
+                  )}
+                  variant="outline"
+                >
+                  {r.isPassed ? (
+                    <>
+                      <Check className="size-3.5 stroke-[3]" />
+                      <span>Passed</span>
+                    </>
+                  ) : (
+                    <>
+                      <X className="size-3.5 stroke-[3]" />
+                      <span>Not passed</span>
+                    </>
+                  )}
+                </Badge>
               )}
-              variant="outline"
-            >
-              {r.isPassed ? (
-                <>
-                  <Check className="size-3.5 stroke-[3]" />
-                  <span>Passed</span>
-                </>
-              ) : (
-                <>
-                  <X className="size-3.5 stroke-[3]" />
-                  <span>Not passed</span>
-                </>
-              )}
-            </Badge>
-          )}
+            </div>
+
+            <div>
+              <h3 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">
+                Score: {r.obtainedMarks} / {r.totalMarks}
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1 hidden sm:block">
+                Final assessment grade verified and recorded in the examination system.
+              </p>
+            </div>
+          </div>
+
+          {/* Right: Metric Breakdown Tiles (Matching Picture 1 Teacher Directory Stat Cards) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:flex xl:flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* Correct */}
+            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all">
+              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+                <CheckCircle2 className="size-4.5 sm:size-5" />
+              </span>
+              <div>
+                <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
+                  {r.correctCount}
+                </span>
+                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Correct
+                </span>
+              </div>
+            </div>
+
+            {/* Incorrect */}
+            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-destructive/40 hover:bg-muted/30 transition-all">
+              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive shadow-2xs ring-1 ring-destructive/20">
+                <X className="size-4.5 sm:size-5 stroke-[2.5]" />
+              </span>
+              <div>
+                <span className="block font-heading text-lg sm:text-xl font-black text-destructive">
+                  {r.incorrectCount}
+                </span>
+                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Incorrect
+                </span>
+              </div>
+            </div>
+
+            {/* Skipped */}
+            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-border hover:bg-muted/30 transition-all">
+              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/10 text-muted-foreground shadow-2xs ring-1 ring-muted-foreground/20">
+                <Clock className="size-4.5 sm:size-5" />
+              </span>
+              <div>
+                <span className="block font-heading text-lg sm:text-xl font-black text-muted-foreground">
+                  {r.skippedCount}
+                </span>
+                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Skipped
+                </span>
+              </div>
+            </div>
+
+            {/* Accuracy */}
+            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all">
+              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+                <Target className="size-4.5 sm:size-5" />
+              </span>
+              <div>
+                <span className="block font-heading text-lg sm:text-xl font-black text-primary">
+                  {Math.round(r.accuracy * 100)}%
+                </span>
+                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                  Accuracy
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Metric Breakdown Cards (Correct, Incorrect, Skipped, Accuracy) */}
-      <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex flex-col gap-1">
-          <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-emerald-500" />
-            <span>Correct</span>
-          </dt>
-          <dd className="font-heading text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
-            {r.correctCount}
-          </dd>
-        </div>
-
-        <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex flex-col gap-1">
-          <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-destructive" />
-            <span>Incorrect</span>
-          </dt>
-          <dd className="font-heading text-xl sm:text-2xl font-extrabold text-destructive">
-            {r.incorrectCount}
-          </dd>
-        </div>
-
-        <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex flex-col gap-1">
-          <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-muted-foreground/60" />
-            <span>Skipped</span>
-          </dt>
-          <dd className="font-heading text-xl sm:text-2xl font-extrabold text-muted-foreground">
-            {r.skippedCount}
-          </dd>
-        </div>
-
-        <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex flex-col gap-1">
-          <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-primary" />
-            <span>Accuracy</span>
-          </dt>
-          <dd className="font-heading text-xl sm:text-2xl font-extrabold text-primary">
-            {Math.round(r.accuracy * 100)}%
-          </dd>
-        </div>
-      </dl>
 
       {r.cancelledCount > 0 && (
         <p className="text-xs text-muted-foreground bg-muted/40 p-3 rounded-xl border border-border/60">

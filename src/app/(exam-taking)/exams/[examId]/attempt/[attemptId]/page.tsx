@@ -166,8 +166,18 @@ export default async function AttemptPage({
           </div>
         </div>
 
-        <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3 sm:gap-3.5">
+        <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/5 dark:from-card dark:via-card dark:to-primary/10 p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden relative">
+          {/* Ambient System Gradient Flow matching platform design */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-primary/15 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-24 -left-24 size-80 rounded-full bg-emerald-500/15 blur-3xl"
+          />
+
+          <div className="relative z-10 px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3 sm:gap-3.5">
             <div
               className={cn(
                 "size-9 sm:size-11 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ring-1",
