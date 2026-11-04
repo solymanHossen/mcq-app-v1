@@ -14,7 +14,6 @@ import {
   ArrowLeft,
   LayoutDashboard,
   Award,
-  Info,
   FileCheck2,
   Target,
 } from "lucide-react"
@@ -255,6 +254,11 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
                       <Badge variant="outline" className="text-[10px] sm:text-[11px] font-semibold border-border/70">
                         {q.marks} {q.marks === 1 ? "MARK" : "MARKS"}
                       </Badge>
+                      {typeof q.negativeMarks === "number" && q.negativeMarks > 0 ? (
+                        <Badge variant="outline" className="text-[10px] sm:text-[11px] font-semibold border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                          -{q.negativeMarks} neg.
+                        </Badge>
+                      ) : null}
                     </div>
 
                     <div>
@@ -274,7 +278,7 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
                       ) : (
                         <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-xs font-semibold rounded-full gap-1">
                           <X className="size-3 stroke-[3]" />
-                          <span>Incorrect (0)</span>
+                          <span>Incorrect {typeof q.negativeMarks === "number" && q.negativeMarks > 0 ? `(-${q.negativeMarks})` : "(0)"}</span>
                         </Badge>
                       )}
                     </div>

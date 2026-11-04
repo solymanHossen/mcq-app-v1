@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import { canAccessRole, getCurrentUser } from "@/lib/authorization"
 import { countAttempts } from "@/modules/attempts/queries"
@@ -18,6 +19,7 @@ import {
   Calendar,
   CheckCircle2,
   User,
+  AlertTriangle,
 } from "lucide-react"
 
 // @next-codemod-ignore Cache Components adoption
@@ -137,6 +139,16 @@ export default async function PublicExamLandingPage({
 
           <div className="relative z-10 space-y-4">
             <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[11px] sm:text-xs font-bold tracking-wide text-primary shadow-2xs">
+                <Image
+                  src={settings?.logoUrl || "/images/bcs-bank-logo-512.png"}
+                  alt="BCS & Bank Aspirants"
+                  width={18}
+                  height={18}
+                  className="size-3.5 sm:size-4 rounded-full"
+                />
+                <span>BCS &amp; Bank Aspirants</span>
+              </span>
               <Badge
                 variant="secondary"
                 className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-primary/20 bg-primary/10 text-primary shadow-2xs"
@@ -168,13 +180,29 @@ export default async function PublicExamLandingPage({
                   <span>Proctored</span>
                 </Badge>
               )}
+              {exam.negativeMarks > 0 ? (
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 gap-1 bg-amber-500/10 backdrop-blur-xs"
+                >
+                  <AlertTriangle className="size-3 text-amber-500" />
+                  <span>Negative Marking (-{exam.negativeMarks})</span>
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-muted-foreground border-border/70 bg-card/60 backdrop-blur-xs"
+                >
+                  No Negative Marking
+                </Badge>
+              )}
             </div>
 
             <div>
               <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
                 {exam.title}
               </h1>
-              <div className="mt-2 text-xs sm:text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+              <div className="mt-2 text-sm sm:text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
                 <div className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px] ring-1 ring-primary/25 shadow-2xs">
                   {exam.teacher.name.slice(0, 2).toUpperCase()}
                 </div>
@@ -185,7 +213,7 @@ export default async function PublicExamLandingPage({
             </div>
 
             {exam.description && (
-              <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-xs text-xs sm:text-sm text-muted-foreground leading-relaxed shadow-2xs">
+              <div className="p-4 sm:p-5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-xs text-sm sm:text-sm text-muted-foreground leading-relaxed shadow-2xs">
                 {exam.description}
               </div>
             )}
@@ -197,10 +225,10 @@ export default async function PublicExamLandingPage({
                   <Clock className="size-5" />
                 </span>
                 <div className="min-w-0">
-                  <span className="block font-heading text-base sm:text-lg font-black text-foreground truncate">
+                  <span className="block font-heading text-lg sm:text-lg font-black text-foreground truncate">
                     {exam.durationMinutes} mins
                   </span>
-                  <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                  <span className="block text-xs sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
                     Duration
                   </span>
                 </div>
@@ -211,10 +239,10 @@ export default async function PublicExamLandingPage({
                   <HelpCircle className="size-5" />
                 </span>
                 <div className="min-w-0">
-                  <span className="block font-heading text-base sm:text-lg font-black text-foreground truncate">
+                  <span className="block font-heading text-lg sm:text-lg font-black text-foreground truncate">
                     {totalQuestions} MCQs
                   </span>
-                  <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                  <span className="block text-xs sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
                     Questions
                   </span>
                 </div>
@@ -225,10 +253,10 @@ export default async function PublicExamLandingPage({
                   <Award className="size-5" />
                 </span>
                 <div className="min-w-0">
-                  <span className="block font-heading text-base sm:text-lg font-black text-foreground truncate">
+                  <span className="block font-heading text-lg sm:text-lg font-black text-foreground truncate">
                     {totalMarks} pts
                   </span>
-                  <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                  <span className="block text-xs sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
                     Total Marks
                   </span>
                 </div>
@@ -239,10 +267,10 @@ export default async function PublicExamLandingPage({
                   <Calendar className="size-5" />
                 </span>
                 <div className="min-w-0">
-                  <span className="block font-heading text-base sm:text-lg font-black text-foreground truncate">
+                  <span className="block font-heading text-lg sm:text-lg font-black text-foreground truncate">
                     {exam.maxAttempts}
                   </span>
-                  <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                  <span className="block text-xs sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
                     Max Attempts
                   </span>
                 </div>
@@ -253,16 +281,16 @@ export default async function PublicExamLandingPage({
 
         {/* Schedule Alert (If Closed or Not Yet Open) */}
         {isNotYetOpen ? (
-          <div className="p-4 sm:p-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200 text-sm space-y-1">
+          <div className="p-4 sm:p-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200 text-sm sm:text-sm space-y-1">
             <p className="font-bold">This exam hasn&apos;t opened yet</p>
-            <p className="text-xs">
+            <p className="text-sm sm:text-xs leading-relaxed">
               Scheduled to open on {exam.startTime!.toLocaleString()}. Please check back at the scheduled opening time.
             </p>
           </div>
         ) : isClosed ? (
-          <div className="p-4 sm:p-5 rounded-2xl border border-destructive/30 bg-destructive/10 text-destructive text-sm space-y-1">
+          <div className="p-4 sm:p-5 rounded-2xl border border-destructive/30 bg-destructive/10 text-destructive text-sm sm:text-sm space-y-1">
             <p className="font-bold">This exam is now closed</p>
-            <p className="text-xs">
+            <p className="text-sm sm:text-xs leading-relaxed">
               The deadline for submissions closed on {exam.endTime!.toLocaleString()}. Submissions are no longer accepted.
             </p>
           </div>
@@ -287,11 +315,11 @@ export default async function PublicExamLandingPage({
 
             {/* Test Rules & Instructions Card */}
             <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-2xs space-y-4">
-              <h3 className="font-heading text-xs sm:text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-border/60">
+              <h3 className="font-heading text-sm sm:text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-border/60">
                 <CheckCircle2 className="size-4 text-primary shrink-0" />
                 <span>Instructions for Candidates</span>
               </h3>
-              <ul className="text-xs sm:text-sm text-muted-foreground space-y-2.5">
+              <ul className="text-sm sm:text-sm text-muted-foreground space-y-3 sm:space-y-2.5 leading-relaxed">
                 <li className="flex items-start gap-2.5">
                   <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
                   <span>Once you begin, the timer of <strong className="text-foreground font-semibold">{exam.durationMinutes} minutes</strong> runs continuously without pause.</span>
@@ -304,6 +332,20 @@ export default async function PublicExamLandingPage({
                   <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
                   <span>Ensure you have a stable internet connection. In case of brief disconnections, your progress is safely preserved.</span>
                 </li>
+                {exam.negativeMarks > 0 ? (
+                  <li className="flex items-start gap-2.5">
+                    <span className="size-1.5 rounded-full bg-amber-500 mt-2 shrink-0" />
+                    <span>
+                      <strong className="text-foreground font-semibold">Negative Marking is active:</strong>{" "}
+                      <strong className="text-amber-600 dark:text-amber-400 font-bold">{exam.negativeMarks} marks</strong> will be deducted for each incorrect answer. Unanswered questions do not lose marks.
+                    </span>
+                  </li>
+                ) : (
+                  <li className="flex items-start gap-2.5">
+                    <span className="size-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                    <span>No negative marks: you will not be penalized for wrong answers.</span>
+                  </li>
+                )}
                 {exam.webcamMonitoringRequired && (
                   <li className="flex items-start gap-2.5">
                     <span className="size-1.5 rounded-full bg-amber-500 mt-2 shrink-0" />
@@ -324,7 +366,7 @@ export default async function PublicExamLandingPage({
 
       {/* Footer */}
       <footer className="border-t border-border/60 py-5 px-6 text-center text-xs text-muted-foreground bg-muted/10">
-        <p>© {new Date().getFullYear()} ExamHub · Online Assessment Platform</p>
+        <p>© {new Date().getFullYear()} {APP_NAME} · Online Assessment Platform</p>
       </footer>
     </div>
   )

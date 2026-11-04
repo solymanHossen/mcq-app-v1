@@ -8,8 +8,8 @@
 export const APP_NAME =
   process.env.NEXT_PUBLIC_APP_NAME ||
   process.env.APP_NAME ||
-  "ExamHub"
+  "BCS & Bank Aspirants"
 
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
-  "Build question banks, run timed exams, and auto-grade results with proctoring, leaderboards, and AI explanations."
+  "The premier platform for BCS & Bank competitive examination preparation, timed mock exams, verified question banks, and AI-driven performance analytics."

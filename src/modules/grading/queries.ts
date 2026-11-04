@@ -61,6 +61,7 @@ export async function getResultForStudent(attemptId: string) {
             select: {
               id: true,
               marks: true,
+              negativeMarks: true,
               isCancelled: true,
               questionTextSnapshot: true,
               optionASnapshot: true,
@@ -129,6 +130,7 @@ export async function getResultForStudent(attemptId: string) {
           selectedOption: a.selectedOption,
           isCancelled: a.examQuestion.isCancelled,
           marks: a.examQuestion.marks,
+          negativeMarks: a.examQuestion.negativeMarks,
         }))
       : null,
   }

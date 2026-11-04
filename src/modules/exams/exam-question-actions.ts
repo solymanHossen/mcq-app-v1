@@ -67,6 +67,7 @@ export async function addQuestionsToExamAction(
           examId,
           questionId: q.id,
           order: nextOrder++,
+          negativeMarks: exam.negativeMarks,
           questionTextSnapshot: q.questionText,
           optionASnapshot: q.optionA,
           optionBSnapshot: q.optionB,

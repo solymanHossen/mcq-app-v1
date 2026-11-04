@@ -26,9 +26,7 @@ import {
   Plus,
   Award,
   Clock,
-  Eye,
   BarChart3,
-  Calendar,
   ShieldAlert,
   Users,
   CheckCircle2,
@@ -417,6 +415,7 @@ export default async function ExamDetailPage({
                 durationMinutes: exam.durationMinutes,
                 maxAttempts: exam.maxAttempts,
                 passingMarks: exam.passingMarks,
+                negativeMarks: exam.negativeMarks,
                 startTime: exam.startTime,
                 endTime: exam.endTime,
                 shuffleQuestions: exam.shuffleQuestions,
@@ -449,9 +448,15 @@ export default async function ExamDetailPage({
                     <span className="text-muted-foreground">Max Attempts</span>
                     <span className="font-semibold text-foreground">{exam.maxAttempts}</span>
                   </div>
-                  <div className="flex justify-between py-1.5">
+                  <div className="flex justify-between py-1.5 border-b border-border/40">
                     <span className="text-muted-foreground">Passing Marks</span>
                     <span className="font-semibold text-foreground">{exam.passingMarks ?? "Not required"}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5">
+                    <span className="text-muted-foreground">Negative Marking</span>
+                    <span className="font-semibold text-foreground">
+                      {exam.negativeMarks > 0 ? `-${exam.negativeMarks} / wrong` : "Disabled (0)"}
+                    </span>
                   </div>
                 </CardContent>
               </Card>

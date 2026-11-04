@@ -63,6 +63,7 @@ export async function createExamAction(
       durationMinutes: parsed.data.durationMinutes,
       maxAttempts: parsed.data.maxAttempts,
       passingMarks: parsed.data.passingMarks,
+      negativeMarks: parsed.data.negativeMarks,
       startTime: parsed.data.startTime ? new Date(parsed.data.startTime) : null,
       endTime: parsed.data.endTime ? new Date(parsed.data.endTime) : null,
       shuffleQuestions: parsed.data.shuffleQuestions,
@@ -100,25 +101,34 @@ export async function updateExamAction(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
   }
 
-  await prisma.exam.update({
-    where: { id: examId },
-    data: {
-      title: parsed.data.title,
-      description: parsed.data.description,
-      durationMinutes: parsed.data.durationMinutes,
-      maxAttempts: parsed.data.maxAttempts,
-      passingMarks: parsed.data.passingMarks,
-      startTime: parsed.data.startTime ? new Date(parsed.data.startTime) : null,
-      endTime: parsed.data.endTime ? new Date(parsed.data.endTime) : null,
-      shuffleQuestions: parsed.data.shuffleQuestions,
-      shuffleOptions: parsed.data.shuffleOptions,
-      webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
-      violationReviewThreshold: parsed.data.violationReviewThreshold,
-      isPublic: parsed.data.isPublic,
-      allowGuestAccess: parsed.data.allowGuestAccess,
-      accessCode: parsed.data.accessCode,
-    },
-  })
+  await prisma.$transaction([
+    prisma.exam.update({
+      where: { id: examId },
+      data: {
+        title: parsed.data.title,
+        description: parsed.data.description,
+        durationMinutes: parsed.data.durationMinutes,
+        maxAttempts: parsed.data.maxAttempts,
+        passingMarks: parsed.data.passingMarks,
+        negativeMarks: parsed.data.negativeMarks,
+        startTime: parsed.data.startTime ? new Date(parsed.data.startTime) : null,
+        endTime: parsed.data.endTime ? new Date(parsed.data.endTime) : null,
+        shuffleQuestions: parsed.data.shuffleQuestions,
+        shuffleOptions: parsed.data.shuffleOptions,
+        webcamMonitoringRequired: parsed.data.webcamMonitoringRequired,
+        violationReviewThreshold: parsed.data.violationReviewThreshold,
+        isPublic: parsed.data.isPublic,
+        allowGuestAccess: parsed.data.allowGuestAccess,
+        accessCode: parsed.data.accessCode,
+      },
+    }),
+    prisma.examQuestion.updateMany({
+      where: { examId },
+      data: {
+        negativeMarks: parsed.data.negativeMarks,
+      },
+    }),
+  ])
 
   safeRevalidatePath(`/teacher/exams/${examId}`)
   return { success: true }

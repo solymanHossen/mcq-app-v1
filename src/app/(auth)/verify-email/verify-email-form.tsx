@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/input-otp"
 import { AuthHeader } from "@/components/auth/auth-header"
 import { Spinner } from "@/components/ui/spinner"
+import { APP_NAME } from "@/lib/config"
 
 export function VerifyEmailForm() {
   const email = useSearchParams().get("email") ?? ""
@@ -38,7 +39,7 @@ export function VerifyEmailForm() {
   return (
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
-        title="Verify your ExamHub account"
+        title={`Verify your ${APP_NAME} account`}
         description={
           email
             ? `Enter the 6-digit code sent to ${email} to activate your account`
