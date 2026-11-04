@@ -19,6 +19,7 @@ import {
   Calendar,
   CheckCircle2,
   User,
+  AlertTriangle,
 } from "lucide-react"
 
 // @next-codemod-ignore Cache Components adoption
@@ -179,6 +180,22 @@ export default async function PublicExamLandingPage({
                   <span>Proctored</span>
                 </Badge>
               )}
+              {exam.negativeMarks > 0 ? (
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 gap-1 bg-amber-500/10 backdrop-blur-xs"
+                >
+                  <AlertTriangle className="size-3 text-amber-500" />
+                  <span>Negative Marking (-{exam.negativeMarks})</span>
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-muted-foreground border-border/70 bg-card/60 backdrop-blur-xs"
+                >
+                  No Negative Marking
+                </Badge>
+              )}
             </div>
 
             <div>
@@ -315,6 +332,20 @@ export default async function PublicExamLandingPage({
                   <span className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
                   <span>Ensure you have a stable internet connection. In case of brief disconnections, your progress is safely preserved.</span>
                 </li>
+                {exam.negativeMarks > 0 ? (
+                  <li className="flex items-start gap-2.5">
+                    <span className="size-1.5 rounded-full bg-amber-500 mt-2 shrink-0" />
+                    <span>
+                      <strong className="text-foreground font-semibold">Negative Marking is active:</strong>{" "}
+                      <strong className="text-amber-600 dark:text-amber-400 font-bold">{exam.negativeMarks} marks</strong> will be deducted for each incorrect answer. Unanswered questions do not lose marks.
+                    </span>
+                  </li>
+                ) : (
+                  <li className="flex items-start gap-2.5">
+                    <span className="size-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                    <span>No negative marks: you will not be penalized for wrong answers.</span>
+                  </li>
+                )}
                 {exam.webcamMonitoringRequired && (
                   <li className="flex items-start gap-2.5">
                     <span className="size-1.5 rounded-full bg-amber-500 mt-2 shrink-0" />

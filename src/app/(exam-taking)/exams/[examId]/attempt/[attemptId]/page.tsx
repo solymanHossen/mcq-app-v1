@@ -234,10 +234,12 @@ export default async function AttemptPage({
       examTitle={attempt.exam.title}
       deadline={attempt.deadline.toISOString()}
       logoUrl={settings?.logoUrl ?? "/images/bcs-bank-logo-512.png"}
+      negativeMarks={attempt.exam.negativeMarks}
       questions={attempt.answers.map((a) => ({
         examQuestionId: a.examQuestionId,
         questionText: a.questionText,
         marks: a.marks,
+        negativeMarks: a.negativeMarks,
         optionOrder: a.optionOrder,
         optionText: a.optionText,
         selectedOption: a.selectedOption,

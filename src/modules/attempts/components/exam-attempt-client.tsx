@@ -46,6 +46,7 @@ export type AttemptQuestion = {
   examQuestionId: string
   questionText: string
   marks: number
+  negativeMarks?: number
   optionOrder: OptionChoice[]
   optionText: Record<OptionChoice, string>
   selectedOption: OptionChoice | null
@@ -62,12 +63,14 @@ export function ExamAttemptClient({
   deadline,
   questions,
   logoUrl,
+  negativeMarks = 0,
 }: {
   attemptId: string
   examTitle: string
   deadline: string
   questions: AttemptQuestion[]
   logoUrl?: string | null
+  negativeMarks?: number
 }) {
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
@@ -408,6 +411,15 @@ export function ExamAttemptClient({
                     <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Verified Assessment
                   </span>
+                  {typeof negativeMarks === "number" && negativeMarks > 0 ? (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                      Negative Marking: -{negativeMarks} / wrong
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-muted/60 text-muted-foreground border border-border/60">
+                      No Negative Marking
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5 font-medium line-clamp-1">
                   Answer all {questions.length} questions carefully. Real-time encryption &amp; automatic cloud sync active.
@@ -455,6 +467,14 @@ export function ExamAttemptClient({
                   >
                     {q.marks} {q.marks === 1 ? "MARK" : "MARKS"}
                   </Badge>
+                  {typeof q.negativeMarks === "number" && q.negativeMarks > 0 ? (
+                    <Badge
+                      variant="outline"
+                      className="rounded-full text-[11px] sm:text-[11px] font-semibold border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400 px-2 py-0.5 shadow-2xs"
+                    >
+                      -{q.negativeMarks} neg.
+                    </Badge>
+                  ) : null}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -718,6 +738,15 @@ export function ExamAttemptClient({
               </p>
             </div>
           </div>
+
+          {typeof negativeMarks === "number" && negativeMarks > 0 && (
+            <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10 p-3 text-amber-900 dark:text-amber-200">
+              <AlertTriangle className="size-4 text-amber-600 shrink-0" />
+              <AlertDescription className="text-sm sm:text-xs leading-relaxed font-medium">
+                <strong>Negative Marking active:</strong> Each incorrect answer deducts <strong>{negativeMarks} mark{negativeMarks === 1 ? "" : "s"}</strong>. Unanswered questions receive 0 marks.
+              </AlertDescription>
+            </Alert>
+          )}
 
           {unansweredCount > 0 && (
             <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10 p-3 text-amber-900 dark:text-amber-200">

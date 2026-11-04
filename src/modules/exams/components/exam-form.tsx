@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { useActionState, useState } from "react"
-import Link from "next/link"
 import {
   Clock,
   Shuffle,
@@ -12,7 +11,6 @@ import {
   Trophy,
   ShieldCheck,
   Calendar,
-  Trash2,
   Globe,
   Lock,
   Users,
@@ -21,7 +19,6 @@ import {
   CheckCircle2,
   SlidersHorizontal,
   HelpCircle,
-  Eye,
   KeyRound,
   ShieldAlert,
   Plus,
@@ -61,6 +58,7 @@ export type ExamFormValues = {
   durationMinutes?: number
   maxAttempts?: number
   passingMarks?: number | null
+  negativeMarks?: number
   startTime?: Date | null
   endTime?: Date | null
   shuffleQuestions?: boolean
@@ -73,6 +71,13 @@ export type ExamFormValues = {
 }
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120] as const
+
+const NEGATIVE_MARKING_PRESETS = [
+  { label: "None (0.00)", value: 0, tag: "No Deduction" },
+  { label: "Bank (0.25)", value: 0.25, tag: "Bank Standard" },
+  { label: "BCS (0.50)", value: 0.5, tag: "BCS Standard" },
+  { label: "Full (1.00)", value: 1.0, tag: "1:1 Mark" },
+] as const
 
 /**
  * Reusable Info Tooltip Helper
@@ -142,6 +147,11 @@ export function ExamForm({
   )
   const [passingMarksTouched, setPassingMarksTouched] = useState(false)
 
+  const [negativeMarks, setNegativeMarks] = useState<string>(
+    initialValues?.negativeMarks != null ? String(initialValues.negativeMarks) : "0"
+  )
+  const [negativeMarksTouched, setNegativeMarksTouched] = useState(false)
+
   const [startTime, setStartTime] = useState<Date | undefined>(
     initialValues?.startTime ? new Date(initialValues.startTime) : undefined
   )
@@ -180,6 +190,9 @@ export function ExamForm({
   const isPassingMarksValid =
     passingMarks.trim() === "" ||
     (!isNaN(Number(passingMarks)) && Number(passingMarks) >= 0)
+  const isNegativeMarksValid =
+    negativeMarks.trim() === "" ||
+    (!isNaN(Number(negativeMarks)) && Number(negativeMarks) >= 0 && Number(negativeMarks) <= 100)
   const isScheduleValid =
     !startTime || !endTime || startTime.getTime() < endTime.getTime()
   const isThresholdValid =
@@ -191,6 +204,7 @@ export function ExamForm({
     isDurationValid &&
     isAttemptsValid &&
     isPassingMarksValid &&
+    isNegativeMarksValid &&
     isScheduleValid &&
     isThresholdValid
 
@@ -376,7 +390,7 @@ export function ExamForm({
               </div>
 
               <div className="p-4 sm:p-6 lg:p-7">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                   {/* Duration */}
                   <div className="space-y-2">
                     <Label htmlFor="durationMinutes" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
@@ -477,6 +491,103 @@ export function ExamForm({
                         <AlertTriangle className="size-4 shrink-0" />
                         <span>Passing marks must be 0 or greater.</span>
                       </p>
+                    )}
+                  </div>
+
+                  {/* Negative Marking */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="negativeMarks" className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-1.5">
+                        <span>Negative Marks</span>
+                        <InfoTip text="Marks deducted for each incorrect answer. BCS preliminary is 0.50; Bank recruitment is 0.25. Set 0 for no penalty." />
+                      </Label>
+                      <span className="text-xs text-muted-foreground font-medium">Per wrong</span>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        id="negativeMarks"
+                        name="negativeMarks"
+                        type="number"
+                        min={0}
+                        max={100}
+                        step="any"
+                        value={negativeMarks}
+                        onChange={(e) => setNegativeMarks(e.target.value)}
+                        onBlur={() => setNegativeMarksTouched(true)}
+                        placeholder="e.g. 0.50 or 0.25"
+                        className={cn(
+                          "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl pr-14 transition-all",
+                          Number(negativeMarks) > 0 ? "border-amber-500/50 bg-amber-500/5 text-amber-900 dark:text-amber-200" : "",
+                          negativeMarksTouched && !isNegativeMarksValid && "border-destructive focus-visible:ring-destructive/30"
+                        )}
+                      />
+                      <span className="absolute inset-y-0 right-4 flex items-center text-xs sm:text-sm font-semibold text-muted-foreground pointer-events-none">
+                        marks
+                      </span>
+                    </div>
+                    {negativeMarksTouched && !isNegativeMarksValid && (
+                      <p className="text-xs sm:text-sm text-destructive font-semibold flex items-center gap-1.5 mt-1.5 animate-in fade-in-50 duration-200">
+                        <AlertTriangle className="size-4 shrink-0" />
+                        <span>Negative marks must be 0 or greater (max 100).</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Dynamic Negative Marking Preset Bar */}
+                <div className="mt-5 pt-4 border-t border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-muted/15 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 lg:-mx-7 lg:-mb-7 p-4 sm:p-5 rounded-b-2xl">
+                  <div className="flex flex-col xs:flex-row xs:items-center gap-2">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <span>Negative Marking Presets:</span>
+                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {NEGATIVE_MARKING_PRESETS.map((preset) => {
+                        const isSelected = Number(negativeMarks) === preset.value
+                        return (
+                          <Button
+                            key={preset.value}
+                            type="button"
+                            variant={isSelected ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => {
+                              setNegativeMarks(String(preset.value))
+                              setNegativeMarksTouched(true)
+                            }}
+                            className={cn(
+                              "h-7.5 px-3 rounded-lg text-xs font-semibold transition-all cursor-pointer active:scale-95",
+                              isSelected
+                                ? "shadow-2xs font-bold"
+                                : "text-muted-foreground hover:text-foreground bg-background"
+                            )}
+                          >
+                            <span>{preset.tag}</span>
+                            <span className="opacity-75 font-mono text-[11px]">({preset.value})</span>
+                          </Button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    {Number(negativeMarks) === 0 ? (
+                      <Badge variant="outline" className="text-xs font-semibold text-muted-foreground border-border/60 bg-background/80">
+                        No Negative Deduction
+                      </Badge>
+                    ) : Number(negativeMarks) === 0.5 ? (
+                      <Badge className="text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 gap-1.5">
+                        <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
+                        <span>BCS Standard: -0.50 Mark / Wrong</span>
+                      </Badge>
+                    ) : Number(negativeMarks) === 0.25 ? (
+                      <Badge className="text-xs font-bold bg-primary/15 text-primary border border-primary/30 gap-1.5">
+                        <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+                        <span>Bank Standard: -0.25 Mark / Wrong</span>
+                      </Badge>
+                    ) : (
+                      <Badge className="text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 gap-1.5">
+                        <span className="size-1.5 rounded-full bg-amber-500" />
+                        <span>Custom: -{negativeMarks} Marks / Wrong</span>
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -911,6 +1022,16 @@ export function ExamForm({
 
                   <div className="flex items-center justify-between py-3">
                     <span className="text-muted-foreground font-medium flex items-center gap-2">
+                      <AlertTriangle className={cn("size-4", Number(negativeMarks) > 0 ? "text-amber-500" : "text-muted-foreground/60")} />
+                      <span>Negative Marking</span>
+                    </span>
+                    <span className={cn("font-bold text-xs sm:text-sm", Number(negativeMarks) > 0 ? "text-amber-600 dark:text-amber-400" : "text-foreground")}>
+                      {Number(negativeMarks) > 0 ? `-${negativeMarks} / wrong` : "Disabled (0)"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-muted-foreground font-medium flex items-center gap-2">
                       <ShieldCheck className="size-4 text-emerald-500" />
                       <span>Proctoring</span>
                     </span>
@@ -945,6 +1066,8 @@ export function ExamForm({
                         ? "Enter valid attempts (1-10)"
                         : !isPassingMarksValid
                         ? "Passing marks must be ≥ 0"
+                        : !isNegativeMarksValid
+                        ? "Negative marks must be ≥ 0"
                         : !isScheduleValid
                         ? "Closing time must be after opening time"
                         : "Please fill required fields to activate"}

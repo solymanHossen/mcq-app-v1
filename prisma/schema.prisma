@@ -301,6 +301,8 @@ model Exam {
   shuffleQuestions Boolean    @default(true)
   shuffleOptions   Boolean    @default(false)
   passingMarks     Float?
+  // Deducted per incorrect answer (e.g. 0.50 for BCS, 0.25 for Bank, 0 for none)
+  negativeMarks    Float      @default(0)
 
   // Access and participation rules
   isPublic         Boolean    @default(true)

@@ -28,6 +28,7 @@ export async function getAttemptForStudent(attemptId: string) {
           title: true,
           durationMinutes: true,
           shuffleOptions: true,
+          negativeMarks: true,
         },
       },
       answers: {
@@ -41,6 +42,7 @@ export async function getAttemptForStudent(attemptId: string) {
             select: {
               id: true,
               marks: true,
+              negativeMarks: true,
               questionTextSnapshot: true,
               optionASnapshot: true,
               optionBSnapshot: true,
@@ -76,6 +78,7 @@ export async function getAttemptForStudent(attemptId: string) {
         selectedOption: a.selectedOption,
         isMarkedForReview: a.isMarkedForReview,
         marks: a.examQuestion.marks,
+        negativeMarks: a.examQuestion.negativeMarks,
         questionText: a.examQuestion.questionTextSnapshot,
         optionOrder: order,
         optionText: Object.fromEntries(

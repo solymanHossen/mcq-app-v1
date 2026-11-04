@@ -26,6 +26,11 @@ export const examSchema = z
       .union([z.coerce.number().min(0), z.literal("")])
       .optional()
       .transform((v) => (v === "" || v === undefined ? undefined : v)),
+    negativeMarks: z.coerce
+      .number({ error: "Negative marks must be a valid number" })
+      .min(0, "Negative marks must be 0 or greater")
+      .max(100, "Negative marks cannot exceed 100")
+      .default(0),
     startTime: z
       .string()
       .optional()
