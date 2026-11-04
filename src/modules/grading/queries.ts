@@ -76,8 +76,36 @@ export async function getResultForStudent(attemptId: string) {
   })
   if (!attempt) return null
 
+  // Results are disclosed if:
+  // 1. This specific result is already marked PUBLISHED
+  // 2. The teacher published results for this exam (verified via audit log or any published attempt)
+  const isExamResultsPublished =
+    attempt.result?.status === "PUBLISHED" ||
+    (await prisma.gradingAuditLog.findFirst({
+      where: { examId: attempt.examId, action: "RESULTS_PUBLISHED" },
+      select: { id: true },
+    })) !== null ||
+    (await prisma.examResult.findFirst({
+      where: { attempt: { examId: attempt.examId }, status: "PUBLISHED" },
+      select: { id: true },
+    })) !== null
+
+  // Self-heal: If the exam results have been published, ensure this attempt's
+  // result record is permanently updated to PUBLISHED as well.
+  if (
+    isExamResultsPublished &&
+    attempt.result &&
+    attempt.result.status === "PROVISIONAL"
+  ) {
+    await prisma.examResult.update({
+      where: { attemptId },
+      data: { status: "PUBLISHED", publishedAt: new Date() },
+    })
+    attempt.result.status = "PUBLISHED"
+  }
+
   const revealAnswerKey = attempt.exam.answerKeyReleased
-  const revealResult = attempt.result?.status === "PUBLISHED"
+  const revealResult = isExamResultsPublished && attempt.result !== null
 
   return {
     id: attempt.id,

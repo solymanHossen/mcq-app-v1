@@ -189,6 +189,27 @@ describe("finalizeAndGradeAttempt — idempotency", () => {
     expect(result.publishedAt).toBeNull()
   })
 
+  it("automatically publishes newly finalized attempts if the exam results are already published", async () => {
+    const attempt = await makeInProgressAttempt(teacher.id, student.id)
+
+    // Simulate teacher having published results for this exam
+    await prisma.gradingAuditLog.create({
+      data: {
+        examId: attempt.examId,
+        action: "RESULTS_PUBLISHED",
+        actorId: teacher.id,
+      },
+    })
+
+    await finalizeAndGradeAttempt(attempt.id, "COMPLETED")
+
+    const result = await prisma.examResult.findUniqueOrThrow({
+      where: { attemptId: attempt.id },
+    })
+    expect(result.status).toBe("PUBLISHED")
+    expect(result.publishedAt).not.toBeNull()
+  })
+
   it("upserts safely without throwing unique constraint error if ExamResult already exists", async () => {
     const attempt = await makeInProgressAttempt(teacher.id, student.id)
 

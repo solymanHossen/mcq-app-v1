@@ -3,6 +3,11 @@ import { computeGrade } from "./engine"
 import { recordAttemptProgress } from "@/modules/learning/progress"
 import { awardXP, XP_PER_CORRECT_ANSWER, XP_PERFECT_SCORE_BONUS } from "@/modules/learning/xp"
 import { evaluateBadgesAfterExamCompletion } from "@/modules/learning/badges"
+import { invalidateScope } from "@/modules/leaderboard/cache"
+import {
+  examLeaderboardScope,
+  globalLeaderboardScope,
+} from "@/modules/leaderboard/engine"
 
 /**
  * The single place an attempt transitions out of IN_PROGRESS and gets
@@ -32,11 +37,42 @@ export async function finalizeAndGradeAttempt(
       select: { examId: true, studentId: true },
     })
 
+    // Once an exam's results have been published by the teacher, every subsequent
+    // candidate submission should also automatically be published immediately.
+    const isExamResultsPublished =
+      (await tx.gradingAuditLog.findFirst({
+        where: { examId: attempt.examId, action: "RESULTS_PUBLISHED" },
+        select: { id: true },
+      })) !== null ||
+      (await tx.examResult.findFirst({
+        where: { attempt: { examId: attempt.examId }, status: "PUBLISHED" },
+        select: { id: true },
+      })) !== null
+
+    const resultStatus = isExamResultsPublished ? "PUBLISHED" : "PROVISIONAL"
+    const publishedAt = isExamResultsPublished ? new Date() : null
+
     await tx.examResult.upsert({
       where: { attemptId },
-      create: { attemptId, ...grade },
-      update: { ...grade, gradedAt: new Date() },
+      create: {
+        attemptId,
+        ...grade,
+        status: resultStatus,
+        publishedAt,
+      },
+      update: {
+        ...grade,
+        status: resultStatus,
+        publishedAt,
+        gradedAt: new Date(),
+      },
     })
+
+    if (isExamResultsPublished) {
+      await invalidateScope(examLeaderboardScope(attempt.examId))
+      await invalidateScope(globalLeaderboardScope)
+    }
+
     await tx.gradingAuditLog.create({
       data: {
         examId: attempt.examId,
