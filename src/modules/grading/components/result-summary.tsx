@@ -85,8 +85,8 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
           </div>
         </div>
 
-        {/* Reassurance Guidance Box */}
-        <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-muted/20 p-4 sm:p-5 space-y-3">
+        {/* Reassurance Guidance Box (Clean on mobile, detailed on desktop) */}
+        <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-muted/20 p-4 sm:p-5 space-y-3 hidden sm:block">
           <h4 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
             <Info className="size-4 text-primary" />
             <span>Important Information for Candidates</span>
@@ -242,7 +242,7 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
               <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">
                 Detailed Question Breakdown &amp; Answer Key
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">
                 Verify your chosen answers against the official correct solutions below.
               </p>
             </div>

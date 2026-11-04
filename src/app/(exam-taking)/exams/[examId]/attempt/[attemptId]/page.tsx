@@ -160,7 +160,7 @@ export default async function AttemptPage({
                 <span>{current.status.replace("_", " ")}</span>
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
               This attempt has concluded and has been recorded in the platform database.
             </p>
           </div>
@@ -186,7 +186,7 @@ export default async function AttemptPage({
               <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground">
                 {isPublished ? "Official Grading & Submission Summary" : "Submission Received • Results Pending"}
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                 {isPublished
                   ? "Official scoring metrics, answer verification, and question breakdown"
                   : "Your exam answers are safely recorded. Results will appear once published by your instructor."}

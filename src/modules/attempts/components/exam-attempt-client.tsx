@@ -274,7 +274,7 @@ export function ExamAttemptClient({
               onClick={toggleFullscreen}
               title={isFullscreen ? "Exit Zen Mode" : "Zen Focus Mode (Fullscreen)"}
               aria-label={isFullscreen ? "Exit Zen Mode" : "Zen Focus Mode (Fullscreen)"}
-              className="size-8.5 sm:size-9 rounded-xl border-border/70 bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-2xs cursor-pointer shrink-0"
+              className="size-8.5 sm:size-9 rounded-xl border-border/70 bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-all shadow-2xs cursor-pointer shrink-0 hidden sm:inline-flex"
             >
               {isFullscreen ? (
                 <Minimize2 className="size-3.5" />
@@ -480,8 +480,11 @@ export function ExamAttemptClient({
 
                           {/* Option Prefix & Text */}
                           <div className="min-w-0 flex-1 flex items-baseline gap-2 text-xs sm:text-sm sm:text-base leading-relaxed font-bengali wrap-anywhere">
-                            <span className="font-bold text-muted-foreground shrink-0 select-none">
+                            <span className="font-bold text-muted-foreground shrink-0 select-none hidden sm:inline">
                               {optionLabel} —
+                            </span>
+                            <span className="font-bold text-muted-foreground shrink-0 select-none sm:hidden">
+                              {String.fromCharCode(65 + slot)}.
                             </span>
                             <span className="font-normal text-[#172B2B] dark:text-foreground">
                               <LatexText
@@ -512,7 +515,8 @@ export function ExamAttemptClient({
                     )}
                   >
                     <Flag className={cn("size-3.5 shrink-0", isMarked ? "fill-white" : "")} />
-                    <span>{isMarked ? "Marked for Review" : "Mark for Review"}</span>
+                    <span className="hidden xs:inline">{isMarked ? "Marked for Review" : "Mark for Review"}</span>
+                    <span className="xs:hidden">{isMarked ? "Marked" : "Review"}</span>
                   </Button>
 
                   {isAnswered && (
