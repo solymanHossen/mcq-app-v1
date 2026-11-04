@@ -13,7 +13,7 @@ import {
   RotateCcw,
   Square,
   CheckSquare,
-  Sparkles,
+  Clock,
   AlertTriangle,
 } from "lucide-react"
 
@@ -353,7 +353,7 @@ export function QuestionBankTable({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-2.5 text-xs sm:text-sm text-foreground shadow-2xs">
           <div className="flex items-center gap-2">
             <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
-              <Sparkles className="size-3.5" />
+              <Clock className="size-3.5" />
             </span>
             <span className="font-medium text-foreground">
               You have <strong className="font-bold text-amber-600 dark:text-amber-400">{draftsOnPageCount}</strong> draft question{draftsOnPageCount === 1 ? "" : "s"} on this page awaiting publication.

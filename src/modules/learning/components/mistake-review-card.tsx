@@ -6,7 +6,7 @@ import {
   Brain,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
+  Lightbulb,
   RotateCcw,
   BookOpen,
 } from "lucide-react"
@@ -279,7 +279,7 @@ export function MistakeReviewCard({
                       </>
                     ) : (
                       <>
-                        <Sparkles className="size-3.5 text-primary" />
+                        <Lightbulb className="size-3.5 text-primary" />
                         <span>Explain with AI</span>
                       </>
                     )}
@@ -287,7 +287,7 @@ export function MistakeReviewCard({
                 ) : (
                   <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 sm:p-5 space-y-2">
                     <div className="flex items-center gap-2 text-primary font-bold text-xs sm:text-sm">
-                      <Sparkles className="size-4" />
+                      <Lightbulb className="size-4" />
                       <span>AI Solution & Concept Breakdown</span>
                     </div>
                     <div className="text-xs sm:text-sm leading-relaxed text-foreground whitespace-pre-line">
