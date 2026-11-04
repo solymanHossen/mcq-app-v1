@@ -282,12 +282,12 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
                   {/* Question Statement */}
                   <div className="p-4 sm:p-6 space-y-4">
-                    <div className="text-sm sm:text-base font-semibold text-foreground leading-relaxed font-bengali">
+                    <div className="text-base sm:text-base font-semibold text-foreground leading-relaxed font-bengali">
                       <LatexText text={q.questionText} className="min-w-0 [&_.katex-display]:overflow-x-auto" />
                     </div>
 
                     {/* Options Review Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs sm:text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-sm sm:text-sm font-bengali">
                       {(["A", "B", "C", "D"] as const).map((opt) => {
                         const optText = q[`option${opt}` as "optionA" | "optionB" | "optionC" | "optionD"]
                         const isThisCorrect = q.correctOption === opt
