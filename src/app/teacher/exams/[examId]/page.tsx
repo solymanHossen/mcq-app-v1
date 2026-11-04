@@ -159,7 +159,12 @@ export default async function ExamDetailPage({
             )}
 
             {/* Publish & Delete Draft Buttons */}
-            <ExamStatusActions examId={exam.id} status={exam.status} />
+            <ExamStatusActions
+              examId={exam.id}
+              status={exam.status}
+              examTitle={exam.title}
+              answerKeyReleased={exam.answerKeyReleased}
+            />
           </div>
         </div>
       </div>

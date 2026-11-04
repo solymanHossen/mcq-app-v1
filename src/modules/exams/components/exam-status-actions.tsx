@@ -20,20 +20,26 @@ import {
   archiveExamAction,
   deleteExamAction,
 } from "@/modules/exams/actions"
-import { Send, Trash2, Archive, Loader2 } from "lucide-react"
+import { Send, Trash2, Archive, Loader2, CheckCircle2 } from "lucide-react"
+import { PublishResultsModal } from "@/modules/exams/components/publish-results-modal"
 
 export function ExamStatusActions({
   examId,
   status,
+  examTitle = "Exam",
+  answerKeyReleased = false,
 }: {
   examId: string
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
+  examTitle?: string
+  answerKeyReleased?: boolean
 }) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const [publishOpen, setPublishOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [archiveOpen, setArchiveOpen] = useState(false)
+  const [disclosureModalOpen, setDisclosureModalOpen] = useState(false)
 
   function handlePublish() {
     startTransition(async () => {
@@ -43,6 +49,7 @@ export function ExamStatusActions({
       } else {
         toast.success("Exam published successfully! Students can now access it.")
         setPublishOpen(false)
+        setDisclosureModalOpen(true)
         router.refresh()
       }
     })
@@ -170,55 +177,84 @@ export function ExamStatusActions({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          {/* Post-publish prompt modal (opens right after publish action succeeds) */}
+          <PublishResultsModal
+            open={disclosureModalOpen}
+            onOpenChange={setDisclosureModalOpen}
+            examId={examId}
+            examTitle={examTitle}
+            answerKeyReleased={answerKeyReleased}
+          />
         </>
       )}
 
       {status === "PUBLISHED" && (
-        <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="outline"
-              disabled={isPending}
-              className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-4"
-            >
-              {isPending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Archive className="size-4" />
-              )}
-              <span>Archive</span>
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="rounded-3xl max-w-md p-6">
-            <AlertDialogHeader className="space-y-2">
-              <div className="size-11 rounded-2xl bg-muted flex items-center justify-center mb-1">
-                <Archive className="size-5 text-foreground" />
-              </div>
-              <AlertDialogTitle className="text-xl font-bold">
-                Archive this Exam?
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Archiving closes this exam to all new student attempts. All existing student submissions and results will remain preserved and accessible.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="pt-3 gap-2">
-              <AlertDialogCancel className="rounded-xl h-10 text-xs sm:text-sm" disabled={isPending}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleArchive()
-                }}
+        <>
+          {/* Quick Result & Answer Key Disclosure Modal */}
+          <PublishResultsModal
+            open={disclosureModalOpen}
+            onOpenChange={setDisclosureModalOpen}
+            examId={examId}
+            examTitle={examTitle}
+            answerKeyReleased={answerKeyReleased}
+            trigger={
+              <Button
+                variant="outline"
                 disabled={isPending}
-                className="rounded-xl h-10 text-xs sm:text-sm font-semibold gap-2"
+                className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-4 border-primary/30 text-primary hover:bg-primary/10 shadow-2xs cursor-pointer"
               >
-                {isPending ? <Loader2 className="size-4 animate-spin" /> : <Archive className="size-4" />}
-                <span>Confirm Archive</span>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                <CheckCircle2 className="size-4" />
+                <span>Publish Results</span>
+              </Button>
+            }
+          />
+
+          <AlertDialog open={archiveOpen} onOpenChange={setArchiveOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                disabled={isPending}
+                className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-4"
+              >
+                {isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Archive className="size-4" />
+                )}
+                <span>Archive</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="rounded-3xl max-w-md p-6">
+              <AlertDialogHeader className="space-y-2">
+                <div className="size-11 rounded-2xl bg-muted flex items-center justify-center mb-1">
+                  <Archive className="size-5 text-foreground" />
+                </div>
+                <AlertDialogTitle className="text-xl font-bold">
+                  Archive this Exam?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  Archiving closes this exam to all new student attempts. All existing student submissions and results will remain preserved and accessible.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="pt-3 gap-2">
+                <AlertDialogCancel className="rounded-xl h-10 text-xs sm:text-sm" disabled={isPending}>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleArchive()
+                  }}
+                  disabled={isPending}
+                  className="rounded-xl h-10 text-xs sm:text-sm font-semibold gap-2"
+                >
+                  {isPending ? <Loader2 className="size-4 animate-spin" /> : <Archive className="size-4" />}
+                  <span>Confirm Archive</span>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       )}
     </div>
   )

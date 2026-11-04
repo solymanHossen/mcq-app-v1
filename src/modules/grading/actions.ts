@@ -211,3 +211,61 @@ export async function releaseAnswerKeyAction(examId: string) {
   safeRevalidatePath(`/teacher/exams/${examId}/results`)
   return { success: true }
 }
+
+export async function publishResultsAndAnswerKeyAction(
+  examId: string,
+  options: {
+    publishScores?: boolean
+    releaseAnswerKey?: boolean
+  }
+) {
+  const { user, exam } = await requireExamOwner(examId)
+
+  if (exam.status !== "PUBLISHED") {
+    return { error: "Only a published exam has results or answer keys to disclose" }
+  }
+
+  let publishedCount = 0
+  let answerKeyJustReleased = false
+
+  if (options.publishScores) {
+    const { count } = await prisma.examResult.updateMany({
+      where: {
+        status: "PROVISIONAL",
+        attempt: { examId },
+      },
+      data: { status: "PUBLISHED", publishedAt: new Date() },
+    })
+
+    await prisma.gradingAuditLog.create({
+      data: {
+        examId,
+        action: "RESULTS_PUBLISHED",
+        actorId: user.id,
+        metadata: { count },
+      },
+    })
+
+    await invalidateScope(examLeaderboardScope(examId))
+    await invalidateScope(globalLeaderboardScope)
+    publishedCount = count
+  }
+
+  if (options.releaseAnswerKey && !exam.answerKeyReleased) {
+    await prisma.exam.update({
+      where: { id: examId },
+      data: { answerKeyReleased: true, answerKeyReleasedAt: new Date() },
+    })
+    answerKeyJustReleased = true
+  }
+
+  safeRevalidatePath(`/teacher/exams/${examId}`)
+  safeRevalidatePath(`/teacher/exams/${examId}/results`)
+
+  return {
+    success: true,
+    publishedCount,
+    answerKeyReleased: exam.answerKeyReleased || answerKeyJustReleased,
+  }
+}
+
