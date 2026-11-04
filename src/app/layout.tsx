@@ -20,6 +20,16 @@ export const metadata: Metadata = {
     template: `%s — ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/logo-icon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/logo-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+  },
 }
 
 const openSans = Open_Sans({

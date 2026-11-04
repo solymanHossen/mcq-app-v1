@@ -63,7 +63,7 @@ const dashboardChartClassName = "min-w-0 shadow-xs hover:shadow-sm"
 const dashboardKpiClassName =
   "h-full min-w-0 justify-start gap-3 hover:translate-y-0 hover:shadow-sm [&_.truncate]:whitespace-normal [&_.items-baseline]:flex-wrap [&>div:first-child]:flex-wrap"
 const dashboardTabClassName =
-  "group h-10 shrink-0 gap-2 rounded-lg px-3 text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:px-4 sm:text-sm"
+  "group relative flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg px-3.5 text-xs font-semibold text-muted-foreground transition-all duration-150 hover:bg-background/60 hover:text-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs sm:px-4 sm:text-sm"
 
 export default async function TeacherDashboardPage() {
   const teacher = await requireRole(...TEACHER_ROLES)
@@ -498,44 +498,44 @@ export default async function TeacherDashboardPage() {
               className="h-auto min-h-12 w-max gap-1 rounded-xl border border-border/60 bg-muted/40 p-1 group-data-horizontal/tabs:h-auto"
             >
               <TabsTrigger value="exams" className={dashboardTabClassName}>
-                <BookOpen data-icon="inline-start" />
+                <BookOpen className="size-4 shrink-0" />
                 <span className="whitespace-nowrap">Authored Exams</span>
                 <Badge
                   variant="secondary"
-                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                  className="h-5 min-w-5 rounded-full px-1.5 text-[11px] font-bold group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
                 >
                   {recentExams.length}
                 </Badge>
               </TabsTrigger>
 
               <TabsTrigger value="attempts" className={dashboardTabClassName}>
-                <Activity data-icon="inline-start" />
+                <Activity className="size-4 shrink-0" />
                 <span className="whitespace-nowrap">Recent Submissions</span>
                 <Badge
                   variant="secondary"
-                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                  className="h-5 min-w-5 rounded-full px-1.5 text-[11px] font-bold group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
                 >
                   {recentAttempts.length}
                 </Badge>
               </TabsTrigger>
 
               <TabsTrigger value="proctoring" className={dashboardTabClassName}>
-                <ShieldAlert data-icon="inline-start" />
+                <ShieldAlert className="size-4 shrink-0" />
                 <span className="whitespace-nowrap">Proctoring Alerts</span>
                 <Badge
                   variant="secondary"
-                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                  className="h-5 min-w-5 rounded-full px-1.5 text-[11px] font-bold group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
                 >
                   {openViolations}
                 </Badge>
               </TabsTrigger>
 
               <TabsTrigger value="subjects" className={dashboardTabClassName}>
-                <GraduationCap data-icon="inline-start" />
+                <GraduationCap className="size-4 shrink-0" />
                 <span className="whitespace-nowrap">Disciplines</span>
                 <Badge
                   variant="secondary"
-                  className="min-w-5 group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
+                  className="h-5 min-w-5 rounded-full px-1.5 text-[11px] font-bold group-data-[state=active]:bg-primary-foreground/20 group-data-[state=active]:text-primary-foreground"
                 >
                   {subjects.length}
                 </Badge>
