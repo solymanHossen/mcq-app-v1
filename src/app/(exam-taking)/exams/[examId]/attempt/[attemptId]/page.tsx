@@ -5,6 +5,7 @@ import { getAttemptForStudent } from "@/modules/attempts/queries"
 import { finalizeIfExpired } from "@/modules/attempts/expire"
 import { getResultForStudent } from "@/modules/grading/queries"
 import { getPendingAppeal } from "@/modules/proctoring/queries"
+import { getSystemSettings } from "@/modules/settings/queries"
 import { prisma } from "@/lib/prisma"
 import { ExamAttemptClient } from "@/modules/attempts/components/exam-attempt-client"
 import { ResultSummary } from "@/modules/grading/components/result-summary"
@@ -26,9 +27,12 @@ export default async function AttemptPage({
   params: Promise<{ examId: string; attemptId: string }>
 }) {
   const { examId, attemptId } = await params
-  const user = await requireRole("STUDENT")
+  const [user, attempt, settings] = await Promise.all([
+    requireRole("STUDENT"),
+    getAttemptForStudent(attemptId),
+    getSystemSettings().catch(() => null),
+  ])
 
-  const attempt = await getAttemptForStudent(attemptId)
   // Strict ownership, no ADMIN bypass — nobody but the student themself
   // should ever be able to open this exam-taking view.
   if (!attempt || attempt.studentId !== user.id || attempt.examId !== examId) {
@@ -229,6 +233,7 @@ export default async function AttemptPage({
       attemptId={attempt.id}
       examTitle={attempt.exam.title}
       deadline={attempt.deadline.toISOString()}
+      logoUrl={settings?.logoUrl ?? "/images/bcs-bank-logo-512.png"}
       questions={attempt.answers.map((a) => ({
         examQuestionId: a.examQuestionId,
         questionText: a.questionText,

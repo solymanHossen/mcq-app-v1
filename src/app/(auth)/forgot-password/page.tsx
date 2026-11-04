@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Card, CardContent } from "@/components/ui/card"
 import { AuthHeader } from "@/components/auth/auth-header"
 import { Spinner } from "@/components/ui/spinner"
+import { APP_NAME } from "@/lib/config"
 
 export default function ForgotPasswordPage() {
   const [state, action, isPending] = useActionState(
@@ -21,7 +22,7 @@ export default function ForgotPasswordPage() {
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
         title="Reset your password"
-        description="Enter your email to recover your ExamHub account"
+        description={`Enter your email to recover your ${APP_NAME} account`}
       />
 
       <Card className="gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 py-0 shadow-xs sm:shadow-sm">

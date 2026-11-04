@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
 import { requireRole } from "@/lib/authorization"
 import { prisma } from "@/lib/prisma"
@@ -16,7 +17,6 @@ import {
   Trophy,
   ShieldCheck,
   Calendar,
-  FileText,
   AlertTriangle,
   History,
 } from "lucide-react"
@@ -121,8 +121,14 @@ export default async function ExamInfoPage({
           <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
             <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center justify-between gap-3 sm:gap-4">
               <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-                <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-primary/20">
-                  <FileText className="size-4.5 sm:size-5.5" />
+                <div className="relative size-9 sm:size-11 rounded-xl sm:rounded-2xl overflow-hidden shrink-0 shadow-2xs ring-1 ring-primary/25 bg-white dark:bg-card p-0.5 flex items-center justify-center">
+                  <Image
+                    src="/images/bcs-bank-logo-512.png"
+                    alt="BCS & Bank Aspirants"
+                    width={44}
+                    height={44}
+                    className="size-full object-contain rounded-xl sm:rounded-2xl"
+                  />
                 </div>
                 <div className="min-w-0">
                   <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground truncate">
@@ -133,8 +139,8 @@ export default async function ExamInfoPage({
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border-border/70 shrink-0">
-                Official
+              <Badge variant="outline" className="text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 border-primary/30 text-primary bg-primary/5 shrink-0">
+                BCS &amp; Bank Verified
               </Badge>
             </div>
 

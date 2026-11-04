@@ -3,6 +3,7 @@ import { LoginForm } from "./login-form"
 import { Card, CardContent } from "@/components/ui/card"
 import { AuthHeader } from "@/components/auth/auth-header"
 import { Skeleton } from "@/components/ui/skeleton"
+import { APP_NAME } from "@/lib/config"
 
 export default function LoginPage() {
   return (
@@ -19,7 +20,7 @@ function LoginCardSkeleton() {
       aria-busy="true"
     >
       <AuthHeader
-        title="Sign in to ExamHub"
+        title={`Sign in to ${APP_NAME}`}
         description="Access your exams, question banks, and live results"
       />
       <Card className="gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 py-0 shadow-xs sm:shadow-sm">

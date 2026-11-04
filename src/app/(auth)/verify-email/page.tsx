@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { FieldGroup } from "@/components/ui/field"
 import { Skeleton } from "@/components/ui/skeleton"
 import { AuthHeader } from "@/components/auth/auth-header"
+import { APP_NAME } from "@/lib/config"
 
 export default function VerifyEmailPage() {
   return (
@@ -17,7 +18,7 @@ function VerifyEmailCardSkeleton() {
   return (
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
-        title="Verify your ExamHub account"
+        title={`Verify your ${APP_NAME} account`}
         description="Loading verification details..."
       />
       <Card

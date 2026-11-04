@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { prisma } from "@/lib/prisma"
 import { canAccessRole, getCurrentUser } from "@/lib/authorization"
 import { countAttempts } from "@/modules/attempts/queries"
@@ -137,6 +138,16 @@ export default async function PublicExamLandingPage({
 
           <div className="relative z-10 space-y-4">
             <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[11px] sm:text-xs font-bold tracking-wide text-primary shadow-2xs">
+                <Image
+                  src={settings?.logoUrl || "/images/bcs-bank-logo-512.png"}
+                  alt="BCS & Bank Aspirants"
+                  width={18}
+                  height={18}
+                  className="size-3.5 sm:size-4 rounded-full"
+                />
+                <span>BCS &amp; Bank Aspirants</span>
+              </span>
               <Badge
                 variant="secondary"
                 className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-primary/20 bg-primary/10 text-primary shadow-2xs"
@@ -324,7 +335,7 @@ export default async function PublicExamLandingPage({
 
       {/* Footer */}
       <footer className="border-t border-border/60 py-5 px-6 text-center text-xs text-muted-foreground bg-muted/10">
-        <p>© {new Date().getFullYear()} ExamHub · Online Assessment Platform</p>
+        <p>© {new Date().getFullYear()} {APP_NAME} · Online Assessment Platform</p>
       </footer>
     </div>
   )

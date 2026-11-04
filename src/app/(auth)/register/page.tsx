@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { AuthHeader } from "@/components/auth/auth-header"
 import { Spinner } from "@/components/ui/spinner"
 import { GraduationCap } from "lucide-react"
+import { APP_NAME } from "@/lib/config"
 
 export default function RegisterPage() {
   const [state, action, isPending] = useActionState(registerAction, undefined)
@@ -18,7 +19,7 @@ export default function RegisterPage() {
   return (
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
-        title="Join ExamHub"
+        title={`Join ${APP_NAME}`}
         description="Start practicing, taking tests, and tracking performance"
       />
 

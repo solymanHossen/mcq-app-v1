@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Skeleton } from "@/components/ui/skeleton"
 import { AuthHeader } from "@/components/auth/auth-header"
+import { APP_NAME } from "@/lib/config"
 
 export default function ResetPasswordPage({
   params,
@@ -31,7 +32,7 @@ function ResetPasswordCardSkeleton() {
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
         title="Create new password"
-        description="Choose a strong password for your ExamHub account"
+        description={`Choose a strong password for your ${APP_NAME} account`}
       />
       <Card
         className="gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 py-0 shadow-xs sm:shadow-sm"

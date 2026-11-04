@@ -10,6 +10,7 @@ import Link from "next/link"
 import { requireRole, ADMIN_ROLES } from "@/lib/authorization"
 import { listNewsletterSubscribers } from "@/modules/newsletter/queries"
 import type { NewsletterStatus } from "@/modules/newsletter/types"
+import { APP_NAME } from "@/lib/config"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -128,7 +129,7 @@ export default async function AdminSubscribersPage({
               <span className="font-semibold text-foreground">{metrics.total}</span> total subscriber{metrics.total === 1 ? "" : "s"} ·{" "}
               <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{metrics.activeCount} active</span>
               {metrics.unsubscribedCount > 0 ? ` · ${metrics.unsubscribedCount} unsubscribed` : ""}
-              {search ? ` · matching "${search}"` : ""} · Verified email directory from ExamHub Dispatch
+              {search ? ` · matching "${search}"` : ""} · Verified email directory from {APP_NAME} Dispatch
             </p>
           </div>
         </div>
@@ -318,7 +319,7 @@ export default async function AdminSubscribersPage({
                 <EmptyDescription className="text-sm text-muted-foreground sm:text-base max-w-sm mx-auto leading-relaxed">
                   {search
                     ? `No subscriber matching "${search}". Try adjusting your search query or switching filters.`
-                    : "Subscribers will appear here as soon as visitors subscribe to ExamHub Dispatch on the landing page."}
+                    : `Subscribers will appear here as soon as visitors subscribe to ${APP_NAME} Dispatch on the landing page.`}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>

@@ -63,7 +63,7 @@ const FOOTER_SECTIONS = [
   {
     title: "Company & Support",
     links: [
-      { label: "About ExamHub", href: "/about" },
+      { label: `About ${APP_NAME}`, href: "/about" },
       { label: "Contact Us", href: "/contact" },
       { label: "Apply as Faculty", href: "/teachers/apply" },
     ],
@@ -191,7 +191,7 @@ export function Footer({ logoUrl, socialLinks }: FooterProps = {}) {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary mb-3.5 shadow-2xs ring-1 ring-primary/20">
                 <Mail className="size-3.5" />
-                <span>ExamHub Dispatch</span>
+                <span>{APP_NAME} Dispatch</span>
               </div>
               <h3 className="font-heading text-2xl sm:text-3xl lg:text-[30px] font-extrabold tracking-tight text-foreground leading-tight">
                 Stay updated with modern examinations
@@ -210,7 +210,7 @@ export function Footer({ logoUrl, socialLinks }: FooterProps = {}) {
                   <div>
                     <p className="text-sm sm:text-base font-bold font-heading">You&apos;re subscribed!</p>
                     <p className="text-xs sm:text-sm text-emerald-600/80 dark:text-emerald-400/80 font-medium mt-0.5">
-                      Thanks for joining ExamHub Dispatch.
+                      Thanks for joining {APP_NAME} Dispatch.
                     </p>
                   </div>
                 </div>

@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
+import { APP_NAME } from "@/lib/config"
 import {
   startAttemptAction,
   startGuestExamAction,
@@ -398,7 +399,7 @@ export function StudentExamEntryCard({
           {/* Alternative login link */}
           <div className="pt-3 text-center border-t border-border/60">
             <p className="text-xs text-muted-foreground">
-              Already have an ExamHub account?{" "}
+              Already have an {APP_NAME} account?{" "}
               <Link
                 href={`/login?callbackUrl=/exam/${exam.id}`}
                 className="font-semibold text-primary hover:underline"

@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -60,11 +61,13 @@ export function ExamAttemptClient({
   examTitle,
   deadline,
   questions,
+  logoUrl,
 }: {
   attemptId: string
   examTitle: string
   deadline: string
   questions: AttemptQuestion[]
+  logoUrl?: string | null
 }) {
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
@@ -207,10 +210,17 @@ export function ExamAttemptClient({
       {/* ================= COMPACT STICKY EXAM HEADER ================= */}
       <header className="sticky top-0 z-40 bg-white/95 dark:bg-card/95 backdrop-blur-md border-b border-border/70 shadow-2xs transition-all">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
-          {/* Left: Exam Title & Subtle Badge */}
+          {/* Left: Official Brand Emblem & Exam Title */}
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="size-8 sm:size-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/25">
-              <span className="font-heading font-extrabold text-xs sm:text-sm tracking-tight">EX</span>
+            <div className="relative size-8.5 sm:size-9.5 rounded-full shrink-0 ring-1.5 ring-primary/25 dark:ring-primary/40 shadow-2xs overflow-hidden bg-white dark:bg-card flex items-center justify-center p-0.5">
+              <Image
+                src={logoUrl || "/images/bcs-bank-logo-512.png"}
+                alt="BCS & Bank Aspirants"
+                width={38}
+                height={38}
+                priority
+                className="size-full object-contain rounded-full"
+              />
             </div>
             <div className="min-w-0">
               <h1
@@ -219,9 +229,11 @@ export function ExamAttemptClient({
               >
                 {examTitle}
               </h1>
-              <p className="text-[11px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <p className="text-[11px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Live Assessment</span>
+                <span className="text-border/80 hidden xs:inline">•</span>
+                <span className="hidden xs:inline text-primary font-bold tracking-tight">BCS &amp; Bank Aspirants</span>
               </p>
             </div>
           </div>
@@ -368,6 +380,50 @@ export function ExamAttemptClient({
 
       {/* ================= MAIN EXAMINATION QUESTION LIST ================= */}
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8">
+        {/* Official Institutional Assessment Session Card */}
+        <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-card p-4 sm:p-5 shadow-2xs transition-all">
+          {/* Soft subtle ambient bloom */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full bg-primary/[0.04] blur-2xl dark:bg-primary/[0.06]"
+          />
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="relative size-11 sm:size-12 rounded-full shrink-0 ring-2 ring-primary/25 dark:ring-primary/35 p-0.5 bg-white dark:bg-card shadow-2xs">
+                <Image
+                  src={logoUrl || "/images/bcs-bank-logo-512.png"}
+                  alt="BCS & Bank Aspirants"
+                  width={48}
+                  height={48}
+                  priority
+                  className="size-full object-contain rounded-full"
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="font-heading text-sm sm:text-base font-bold tracking-tight text-foreground truncate">
+                    BCS &amp; Bank Aspirants Examination Hall
+                  </h2>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wide">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Verified Assessment
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5 font-medium line-clamp-1">
+                  Answer all {questions.length} questions carefully. Real-time encryption &amp; automatic cloud sync active.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground font-semibold sm:border-l sm:border-border/60 sm:pl-4">
+              <div className="flex items-center gap-1.5">
+                <Cloud className="size-3.5 text-primary" />
+                <span>Encrypted Session</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {questions.map((q, i) => {
           const a = answers[q.examQuestionId]
           const selectedOption = a?.selectedOption ?? q.selectedOption
@@ -594,15 +650,21 @@ export function ExamAttemptClient({
         <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md rounded-2xl p-5 sm:p-6 border border-border/70 bg-card shadow-xl gap-4">
           <DialogHeader className="text-left space-y-1.5">
             <div className="flex items-start gap-3">
-              <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
-                <Send className="size-5" />
+              <div className="relative size-11 rounded-full shrink-0 ring-2 ring-primary/25 dark:ring-primary/35 p-0.5 bg-white dark:bg-card shadow-2xs mt-0.5">
+                <Image
+                  src={logoUrl || "/images/bcs-bank-logo-512.png"}
+                  alt="BCS & Bank Aspirants"
+                  width={44}
+                  height={44}
+                  className="size-full object-contain rounded-full"
+                />
               </div>
               <div className="min-w-0 flex-1 pr-6">
                 <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
                   Finish &amp; Submit Examination
                 </DialogTitle>
                 <p className="text-xs text-muted-foreground font-medium mt-0.5 truncate">
-                  {examTitle}
+                  {examTitle} • BCS &amp; Bank Aspirants
                 </p>
               </div>
             </div>

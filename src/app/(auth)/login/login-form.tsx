@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Card, CardContent } from "@/components/ui/card"
 import { AuthHeader } from "@/components/auth/auth-header"
 import { Spinner } from "@/components/ui/spinner"
+import { APP_NAME } from "@/lib/config"
 
 export function LoginForm() {
   const router = useRouter()
@@ -47,7 +48,7 @@ export function LoginForm() {
   return (
     <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       <AuthHeader
-        title="Sign in to ExamHub"
+        title={`Sign in to ${APP_NAME}`}
         description="Access your exams, question banks, and live results"
       />
 

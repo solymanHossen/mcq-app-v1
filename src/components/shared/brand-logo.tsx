@@ -45,10 +45,10 @@ export function BrandLogo({
         <Image
           src="/images/logo-icon.png"
           alt={`${alt} Icon`}
-          width={214}
-          height={213}
+          width={128}
+          height={128}
           priority={priority}
-          className="size-full object-contain"
+          className="size-full object-contain rounded-full"
         />
       </div>
     )
@@ -61,8 +61,8 @@ export function BrandLogo({
       <Image
         src="/images/logo.png"
         alt={alt}
-        width={536}
-        height={225}
+        width={489}
+        height={156}
         priority={priority}
         className="h-full w-auto object-contain dark:hidden"
       />
@@ -71,8 +71,8 @@ export function BrandLogo({
       <Image
         src="/images/logo-dark.png"
         alt={alt}
-        width={536}
-        height={225}
+        width={489}
+        height={156}
         priority={priority}
         className="hidden h-full w-auto object-contain dark:block"
       />
