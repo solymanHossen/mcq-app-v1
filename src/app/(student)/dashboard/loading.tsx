@@ -6,10 +6,13 @@ export default function StudentDashboardLoading() {
     <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16 font-sans">
       {/* ── 1. Minimal Page Header Skeleton ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-border/60">
-        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-          <Skeleton className="h-8 sm:h-10 w-52 sm:w-64 rounded-xl" />
-          <Skeleton className="h-6 w-28 rounded-full" />
-          <Skeleton className="h-6 w-16 rounded-full" />
+        <div className="space-y-1.5 min-w-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+            <Skeleton className="h-8 sm:h-10 w-52 sm:w-64 rounded-xl" />
+            <Skeleton className="h-6 w-36 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-full" />
+          </div>
+          <Skeleton className="h-4 w-48 rounded-md" />
         </div>
         <Skeleton className="h-10 w-36 rounded-xl shrink-0" />
       </div>

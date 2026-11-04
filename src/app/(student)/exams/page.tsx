@@ -474,17 +474,22 @@ export default async function AvailableExamsPage({
     <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
       {/* ================= TOP HEADER ================= */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-border/60">
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
-            Exams &amp; Assessments Hub
-          </h1>
-          <Badge
-            variant="secondary"
-            className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-border/60"
-          >
-            <span className="size-1.5 sm:size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Live Assessment Center</span>
-          </Badge>
+        <div className="space-y-1 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
+              Exams &amp; Assessments
+            </h1>
+            <Badge
+              variant="secondary"
+              className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 border border-primary/20 bg-primary/10 text-primary shadow-2xs"
+            >
+              <span className="size-1.5 sm:size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Live Assessment Center</span>
+            </Badge>
+          </div>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Take available exams and check your results.
+          </p>
         </div>
       </div>
 
