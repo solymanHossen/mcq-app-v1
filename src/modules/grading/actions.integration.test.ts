@@ -12,6 +12,7 @@ import {
   updateExamQuestionMarksAction,
   publishExamResultsAction,
   releaseAnswerKeyAction,
+  publishResultsAndAnswerKeyAction,
 } from "./actions"
 
 const mockAuth = vi.mocked(auth)
@@ -301,3 +302,68 @@ describe("releaseAnswerKeyAction", () => {
     expect(freshExam.answerKeyReleased).toBe(true)
   })
 })
+
+describe("publishResultsAndAnswerKeyAction", () => {
+  it("rejects an exam that is still DRAFT", async () => {
+    const { exam } = await makeDraftExamWithQuestion(teacherA.id)
+    asUser(teacherA)
+
+    const result = await publishResultsAndAnswerKeyAction(exam.id, {
+      publishScores: true,
+      releaseAnswerKey: true,
+    })
+    expect(result && "error" in result).toBe(true)
+  })
+
+  it("publishes provisional scores and releases answer key concurrently", async () => {
+    const { exam, attempt } = await makePublishedExamWithGradedAttempt(
+      teacherA.id,
+      student.id
+    )
+    asUser(teacherA)
+
+    const result = await publishResultsAndAnswerKeyAction(exam.id, {
+      publishScores: true,
+      releaseAnswerKey: true,
+    })
+    expect(result).toEqual({
+      success: true,
+      publishedCount: 1,
+      answerKeyReleased: true,
+    })
+
+    const freshResult = await prisma.examResult.findUniqueOrThrow({
+      where: { attemptId: attempt.id },
+    })
+    const freshExam = await prisma.exam.findUniqueOrThrow({
+      where: { id: exam.id },
+    })
+    expect(freshResult.status).toBe("PUBLISHED")
+    expect(freshExam.answerKeyReleased).toBe(true)
+  })
+
+  it("handles repeated answer key release gracefully without failure", async () => {
+    const { exam } = await makePublishedExamWithGradedAttempt(
+      teacherA.id,
+      student.id
+    )
+    asUser(teacherA)
+
+    // First release
+    await publishResultsAndAnswerKeyAction(exam.id, {
+      releaseAnswerKey: true,
+    })
+
+    // Second call with releaseAnswerKey: true should succeed idempotently
+    const secondResult = await publishResultsAndAnswerKeyAction(exam.id, {
+      publishScores: false,
+      releaseAnswerKey: true,
+    })
+    expect(secondResult).toEqual({
+      success: true,
+      publishedCount: 0,
+      answerKeyReleased: true,
+    })
+  })
+})
+

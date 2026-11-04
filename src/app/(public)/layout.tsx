@@ -24,7 +24,7 @@ export default async function PublicLayout({
   ])
 
   return (
-    <div className="flex min-h-svh flex-col bg-background text-foreground">
+    <div className="flex min-h-svh flex-col bg-background text-foreground overflow-x-clip">
       <Navbar
         user={user && canAccessRole(user, "STUDENT") ? { ...user, role: "STUDENT" } : user}
         logoUrl={settings.logoUrl}

@@ -21,7 +21,7 @@ import {
   RotateCcw,
   Search,
   ShieldAlert,
-  Sparkles,
+  Target,
   Trophy,
   Users,
   XCircle,
@@ -427,7 +427,7 @@ export function TeacherResultsClient({
                     <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                       Mean Score
                     </span>
-                    <Sparkles className="size-4 text-indigo-600 dark:text-indigo-400" />
+                    <Target className="size-4 text-indigo-600 dark:text-indigo-400" />
                   </div>
                   <p className="font-heading text-xl sm:text-2xl font-extrabold text-foreground mt-2">
                     {stats.avgAccuracy}%
@@ -1342,7 +1342,7 @@ export function TeacherResultsClient({
 
                 <div className="flex items-center justify-between py-2.5">
                   <span className="text-muted-foreground font-medium flex items-center gap-2">
-                    <Sparkles className="size-4 text-indigo-500" />
+                    <Target className="size-4 text-indigo-500" />
                     <span>Mean Accuracy</span>
                   </span>
                   <span className="font-bold text-foreground">

@@ -1,132 +1,380 @@
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { LatexText } from "@/components/shared/latex-text"
 import { cn } from "@/lib/utils"
 import type { ResultForStudent } from "@/modules/grading/queries"
+import {
+  CheckCircle2,
+  Clock,
+  Check,
+  X,
+  Lock,
+  ArrowLeft,
+  LayoutDashboard,
+  Award,
+  Info,
+  FileCheck2,
+  Target,
+} from "lucide-react"
 
 export function ResultSummary({ result }: { result: ResultForStudent }) {
+  // =========================================================================
+  // STATE 1: RESULTS NOT YET PUBLISHED BY TEACHER / INSTITUTION
+  // =========================================================================
   if (!result.result || result.result.status !== "PUBLISHED") {
     return (
-      <p className="text-sm text-muted-foreground">
-        Your exam has been submitted. Results will be available once your
-        teacher publishes them.
-      </p>
+      <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
+        {/* Simple Minimal Notice Banner */}
+        <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200">
+          <Clock className="size-4.5 sm:size-5 shrink-0 text-amber-600 dark:text-amber-400" />
+          <p className="text-xs sm:text-sm font-medium">
+            Results will appear here automatically once your teacher publishes scores.
+          </p>
+        </div>
+
+        {/* 2 Essential Metric Tiles (Full Width - Matching Master Tokens) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+              <FileCheck2 className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-foreground">
+                {result.answeredCount ?? 0} of {result.totalQuestions ?? 0}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                Questions Answered
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+              <CheckCircle2 className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
+                Saved &amp; Completed
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                Attempt Status
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Clear Action Buttons */}
+        <div className="flex flex-wrap items-center gap-3 pt-1">
+          <Button
+            asChild
+            className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all gap-2"
+          >
+            <Link href={`/exams/${result.examId}`}>
+              <ArrowLeft className="size-4" />
+              <span>Back to assessment</span>
+            </Link>
+          </Button>
+
+          <Button
+            asChild
+            variant="outline"
+            className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold border-border/70 bg-card hover:bg-muted shadow-2xs active:scale-95 transition-all gap-2"
+          >
+            <Link href="/dashboard">
+              <LayoutDashboard className="size-4 text-muted-foreground" />
+              <span>Student Dashboard</span>
+            </Link>
+          </Button>
+        </div>
+      </div>
     )
   }
 
+  // =========================================================================
+  // STATE 2: RESULTS PUBLISHED BY TEACHER
+  // =========================================================================
   const r = result.result
 
   return (
-    <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        <Badge
-          className="rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-sm font-bold text-primary sm:text-base shadow-2xs"
-          variant="outline"
-        >
-          Score: {r.obtainedMarks} / {r.totalMarks}
-        </Badge>
-        {r.isPassed !== null && (
-          <Badge
-            className={cn(
-              "rounded-full px-3 py-1 text-xs font-semibold sm:text-sm shadow-2xs",
-              r.isPassed
-                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-destructive/20 bg-destructive/10 text-destructive"
-            )}
-            variant="outline"
-          >
-            {r.isPassed ? "Passed" : "Not passed"}
-          </Badge>
-        )}
+    <div className="flex min-w-0 flex-col gap-6">
+      {/* Official Results Score Header & Metrics (Full Width - No Nested Inner Card) */}
+      <div className="space-y-5 sm:space-y-6">
+        {/* Top Row: Score & Pass/Fail Status */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 border-b border-border/60">
+          <div className="space-y-1.5 min-w-0">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-2xs whitespace-nowrap">
+              <Award className="size-3.5" />
+              <span>Official Assessment Score</span>
+            </div>
+
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight whitespace-nowrap">
+              Score: {r.obtainedMarks} / {r.totalMarks}
+            </h2>
+          </div>
+
+          {r.isPassed !== null && (
+            <Badge
+              className={cn(
+                "self-start sm:self-auto rounded-full px-3.5 py-1 text-xs sm:text-sm font-bold shadow-2xs gap-1.5 whitespace-nowrap shrink-0",
+                r.isPassed
+                  ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                  : "border-destructive/30 bg-destructive/15 text-destructive"
+              )}
+              variant="outline"
+            >
+              {r.isPassed ? (
+                <>
+                  <Check className="size-3.5 stroke-[3]" />
+                  <span>Passed</span>
+                </>
+              ) : (
+                <>
+                  <X className="size-3.5 stroke-[3]" />
+                  <span>Not passed</span>
+                </>
+              )}
+            </Badge>
+          )}
+        </div>
+
+        {/* 4 Metric Breakdown Tiles (Full Width - 4-column grid on desktop, 2-column on mobile) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {/* Correct */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+              <CheckCircle2 className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate">
+                {r.correctCount}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Correct
+              </span>
+            </div>
+          </div>
+
+          {/* Incorrect */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-destructive/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive shadow-2xs ring-1 ring-destructive/20">
+              <X className="size-5 stroke-[2.5]" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-destructive truncate">
+                {r.incorrectCount}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Incorrect
+              </span>
+            </div>
+          </div>
+
+          {/* Skipped */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-border hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/10 text-muted-foreground shadow-2xs ring-1 ring-muted-foreground/20">
+              <Clock className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-muted-foreground truncate">
+                {r.skippedCount}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Skipped
+              </span>
+            </div>
+          </div>
+
+          {/* Accuracy */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+              <Target className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-primary truncate">
+                {Math.round(r.accuracy * 100)}%
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Accuracy
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-4 sm:gap-4 sm:text-sm [&>div]:flex [&>div]:min-w-0 [&>div]:flex-col [&>div]:gap-1 [&>div]:rounded-xl sm:[&>div]:rounded-2xl [&>div]:border [&>div]:border-border/70 [&>div]:bg-muted/20 [&>div]:p-3 sm:[&>div]:p-4 [&>div]:shadow-2xs">
-        <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Correct
-          </dt>
-          <dd className="font-heading text-lg font-bold text-foreground sm:text-xl">
-            {r.correctCount}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Incorrect
-          </dt>
-          <dd className="font-heading text-lg font-bold text-foreground sm:text-xl">
-            {r.incorrectCount}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Skipped
-          </dt>
-          <dd className="font-heading text-lg font-bold text-foreground sm:text-xl">
-            {r.skippedCount}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Accuracy
-          </dt>
-          <dd className="font-heading text-lg font-bold text-foreground sm:text-xl">
-            {Math.round(r.accuracy * 100)}%
-          </dd>
-        </div>
-      </dl>
       {r.cancelledCount > 0 && (
-        <p className="text-xs text-muted-foreground">
-          {r.cancelledCount} question
-          {r.cancelledCount === 1 ? " was" : "s were"} cancelled and credited to
-          everyone.
+        <p className="text-xs text-muted-foreground bg-muted/40 p-3 rounded-xl border border-border/60">
+          ℹ️ {r.cancelledCount} question
+          {r.cancelledCount === 1 ? " was" : "s were"} cancelled during grading and awarded full marks to all candidates.
         </p>
       )}
 
-      {result.questions && (
-        <>
-          <Separator />
-          <div className="flex min-w-0 flex-col gap-4 sm:gap-5">
-            <h2 className="font-heading text-base font-bold tracking-tight text-foreground sm:text-xl">
-              Answer key
-            </h2>
-            {result.questions.map((q, i) => (
-              <Card
-                key={i}
-                className="min-w-0 gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-0 py-0 shadow-xs transition-all hover:shadow-sm"
-              >
-                <CardContent className="flex min-w-0 flex-col gap-3 p-4 text-sm wrap-anywhere sm:p-6">
-                  <LatexText
-                    text={q.questionText}
-                    className="min-w-0 text-sm font-semibold text-foreground sm:text-base [&_.katex-display]:overflow-x-auto"
-                  />
-                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                    Your answer:{" "}
-                    <span
-                      className={cn(
-                        "font-semibold",
-                        q.isCancelled
-                          ? "text-muted-foreground"
-                          : q.selectedOption === q.correctOption
-                            ? "text-primary"
-                            : "text-destructive"
-                      )}
-                    >
-                      {q.selectedOption ?? "Not answered"}
-                    </span>
-                    {" · "}
-                    {q.isCancelled ? (
-                      "Cancelled (credited)"
-                    ) : (
-                      <>Correct answer: {q.correctOption}</>
-                    )}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+      {/* Answer Key Breakdown (if released) */}
+      {result.answerKeyReleased && result.questions ? (
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-3">
+            <div>
+              <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">
+                Detailed Question Breakdown &amp; Answer Key
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">
+                Verify your chosen answers against the official correct solutions below.
+              </p>
+            </div>
+            <Badge variant="outline" className="text-xs font-semibold rounded-full border-border/70">
+              {result.questions.length} Questions
+            </Badge>
           </div>
-        </>
+
+          <div className="space-y-4">
+            {result.questions.map((q, i) => {
+              const isCorrect = !q.isCancelled && q.selectedOption === q.correctOption
+              const isSkipped = q.selectedOption === null
+
+              return (
+                <Card
+                  key={i}
+                  className={cn(
+                    "rounded-2xl border bg-card p-0 gap-0 shadow-2xs overflow-hidden transition-all",
+                    q.isCancelled
+                      ? "border-muted-foreground/30"
+                      : isCorrect
+                      ? "border-emerald-500/40"
+                      : isSkipped
+                      ? "border-border/70"
+                      : "border-destructive/40"
+                  )}
+                >
+                  {/* Question Header */}
+                  <div className="px-4 sm:px-6 py-3 border-b border-border/60 bg-muted/20 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-extrabold text-muted-foreground">
+                        QUESTION {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <Badge variant="outline" className="text-[10px] sm:text-[11px] font-semibold border-border/70">
+                        {q.marks} {q.marks === 1 ? "MARK" : "MARKS"}
+                      </Badge>
+                    </div>
+
+                    <div>
+                      {q.isCancelled ? (
+                        <Badge variant="secondary" className="text-xs font-semibold rounded-full">
+                          Cancelled (Credit)
+                        </Badge>
+                      ) : isCorrect ? (
+                        <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-xs font-semibold rounded-full gap-1">
+                          <Check className="size-3 stroke-[3]" />
+                          <span>Correct (+{q.marks})</span>
+                        </Badge>
+                      ) : isSkipped ? (
+                        <Badge variant="outline" className="text-xs font-medium text-muted-foreground rounded-full">
+                          Not answered (0)
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-destructive/15 text-destructive border-destructive/30 text-xs font-semibold rounded-full gap-1">
+                          <X className="size-3 stroke-[3]" />
+                          <span>Incorrect (0)</span>
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Question Statement */}
+                  <div className="p-4 sm:p-6 space-y-4">
+                    <div className="text-sm sm:text-base font-semibold text-foreground leading-relaxed font-bengali">
+                      <LatexText text={q.questionText} className="min-w-0 [&_.katex-display]:overflow-x-auto" />
+                    </div>
+
+                    {/* Options Review Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs sm:text-sm">
+                      {(["A", "B", "C", "D"] as const).map((opt) => {
+                        const optText = q[`option${opt}` as "optionA" | "optionB" | "optionC" | "optionD"]
+                        const isThisCorrect = q.correctOption === opt
+                        const isThisSelected = q.selectedOption === opt
+
+                        return (
+                          <div
+                            key={opt}
+                            className={cn(
+                              "p-3 rounded-xl border flex items-center justify-between gap-2.5 transition-all",
+                              isThisCorrect
+                                ? "border-emerald-500/60 bg-emerald-500/[0.08] dark:bg-emerald-500/15 font-semibold text-foreground"
+                                : isThisSelected && !isThisCorrect
+                                ? "border-destructive/60 bg-destructive/[0.08] dark:bg-destructive/15 text-foreground"
+                                : "border-border/60 bg-card/60 text-muted-foreground"
+                            )}
+                          >
+                            <div className="flex items-baseline gap-2 min-w-0">
+                              <span className="font-bold shrink-0">{opt} —</span>
+                              <span className="wrap-anywhere">
+                                <LatexText text={optText} />
+                              </span>
+                            </div>
+
+                            <div className="shrink-0 text-[11px] font-bold">
+                              {isThisCorrect && (
+                                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                  <Check className="size-3.5 stroke-[3]" />
+                                  <span className="hidden xs:inline">Correct</span>
+                                </span>
+                              )}
+                              {isThisSelected && !isThisCorrect && (
+                                <span className="text-destructive flex items-center gap-1">
+                                  <X className="size-3.5 stroke-[3]" />
+                                  <span className="hidden xs:inline">Your choice</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 sm:p-5 flex items-start gap-3.5">
+          <div className="size-9 rounded-xl bg-muted/60 text-muted-foreground flex items-center justify-center shrink-0">
+            <Lock className="size-4.5" />
+          </div>
+          <div className="space-y-0.5">
+            <h4 className="text-xs sm:text-sm font-bold text-foreground">
+              Answer Key Withheld by Instructor
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Your overall score and performance metrics are shown above. The detailed question-by-question answer key has not been published yet by your instructor.
+            </p>
+          </div>
+        </div>
       )}
+
+      {/* Action Buttons for Published Results */}
+      <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border/60">
+        <Button
+          asChild
+          className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all gap-2"
+        >
+          <Link href={`/exams/${result.examId}`}>
+            <ArrowLeft className="size-4" />
+            <span>Back to assessment overview</span>
+          </Link>
+        </Button>
+
+        <Button
+          asChild
+          variant="outline"
+          className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold border-border/70 bg-card hover:bg-muted shadow-2xs active:scale-95 transition-all gap-2"
+        >
+          <Link href="/dashboard">
+            <LayoutDashboard className="size-4 text-muted-foreground" />
+            <span>Go to Student Dashboard</span>
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }

@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Zap,
+  Clock,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -131,8 +132,19 @@ export function StudentExamEntryCard({
   // Case 1: Logged In User
   if (user) {
     return (
-      <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md overflow-hidden">
-        <CardHeader className="p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
+      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs hover:shadow-sm transition-all">
+        {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
+        />
+        {/* Subtle Radiant Top Accent */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
+        />
+
+        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3">
               <div className="size-9 rounded-xl border border-border/60 bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shadow-2xs">
@@ -156,7 +168,7 @@ export function StudentExamEntryCard({
           </div>
         </CardHeader>
 
-        <CardContent className="p-5 sm:p-6 space-y-4 sm:space-y-5">
+        <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
           {errorMessage && (
             <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
               <AlertTriangle className="size-4 shrink-0" />
@@ -239,29 +251,40 @@ export function StudentExamEntryCard({
   // Case 2: Guest Participation Allowed (Frictionless Name & Email)
   if (exam.allowGuestAccess) {
     return (
-      <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md overflow-hidden">
-        <CardHeader className="p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20 space-y-2">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <Badge variant="secondary" className="rounded-full px-2.5 py-0.5 text-xs font-bold gap-1.5 border border-border/60 bg-muted/60 text-foreground">
-              <Zap className="size-3 text-primary" />
-              <span>Instant Entry (No Password Needed)</span>
+      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs hover:shadow-sm transition-all">
+        {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
+        />
+        {/* Subtle Radiant Top Accent */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
+        />
+
+        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                Enter Your Details
+              </CardTitle>
+              <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                Provide your name and email to begin the exam.
+              </CardDescription>
+            </div>
+
+            <Badge
+              variant="outline"
+              className="rounded-full px-3 py-1 text-xs sm:text-sm font-bold gap-1.5 border-primary/30 bg-primary/10 text-primary shadow-2xs"
+            >
+              <Clock className="size-3.5" />
+              <span>{exam.durationMinutes} Minutes</span>
             </Badge>
-            <span className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
-              <span>Duration:</span>
-              <strong className="text-foreground font-semibold">{exam.durationMinutes}m</strong>
-            </span>
-          </div>
-          <div>
-            <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Enter Your Details to Begin
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-1 leading-normal">
-              No registration or account creation required. Just provide your Name & Email so your teacher can identify your submission.
-            </CardDescription>
           </div>
         </CardHeader>
 
-        <CardContent className="p-5 sm:p-6 space-y-4 sm:space-y-5">
+        <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
           <form onSubmit={handleStartForGuest} className="space-y-4">
             {errorMessage && (
               <div className="p-3 sm:p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold flex items-center gap-2">
@@ -394,29 +417,42 @@ export function StudentExamEntryCard({
 
   // Case 3: Registered Students Only (allowGuestAccess = false)
   return (
-    <Card className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-sm sm:shadow-md p-6 sm:p-8 text-center space-y-4">
-      <div className="size-12 rounded-2xl border border-border/60 bg-muted/40 text-muted-foreground flex items-center justify-center mx-auto shadow-2xs">
-        <Lock className="size-5" />
-      </div>
-      <div className="space-y-1">
-        <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
-          Student Account Required
-        </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
-          The teacher has restricted this assessment to registered students. Please sign in or create an account to proceed.
-        </p>
-      </div>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
-        <Button asChild size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm">
-          <Link href={`/login?callbackUrl=/exam/${exam.id}`}>
-            Sign In to Start
-          </Link>
-        </Button>
-        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm border-border/70">
-          <Link href={`/register?callbackUrl=/exam/${exam.id}`}>
-            Create Free Account
-          </Link>
-        </Button>
+    <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs p-6 sm:p-8 text-center space-y-4">
+      {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
+      />
+      {/* Subtle Radiant Top Accent */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
+      />
+
+      <div className="relative z-10 space-y-4">
+        <div className="size-12 rounded-2xl border border-border/60 bg-muted/40 text-muted-foreground flex items-center justify-center mx-auto shadow-2xs">
+          <Lock className="size-5" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="font-heading font-bold text-base sm:text-lg text-foreground">
+            Student Account Required
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
+            The teacher has restricted this assessment to registered students. Please sign in or create an account to proceed.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+          <Button asChild size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm">
+            <Link href={`/login?callbackUrl=/exam/${exam.id}`}>
+              Sign In to Start
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-10 px-5 rounded-xl font-heading font-bold text-xs sm:text-sm border-border/70">
+            <Link href={`/register?callbackUrl=/exam/${exam.id}`}>
+              Create Free Account
+            </Link>
+          </Button>
+        </div>
       </div>
     </Card>
   )
