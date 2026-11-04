@@ -37,16 +37,21 @@ export function BookmarkButton({
       onClick={toggle}
       disabled={isPending}
       aria-pressed={bookmarked}
+      className={cn(
+        "h-8 sm:h-8.5 px-3 rounded-xl text-xs font-semibold shadow-2xs transition-all gap-1.5 cursor-pointer",
+        bookmarked
+          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+          : "border-border/70 hover:border-primary/40 hover:text-primary"
+      )}
     >
       {isPending ? (
-        <Spinner data-icon="inline-start" />
+        <Spinner className="size-3.5" />
       ) : (
         <BookmarkIcon
-          data-icon="inline-start"
           className={cn("size-3.5", bookmarked && "fill-current")}
         />
       )}
-      {bookmarked ? "Bookmarked" : "Bookmark"}
+      <span>{bookmarked ? "Bookmarked" : "Bookmark"}</span>
     </Button>
   )
 }
