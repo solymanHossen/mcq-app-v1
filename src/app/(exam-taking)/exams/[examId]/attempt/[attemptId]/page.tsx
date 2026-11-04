@@ -199,7 +199,7 @@ export default async function AttemptPage({
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium hidden sm:block">
                 {isPublished
                   ? "Official scoring metrics, answer verification, and question breakdown"
-                  : "Your exam answers are safely recorded. Results will appear once published by your instructor."}
+                  : "Your answers are saved. Results will appear once published by your teacher."}
               </p>
             </div>
           </div>

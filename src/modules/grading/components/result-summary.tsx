@@ -25,108 +25,55 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
   // =========================================================================
   if (!result.result || result.result.status !== "PUBLISHED") {
     return (
-      <div className="flex min-w-0 flex-col gap-6">
-        {/* Prominent Pending Notice Banner (Matching Teacher Directory Gradient Hero) */}
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-amber-500/25 bg-gradient-to-r from-card via-card to-amber-500/10 dark:from-card dark:via-card dark:to-amber-500/15 p-5 sm:p-7 space-y-3 shadow-2xs">
-          {/* Ambient Glow */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-amber-500/15 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-16 -left-16 size-56 rounded-full bg-primary/10 blur-3xl"
-          />
-
-          <div className="relative z-10 flex items-start gap-3.5 sm:gap-4">
-            <div className="size-10 sm:size-11 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/30 shadow-2xs">
-              <Clock className="size-5 sm:size-6" />
-            </div>
-            <div className="space-y-1.5 min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">
-                  Results Not Published Yet
-                </h3>
-                <Badge
-                  variant="outline"
-                  className="rounded-full border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[11px] font-bold px-2.5 py-0.5 shadow-2xs"
-                >
-                  Pending Instructor Evaluation
-                </Badge>
-              </div>
-              <p className="text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground leading-relaxed">
-                Your examination has been submitted successfully and all your answers are safely recorded. Your teacher or faculty instructor has not released the official scores for this assessment yet.
-              </p>
-            </div>
-          </div>
+      <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
+        {/* Simple Minimal Notice Banner */}
+        <div className="flex items-center gap-3 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200">
+          <Clock className="size-4.5 sm:size-5 shrink-0 text-amber-600 dark:text-amber-400" />
+          <p className="text-xs sm:text-sm font-medium">
+            Results will appear here automatically once your teacher publishes scores.
+          </p>
         </div>
 
-        {/* Submission Details Overview Cards */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3">
-          <div className="p-4 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex items-center gap-3.5">
-            <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 ring-1 ring-emerald-500/25">
-              <CheckCircle2 className="size-5" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Attempt Status</p>
-              <p className="text-sm font-extrabold text-foreground truncate">Saved &amp; Completed</p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex items-center gap-3.5">
-            <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 ring-1 ring-primary/25">
+        {/* 2 Essential Metric Tiles (Full Width - Matching Master Tokens) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
               <FileCheck2 className="size-5" />
-            </div>
+            </span>
             <div className="min-w-0">
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Responses</p>
-              <p className="text-sm font-extrabold text-foreground truncate">
-                {result.answeredCount ?? 0} of {result.totalQuestions ?? 0} Answered
-              </p>
+              <span className="block font-heading text-lg sm:text-xl font-black text-foreground">
+                {result.answeredCount ?? 0} of {result.totalQuestions ?? 0}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                Questions Answered
+              </span>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl sm:rounded-2xl border border-border/70 bg-card shadow-2xs flex items-center gap-3.5 xs:col-span-2 sm:col-span-1">
-            <div className="size-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 ring-1 ring-amber-500/25">
-              <Clock className="size-5" />
-            </div>
+          <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+              <CheckCircle2 className="size-5" />
+            </span>
             <div className="min-w-0">
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Score Release</p>
-              <p className="text-sm font-extrabold text-amber-700 dark:text-amber-400 truncate">Pending Publication</p>
+              <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
+                Saved &amp; Completed
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                Attempt Status
+              </span>
             </div>
           </div>
-        </div>
-
-        {/* Reassurance Guidance Box (Clean on mobile, detailed on desktop) */}
-        <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-muted/20 p-4 sm:p-5 space-y-3 hidden sm:block">
-          <h4 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
-            <Info className="size-4 text-primary" />
-            <span>Important Information for Candidates</span>
-          </h4>
-          <ul className="text-xs sm:text-sm text-muted-foreground space-y-2 leading-relaxed">
-            <li className="flex items-start gap-2.5">
-              <span className="text-emerald-500 font-bold shrink-0">✓</span>
-              <span><strong>Answers Permanently Saved:</strong> Every answer you selected has been finalized and secured in the platform database.</span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <span className="text-emerald-500 font-bold shrink-0">✓</span>
-              <span><strong>No Action Required:</strong> You do not need to re-enter, edit, or resubmit this assessment.</span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <span className="text-emerald-500 font-bold shrink-0">✓</span>
-              <span><strong>Automatic Score Display:</strong> Once your teacher reviews and publishes the results, your score, accuracy breakdown, and answer analysis will appear right here automatically.</span>
-            </li>
-          </ul>
         </div>
 
         {/* Clear Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="flex flex-wrap items-center gap-3 pt-1">
           <Button
             asChild
             className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all gap-2"
           >
             <Link href={`/exams/${result.examId}`}>
               <ArrowLeft className="size-4" />
-              <span>Back to assessment overview</span>
+              <span>Back to assessment</span>
             </Link>
           </Button>
 
@@ -137,7 +84,7 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
           >
             <Link href="/dashboard">
               <LayoutDashboard className="size-4 text-muted-foreground" />
-              <span>Go to Student Dashboard</span>
+              <span>Student Dashboard</span>
             </Link>
           </Button>
         </div>
