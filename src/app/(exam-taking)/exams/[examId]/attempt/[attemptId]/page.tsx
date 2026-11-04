@@ -12,7 +12,8 @@ import { AppealForm } from "@/modules/proctoring/components/appeal-form"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, AlertTriangle, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, AlertTriangle, CheckCircle2, Clock } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
@@ -59,7 +60,7 @@ export default async function AttemptPage({
           })
 
       return (
-        <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
           {/* Top Breadcrumb */}
           <div className="space-y-3 sm:space-y-4">
             <Button
@@ -128,8 +129,10 @@ export default async function AttemptPage({
     }
 
     const result = await getResultForStudent(attemptId)
+    const isPublished = result?.result?.status === "PUBLISHED"
+
     return (
-      <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
         {/* Top Breadcrumb */}
         <div className="space-y-3 sm:space-y-4">
           <Button
@@ -165,30 +168,45 @@ export default async function AttemptPage({
 
         <Card className="rounded-2xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden">
           <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3 sm:gap-3.5">
-            <div className="size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-2xs ring-1 ring-emerald-500/20">
-              <CheckCircle2 className="size-4.5 sm:size-5.5" />
+            <div
+              className={cn(
+                "size-9 sm:size-11 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ring-1",
+                isPublished
+                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-emerald-500/20"
+                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-amber-500/20"
+              )}
+            >
+              {isPublished ? (
+                <CheckCircle2 className="size-4.5 sm:size-5.5" />
+              ) : (
+                <Clock className="size-4.5 sm:size-5.5" />
+              )}
             </div>
             <div className="min-w-0">
               <h2 className="text-base sm:text-xl font-bold tracking-tight text-foreground">
-                Submission &amp; Grading Summary
+                {isPublished ? "Official Grading & Submission Summary" : "Submission Received • Results Pending"}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 font-medium">
-                Official scoring metrics, answer verification, and question breakdown
+                {isPublished
+                  ? "Official scoring metrics, answer verification, and question breakdown"
+                  : "Your exam answers are safely recorded. Results will appear once published by your instructor."}
               </p>
             </div>
           </div>
 
-          <div className="p-4 sm:p-6 lg:p-7 space-y-6">
-            {result && <ResultSummary result={result} />}
-            <div className="pt-2">
-              <Button
-                asChild
-                variant="outline"
-                className="h-10 sm:h-11 px-4 sm:px-5 rounded-xl text-xs sm:text-sm font-semibold shadow-2xs active:scale-95 transition-all"
-              >
-                <Link href={`/exams/${examId}`}>Back to assessment overview</Link>
-              </Button>
-            </div>
+          <div className="p-4 sm:p-6 lg:p-7">
+            {result ? (
+              <ResultSummary result={result} />
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Your attempt has ended and been saved.
+                </p>
+                <Button asChild variant="outline" className="rounded-xl">
+                  <Link href={`/exams/${examId}`}>Back to assessment overview</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </Card>
       </div>

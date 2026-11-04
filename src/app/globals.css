@@ -37,7 +37,8 @@
   --sidebar-accent: oklch(0.9104 0.0460 174.0259);
   --sidebar-accent-foreground: oklch(0.2395 0.0455 282.4182);
   --sidebar-border: oklch(0.9202 0.0202 200.6310);
-  --font-sans: 'Open Sans', sans-serif;
+  --font-sans: 'Open Sans', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-bengali: 'Hind Siliguri', 'Open Sans', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.5rem;
@@ -92,7 +93,8 @@
   --sidebar-accent-foreground: oklch(0.9294 0.0202 286.0004);
   --sidebar-border: oklch(0.3008 0.0343 281.7840);
   --sidebar-ring: oklch(0.7155 0.1583 288.7763);
-  --font-sans: 'Open Sans', sans-serif;
+  --font-sans: 'Open Sans', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-bengali: 'Hind Siliguri', 'Open Sans', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.5rem;

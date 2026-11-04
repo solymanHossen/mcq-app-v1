@@ -85,6 +85,9 @@ export async function getResultForStudent(attemptId: string) {
     examId: attempt.examId,
     examTitle: attempt.exam.title,
     status: attempt.status,
+    submittedAt: attempt.submittedAt,
+    totalQuestions: attempt.answers.length,
+    answeredCount: attempt.answers.filter((a) => a.selectedOption !== null).length,
     result: revealResult ? attempt.result : null,
     answerKeyReleased: revealAnswerKey,
     questions: revealAnswerKey

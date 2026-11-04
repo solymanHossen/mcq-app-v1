@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Script from "next/script"
-import { Geist_Mono, Open_Sans } from "next/font/google"
+import { Geist_Mono, Open_Sans, Hind_Siliguri } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
@@ -28,6 +28,13 @@ const openSans = Open_Sans({
   display: "swap",
 })
 
+const hindSiliguri = Hind_Siliguri({
+  subsets: ["bengali"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-bengali",
+  display: "swap",
+})
+
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -42,7 +49,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", openSans.variable)}
+      className={cn("antialiased", fontMono.variable, "font-sans", openSans.variable, hindSiliguri.variable)}
     >
       <body>
         <ThemeProvider>
