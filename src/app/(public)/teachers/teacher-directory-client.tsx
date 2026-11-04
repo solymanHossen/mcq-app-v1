@@ -104,16 +104,17 @@ export function TeacherDirectoryClient({
 
   return (
     <div className="w-full space-y-6 sm:space-y-8">
-      {/* ================= HERO CARD: MATCHING PLATFORM SYSTEM & EXAM-LIST ================= */}
+      {/* ================= HERO CARD: MATCHING PLATFORM SYSTEM & PROFILE HERO ================= */}
       <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 lg:p-10 shadow-xs relative overflow-hidden">
-        {/* Ambient System Gradient Flow matching platform design */}
+        {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
         />
+        {/* Subtle Radiant Top Accent */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/10 blur-3xl"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
         />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">

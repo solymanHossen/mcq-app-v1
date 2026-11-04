@@ -122,16 +122,17 @@ export default async function PublicExamLandingPage({
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-        {/* Exam Hero Card (Minimal Professional Modern Gradient matching Teacher Directory) */}
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-r from-card via-card to-primary/10 dark:from-card dark:via-card dark:to-primary/15 p-6 sm:p-8 lg:p-10 shadow-xs space-y-5 sm:space-y-6">
-          {/* Ambient System Gradient Flow */}
+        {/* Exam Hero Card (Minimal Professional Design matching Profile Hero) */}
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-6 sm:p-8 lg:p-10 shadow-xs space-y-5 sm:space-y-6">
+          {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/15 blur-3xl"
+            className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
           />
+          {/* Subtle Radiant Top Accent */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/15 blur-3xl"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
           />
 
           <div className="relative z-10 space-y-4">

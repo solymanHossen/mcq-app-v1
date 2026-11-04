@@ -132,15 +132,16 @@ export function StudentExamEntryCard({
   // Case 1: Logged In User
   if (user) {
     return (
-      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/5 dark:from-card dark:via-card dark:to-primary/10 shadow-xs hover:shadow-sm transition-all">
-        {/* Ambient Subtle Gradient Glow */}
+      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs hover:shadow-sm transition-all">
+        {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
         />
+        {/* Subtle Radiant Top Accent */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-emerald-500/10 blur-3xl"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
         />
 
         <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
@@ -250,15 +251,16 @@ export function StudentExamEntryCard({
   // Case 2: Guest Participation Allowed (Frictionless Name & Email)
   if (exam.allowGuestAccess) {
     return (
-      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/5 dark:from-card dark:via-card dark:to-primary/10 shadow-xs hover:shadow-sm transition-all">
-        {/* Ambient Subtle Gradient Glow */}
+      <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs hover:shadow-sm transition-all">
+        {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
         />
+        {/* Subtle Radiant Top Accent */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-emerald-500/10 blur-3xl"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
         />
 
         <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
@@ -415,15 +417,16 @@ export function StudentExamEntryCard({
 
   // Case 3: Registered Students Only (allowGuestAccess = false)
   return (
-    <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/5 dark:from-card dark:via-card dark:to-primary/10 shadow-xs p-6 sm:p-8 text-center space-y-4">
-      {/* Ambient Subtle Gradient Glow */}
+    <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs p-6 sm:p-8 text-center space-y-4">
+      {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/10 blur-3xl"
+        className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
       />
+      {/* Subtle Radiant Top Accent */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-emerald-500/10 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
       />
 
       <div className="relative z-10 space-y-4">

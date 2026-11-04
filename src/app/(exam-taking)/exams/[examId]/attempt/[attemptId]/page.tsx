@@ -166,15 +166,16 @@ export default async function AttemptPage({
           </div>
         </div>
 
-        <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-br from-card via-card to-primary/5 dark:from-card dark:via-card dark:to-primary/10 p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden relative">
-          {/* Ambient System Gradient Flow matching platform design */}
+        <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-0 gap-0 py-0 shadow-xs hover:shadow-sm transition-all overflow-hidden relative">
+          {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-primary/15 blur-3xl"
+            className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
           />
+          {/* Subtle Radiant Top Accent */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 -left-24 size-80 rounded-full bg-emerald-500/15 blur-3xl"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
           />
 
           <div className="relative z-10 px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border/50 bg-muted/20 flex items-center gap-3 sm:gap-3.5">
