@@ -120,15 +120,6 @@ export default async function ExamDetailPage({
 
           {/* Unified Action Button Bar */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 pt-1 lg:pt-0">
-            {/* Direct Link Active Status Badge */}
-            {isPublished && exam.allowGuestAccess && (
-              <div className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs h-10 select-none">
-                <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                <Globe className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Direct Link Active</span>
-              </div>
-            )}
-
             {/* Share Exam Button */}
             {isPublished && (
               <ShareExamModal
