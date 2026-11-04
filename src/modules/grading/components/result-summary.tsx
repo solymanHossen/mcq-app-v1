@@ -66,13 +66,13 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         </div>
 
         {/* Clear Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 pt-1">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-2 sm:pt-3">
           <Button
             asChild
-            className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all gap-2"
+            className="group h-11 w-full sm:w-auto px-5 sm:px-6 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs hover:shadow-sm active:scale-[0.99] transition-all gap-2.5 justify-center"
           >
             <Link href={`/exams/${result.examId}`}>
-              <ArrowLeft className="size-4" />
+              <ArrowLeft className="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-x-1" />
               <span>Back to assessment</span>
             </Link>
           </Button>
@@ -80,10 +80,10 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
           <Button
             asChild
             variant="outline"
-            className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold border-border/70 bg-card hover:bg-muted shadow-2xs active:scale-95 transition-all gap-2"
+            className="group h-11 w-full sm:w-auto px-5 sm:px-6 rounded-xl text-sm font-semibold border-border/70 hover:border-border/90 bg-card hover:bg-muted/70 text-foreground shadow-2xs hover:shadow-xs active:scale-[0.99] transition-all gap-2.5 justify-center"
           >
             <Link href="/dashboard">
-              <LayoutDashboard className="size-4 text-muted-foreground" />
+              <LayoutDashboard className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors duration-200" />
               <span>Student Dashboard</span>
             </Link>
           </Button>
@@ -353,13 +353,13 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
       )}
 
       {/* Action Buttons for Published Results */}
-      <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border/60">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-5 sm:pt-6 border-t border-border/60">
         <Button
           asChild
-          className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xs active:scale-95 transition-all gap-2"
+          className="group h-11 w-full sm:w-auto px-5 sm:px-6 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs hover:shadow-sm active:scale-[0.99] transition-all gap-2.5 justify-center"
         >
           <Link href={`/exams/${result.examId}`}>
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-x-1" />
             <span>Back to assessment overview</span>
           </Link>
         </Button>
@@ -367,10 +367,10 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         <Button
           asChild
           variant="outline"
-          className="h-10 sm:h-11 px-5 rounded-xl text-xs sm:text-sm font-semibold border-border/70 bg-card hover:bg-muted shadow-2xs active:scale-95 transition-all gap-2"
+          className="group h-11 w-full sm:w-auto px-5 sm:px-6 rounded-xl text-sm font-semibold border-border/70 hover:border-border/90 bg-card hover:bg-muted/70 text-foreground shadow-2xs hover:shadow-xs active:scale-[0.99] transition-all gap-2.5 justify-center"
         >
           <Link href="/dashboard">
-            <LayoutDashboard className="size-4 text-muted-foreground" />
+            <LayoutDashboard className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors duration-200" />
             <span>Go to Student Dashboard</span>
           </Link>
         </Button>
