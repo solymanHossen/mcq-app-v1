@@ -152,122 +152,105 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      {/* Official Results Score Hero Card (Matching Picture 1 Teacher Directory Gradient Hero) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-r from-card via-card to-primary/10 dark:from-card dark:via-card dark:to-primary/15 p-5 sm:p-7 lg:p-8 shadow-xs">
-        {/* Ambient System Gradient Flow matching platform design */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/15 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/15 blur-3xl"
-        />
-
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          {/* Left: Score & Pass/Fail Status */}
-          <div className="space-y-2.5 sm:space-y-3 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-2xs">
-                <Award className="size-3.5" />
-                <span>Official Assessment Score</span>
-              </div>
-
-              {r.isPassed !== null && (
-                <Badge
-                  className={cn(
-                    "rounded-full px-3 py-0.5 text-xs font-bold shadow-2xs gap-1.5",
-                    r.isPassed
-                      ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                      : "border-destructive/30 bg-destructive/15 text-destructive"
-                  )}
-                  variant="outline"
-                >
-                  {r.isPassed ? (
-                    <>
-                      <Check className="size-3.5 stroke-[3]" />
-                      <span>Passed</span>
-                    </>
-                  ) : (
-                    <>
-                      <X className="size-3.5 stroke-[3]" />
-                      <span>Not passed</span>
-                    </>
-                  )}
-                </Badge>
-              )}
+      {/* Official Results Score Header & Metrics (Full Width - No Nested Inner Card) */}
+      <div className="space-y-5 sm:space-y-6">
+        {/* Top Row: Score & Pass/Fail Status */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 border-b border-border/60">
+          <div className="space-y-1.5 min-w-0">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-2xs whitespace-nowrap">
+              <Award className="size-3.5" />
+              <span>Official Assessment Score</span>
             </div>
 
-            <div>
-              <h3 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">
-                Score: {r.obtainedMarks} / {r.totalMarks}
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1 hidden sm:block">
-                Final assessment grade verified and recorded in the examination system.
-              </p>
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight whitespace-nowrap">
+              Score: {r.obtainedMarks} / {r.totalMarks}
+            </h2>
+          </div>
+
+          {r.isPassed !== null && (
+            <Badge
+              className={cn(
+                "self-start sm:self-auto rounded-full px-3.5 py-1 text-xs sm:text-sm font-bold shadow-2xs gap-1.5 whitespace-nowrap shrink-0",
+                r.isPassed
+                  ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                  : "border-destructive/30 bg-destructive/15 text-destructive"
+              )}
+              variant="outline"
+            >
+              {r.isPassed ? (
+                <>
+                  <Check className="size-3.5 stroke-[3]" />
+                  <span>Passed</span>
+                </>
+              ) : (
+                <>
+                  <X className="size-3.5 stroke-[3]" />
+                  <span>Not passed</span>
+                </>
+              )}
+            </Badge>
+          )}
+        </div>
+
+        {/* 4 Metric Breakdown Tiles (Full Width - 4-column grid on desktop, 2-column on mobile) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {/* Correct */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
+              <CheckCircle2 className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate">
+                {r.correctCount}
+              </span>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Correct
+              </span>
             </div>
           </div>
 
-          {/* Right: Metric Breakdown Tiles (Matching Picture 1 Teacher Directory Stat Cards) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:flex xl:flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* Correct */}
-            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all">
-              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
-                <CheckCircle2 className="size-4.5 sm:size-5" />
+          {/* Incorrect */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-destructive/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive shadow-2xs ring-1 ring-destructive/20">
+              <X className="size-5 stroke-[2.5]" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-destructive truncate">
+                {r.incorrectCount}
               </span>
-              <div>
-                <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
-                  {r.correctCount}
-                </span>
-                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
-                  Correct
-                </span>
-              </div>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Incorrect
+              </span>
             </div>
+          </div>
 
-            {/* Incorrect */}
-            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-destructive/40 hover:bg-muted/30 transition-all">
-              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive shadow-2xs ring-1 ring-destructive/20">
-                <X className="size-4.5 sm:size-5 stroke-[2.5]" />
+          {/* Skipped */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-border hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/10 text-muted-foreground shadow-2xs ring-1 ring-muted-foreground/20">
+              <Clock className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-muted-foreground truncate">
+                {r.skippedCount}
               </span>
-              <div>
-                <span className="block font-heading text-lg sm:text-xl font-black text-destructive">
-                  {r.incorrectCount}
-                </span>
-                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
-                  Incorrect
-                </span>
-              </div>
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Skipped
+              </span>
             </div>
+          </div>
 
-            {/* Skipped */}
-            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-border hover:bg-muted/30 transition-all">
-              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/10 text-muted-foreground shadow-2xs ring-1 ring-muted-foreground/20">
-                <Clock className="size-4.5 sm:size-5" />
+          {/* Accuracy */}
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all min-w-0">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
+              <Target className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <span className="block font-heading text-lg sm:text-xl font-black text-primary truncate">
+                {Math.round(r.accuracy * 100)}%
               </span>
-              <div>
-                <span className="block font-heading text-lg sm:text-xl font-black text-muted-foreground">
-                  {r.skippedCount}
-                </span>
-                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
-                  Skipped
-                </span>
-              </div>
-            </div>
-
-            {/* Accuracy */}
-            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 backdrop-blur-xs sm:bg-muted/20 px-3.5 sm:px-4 py-2.5 sm:py-3 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all">
-              <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
-                <Target className="size-4.5 sm:size-5" />
+              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+                Accuracy
               </span>
-              <div>
-                <span className="block font-heading text-lg sm:text-xl font-black text-primary">
-                  {Math.round(r.accuracy * 100)}%
-                </span>
-                <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
-                  Accuracy
-                </span>
-              </div>
             </div>
           </div>
         </div>

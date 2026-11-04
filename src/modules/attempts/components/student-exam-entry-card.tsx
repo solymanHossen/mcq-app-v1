@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Zap,
+  Clock,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -260,24 +261,24 @@ export function StudentExamEntryCard({
           className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-emerald-500/10 blur-3xl"
         />
 
-        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20 space-y-2">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <Badge variant="secondary" className="rounded-full px-2.5 py-0.5 text-xs font-bold gap-1.5 border border-border/60 bg-muted/60 text-foreground">
-              <Zap className="size-3 text-primary" />
-              <span>Instant Entry (No Password Needed)</span>
+        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                Enter Your Details
+              </CardTitle>
+              <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                Provide your name and email to begin the exam.
+              </CardDescription>
+            </div>
+
+            <Badge
+              variant="outline"
+              className="rounded-full px-3 py-1 text-xs sm:text-sm font-bold gap-1.5 border-primary/30 bg-primary/10 text-primary shadow-2xs"
+            >
+              <Clock className="size-3.5" />
+              <span>{exam.durationMinutes} Minutes</span>
             </Badge>
-            <span className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
-              <span>Duration:</span>
-              <strong className="text-foreground font-semibold">{exam.durationMinutes}m</strong>
-            </span>
-          </div>
-          <div>
-            <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-              Enter Your Details to Begin
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-1 leading-normal">
-              No registration or account creation required. Just provide your Name & Email so your teacher can identify your submission.
-            </CardDescription>
           </div>
         </CardHeader>
 
