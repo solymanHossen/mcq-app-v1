@@ -174,7 +174,7 @@ export function HeroSection({
   return (
     <section
       aria-labelledby="home-title"
-      className="relative isolate bg-background pt-28 pb-8 text-foreground sm:pt-32 sm:pb-12 lg:pt-36 lg:pb-16"
+      className="relative isolate overflow-x-clip bg-background pt-24 pb-8 text-foreground sm:pt-32 sm:pb-12 lg:pt-36 lg:pb-16"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-12">
@@ -261,15 +261,17 @@ export function HeroSection({
             </div>
           </div>
           <div className="relative min-w-0 py-6 sm:py-8 lg:py-6">
-            {/* Ambient System Gradient Glow matching platform design */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-12 -right-12 size-72 rounded-full bg-primary/10 blur-3xl -z-10"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-12 -left-12 size-72 rounded-full bg-emerald-500/10 blur-3xl -z-10"
-            />
+            {/* Ambient System Gradient Glow safely clipped inside container */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+              <div
+                aria-hidden="true"
+                className="absolute -top-12 -right-12 size-72 rounded-full bg-primary/10 blur-3xl"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-12 -left-12 size-72 rounded-full bg-emerald-500/10 blur-3xl"
+              />
+            </div>
 
             {/* Main Students Hero Image with Master Reference Border & Radius */}
             <div className="relative aspect-[4/3] sm:aspect-video overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-muted/20 shadow-md">
@@ -290,7 +292,7 @@ export function HeroSection({
             {/* Platform System Floating Card 1: Top-Left (Matching ExamHub System Gradient & UI) */}
             <Link
               href={firstExam.id === "explore" ? "/exam-list" : `/exam/${firstExam.id}`}
-              className="group absolute -top-3.5 left-2 sm:-top-5 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              className="group absolute -top-3 left-1 sm:-top-5 sm:-left-3 lg:-top-6 lg:-left-6 xl:-top-7 xl:-left-8 z-20 w-[240px] max-w-[calc(100%-0.5rem)] sm:w-[285px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               aria-label={`View top assessment: ${firstExam.title}`}
             >
               {/* Ambient radial gradient bloom matching platform system */}
@@ -340,7 +342,7 @@ export function HeroSection({
             {/* Platform System Floating Card 2: Bottom-Right (Matching ExamHub System Gradient & UI) */}
             <Link
               href={secondExam.id === "explore" ? "/exam-list" : `/exam/${secondExam.id}`}
-              className="group absolute -bottom-3.5 right-2 sm:-bottom-5 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] xs:w-[265px] sm:w-[290px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="group absolute -bottom-3 right-1 sm:-bottom-5 sm:-right-3 lg:-bottom-6 lg:-right-6 xl:-bottom-7 xl:-right-8 z-20 w-[240px] max-w-[calc(100%-0.5rem)] sm:w-[285px] lg:w-[315px] overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card/90 sm:bg-card/95 p-3 sm:p-3.5 shadow-md backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={`View assessment: ${secondExam.title}`}
             >
               {/* Ambient radial gradient bloom matching platform system */}

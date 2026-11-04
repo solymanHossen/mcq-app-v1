@@ -117,10 +117,7 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
     >
       {/* Mobile: 100% full-width flush to top. Desktop/Tablet: floating container */}
       <div
-        className={cn(
-          "w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5",
-          isHome && "mx-auto px-4 pt-3 lg:px-8"
-        )}
+        className="w-full px-0 pt-0 sm:container sm:mx-auto sm:px-6 sm:pt-5 lg:px-8"
       >
         <div
           className={cn(
@@ -128,9 +125,7 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
             // Mobile: Full-width, flush to top, edge-to-edge, NO rounded corners, bottom border only
             "rounded-none border-0 border-b border-border/80 bg-card/95 text-card-foreground shadow-none backdrop-blur-2xl",
             // Tablet/Desktop (sm+): Floating rounded pill with full border and subtle shadow
-            "sm:rounded-[22px] sm:border sm:border-border/80 sm:bg-card/85 sm:shadow-xs",
-            isHome &&
-              "rounded-2xl border border-border/70 bg-card/95 shadow-xs sm:rounded-2xl sm:bg-card/95",
+            "sm:rounded-2xl sm:border sm:border-border/70 sm:bg-card/95 sm:shadow-xs",
             // Scrolled states
             scrolled &&
               "border-border bg-card/98 shadow-sm sm:border-border sm:bg-card/95 sm:shadow-md"
@@ -234,7 +229,7 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
               onClick={() => setMobileMenuOpen(false)}
               className={cn(
                 "fixed inset-0 top-16 z-40 bg-background/60 backdrop-blur-md transition-opacity duration-300 md:hidden",
-                isHome && "top-20 sm:top-24 md:block lg:hidden"
+                isHome && "md:block lg:hidden sm:top-[88px]"
               )}
             />
 
@@ -246,7 +241,7 @@ export function Navbar({ user, logoUrl, className }: NavbarProps) {
               className={cn(
                 "fixed inset-x-0 top-16 z-50 max-h-[calc(100dvh-4rem)] w-full animate-in overflow-y-auto rounded-none border-0 border-b border-border/80 bg-card/98 p-5 text-card-foreground shadow-2xl backdrop-blur-2xl duration-200 slide-in-from-top-2 md:hidden",
                 isHome &&
-                  "inset-x-4 top-20 max-h-[calc(100dvh-7rem)] w-auto rounded-2xl border border-border/70 p-4 shadow-sm sm:top-24 md:block lg:hidden"
+                  "sm:inset-x-6 sm:top-[88px] sm:max-h-[calc(100dvh-7rem)] sm:w-auto sm:rounded-2xl sm:border sm:border-border/70 sm:p-5 sm:shadow-md md:block lg:hidden"
               )}
             >
               {/* If Logged In: Prominent User Header Card */}

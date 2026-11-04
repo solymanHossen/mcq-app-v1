@@ -156,16 +156,18 @@ export function Footer({ logoUrl, socialLinks }: FooterProps = {}) {
   const activeSocials = rawSocials.filter((s) => s.href.length > 0)
 
   return (
-    <footer className="relative isolate border-t border-border/80 bg-gradient-to-b from-background via-background/95 to-muted/30 dark:to-muted/10 text-foreground overflow-hidden">
+    <footer className="relative isolate border-t border-border/80 bg-gradient-to-b from-background via-background/95 to-muted/30 dark:to-muted/10 text-foreground overflow-hidden max-w-full">
       {/* Dynamic Ambient Background Glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-80 w-[54rem] -translate-x-1/2 rounded-full bg-primary/[0.08] blur-[140px]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-10 -z-10 h-64 w-80 rounded-full bg-chart-2/[0.08] blur-[120px]"
-      />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div
+          aria-hidden="true"
+          className="absolute -top-32 left-1/2 h-80 w-[54rem] -translate-x-1/2 rounded-full bg-primary/[0.08] blur-[140px]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute bottom-0 right-10 h-64 w-80 rounded-full bg-chart-2/[0.08] blur-[120px]"
+        />
+      </div>
 
       {/* Radiant Top Edge Accent */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />

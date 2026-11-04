@@ -140,7 +140,7 @@ export default async function LandingPage() {
   ])
 
   return (
-    <main className="min-w-0">
+    <main className="min-w-0 overflow-x-clip">
       <HeroSection settings={settings} popularExams={popularExams} />
 
       <section
