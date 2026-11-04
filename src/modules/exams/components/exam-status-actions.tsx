@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useEffect, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -28,11 +28,17 @@ export function ExamStatusActions({
   status,
   examTitle = "Exam",
   answerKeyReleased = false,
+  isResultsPublished = false,
+  provisionalCount = 0,
+  publishedCount = 0,
 }: {
   examId: string
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
   examTitle?: string
   answerKeyReleased?: boolean
+  isResultsPublished?: boolean
+  provisionalCount?: number
+  publishedCount?: number
 }) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
@@ -40,6 +46,11 @@ export function ExamStatusActions({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [archiveOpen, setArchiveOpen] = useState(false)
   const [disclosureModalOpen, setDisclosureModalOpen] = useState(false)
+  const [localResultsPublished, setLocalResultsPublished] = useState(isResultsPublished)
+
+  useEffect(() => {
+    setLocalResultsPublished(isResultsPublished)
+  }, [isResultsPublished])
 
   function handlePublish() {
     startTransition(async () => {
@@ -197,15 +208,38 @@ export function ExamStatusActions({
             examId={examId}
             examTitle={examTitle}
             answerKeyReleased={answerKeyReleased}
+            isResultsPublished={localResultsPublished}
+            onSuccess={() => setLocalResultsPublished(true)}
             trigger={
-              <Button
-                variant="outline"
-                disabled={isPending}
-                className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-4 border-primary/30 text-primary hover:bg-primary/10 shadow-2xs cursor-pointer"
-              >
-                <CheckCircle2 className="size-4" />
-                <span>Publish Results</span>
-              </Button>
+              localResultsPublished ? (
+                <Button
+                  variant="outline"
+                  disabled={isPending}
+                  className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-3.5 sm:px-4 bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs cursor-pointer transition-all active:scale-98"
+                >
+                  <CheckCircle2 className="size-3.5 sm:size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Results Published</span>
+                  {provisionalCount > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-600 text-white leading-none">
+                      +{provisionalCount}
+                    </span>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  disabled={isPending}
+                  className="gap-2 rounded-xl text-xs sm:text-sm font-semibold h-10 px-3.5 sm:px-4 border-primary/40 text-primary hover:bg-primary/10 shadow-2xs cursor-pointer transition-all active:scale-98"
+                >
+                  <Send className="size-3.5 sm:size-4 shrink-0" />
+                  <span>Publish Results</span>
+                  {provisionalCount > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/15 text-primary leading-none">
+                      {provisionalCount}
+                    </span>
+                  )}
+                </Button>
+              )
             }
           />
 

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { connection } from "next/server"
+import { prisma } from "@/lib/prisma"
 import { requireUser, assertOwner } from "@/lib/authorization"
 import { getExamWithQuestions, getExamTotalMarks } from "@/modules/exams/queries"
 import { listActiveUnusedQuestions } from "@/modules/question-bank/queries"
@@ -68,6 +69,27 @@ export default async function ExamDetailPage({
   const isPublished = exam.status === "PUBLISHED"
   const totalMarks = getExamTotalMarks(exam.examQuestions)
   const defaultTab = sp.tab || "questions"
+
+  const [hasResultsPublishedLog, publishedResultsCount, provisionalResultsCount] =
+    !isDraft
+      ? await Promise.all([
+          prisma.gradingAuditLog.findFirst({
+            where: { examId, action: "RESULTS_PUBLISHED" },
+            select: { id: true },
+          }),
+          prisma.examResult.count({
+            where: { attempt: { examId }, status: "PUBLISHED" },
+          }),
+          prisma.examResult.count({
+            where: { attempt: { examId }, status: "PROVISIONAL" },
+          }),
+        ])
+      : [null, 0, 0]
+
+  const isResultsPublished =
+    Boolean(hasResultsPublishedLog) ||
+    publishedResultsCount > 0 ||
+    Boolean(exam.answerKeyReleased)
 
   return (
     <div className="w-full space-y-6 sm:space-y-8 pb-12 sm:pb-16">
@@ -155,6 +177,9 @@ export default async function ExamDetailPage({
               status={exam.status}
               examTitle={exam.title}
               answerKeyReleased={exam.answerKeyReleased}
+              isResultsPublished={isResultsPublished}
+              provisionalCount={provisionalResultsCount}
+              publishedCount={publishedResultsCount}
             />
           </div>
         </div>

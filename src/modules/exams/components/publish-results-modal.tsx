@@ -28,6 +28,7 @@ export interface PublishResultsModalProps {
   examId: string
   examTitle: string
   answerKeyReleased?: boolean
+  isResultsPublished?: boolean
   trigger?: React.ReactNode
   open?: boolean
   onOpenChange?: (open: boolean) => void
@@ -38,6 +39,7 @@ export function PublishResultsModal({
   examId,
   examTitle,
   answerKeyReleased = false,
+  isResultsPublished = false,
   trigger,
   open: controlledOpen,
   onOpenChange: setControlledOpen,
@@ -158,16 +160,27 @@ export function PublishResultsModal({
                 className="mt-0.5"
               />
               <div className="space-y-0.5 min-w-0 flex-1">
-                <Label
-                  htmlFor="publish-scores-checkbox"
-                  className="text-xs sm:text-sm font-semibold text-foreground cursor-pointer block"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Publish Student Scores (ফলাফল প্রকাশ)
-                </Label>
+                <div className="flex items-center justify-between gap-2">
+                  <Label
+                    htmlFor="publish-scores-checkbox"
+                    className="text-xs sm:text-sm font-semibold text-foreground cursor-pointer block"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Publish Student Scores (ফলাফল প্রকাশ)
+                  </Label>
+                  {isResultsPublished && (
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 border-emerald-500/30 h-5 px-1.5"
+                    >
+                      Already Published
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
-                  Students can view their obtained marks, accuracy percentage,
-                  and pass/fail status.
+                  {isResultsPublished
+                    ? "Scores are live for candidates. Confirming will update and release scores for any newly completed submissions."
+                    : "Students can view their obtained marks, accuracy percentage, and pass/fail status."}
                 </p>
               </div>
             </div>
@@ -262,7 +275,11 @@ export function PublishResultsModal({
             ) : (
               <Check className="size-4" />
             )}
-            <span>Confirm & Publish</span>
+            <span>
+              {isResultsPublished || isAnswerKeyAlreadyReleased
+                ? "Confirm & Update"
+                : "Confirm & Publish"}
+            </span>
           </Button>
         </DialogFooter>
       </DialogContent>
