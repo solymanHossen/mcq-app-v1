@@ -133,22 +133,22 @@ export function SubmissionResultModal({
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
           showCloseButton={true}
-          className="w-[95vw] max-w-lg sm:max-w-xl md:max-w-2xl rounded-3xl border border-border/80 bg-card/95 backdrop-blur-xl p-0 shadow-2xl overflow-hidden gap-0 focus:outline-none"
+          className="w-[95vw] max-w-lg sm:max-w-xl md:max-w-2xl rounded-3xl border border-border/70 bg-card/95 backdrop-blur-xl p-0 shadow-2xl overflow-hidden gap-0 focus:outline-none"
         >
-          {/* Subtle Radiant Top Accent Gradient */}
+          {/* Soft Top Ambient Gradient Glow (Borderless, Premium & Subtle) */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-500 via-primary to-teal-400 z-20"
+            className="pointer-events-none absolute -top-20 inset-x-0 h-44 bg-gradient-to-b from-primary/[0.08] via-emerald-500/[0.03] to-transparent blur-2xl"
           />
 
           {/* Soft Ambient System Glows */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full bg-emerald-500/[0.08] blur-3xl dark:bg-emerald-500/[0.12]"
+            className="pointer-events-none absolute -top-24 -right-24 size-72 rounded-full bg-emerald-500/[0.06] blur-3xl dark:bg-emerald-500/[0.10]"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-primary/[0.08] blur-3xl dark:bg-primary/[0.12]"
+            className="pointer-events-none absolute -bottom-24 -left-24 size-72 rounded-full bg-primary/[0.06] blur-3xl dark:bg-primary/[0.10]"
           />
 
           <DialogHeader className="sr-only">
@@ -158,18 +158,18 @@ export function SubmissionResultModal({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="relative z-10 px-5 sm:px-8 pt-7 sm:pt-8 pb-6 sm:pb-8 space-y-6 sm:space-y-7">
+          <div className="relative z-10 px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-8 space-y-5 sm:space-y-6">
             {/* Celebration Header */}
             <div className="text-center space-y-3">
               {/* Official Brand Logo Avatar */}
-              <div className="relative size-14 sm:size-16 rounded-2xl mx-auto shadow-2xs ring-2 ring-primary/25 dark:ring-primary/40 p-1 bg-white dark:bg-card flex items-center justify-center overflow-hidden">
+              <div className="relative size-16 sm:size-18 rounded-3xl mx-auto shadow-sm ring-1 ring-border/80 dark:ring-border/60 p-2 bg-white dark:bg-card flex items-center justify-center overflow-hidden transition-transform duration-200 hover:scale-105">
                 <Image
                   src={logoUrl || "/images/bcs-bank-logo-512.png"}
                   alt={appName}
-                  width={56}
-                  height={56}
+                  width={64}
+                  height={64}
                   priority
-                  className="size-full object-contain rounded-xl"
+                  className="size-full object-contain rounded-2xl"
                 />
               </div>
 
@@ -178,12 +178,12 @@ export function SubmissionResultModal({
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-full px-3 py-0.5 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase gap-1.5 shadow-2xs",
+                    "rounded-full px-3 py-0.5 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase gap-1.5 shadow-2xs border-0",
                     isPassed === true
-                      ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                       : isPassed === false
-                      ? "border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-400"
-                      : "border-primary/40 bg-primary/15 text-primary"
+                      ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+                      : "bg-primary/15 text-primary"
                   )}
                 >
                   <span
@@ -211,22 +211,22 @@ export function SubmissionResultModal({
 
               {/* Exam Title */}
               <div className="space-y-1">
-                <h3 className="font-heading text-xl sm:text-2xl font-black text-foreground tracking-tight line-clamp-1" title={examTitle}>
+                <h3 className="font-heading text-lg sm:text-2xl font-black text-foreground tracking-tight max-w-md mx-auto line-clamp-2 leading-snug" title={examTitle}>
                   {examTitle}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground font-medium">
-                  Official grading verified by {appName}
+                  Official grading verified by <span className="text-primary font-bold">{appName}</span>
                 </p>
               </div>
             </div>
 
             {/* Hero Scorecard Box */}
-            <div className="relative rounded-2xl border border-border/70 bg-gradient-to-b from-muted/40 via-muted/20 to-card p-5 sm:p-6 text-center shadow-xs overflow-hidden">
-              <span className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="relative rounded-2xl sm:rounded-3xl border border-border/50 bg-gradient-to-b from-muted/50 via-muted/20 to-card p-4 sm:p-5.5 text-center shadow-2xs overflow-hidden">
+              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 Total Obtained Score
               </span>
 
-              <div className="flex items-baseline justify-center gap-1.5 sm:gap-2 my-2 sm:my-3">
+              <div className="flex items-baseline justify-center gap-1.5 sm:gap-2 my-1.5 sm:my-2">
                 <span className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground">
                   {result.obtainedMarks}
                 </span>
@@ -238,7 +238,7 @@ export function SubmissionResultModal({
               <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap pt-1">
                 <Badge
                   variant="outline"
-                  className="rounded-full px-3 py-1 text-xs font-bold border-primary/30 bg-primary/10 text-primary gap-1.5 shadow-2xs"
+                  className="rounded-full px-2.5 sm:px-3 py-0.5 text-xs font-bold border-0 bg-primary/10 text-primary gap-1.5 shadow-2xs"
                 >
                   <Target className="size-3.5" />
                   <span>{accuracyPercent}% Accuracy</span>
@@ -248,10 +248,10 @@ export function SubmissionResultModal({
                   <Badge
                     variant="outline"
                     className={cn(
-                      "rounded-full px-3 py-1 text-xs font-bold gap-1.5 shadow-2xs",
+                      "rounded-full px-2.5 sm:px-3 py-0.5 text-xs font-bold gap-1.5 shadow-2xs border-0",
                       isPassed
-                        ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                        : "border-destructive/40 bg-destructive/15 text-destructive"
+                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                        : "bg-destructive/15 text-destructive"
                     )}
                   >
                     {isPassed ? (
@@ -273,8 +273,8 @@ export function SubmissionResultModal({
             {/* 4 Metric Breakdown Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
               {/* Correct */}
-              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-500/10 text-center shadow-2xs transition-all hover:bg-emerald-500/10">
-                <span className="flex size-7 sm:size-8 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mb-1.5">
+              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/10 to-emerald-500/5 text-center shadow-2xs transition-all hover:bg-emerald-500/10">
+                <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mb-1.5">
                   <CheckCircle2 className="size-4" />
                 </span>
                 <span className="font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
@@ -286,8 +286,8 @@ export function SubmissionResultModal({
               </div>
 
               {/* Incorrect */}
-              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-xl border border-destructive/20 bg-destructive/5 dark:bg-destructive/10 text-center shadow-2xs transition-all hover:bg-destructive/10">
-                <span className="flex size-7 sm:size-8 items-center justify-center rounded-lg bg-destructive/15 text-destructive mb-1.5">
+              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl border border-destructive/20 bg-gradient-to-b from-destructive/10 to-destructive/5 text-center shadow-2xs transition-all hover:bg-destructive/10">
+                <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-destructive/15 text-destructive mb-1.5">
                   <XCircle className="size-4" />
                 </span>
                 <span className="font-heading text-lg sm:text-xl font-black text-destructive">
@@ -299,8 +299,8 @@ export function SubmissionResultModal({
               </div>
 
               {/* Skipped */}
-              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-xl border border-border/70 bg-muted/20 text-center shadow-2xs transition-all hover:bg-muted/30">
-                <span className="flex size-7 sm:size-8 items-center justify-center rounded-lg bg-muted-foreground/15 text-muted-foreground mb-1.5">
+              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl border border-border/50 bg-gradient-to-b from-muted/30 to-muted/15 text-center shadow-2xs transition-all hover:bg-muted/30">
+                <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-muted-foreground/15 text-muted-foreground mb-1.5">
                   <MinusCircle className="size-4" />
                 </span>
                 <span className="font-heading text-lg sm:text-xl font-black text-foreground">
@@ -312,8 +312,8 @@ export function SubmissionResultModal({
               </div>
 
               {/* Attempted */}
-              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-xl border border-primary/20 bg-primary/5 dark:bg-primary/10 text-center shadow-2xs transition-all hover:bg-primary/10">
-                <span className="flex size-7 sm:size-8 items-center justify-center rounded-lg bg-primary/15 text-primary mb-1.5">
+              <div className="flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 text-center shadow-2xs transition-all hover:bg-primary/10">
+                <span className="flex size-7 sm:size-8 items-center justify-center rounded-xl bg-primary/15 text-primary mb-1.5">
                   <FileCheck2 className="size-4" />
                 </span>
                 <span className="font-heading text-lg sm:text-xl font-black text-primary">

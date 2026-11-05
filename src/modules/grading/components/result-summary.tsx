@@ -98,12 +98,12 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
   return (
     <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
-      {/* Modern Hero Score Box (Optimized for Mobile & Desktop) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-to-b from-muted/40 via-muted/20 to-card p-4 sm:p-5.5 shadow-2xs">
+      {/* Modern Hero Score Box (Optimized for Mobile & Desktop - Minimalist & Gradient-Enhanced) */}
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/50 bg-gradient-to-b from-muted/50 via-muted/20 to-card p-4 sm:p-5.5 shadow-2xs">
         {/* Subtle Ambient Glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-emerald-500/[0.08] blur-2xl dark:bg-emerald-500/[0.12]"
+          className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-emerald-500/[0.06] blur-2xl dark:bg-emerald-500/[0.10]"
         />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 sm:gap-4">
@@ -129,10 +129,10 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold shadow-2xs gap-1.5",
+                    "rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold shadow-2xs gap-1.5 border-0",
                     r.isPassed
-                      ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                      : "border-destructive/40 bg-destructive/15 text-destructive"
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      : "bg-destructive/15 text-destructive"
                   )}
                 >
                   {r.isPassed ? (
@@ -151,7 +151,7 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
               <Badge
                 variant="outline"
-                className="rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold border-primary/30 bg-primary/10 text-primary gap-1 shadow-2xs"
+                className="rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold border-0 bg-primary/10 text-primary gap-1 shadow-2xs"
               >
                 <Target className="size-3" />
                 <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
@@ -165,11 +165,11 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         </div>
       </div>
 
-      {/* 4 Metric Breakdown Cards (Mobile: 2x2 grid, Desktop: 4 columns) */}
+      {/* 4 Metric Breakdown Cards (Mobile: 2x2 grid, Desktop: 4 columns - Soft Gradients) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
         {/* Correct */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-emerald-500/25 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-emerald-500/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/10 to-emerald-500/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-emerald-500/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs">
             <CheckCircle2 className="size-4 sm:size-4.5" />
           </span>
           <div className="min-w-0">
@@ -183,8 +183,8 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         </div>
 
         {/* Incorrect */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-destructive/25 bg-destructive/5 dark:bg-destructive/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-destructive/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-destructive/15 text-destructive shadow-2xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-destructive/20 bg-gradient-to-b from-destructive/10 to-destructive/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-destructive/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-destructive/15 text-destructive shadow-2xs">
             <X className="size-4 sm:size-4.5 stroke-[2.5]" />
           </span>
           <div className="min-w-0">
@@ -198,8 +198,8 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         </div>
 
         {/* Skipped */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/80 bg-muted/25 dark:bg-muted/15 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-muted/40 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-muted-foreground/15 text-muted-foreground shadow-2xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/50 bg-gradient-to-b from-muted/30 to-muted/15 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-muted/40 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/15 text-muted-foreground shadow-2xs">
             <Clock className="size-4 sm:size-4.5" />
           </span>
           <div className="min-w-0">
@@ -213,8 +213,8 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
         </div>
 
         {/* Accuracy */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-primary/25 bg-primary/5 dark:bg-primary/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-primary/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/15 text-primary shadow-2xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-primary/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-2xs">
             <Target className="size-4 sm:size-4.5" />
           </span>
           <div className="min-w-0">
