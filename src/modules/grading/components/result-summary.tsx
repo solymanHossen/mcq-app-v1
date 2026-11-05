@@ -158,10 +158,6 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
               </Badge>
             </div>
           </div>
-
-          <p className="text-xs text-muted-foreground font-medium hidden md:block text-right max-w-xs">
-            Official score verified against the answer key and grading schema.
-          </p>
         </div>
       </div>
 
