@@ -169,8 +169,13 @@ export default async function AttemptPage({
           )}
         </div>
 
-        {/* Header Hero (Brand Logo + Website Name + Exam Title + Status) - Follows Profile Hero design */}
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-4 sm:p-6 shadow-xs backdrop-blur-xl transition-all">
+        {/* Single Cohesive Parent Card (Zero Nested Cards, Full Width Scorecard) */}
+        <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-b from-card via-card to-muted/15 p-4 sm:p-6 lg:p-7 shadow-xs hover:shadow-sm transition-all overflow-hidden relative">
+          {/* Soft Top Ambient Gradient Glow (Borderless & Premium) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-16 inset-x-0 h-36 bg-gradient-to-b from-primary/[0.04] via-emerald-500/[0.02] to-transparent blur-2xl"
+          />
           {/* Soft Ambient System Gradient Bloom - Light & Clean */}
           <div
             aria-hidden="true"
@@ -182,8 +187,10 @@ export default async function AttemptPage({
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
           />
 
-          <div className="relative z-10 flex items-center gap-3.5 sm:gap-5">
-            <div className="relative size-13 sm:size-16 rounded-2xl shrink-0 ring-2 ring-primary/20 dark:ring-primary/30 p-1.5 bg-white dark:bg-card shadow-xs flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+          {/* Institutional Header: Mobile = Centered Main Logo at Top + Centered Text; Desktop = Horizontal Left-aligned */}
+          <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center justify-center sm:justify-start text-center sm:text-left gap-3.5 sm:gap-5 pb-5 sm:pb-6 border-b border-border/60">
+            {/* Main Brand Logo Avatar */}
+            <div className="relative size-14 sm:size-16 rounded-2xl shrink-0 ring-2 ring-primary/20 dark:ring-primary/30 p-1.5 bg-white dark:bg-card shadow-xs flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
               <Image
                 src={settings?.logoUrl ?? "/images/bcs-bank-logo-512.png"}
                 alt={APP_NAME}
@@ -195,7 +202,7 @@ export default async function AttemptPage({
             </div>
 
             <div className="min-w-0 space-y-1 sm:space-y-1.5 flex-1">
-              <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 flex-wrap">
                 <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground">
                   {titles[current.status]}
                 </h1>
@@ -207,7 +214,7 @@ export default async function AttemptPage({
                 </Badge>
               </div>
 
-              <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-muted-foreground flex-wrap">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base font-semibold text-muted-foreground flex-wrap">
                 <span className="text-primary font-bold">{APP_NAME}</span>
                 <span className="text-muted-foreground/40">•</span>
                 <span className="font-medium text-foreground/90 line-clamp-1 sm:line-clamp-none" title={result?.examTitle || attempt.exam.title}>
@@ -216,32 +223,21 @@ export default async function AttemptPage({
               </div>
             </div>
           </div>
-        </div>
 
-        <Card className="rounded-2xl sm:rounded-3xl border border-border/70 bg-gradient-to-b from-card via-card to-muted/15 p-4 sm:p-6 lg:p-7 shadow-xs hover:shadow-sm transition-all overflow-hidden relative">
-          {/* Soft Top Ambient Gradient Glow (Borderless & Premium) */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-16 inset-x-0 h-36 bg-gradient-to-b from-primary/[0.04] via-emerald-500/[0.02] to-transparent blur-2xl"
-          />
-          {/* Soft Ambient System Gradient Bloom - Light & Clean */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-primary/[0.04] blur-3xl dark:bg-primary/[0.06]"
-          />
-
-          {result ? (
-            <ResultSummary result={result} />
-          ) : (
-            <div className="space-y-4 text-center py-6">
-              <p className="text-sm text-muted-foreground">
-                Your attempt has ended and been saved.
-              </p>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link href={`/exams/${examId}`}>Back to assessment overview</Link>
-              </Button>
-            </div>
-          )}
+          <div className="relative z-10 pt-5 sm:pt-6">
+            {result ? (
+              <ResultSummary result={result} />
+            ) : (
+              <div className="space-y-4 text-center py-6">
+                <p className="text-sm text-muted-foreground">
+                  Your attempt has ended and been saved.
+                </p>
+                <Button asChild variant="outline" className="rounded-xl">
+                  <Link href={`/exams/${examId}`}>Back to assessment overview</Link>
+                </Button>
+              </div>
+            )}
+          </div>
         </Card>
       </div>
     )

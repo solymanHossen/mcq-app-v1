@@ -98,73 +98,56 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
   return (
     <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
-      {/* Modern Hero Score Box (Full Width, Larger Typography & Premium Modern Gradient) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/60 bg-gradient-to-b from-card via-card to-muted/20 p-5 sm:p-6 lg:p-7 shadow-xs transition-all">
-        {/* Soft Ambient System Gradient Bloom - Light & Clean */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-16 -right-16 size-64 rounded-full bg-primary/[0.08] blur-3xl dark:bg-primary/[0.12]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-16 -left-16 size-64 rounded-full bg-emerald-500/[0.06] blur-3xl dark:bg-emerald-500/[0.10]"
-        />
-        {/* Subtle Radiant Top Accent Hairline */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
-        />
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
-          {/* Left: Total Obtained Score */}
-          <div className="space-y-1">
-            <span className="block text-xs sm:text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
-              Total Obtained Score
+      {/* Modern Hero Score (Full Width of Parent Card, Zero Inner Card Borders) */}
+      <div className="w-full flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 sm:gap-6 text-center sm:text-left py-1">
+        {/* Total Obtained Score */}
+        <div className="space-y-1.5 w-full sm:w-auto">
+          <span className="block text-xs font-extrabold uppercase tracking-widest text-muted-foreground text-center sm:text-left">
+            Total Obtained Score
+          </span>
+          <div className="flex items-baseline justify-center sm:justify-start gap-2">
+            <span className="font-heading text-5xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight">
+              {r.obtainedMarks}
             </span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight">
-                {r.obtainedMarks}
-              </span>
-              <span className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground/60">
-                / {r.totalMarks}
-              </span>
-            </div>
+            <span className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground/60">
+              / {r.totalMarks}
+            </span>
           </div>
+        </div>
 
-          {/* Right: Premium Status & Accuracy Badges */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            {r.isPassed !== null && (
-              <Badge
-                variant="outline"
-                className={cn(
-                  "rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold shadow-2xs gap-2 border-0",
-                  r.isPassed
-                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                    : "bg-destructive/15 text-destructive"
-                )}
-              >
-                {r.isPassed ? (
-                  <>
-                    <CheckCircle2 className="size-4 sm:size-4.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Passed</span>
-                  </>
-                ) : (
-                  <>
-                    <X className="size-4 sm:size-4.5 text-destructive" />
-                    <span>Not Passed</span>
-                  </>
-                )}
-              </Badge>
-            )}
-
+        {/* Status & Accuracy Badges */}
+        <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-3 flex-wrap w-full sm:w-auto pt-1 sm:pt-0">
+          {r.isPassed !== null && (
             <Badge
               variant="outline"
-              className="rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold border-0 bg-primary/10 text-primary gap-2 shadow-2xs"
+              className={cn(
+                "rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold shadow-2xs gap-2 border-0",
+                r.isPassed
+                  ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                  : "bg-destructive/15 text-destructive"
+              )}
             >
-              <Target className="size-4 sm:size-4.5 text-primary" />
-              <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
+              {r.isPassed ? (
+                <>
+                  <CheckCircle2 className="size-4 sm:size-4.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Passed</span>
+                </>
+              ) : (
+                <>
+                  <X className="size-4 sm:size-4.5 text-destructive" />
+                  <span>Not Passed</span>
+                </>
+              )}
             </Badge>
-          </div>
+          )}
+
+          <Badge
+            variant="outline"
+            className="rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold border-0 bg-primary/10 text-primary gap-2 shadow-2xs"
+          >
+            <Target className="size-4 sm:size-4.5 text-primary" />
+            <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
+          </Badge>
         </div>
       </div>
 
