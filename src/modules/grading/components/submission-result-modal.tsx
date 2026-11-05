@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useState, useEffect, useCallback } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import {
   Trophy,
@@ -43,6 +44,8 @@ export interface SubmissionResultModalProps {
   }
   totalQuestions: number
   answeredCount: number
+  logoUrl?: string | null
+  appName?: string
   targetScrollId?: string
   initialOpen?: boolean
 }
@@ -59,6 +62,8 @@ export function SubmissionResultModal({
   result,
   totalQuestions,
   answeredCount,
+  logoUrl,
+  appName = "BCS & Bank Aspirants",
   targetScrollId = "result-top",
   initialOpen = true,
 }: SubmissionResultModalProps) {
@@ -122,7 +127,7 @@ export function SubmissionResultModal({
         className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-xl border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-semibold text-xs sm:text-sm shadow-2xs hover:shadow-xs active:scale-95 transition-all gap-2 cursor-pointer"
       >
         <Trophy className="size-4 text-emerald-600 dark:text-emerald-400" />
-        <span>View Scorecard Modal</span>
+        <span>View Scorecard</span>
       </Button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -156,27 +161,19 @@ export function SubmissionResultModal({
           <div className="relative z-10 px-5 sm:px-8 pt-7 sm:pt-8 pb-6 sm:pb-8 space-y-6 sm:space-y-7">
             {/* Celebration Header */}
             <div className="text-center space-y-3">
-              {/* Animated Icon Avatar */}
-              <div
-                className={cn(
-                  "size-14 sm:size-16 rounded-2xl flex items-center justify-center mx-auto shadow-2xs ring-1 transition-all",
-                  isPassed === true
-                    ? "bg-gradient-to-br from-emerald-500/20 to-teal-500/10 text-emerald-600 dark:text-emerald-400 ring-emerald-500/30 shadow-emerald-500/10"
-                    : isPassed === false
-                    ? "bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-600 dark:text-amber-400 ring-amber-500/30 shadow-amber-500/10"
-                    : "bg-gradient-to-br from-primary/20 to-teal-500/10 text-primary ring-primary/30 shadow-primary/10"
-                )}
-              >
-                {isPassed === true ? (
-                  <Trophy className="size-7 sm:size-8" />
-                ) : isPassed === false ? (
-                  <Target className="size-7 sm:size-8" />
-                ) : (
-                  <Sparkles className="size-7 sm:size-8" />
-                )}
+              {/* Official Brand Logo Avatar */}
+              <div className="relative size-14 sm:size-16 rounded-2xl mx-auto shadow-2xs ring-2 ring-primary/25 dark:ring-primary/40 p-1 bg-white dark:bg-card flex items-center justify-center overflow-hidden">
+                <Image
+                  src={logoUrl || "/images/bcs-bank-logo-512.png"}
+                  alt={appName}
+                  width={56}
+                  height={56}
+                  priority
+                  className="size-full object-contain rounded-xl"
+                />
               </div>
 
-              {/* Status Badge */}
+              {/* Status Badge & Brand */}
               <div className="flex items-center justify-center gap-2 flex-wrap">
                 <Badge
                   variant="outline"
@@ -207,15 +204,18 @@ export function SubmissionResultModal({
                       : "Official Result Published"}
                   </span>
                 </Badge>
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden xs:inline">
+                  • {appName}
+                </span>
               </div>
 
               {/* Exam Title */}
               <div className="space-y-1">
-                <h3 className="font-heading text-xl sm:text-2xl font-black text-foreground tracking-tight line-clamp-1">
+                <h3 className="font-heading text-xl sm:text-2xl font-black text-foreground tracking-tight line-clamp-1" title={examTitle}>
                   {examTitle}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground font-medium">
-                  Your attempt has been graded and officially confirmed
+                  Official grading verified by {appName}
                 </p>
               </div>
             </div>
