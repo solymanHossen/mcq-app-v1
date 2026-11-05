@@ -675,7 +675,7 @@ export function ExamAttemptClient({
       <Dialog open={submitDialogOpen} onOpenChange={setSubmitDialogOpen}>
         <DialogContent
           showCloseButton={false}
-          className="relative w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-lg md:max-w-xl max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-2xl overflow-hidden focus:outline-none"
+          className="w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-lg md:max-w-xl max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-2xl overflow-hidden focus:outline-none"
         >
           {/* Soft Ambient System Gradient Bloom - Light & Clean (following profile-hero design) */}
           <div
