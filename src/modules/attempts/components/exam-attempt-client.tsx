@@ -120,6 +120,11 @@ export function ExamAttemptClient({
       )
       setEnded(true)
       setSubmitDialogOpen(false)
+      try {
+        sessionStorage.removeItem(`result_modal_closed_${attemptId}`)
+      } catch {
+        // ignore
+      }
       router.refresh()
     } else if (result && "error" in result) {
       toast.error(result.error)

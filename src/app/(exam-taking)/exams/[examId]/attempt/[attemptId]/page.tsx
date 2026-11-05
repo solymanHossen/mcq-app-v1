@@ -9,6 +9,7 @@ import { getSystemSettings } from "@/modules/settings/queries"
 import { prisma } from "@/lib/prisma"
 import { ExamAttemptClient } from "@/modules/attempts/components/exam-attempt-client"
 import { ResultSummary } from "@/modules/grading/components/result-summary"
+import { SubmissionResultModal } from "@/modules/grading/components/submission-result-modal"
 import { AppealForm } from "@/modules/proctoring/components/appeal-form"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -136,7 +137,7 @@ export default async function AttemptPage({
     const isPublished = result?.result?.status === "PUBLISHED"
 
     return (
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0">
+      <div id="result-top" className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 sm:space-y-8 pb-12 sm:pb-16 min-w-0 scroll-mt-6">
         {/* Top Breadcrumb */}
         <div className="space-y-3 sm:space-y-4">
           <Button
@@ -164,9 +165,23 @@ export default async function AttemptPage({
                 <span>{current.status.replace("_", " ")}</span>
               </Badge>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
-              This attempt has concluded and has been recorded in the platform database.
-            </p>
+
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+              {isPublished && result?.result && (
+                <SubmissionResultModal
+                  attemptId={attemptId}
+                  examId={examId}
+                  examTitle={result.examTitle}
+                  result={result.result}
+                  totalQuestions={result.totalQuestions}
+                  answeredCount={result.answeredCount}
+                  targetScrollId="result-top"
+                />
+              )}
+              <p className="text-xs sm:text-sm text-muted-foreground hidden lg:block">
+                This attempt has concluded and has been recorded in the platform database.
+              </p>
+            </div>
           </div>
         </div>
 
