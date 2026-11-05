@@ -130,7 +130,7 @@ export function UpgradeGuestModal({
                       id="upgrade-password"
                       name="password"
                       type="password"
-                      placeholder="At least 8 characters"
+                      placeholder="Create a password (min 8 chars)"
                       className="pl-9"
                       required
                       minLength={8}
@@ -152,7 +152,7 @@ export function UpgradeGuestModal({
                       id="upgrade-confirm-password"
                       name="confirmPassword"
                       type="password"
-                      placeholder="Re-enter your password"
+                      placeholder="Re-enter password"
                       className="pl-9"
                       required
                       minLength={8}

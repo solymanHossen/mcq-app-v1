@@ -281,7 +281,7 @@ export function ExamForm({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       onBlur={() => setTitleTouched(true)}
-                      placeholder="e.g. Higher Mathematics Mid-Term Examination 2026"
+                      placeholder="Enter assessment title"
                       maxLength={200}
                       className={cn(
                         "h-12 sm:h-13 text-base sm:text-lg font-medium rounded-xl transition-all pr-14",
@@ -336,7 +336,7 @@ export function ExamForm({
                     name="description"
                     rows={4}
                     defaultValue={initialValues?.description}
-                    placeholder="Provide syllabus chapters, negative marking notices, or candidate guidelines..."
+                    placeholder="Add instructions or candidate guidelines (optional)..."
                     className="rounded-xl text-sm sm:text-base min-h-[105px] resize-y p-4 leading-relaxed"
                   />
                 </div>
@@ -480,7 +480,7 @@ export function ExamForm({
                       value={passingMarks}
                       onChange={(e) => setPassingMarks(e.target.value)}
                       onBlur={() => setPassingMarksTouched(true)}
-                      placeholder="e.g. 40"
+                      placeholder="Minimum passing score"
                       className={cn(
                         "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl transition-all",
                         passingMarksTouched && !isPassingMarksValid && "border-destructive focus-visible:ring-destructive/30"
@@ -514,7 +514,7 @@ export function ExamForm({
                         value={negativeMarks}
                         onChange={(e) => setNegativeMarks(e.target.value)}
                         onBlur={() => setNegativeMarksTouched(true)}
-                        placeholder="e.g. 0.50 or 0.25"
+                        placeholder="Penalty score (e.g. 0.25)"
                         className={cn(
                           "h-12 sm:h-13 text-base sm:text-lg font-bold rounded-xl pr-14 transition-all",
                           Number(negativeMarks) > 0 ? "border-amber-500/50 bg-amber-500/5 text-amber-900 dark:text-amber-200" : "",
@@ -931,7 +931,7 @@ export function ExamForm({
                       <Input
                         id="accessCode"
                         name="accessCode"
-                        placeholder="e.g. 2026EXAM"
+                        placeholder="Enter secret passcode"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
                         className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"
@@ -1366,7 +1366,7 @@ export function ExamForm({
                   <div className="flex items-center gap-2 sm:gap-2.5 pt-0.5">
                     <div className="relative flex-1">
                       <Input
-                        placeholder="e.g. 2026EXAM"
+                        placeholder="Enter secret passcode"
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
                         className="h-10 sm:h-11 font-mono text-xs sm:text-base font-semibold tracking-wider rounded-xl pr-14 bg-background"

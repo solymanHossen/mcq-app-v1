@@ -113,7 +113,7 @@ export function LoginForm() {
                   name="email"
                   type="email"
                   inputMode="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address"
                   autoComplete="email"
                   required
                 />
@@ -138,6 +138,7 @@ export function LoginForm() {
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="Enter your password"
                   autoComplete="current-password"
                   required
                 />

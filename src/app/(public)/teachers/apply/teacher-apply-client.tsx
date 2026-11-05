@@ -494,7 +494,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                   id="institution"
                   name="institution"
                   defaultValue={currentUser.institution || ""}
-                  placeholder="e.g. University of Dhaka / Stanford University / Milestone College"
+                  placeholder="Enter institution or college name"
                   className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
                   required
                 />
@@ -508,7 +508,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                   id="department"
                   name="department"
                   defaultValue={currentUser.department || ""}
-                  placeholder="e.g. Department of Computer Science & Engineering / Higher Mathematics"
+                  placeholder="Enter department or subject specialization"
                   className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl"
                   required
                 />
@@ -545,7 +545,7 @@ export function TeacherApplyClient({ currentUser }: TeacherApplyClientProps) {
                   name="bio"
                   rows={4}
                   defaultValue={currentUser.bio || ""}
-                  placeholder="Describe your teaching experience, subjects of focus, academic achievements, or target student body..."
+                  placeholder="Describe your teaching background and qualifications..."
                   className="rounded-xl text-sm sm:text-base min-h-[110px] resize-y p-4 leading-relaxed"
                   required
                 />

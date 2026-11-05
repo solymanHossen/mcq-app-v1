@@ -132,7 +132,7 @@ export function ContactClient({ contactEmail }: ContactClientProps) {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. Dr. Jane Doe"
+                        placeholder="Enter your full name"
                         className="h-11 rounded-xl text-sm font-medium"
                       />
                     </div>
@@ -147,7 +147,7 @@ export function ContactClient({ contactEmail }: ContactClientProps) {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@institution.edu"
+                        placeholder="Enter your email address"
                         className="h-11 rounded-xl text-sm font-medium"
                       />
                     </div>
@@ -161,7 +161,7 @@ export function ContactClient({ contactEmail }: ContactClientProps) {
                       id="contact-subject"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      placeholder="e.g. Question about exam scheduling or teacher accreditation"
+                      placeholder="Enter subject or inquiry topic"
                       className="h-11 rounded-xl text-sm font-medium"
                     />
                   </div>
@@ -176,7 +176,7 @@ export function ContactClient({ contactEmail }: ContactClientProps) {
                       rows={5}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Please describe how we can assist you..."
+                      placeholder="Type your message details here..."
                       className="rounded-xl text-sm font-medium resize-none"
                     />
                   </div>
