@@ -98,65 +98,72 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
 
   return (
     <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
-      {/* Modern Hero Score Box (Optimized for Mobile & Desktop - Minimalist & Gradient-Enhanced) */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/50 bg-gradient-to-b from-muted/50 via-muted/20 to-card p-4 sm:p-5.5 shadow-2xs">
-        {/* Subtle Ambient Glow */}
+      {/* Modern Hero Score Box (Full Width, Larger Typography & Premium Modern Gradient) */}
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/60 bg-gradient-to-b from-card via-card to-muted/20 p-5 sm:p-6 lg:p-7 shadow-xs transition-all">
+        {/* Soft Ambient System Gradient Bloom - Light & Clean */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-emerald-500/[0.06] blur-2xl dark:bg-emerald-500/[0.10]"
+          className="pointer-events-none absolute -top-16 -right-16 size-64 rounded-full bg-primary/[0.08] blur-3xl dark:bg-primary/[0.12]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-16 -left-16 size-64 rounded-full bg-emerald-500/[0.06] blur-3xl dark:bg-emerald-500/[0.10]"
+        />
+        {/* Subtle Radiant Top Accent Hairline */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
         />
 
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 sm:gap-4">
-          {/* Score & Status */}
-          <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 flex-wrap">
-            <div>
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
-                Total Obtained Score
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+          {/* Left: Total Obtained Score */}
+          <div className="space-y-1">
+            <span className="block text-xs sm:text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
+              Total Obtained Score
+            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight">
+                {r.obtainedMarks}
               </span>
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">
-                  {r.obtainedMarks}
-                </span>
-                <span className="font-heading text-base sm:text-2xl font-bold text-muted-foreground/70">
-                  / {r.totalMarks}
-                </span>
-              </div>
+              <span className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground/60">
+                / {r.totalMarks}
+              </span>
             </div>
+          </div>
 
-            {/* Status & Accuracy Badges */}
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-              {r.isPassed !== null && (
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold shadow-2xs gap-1.5 border-0",
-                    r.isPassed
-                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                      : "bg-destructive/15 text-destructive"
-                  )}
-                >
-                  {r.isPassed ? (
-                    <>
-                      <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>Passed</span>
-                    </>
-                  ) : (
-                    <>
-                      <X className="size-3.5 text-destructive" />
-                      <span>Not Passed</span>
-                    </>
-                  )}
-                </Badge>
-              )}
-
+          {/* Right: Premium Status & Accuracy Badges */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            {r.isPassed !== null && (
               <Badge
                 variant="outline"
-                className="rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold border-0 bg-primary/10 text-primary gap-1 shadow-2xs"
+                className={cn(
+                  "rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold shadow-2xs gap-2 border-0",
+                  r.isPassed
+                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                    : "bg-destructive/15 text-destructive"
+                )}
               >
-                <Target className="size-3" />
-                <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
+                {r.isPassed ? (
+                  <>
+                    <CheckCircle2 className="size-4 sm:size-4.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>Passed</span>
+                  </>
+                ) : (
+                  <>
+                    <X className="size-4 sm:size-4.5 text-destructive" />
+                    <span>Not Passed</span>
+                  </>
+                )}
               </Badge>
-            </div>
+            )}
+
+            <Badge
+              variant="outline"
+              className="rounded-full px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-extrabold border-0 bg-primary/10 text-primary gap-2 shadow-2xs"
+            >
+              <Target className="size-4 sm:size-4.5 text-primary" />
+              <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
+            </Badge>
           </div>
         </div>
       </div>
@@ -164,60 +171,60 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
       {/* 4 Metric Breakdown Cards (Mobile: 2x2 grid, Desktop: 4 columns - Soft Gradients) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
         {/* Correct */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/10 to-emerald-500/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-emerald-500/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs">
-            <CheckCircle2 className="size-4 sm:size-4.5" />
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-emerald-500/20 bg-gradient-to-b from-emerald-500/10 to-emerald-500/5 p-3.5 sm:p-4 shadow-2xs transition-all hover:bg-emerald-500/10 min-w-0">
+          <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs">
+            <CheckCircle2 className="size-4.5 sm:size-5" />
           </span>
           <div className="min-w-0">
-            <span className="block font-heading text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate">
+            <span className="block font-heading text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 truncate">
               {r.correctCount}
             </span>
-            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+            <span className="block text-xs font-bold tracking-wider text-muted-foreground uppercase truncate">
               Correct
             </span>
           </div>
         </div>
 
         {/* Incorrect */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-destructive/20 bg-gradient-to-b from-destructive/10 to-destructive/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-destructive/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-destructive/15 text-destructive shadow-2xs">
-            <X className="size-4 sm:size-4.5 stroke-[2.5]" />
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-destructive/20 bg-gradient-to-b from-destructive/10 to-destructive/5 p-3.5 sm:p-4 shadow-2xs transition-all hover:bg-destructive/10 min-w-0">
+          <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/15 text-destructive shadow-2xs">
+            <X className="size-4.5 sm:size-5 stroke-[2.5]" />
           </span>
           <div className="min-w-0">
-            <span className="block font-heading text-base sm:text-xl font-black text-destructive truncate">
+            <span className="block font-heading text-lg sm:text-2xl font-black text-destructive truncate">
               {r.incorrectCount}
             </span>
-            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+            <span className="block text-xs font-bold tracking-wider text-muted-foreground uppercase truncate">
               Incorrect
             </span>
           </div>
         </div>
 
         {/* Skipped */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/50 bg-gradient-to-b from-muted/30 to-muted/15 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-muted/40 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/15 text-muted-foreground shadow-2xs">
-            <Clock className="size-4 sm:size-4.5" />
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-border/50 bg-gradient-to-b from-muted/30 to-muted/15 p-3.5 sm:p-4 shadow-2xs transition-all hover:bg-muted/40 min-w-0">
+          <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/15 text-muted-foreground shadow-2xs">
+            <Clock className="size-4.5 sm:size-5" />
           </span>
           <div className="min-w-0">
-            <span className="block font-heading text-base sm:text-xl font-black text-muted-foreground truncate">
+            <span className="block font-heading text-lg sm:text-2xl font-black text-muted-foreground truncate">
               {r.skippedCount}
             </span>
-            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+            <span className="block text-xs font-bold tracking-wider text-muted-foreground uppercase truncate">
               Skipped
             </span>
           </div>
         </div>
 
         {/* Accuracy */}
-        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-primary/10 min-w-0">
-          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-2xs">
-            <Target className="size-4 sm:size-4.5" />
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 p-3.5 sm:p-4 shadow-2xs transition-all hover:bg-primary/10 min-w-0">
+          <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary shadow-2xs">
+            <Target className="size-4.5 sm:size-5" />
           </span>
           <div className="min-w-0">
-            <span className="block font-heading text-base sm:text-xl font-black text-primary truncate">
+            <span className="block font-heading text-lg sm:text-2xl font-black text-primary truncate">
               {Math.round(r.accuracy * 100)}%
             </span>
-            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+            <span className="block text-xs font-bold tracking-wider text-muted-foreground uppercase truncate">
               Accuracy
             </span>
           </div>
