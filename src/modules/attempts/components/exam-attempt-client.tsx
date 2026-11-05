@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -32,6 +33,8 @@ import {
   Check,
   RotateCcw,
   AlertTriangle,
+  AlertCircle,
+  HelpCircle,
   Send,
   Cloud,
   CloudOff,
@@ -40,6 +43,7 @@ import {
   Minimize2,
   ChevronDown,
   CheckCircle2,
+  X,
 } from "lucide-react"
 
 export type AttemptQuestion = {
@@ -672,103 +676,200 @@ export function ExamAttemptClient({
 
       {/* ================= FINISH & SUBMIT CONFIRMATION MODAL ================= */}
       <Dialog open={submitDialogOpen} onOpenChange={setSubmitDialogOpen}>
-        <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-md rounded-2xl p-5 sm:p-6 border border-border/70 bg-card shadow-xl gap-4">
-          <DialogHeader className="text-left space-y-1.5">
-            <div className="flex items-start gap-3">
-              <div className="relative size-11 rounded-full shrink-0 ring-2 ring-primary/25 dark:ring-primary/35 p-0.5 bg-white dark:bg-card shadow-2xs mt-0.5">
-                <Image
-                  src={logoUrl || "/images/bcs-bank-logo-512.png"}
-                  alt="BCS & Bank Aspirants"
-                  width={44}
-                  height={44}
-                  className="size-full object-contain rounded-full"
-                />
+        <DialogContent
+          showCloseButton={false}
+          className="w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-lg md:max-w-xl max-h-[90dvh] flex flex-col p-0 gap-0 rounded-2xl sm:rounded-3xl border border-border/80 bg-card shadow-2xl overflow-hidden focus:outline-none"
+        >
+          {/* Subtle Top Accent Gradient Line */}
+          <div
+            aria-hidden="true"
+            className="h-1.5 w-full bg-gradient-to-r from-primary via-teal-400 to-emerald-500 shrink-0"
+          />
+
+          {/* Modal Header */}
+          <DialogHeader className="p-4 sm:p-6 pb-3.5 sm:pb-4 border-b border-border/60 bg-muted/20 shrink-0 text-left">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative size-10.5 sm:size-12 rounded-xl sm:rounded-2xl shrink-0 ring-1 ring-primary/25 dark:ring-primary/40 p-1 bg-white dark:bg-card shadow-2xs flex items-center justify-center overflow-hidden">
+                  <Image
+                    src={logoUrl || "/images/bcs-bank-logo-512.png"}
+                    alt="BCS & Bank Aspirants"
+                    width={44}
+                    height={44}
+                    className="size-full object-contain rounded-lg sm:rounded-xl"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl font-bold tracking-tight text-foreground leading-snug">
+                      Finish &amp; Submit Examination
+                    </DialogTitle>
+                    <Badge
+                      variant="outline"
+                      className="rounded-full px-2 py-0.5 text-[10px] sm:text-[11px] font-bold tracking-wide uppercase border-primary/30 bg-primary/10 text-primary shrink-0"
+                    >
+                      Final Step
+                    </Badge>
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-0.5 truncate" title={examTitle}>
+                    {examTitle} • BCS &amp; Bank Aspirants
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1 pr-6">
-                <DialogTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                  Finish &amp; Submit Examination
-                </DialogTitle>
-                <p className="text-xs text-muted-foreground font-medium mt-0.5 truncate">
-                  {examTitle} • BCS &amp; Bank Aspirants
-                </p>
-              </div>
+
+              <DialogClose asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer shrink-0 transition-all active:scale-95"
+                >
+                  <X className="size-4" />
+                  <span className="sr-only">Close</span>
+                </Button>
+              </DialogClose>
             </div>
-            <DialogDescription className="text-sm sm:text-sm text-muted-foreground leading-relaxed pt-1">
-              Please review your completion status before final submission. Once confirmed, your answers cannot be altered and will be graded immediately.
+            <DialogDescription className="sr-only">
+              Please review your completion status before final confirmation. Once submitted, your answers cannot be altered and will be graded immediately.
             </DialogDescription>
           </DialogHeader>
 
-          {/* Metric Overview Grid */}
-          <div className="grid grid-cols-4 gap-2 my-1 p-3 rounded-xl bg-muted/20 border border-border/60 text-center">
-            <div className="space-y-0.5">
-              <span className="text-lg sm:text-lg font-bold text-foreground">
-                {questions.length}
-              </span>
-              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Total
+          {/* Modal Content Body */}
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-4.5 overflow-y-auto flex-1 text-left min-h-0">
+            {/* Instruction description card */}
+            <div className="rounded-xl sm:rounded-2xl border border-border/70 bg-muted/20 p-3 sm:p-3.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="font-medium">
+                Please review your question completion summary before confirming. Once submitted, your answers cannot be altered and will be graded immediately.
               </p>
             </div>
-            <div className="space-y-0.5">
-              <span className="text-lg sm:text-lg font-bold text-primary">
-                {answeredCount}
-              </span>
-              <p className="text-[11px] sm:text-[10px] text-primary font-semibold uppercase tracking-wider">
-                Answered
-              </p>
-            </div>
-            <div className="space-y-0.5">
-              <span
+
+            {/* Metric Overview Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+              {/* Total Questions */}
+              <div className="flex flex-col items-center justify-center p-3 rounded-xl sm:rounded-2xl border border-border/70 bg-card text-center shadow-2xs">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                  Total
+                </span>
+                <span className="font-heading text-xl sm:text-2xl font-black text-foreground">
+                  {questions.length}
+                </span>
+              </div>
+
+              {/* Answered */}
+              <div className="flex flex-col items-center justify-center p-3 rounded-xl sm:rounded-2xl border border-emerald-500/25 bg-emerald-500/5 dark:bg-emerald-500/10 text-center shadow-2xs">
+                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 mb-1">
+                  <CheckCircle2 className="size-3 text-emerald-600 dark:text-emerald-400" />
+                  <span>Answered</span>
+                </div>
+                <span className="font-heading text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                  {answeredCount}
+                </span>
+              </div>
+
+              {/* Unanswered */}
+              <div
                 className={cn(
-                  "text-lg sm:text-lg font-bold",
-                  unansweredCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
+                  "flex flex-col items-center justify-center p-3 rounded-xl sm:rounded-2xl border text-center shadow-2xs transition-all",
+                  unansweredCount > 0
+                    ? "border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/15"
+                    : "border-border/70 bg-card"
                 )}
               >
-                {unansweredCount}
-              </span>
-              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Unanswered
-              </p>
-            </div>
-            <div className="space-y-0.5">
-              <span
+                <div
+                  className={cn(
+                    "flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1",
+                    unansweredCount > 0
+                      ? "text-amber-700 dark:text-amber-400"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <HelpCircle className="size-3" />
+                  <span>Unanswered</span>
+                </div>
+                <span
+                  className={cn(
+                    "font-heading text-xl sm:text-2xl font-black",
+                    unansweredCount > 0
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-foreground"
+                  )}
+                >
+                  {unansweredCount}
+                </span>
+              </div>
+
+              {/* Marked for Review */}
+              <div
                 className={cn(
-                  "text-lg sm:text-lg font-bold",
-                  markedCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"
+                  "flex flex-col items-center justify-center p-3 rounded-xl sm:rounded-2xl border text-center shadow-2xs transition-all",
+                  markedCount > 0
+                    ? "border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/15"
+                    : "border-border/70 bg-card"
                 )}
               >
-                {markedCount}
-              </span>
-              <p className="text-[11px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Review
-              </p>
+                <div
+                  className={cn(
+                    "flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mb-1",
+                    markedCount > 0
+                      ? "text-amber-700 dark:text-amber-400"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <Flag className="size-3" />
+                  <span>Review</span>
+                </div>
+                <span
+                  className={cn(
+                    "font-heading text-xl sm:text-2xl font-black",
+                    markedCount > 0
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {markedCount}
+                </span>
+              </div>
             </div>
+
+            {/* Negative Marking Active Notice */}
+            {typeof negativeMarks === "number" && negativeMarks > 0 && (
+              <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-destructive/25 bg-destructive/5 dark:bg-destructive/10 text-foreground shadow-2xs">
+                <AlertCircle className="size-4.5 sm:size-5 text-destructive shrink-0 mt-0.5" />
+                <div className="min-w-0 text-xs sm:text-sm space-y-0.5">
+                  <p className="font-bold text-destructive">
+                    Negative Marking Policy Active
+                  </p>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Each incorrect answer deducts <strong>{negativeMarks} mark{negativeMarks === 1 ? "" : "s"}</strong>. Unanswered questions receive 0 marks.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Unanswered Questions Warning Callout */}
+            {unansweredCount > 0 && (
+              <div className="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/15 text-foreground shadow-2xs">
+                <AlertTriangle className="size-4.5 sm:size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="min-w-0 text-xs sm:text-sm space-y-0.5">
+                  <p className="font-bold text-amber-800 dark:text-amber-300">
+                    You have {unansweredCount} unanswered {unansweredCount === 1 ? "question" : "questions"}
+                  </p>
+                  <p className="text-muted-foreground font-medium leading-relaxed">
+                    Unanswered questions receive zero marks. You can continue the examination to answer them before submitting.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
-          {typeof negativeMarks === "number" && negativeMarks > 0 && (
-            <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10 p-3 text-amber-900 dark:text-amber-200">
-              <AlertTriangle className="size-4 text-amber-600 shrink-0" />
-              <AlertDescription className="text-sm sm:text-xs leading-relaxed font-medium">
-                <strong>Negative Marking active:</strong> Each incorrect answer deducts <strong>{negativeMarks} mark{negativeMarks === 1 ? "" : "s"}</strong>. Unanswered questions receive 0 marks.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {unansweredCount > 0 && (
-            <Alert className="rounded-xl border-amber-500/30 bg-amber-500/10 p-3 text-amber-900 dark:text-amber-200">
-              <AlertTriangle className="size-4 text-amber-600 shrink-0" />
-              <AlertDescription className="text-sm sm:text-xs leading-relaxed font-medium">
-                You have <strong>{unansweredCount} unanswered</strong> question(s). Unanswered questions receive zero marks.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <DialogFooter className="gap-2 sm:gap-2.5 pt-2 flex flex-col-reverse sm:flex-row sm:justify-end">
+          {/* Modal Action Footer */}
+          <DialogFooter className="p-4 sm:p-5 bg-muted/20 border-t border-border/60 flex flex-col-reverse sm:flex-row items-center sm:justify-end gap-2.5 sm:gap-3 shrink-0">
             <Button
               type="button"
               variant="outline"
               disabled={submitting}
               onClick={() => setSubmitDialogOpen(false)}
-              className="h-10 rounded-xl px-4 font-semibold border-border/70 text-sm sm:text-sm hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+              className="w-full sm:w-auto h-10 sm:h-11 px-4 sm:px-5 rounded-xl font-semibold border-border/80 hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-all active:scale-98 text-xs sm:text-sm"
             >
               Continue Examination
             </Button>
@@ -776,7 +877,7 @@ export function ExamAttemptClient({
               type="button"
               onClick={submit}
               disabled={submitting}
-              className="h-10 rounded-xl px-4.5 bg-primary text-primary-foreground font-semibold cursor-pointer shadow-2xs hover:bg-primary/90 text-sm sm:text-sm gap-2"
+              className="w-full sm:w-auto h-10 sm:h-11 px-5 sm:px-6 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 shadow-2xs hover:shadow-xs active:scale-98 transition-all text-xs sm:text-sm gap-2 cursor-pointer"
             >
               {submitting ? (
                 <>
