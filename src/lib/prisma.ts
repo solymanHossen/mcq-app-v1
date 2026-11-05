@@ -17,7 +17,15 @@ function createPrismaClient() {
   return new PrismaClient({ adapter })
 }
 
+let prodClient: PrismaClient | undefined
+
 function getPrismaClientInstance(): PrismaClient {
+  if (process.env.NODE_ENV === "production") {
+    if (!prodClient) {
+      prodClient = createPrismaClient()
+    }
+    return prodClient
+  }
   const existing = globalForPrisma.prisma
   if (
     !existing ||
@@ -25,10 +33,8 @@ function getPrismaClientInstance(): PrismaClient {
     !("newsletterSubscriber" in (existing as unknown as Record<string, unknown>))
   ) {
     const client = createPrismaClient()
-    if (process.env.NODE_ENV !== "production") {
-      globalForPrisma.prisma = client
-      globalForPrisma.schemaVersion = SCHEMA_VERSION
-    }
+    globalForPrisma.prisma = client
+    globalForPrisma.schemaVersion = SCHEMA_VERSION
     return client
   }
   return existing
