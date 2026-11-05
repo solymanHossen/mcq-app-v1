@@ -97,107 +97,133 @@ export function ResultSummary({ result }: { result: ResultForStudent }) {
   const r = result.result
 
   return (
-    <div className="flex min-w-0 flex-col gap-6">
-      {/* Official Results Score Header & Metrics (Full Width - No Nested Inner Card) */}
-      <div className="space-y-5 sm:space-y-6">
-        {/* Top Row: Score & Pass/Fail Status */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pb-4 border-b border-border/60">
-          <div className="space-y-1.5 min-w-0">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-2xs whitespace-nowrap">
-              <Award className="size-3.5" />
-              <span>Official Assessment Score</span>
+    <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
+      {/* Modern Hero Score Box (Optimized for Mobile & Desktop) */}
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-to-b from-muted/40 via-muted/20 to-card p-4 sm:p-5.5 shadow-2xs">
+        {/* Subtle Ambient Glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-emerald-500/[0.08] blur-2xl dark:bg-emerald-500/[0.12]"
+        />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 sm:gap-4">
+          {/* Score & Status */}
+          <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 flex-wrap">
+            <div>
+              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">
+                Total Obtained Score
+              </span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">
+                  {r.obtainedMarks}
+                </span>
+                <span className="font-heading text-base sm:text-2xl font-bold text-muted-foreground/70">
+                  / {r.totalMarks}
+                </span>
+              </div>
             </div>
 
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight whitespace-nowrap">
-              Score: {r.obtainedMarks} / {r.totalMarks}
-            </h2>
+            {/* Status & Accuracy Badges */}
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              {r.isPassed !== null && (
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold shadow-2xs gap-1.5",
+                    r.isPassed
+                      ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+                      : "border-destructive/40 bg-destructive/15 text-destructive"
+                  )}
+                >
+                  {r.isPassed ? (
+                    <>
+                      <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span>Passed</span>
+                    </>
+                  ) : (
+                    <>
+                      <X className="size-3.5 text-destructive" />
+                      <span>Not Passed</span>
+                    </>
+                  )}
+                </Badge>
+              )}
+
+              <Badge
+                variant="outline"
+                className="rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold border-primary/30 bg-primary/10 text-primary gap-1 shadow-2xs"
+              >
+                <Target className="size-3" />
+                <span>{Math.round(r.accuracy * 100)}% Accuracy</span>
+              </Badge>
+            </div>
           </div>
 
-          {r.isPassed !== null && (
-            <Badge
-              className={cn(
-                "self-start sm:self-auto rounded-full px-3.5 py-1 text-xs sm:text-sm font-bold shadow-2xs gap-1.5 whitespace-nowrap shrink-0",
-                r.isPassed
-                  ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                  : "border-destructive/30 bg-destructive/15 text-destructive"
-              )}
-              variant="outline"
-            >
-              {r.isPassed ? (
-                <>
-                  <Check className="size-3.5 stroke-[3]" />
-                  <span>Passed</span>
-                </>
-              ) : (
-                <>
-                  <X className="size-3.5 stroke-[3]" />
-                  <span>Not passed</span>
-                </>
-              )}
-            </Badge>
-          )}
+          <p className="text-xs text-muted-foreground font-medium hidden md:block text-right max-w-xs">
+            Official score verified against the answer key and grading schema.
+          </p>
+        </div>
+      </div>
+
+      {/* 4 Metric Breakdown Cards (Mobile: 2x2 grid, Desktop: 4 columns) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+        {/* Correct */}
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-emerald-500/25 bg-emerald-500/5 dark:bg-emerald-500/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-emerald-500/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-2xs">
+            <CheckCircle2 className="size-4 sm:size-4.5" />
+          </span>
+          <div className="min-w-0">
+            <span className="block font-heading text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate">
+              {r.correctCount}
+            </span>
+            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+              Correct
+            </span>
+          </div>
         </div>
 
-        {/* 4 Metric Breakdown Tiles (Full Width - 4-column grid on desktop, 2-column on mobile) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          {/* Correct */}
-          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-emerald-500/40 hover:bg-muted/30 transition-all min-w-0">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-2xs ring-1 ring-emerald-500/20">
-              <CheckCircle2 className="size-5" />
+        {/* Incorrect */}
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-destructive/25 bg-destructive/5 dark:bg-destructive/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-destructive/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-destructive/15 text-destructive shadow-2xs">
+            <X className="size-4 sm:size-4.5 stroke-[2.5]" />
+          </span>
+          <div className="min-w-0">
+            <span className="block font-heading text-base sm:text-xl font-black text-destructive truncate">
+              {r.incorrectCount}
             </span>
-            <div className="min-w-0">
-              <span className="block font-heading text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 truncate">
-                {r.correctCount}
-              </span>
-              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
-                Correct
-              </span>
-            </div>
+            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+              Incorrect
+            </span>
           </div>
+        </div>
 
-          {/* Incorrect */}
-          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-destructive/40 hover:bg-muted/30 transition-all min-w-0">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-destructive/10 text-destructive shadow-2xs ring-1 ring-destructive/20">
-              <X className="size-5 stroke-[2.5]" />
+        {/* Skipped */}
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/80 bg-muted/25 dark:bg-muted/15 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-muted/40 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-muted-foreground/15 text-muted-foreground shadow-2xs">
+            <Clock className="size-4 sm:size-4.5" />
+          </span>
+          <div className="min-w-0">
+            <span className="block font-heading text-base sm:text-xl font-black text-muted-foreground truncate">
+              {r.skippedCount}
             </span>
-            <div className="min-w-0">
-              <span className="block font-heading text-lg sm:text-xl font-black text-destructive truncate">
-                {r.incorrectCount}
-              </span>
-              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
-                Incorrect
-              </span>
-            </div>
+            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+              Skipped
+            </span>
           </div>
+        </div>
 
-          {/* Skipped */}
-          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-border hover:bg-muted/30 transition-all min-w-0">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted-foreground/10 text-muted-foreground shadow-2xs ring-1 ring-muted-foreground/20">
-              <Clock className="size-5" />
+        {/* Accuracy */}
+        <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-primary/25 bg-primary/5 dark:bg-primary/10 p-3 sm:p-3.5 shadow-2xs transition-all hover:bg-primary/10 min-w-0">
+          <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/15 text-primary shadow-2xs">
+            <Target className="size-4 sm:size-4.5" />
+          </span>
+          <div className="min-w-0">
+            <span className="block font-heading text-base sm:text-xl font-black text-primary truncate">
+              {Math.round(r.accuracy * 100)}%
             </span>
-            <div className="min-w-0">
-              <span className="block font-heading text-lg sm:text-xl font-black text-muted-foreground truncate">
-                {r.skippedCount}
-              </span>
-              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
-                Skipped
-              </span>
-            </div>
-          </div>
-
-          {/* Accuracy */}
-          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/20 px-4 py-3.5 shadow-2xs hover:border-primary/40 hover:bg-muted/30 transition-all min-w-0">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-2xs ring-1 ring-primary/20">
-              <Target className="size-5" />
+            <span className="block text-[10px] sm:text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
+              Accuracy
             </span>
-            <div className="min-w-0">
-              <span className="block font-heading text-lg sm:text-xl font-black text-primary truncate">
-                {Math.round(r.accuracy * 100)}%
-              </span>
-              <span className="block text-[11px] font-bold tracking-wider text-muted-foreground uppercase truncate">
-                Accuracy
-              </span>
-            </div>
           </div>
         </div>
       </div>
