@@ -178,7 +178,7 @@ export function SubmissionResultModal({
                 <Badge
                   variant="outline"
                   className={cn(
-                    "rounded-full px-3 py-0.5 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase gap-1.5 shadow-2xs border-0",
+                    "rounded-full px-3 py-0.5 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide uppercase shadow-2xs border-0",
                     isPassed === true
                       ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
                       : isPassed === false
@@ -186,16 +186,6 @@ export function SubmissionResultModal({
                       : "bg-primary/15 text-primary"
                   )}
                 >
-                  <span
-                    className={cn(
-                      "size-1.5 sm:size-2 rounded-full",
-                      isPassed === true
-                        ? "bg-emerald-500 animate-pulse"
-                        : isPassed === false
-                        ? "bg-amber-500"
-                        : "bg-primary animate-pulse"
-                    )}
-                  />
                   <span>
                     {isPassed === true
                       ? "Exam Passed Successfully"

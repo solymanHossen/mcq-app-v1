@@ -201,9 +201,8 @@ export default async function AttemptPage({
                 </h1>
                 <Badge
                   variant={current.status === "COMPLETED" ? "default" : "secondary"}
-                  className="rounded-full px-2.5 sm:px-3 py-0.5 text-xs font-bold tracking-wide uppercase flex items-center gap-1.5 shadow-2xs border-0"
+                  className="rounded-full px-2.5 sm:px-3 py-0.5 text-xs font-bold tracking-wide uppercase shadow-2xs border-0"
                 >
-                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>{current.status.replace("_", " ")}</span>
                 </Badge>
               </div>
