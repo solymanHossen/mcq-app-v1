@@ -47,7 +47,7 @@ export default function RegisterPage() {
                   id="name"
                   name="name"
                   inputMode="text"
-                  placeholder="John Doe"
+                  placeholder="Enter your full name"
                   autoComplete="name"
                   required
                 />
@@ -65,7 +65,7 @@ export default function RegisterPage() {
                   name="email"
                   type="email"
                   inputMode="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address"
                   autoComplete="email"
                   required
                 />
@@ -82,7 +82,7 @@ export default function RegisterPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Min 8 characters"
+                  placeholder="Create a password (min 8 characters)"
                   autoComplete="new-password"
                   required
                 />

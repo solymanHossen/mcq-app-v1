@@ -113,7 +113,7 @@ export function QuestionForm({
                 id="subject"
                 name="subject"
                 defaultValue={initialValues?.subject}
-                placeholder="e.g. Computer Science"
+                placeholder="Enter subject name"
                 className="h-10 rounded-xl text-xs sm:text-sm"
                 required
               />
@@ -127,7 +127,7 @@ export function QuestionForm({
                 id="topic"
                 name="topic"
                 defaultValue={initialValues?.topic}
-                placeholder="e.g. Data Structures"
+                placeholder="Enter topic name"
                 className="h-10 rounded-xl text-xs sm:text-sm"
                 required
               />
@@ -170,7 +170,7 @@ export function QuestionForm({
               name="questionText"
               rows={4}
               defaultValue={initialValues?.questionText}
-              placeholder="Enter your question text here. LaTeX equations like $\int_0^1 x dx$ will be rendered automatically..."
+              placeholder="Type question prompt here (LaTeX math supported)..."
               className="rounded-xl text-xs sm:text-sm min-h-[105px] resize-y p-3.5 leading-relaxed"
               required
             />
@@ -213,7 +213,7 @@ export function QuestionForm({
                   defaultValue={
                     initialValues?.[`option${key}` as keyof QuestionFormValues]
                   }
-                  placeholder={`Choice ${key} content...`}
+                  placeholder={`Enter option ${key} text`}
                   className="h-10 rounded-xl text-xs sm:text-sm"
                   required
                 />
@@ -277,7 +277,7 @@ export function QuestionForm({
               name="explanation"
               rows={3}
               defaultValue={initialValues?.explanation}
-              placeholder="Explain why the designated option is correct, including theorems or derivations..."
+              placeholder="Add solution explanation or theorem derivations (optional)..."
               className="rounded-xl text-xs sm:text-sm min-h-[85px] resize-y p-3.5 leading-relaxed"
             />
           </div>

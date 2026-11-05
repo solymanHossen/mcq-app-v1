@@ -18,6 +18,15 @@ export function apiError(status: number, message: string) {
  * echoed back to the client.
  */
 export function handleApiError(e: unknown) {
+  if (
+    typeof e === "object" &&
+    e !== null &&
+    "digest" in e &&
+    typeof (e as { digest?: unknown }).digest === "string" &&
+    (e as { digest: string }).digest.startsWith("NEXT_")
+  ) {
+    throw e
+  }
   if (e instanceof UnauthorizedError) return apiError(401, e.message)
   if (e instanceof ForbiddenError) return apiError(403, e.message)
   if (e instanceof RateLimitedError) return apiError(429, e.message)

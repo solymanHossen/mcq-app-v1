@@ -515,7 +515,7 @@ export function TitleTemplateModal({
                         handleDirectSaveCustom()
                       }
                     }}
-                    placeholder="e.g. Cambridge A-Levels Physics Mock 2026..."
+                    placeholder="Enter custom examination title..."
                     className="h-11 sm:h-11 text-xs sm:text-sm rounded-xl bg-background border-border/80 px-3.5"
                   />
                   <Button

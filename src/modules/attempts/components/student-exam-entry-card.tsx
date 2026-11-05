@@ -182,7 +182,7 @@ export function StudentExamEntryCard({
               </Label>
               <Input
                 id="loggedInAccessCode"
-                placeholder="Enter passcode provided by teacher"
+                placeholder="Enter exam passcode"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
                 className="h-11 sm:h-11 text-base sm:text-sm font-mono rounded-xl border border-border/70 bg-background"
@@ -301,7 +301,7 @@ export function StudentExamEntryCard({
                 id="guestName"
                 name="name"
                 required
-                placeholder="e.g. Solyman Hossen"
+                placeholder="Enter your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
@@ -321,7 +321,7 @@ export function StudentExamEntryCard({
                 name="email"
                 type="email"
                 required
-                placeholder="e.g. solyman@example.com"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-medium bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-colors"
@@ -343,7 +343,7 @@ export function StudentExamEntryCard({
                   id="guestAccessCode"
                   name="accessCode"
                   required
-                  placeholder="Enter passcode provided by your teacher"
+                  placeholder="Enter exam passcode"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
                   className="h-11 sm:h-11 rounded-xl text-base sm:text-sm font-mono bg-background border border-border/70 focus-visible:ring-2 focus-visible:ring-primary/20"

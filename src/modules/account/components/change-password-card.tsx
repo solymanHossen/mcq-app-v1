@@ -134,7 +134,7 @@ export function ChangePasswordCard({
                 id="newPassword"
                 type={showNew ? "text" : "password"}
                 autoComplete="new-password"
-                placeholder="Minimum 8 characters"
+                placeholder="Enter new password (min 8 chars)"
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
                 minLength={8}
@@ -175,7 +175,7 @@ export function ChangePasswordCard({
                 minLength={8}
                 required
                 className="h-11 sm:h-12 text-sm sm:text-base font-medium rounded-xl pr-11"
-                placeholder="Repeat new password"
+                placeholder="Re-enter new password"
               />
               <button
                 type="button"
