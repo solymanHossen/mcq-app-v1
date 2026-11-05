@@ -9,6 +9,7 @@ import {
   startAttemptAction,
   saveAnswerAction,
   submitAttemptAction,
+  startGuestExamAction,
 } from "./actions"
 import { getAttemptForStudent } from "@/modules/attempts/queries"
 import { sweepExpiredAttempts } from "@/modules/attempts/expire"
@@ -511,5 +512,47 @@ describe("saveAnswerAction — session-conflict detection", () => {
       where: { attemptId: started.attemptId, type: "SESSION_CONFLICT" },
     })
     expect(events).toHaveLength(0)
+  })
+})
+
+describe("startGuestExamAction — security boundaries and account protection", () => {
+  it("rejects guest exam attempts for existing admin accounts", async () => {
+    const admin = await prisma.user.create({
+      data: {
+        name: "Admin User",
+        email: `admin-${suffix}@example.com`,
+        passwordHash: await hashPassword("super-secret"),
+        role: "SUPER_ADMIN",
+        isEmailVerified: true,
+      },
+    })
+    userIds.push(admin.id)
+
+    const teacher = await makeUser("TEACHER", "guest-test-teacher")
+    const exam = await makePublishedExam(teacher.id, { allowGuestAccess: true } as never)
+
+    const result = await startGuestExamAction({
+      examId: exam.id,
+      name: "Attacker Trying Admin",
+      email: admin.email,
+    })
+
+    expect(result).toHaveProperty("error")
+    expect((result as { error: string }).error).toContain("teacher or administrator")
+  })
+
+  it("rejects guest exam attempts for existing registered students with passwords", async () => {
+    const student = await makeUser("STUDENT", "registered-student")
+    const teacher = await makeUser("TEACHER", "guest-test-teacher-2")
+    const exam = await makePublishedExam(teacher.id, { allowGuestAccess: true } as never)
+
+    const result = await startGuestExamAction({
+      examId: exam.id,
+      name: "Imposter Student",
+      email: student.email,
+    })
+
+    expect(result).toHaveProperty("error")
+    expect((result as { error: string }).error).toContain("Please log in with your password")
   })
 })

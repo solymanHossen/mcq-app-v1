@@ -8,7 +8,7 @@ services:
     command:
       - postgres
       - -c
-      - max_connections=40
+      - max_connections=100
       - -c
       - shared_buffers=128MB
       - -c
@@ -65,7 +65,7 @@ services:
       dockerfile: Dockerfile
     container_name: mcq-app-production
     restart: unless-stopped
-    mem_limit: 512m
+    mem_limit: 1g
     depends_on:
       postgres:
         condition: service_healthy

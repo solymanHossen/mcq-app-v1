@@ -196,6 +196,20 @@ export async function startGuestExamAction(
     if (!user.isActive) {
       return { error: "This student account is suspended" }
     }
+    // Prevent account takeover of administrators and teachers via guest entry
+    if (user.role === "SUPER_ADMIN" || user.role === "TEACHER") {
+      return {
+        error:
+          "This email is registered to a teacher or administrator. Please log in with your password to access this exam.",
+      }
+    }
+    // Prevent takeover of registered student accounts that have set a password
+    if (!user.isGuest) {
+      return {
+        error:
+          "An account with this email is already registered. Please log in with your password to take this exam.",
+      }
+    }
   } else {
     const dummyHash = await hashPassword(crypto.randomUUID())
     user = await prisma.user.create({
@@ -213,13 +227,19 @@ export async function startGuestExamAction(
 
   // Issue NextAuth session cookie so student is automatically authenticated
   const secret =
-    process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "default-secret-key"
+    process.env.AUTH_SECRET ??
+    process.env.NEXTAUTH_SECRET ??
+    (process.env.NODE_ENV === "production"
+      ? (() => {
+          throw new Error("AUTH_SECRET must be configured in production")
+        })()
+      : "default-secret-key")
   const token = await encode({
     token: {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: "STUDENT",
       tokenVersion: user.tokenVersion,
     },
     secret,
