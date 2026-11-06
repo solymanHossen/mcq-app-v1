@@ -43,6 +43,7 @@ export default async function AttemptPage({
   }
 
   const current = await finalizeIfExpired(attempt)
+  const brandName = "BCS & Bank Aspirants"
 
   if (current.status !== "IN_PROGRESS") {
     const titles: Record<typeof current.status, string> = {
@@ -187,22 +188,30 @@ export default async function AttemptPage({
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
           />
 
-          {/* Institutional Header: Mobile = Centered Main Logo at Top + Centered Text; Desktop = Horizontal Left-aligned */}
-          <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center justify-center sm:justify-start text-center sm:text-left gap-3.5 sm:gap-5 pb-5 sm:pb-6 border-b border-border/60">
-            {/* Main Brand Logo Avatar */}
-            <div className="relative size-14 sm:size-16 rounded-2xl shrink-0 ring-2 ring-primary/20 dark:ring-primary/30 p-1.5 bg-white dark:bg-card shadow-xs flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+          {/* Institutional Header: Centered World-Class Brand Logo, Motto & Status */}
+          <div className="relative z-10 flex flex-col items-center text-center space-y-3 sm:space-y-3.5 pb-5 sm:pb-6 border-b border-border/60">
+            {/* Main Brand Logo - Clean, Large & Borderless */}
+            <div className="relative size-20 sm:size-24 shrink-0 select-none flex items-center justify-center transition-transform hover:scale-105">
               <Image
                 src={settings?.logoUrl ?? "/images/bcs-bank-logo-512.png"}
-                alt={APP_NAME}
-                width={64}
-                height={64}
+                alt={brandName}
+                width={96}
+                height={96}
                 priority
-                className="size-full object-contain rounded-xl"
+                className="size-full object-contain drop-shadow-sm"
               />
             </div>
 
-            <div className="min-w-0 space-y-1 sm:space-y-1.5 flex-1">
-              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-2.5 flex-wrap">
+            {/* Official Motto Tagline Directly Below the Logo */}
+            <div className="inline-flex items-center justify-center px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/8 to-primary/15 text-primary shadow-2xs backdrop-blur-sm">
+              <span className="font-heading text-[11px] sm:text-xs font-extrabold tracking-widest uppercase text-primary">
+                Your Dream, Our Support
+              </span>
+            </div>
+
+            {/* Status & Title Breakdown */}
+            <div className="space-y-1.5 sm:space-y-2 max-w-xl mx-auto pt-1">
+              <div className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
                 <h1 className="font-heading text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-foreground">
                   {titles[current.status]}
                 </h1>
@@ -214,8 +223,8 @@ export default async function AttemptPage({
                 </Badge>
               </div>
 
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base font-semibold text-muted-foreground flex-wrap">
-                <span className="text-primary font-bold">{APP_NAME}</span>
+              <div className="flex items-center justify-center gap-2 text-sm sm:text-base font-semibold text-muted-foreground flex-wrap">
+                <span className="text-primary font-bold">{brandName}</span>
                 <span className="text-muted-foreground/40">•</span>
                 <span className="font-medium text-foreground/90 line-clamp-1 sm:line-clamp-none" title={result?.examTitle || attempt.exam.title}>
                   {result?.examTitle || attempt.exam.title}

@@ -16,10 +16,12 @@ import {
   ArrowDown,
   ArrowRight,
   ExternalLink,
+  X,
 } from "lucide-react"
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -132,9 +134,23 @@ export function SubmissionResultModal({
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
-          showCloseButton={true}
+          showCloseButton={false}
           className="w-[95vw] max-w-lg sm:max-w-xl md:max-w-2xl rounded-3xl border border-border/70 bg-card/95 backdrop-blur-xl p-0 shadow-2xl overflow-hidden gap-0 focus:outline-none"
         >
+          {/* Top-Right Cancel / Close (X) Cross Button */}
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleCloseAndScrollTop}
+              className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-50 size-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 cursor-pointer transition-all active:scale-95 shadow-2xs"
+              aria-label="Close scorecard modal"
+            >
+              <X className="size-5" />
+            </Button>
+          </DialogClose>
+
           {/* Soft Top Ambient Gradient Glow (Borderless, Premium & Subtle) */}
           <div
             aria-hidden="true"
@@ -160,17 +176,26 @@ export function SubmissionResultModal({
 
           <div className="relative z-10 px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-8 space-y-5 sm:space-y-6">
             {/* Celebration Header */}
-            <div className="text-center space-y-3">
-              {/* Official Brand Logo Avatar */}
-              <div className="relative size-16 sm:size-18 rounded-3xl mx-auto shadow-sm ring-1 ring-border/80 dark:ring-border/60 p-2 bg-white dark:bg-card flex items-center justify-center overflow-hidden transition-transform duration-200 hover:scale-105">
+            <div className="text-center space-y-2.5 sm:space-y-3">
+              {/* Official Brand Logo - Clean, Large & Borderless */}
+              <div className="relative size-24 sm:size-28 mx-auto shrink-0 select-none flex items-center justify-center transition-transform duration-300 hover:scale-105">
                 <Image
                   src={logoUrl || "/images/bcs-bank-logo-512.png"}
                   alt={appName}
-                  width={64}
-                  height={64}
+                  width={112}
+                  height={112}
                   priority
-                  className="size-full object-contain rounded-2xl"
+                  className="size-full object-contain drop-shadow-sm"
                 />
+              </div>
+
+              {/* Highlighted Official Motto / Marketing Tagline */}
+              <div className="flex items-center justify-center">
+                <div className="inline-flex items-center justify-center px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/8 to-primary/15 text-primary shadow-2xs backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/20">
+                  <span className="font-heading text-[11px] sm:text-xs font-extrabold tracking-widest uppercase text-primary">
+                    Your Dream, Our Support
+                  </span>
+                </div>
               </div>
 
               {/* Status Badge & Brand */}

@@ -13,6 +13,11 @@ import {
   ArrowRight,
   AlertTriangle,
   Clock,
+  HelpCircle,
+  Award,
+  Calendar,
+  CheckCircle2,
+  UserCheck,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -32,6 +37,8 @@ export interface StudentExamEntryCardProps {
     title: string
     durationMinutes: number
     maxAttempts: number
+    totalQuestions?: number
+    totalMarks?: number
     allowGuestAccess: boolean
     accessCode: string | null
     webcamMonitoringRequired: boolean
@@ -45,6 +52,42 @@ export interface StudentExamEntryCardProps {
     role: string
   } | null
   existingAttemptsCount: number
+}
+
+function ExamSpecsBar({
+  durationMinutes,
+  totalQuestions,
+  totalMarks,
+  maxAttempts,
+}: {
+  durationMinutes: number
+  totalQuestions?: number
+  totalMarks?: number
+  maxAttempts: number
+}) {
+  return (
+    <div className="flex items-center justify-center sm:justify-start gap-2.5 sm:gap-5 py-2 px-3.5 rounded-xl bg-muted/40 border border-border/50 text-xs font-semibold text-muted-foreground flex-wrap">
+      <span className="inline-flex items-center gap-1.5 text-foreground">
+        <Clock className="size-3.5 text-primary shrink-0" />
+        <span>{durationMinutes} mins</span>
+      </span>
+      <span className="text-muted-foreground/30 hidden sm:inline">•</span>
+      <span className="inline-flex items-center gap-1.5 text-foreground">
+        <HelpCircle className="size-3.5 text-primary shrink-0" />
+        <span>{totalQuestions ?? 0} MCQs</span>
+      </span>
+      <span className="text-muted-foreground/30 hidden sm:inline">•</span>
+      <span className="inline-flex items-center gap-1.5 text-foreground">
+        <Award className="size-3.5 text-primary shrink-0" />
+        <span>{totalMarks ?? 0} Marks</span>
+      </span>
+      <span className="text-muted-foreground/30 hidden sm:inline">•</span>
+      <span className="inline-flex items-center gap-1.5 text-foreground">
+        <Calendar className="size-3.5 text-primary shrink-0" />
+        <span>{maxAttempts} {maxAttempts === 1 ? "Attempt" : "Attempts"}</span>
+      </span>
+    </div>
+  )
 }
 
 export function StudentExamEntryCard({
@@ -142,7 +185,7 @@ export function StudentExamEntryCard({
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
         />
 
-        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
+        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/50 bg-gradient-to-b from-primary/[0.03] via-muted/10 to-transparent space-y-3.5">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3">
               <div className="size-9 rounded-xl border border-border/60 bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shadow-2xs">
@@ -152,7 +195,7 @@ export function StudentExamEntryCard({
                 <CardTitle className="font-heading text-base sm:text-base font-bold text-foreground">
                   Logged in as {user.name}
                 </CardTitle>
-                <CardDescription className="text-xs sm:text-xs text-muted-foreground">
+                <CardDescription className="text-xs sm:text-xs text-muted-foreground font-medium">
                   {user.email} · <span className="uppercase font-semibold tracking-wider">{user.role}</span>
                 </CardDescription>
               </div>
@@ -164,6 +207,14 @@ export function StudentExamEntryCard({
               {attemptsLeft > 0 ? `${attemptsLeft} attempt(s) left` : "No attempts left"}
             </Badge>
           </div>
+
+          {/* Clean Integrated Assessment Specs Ribbon */}
+          <ExamSpecsBar
+            durationMinutes={exam.durationMinutes}
+            totalQuestions={exam.totalQuestions}
+            totalMarks={exam.totalMarks}
+            maxAttempts={exam.maxAttempts}
+          />
         </CardHeader>
 
         <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
@@ -261,25 +312,35 @@ export function StudentExamEntryCard({
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
         />
 
-        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/60 bg-muted/20">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div>
-              <CardTitle className="font-heading text-xl sm:text-xl font-bold tracking-tight text-foreground">
-                Enter Your Details
+        <CardHeader className="relative z-10 p-5 sm:p-6 pb-4 border-b border-border/50 bg-gradient-to-b from-primary/[0.03] via-muted/10 to-transparent space-y-3 sm:space-y-3.5">
+          <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2.5 sm:gap-3 text-center sm:text-left">
+            <div className="space-y-1">
+              <CardTitle className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center justify-center sm:justify-start gap-2">
+                <UserCheck className="size-5 text-primary" />
+                <span>Enter Your Details</span>
               </CardTitle>
-              <CardDescription className="text-sm sm:text-sm text-muted-foreground mt-0.5">
-                Provide your name and email to begin the exam.
+              <CardDescription className="hidden sm:block text-xs sm:text-sm text-muted-foreground font-medium">
+                Provide your candidate name and email to begin the assessment.
               </CardDescription>
             </div>
 
-            <Badge
-              variant="outline"
-              className="rounded-full px-3 py-1 text-xs sm:text-sm font-bold gap-1.5 border-primary/30 bg-primary/10 text-primary shadow-2xs"
-            >
-              <Clock className="size-3.5" />
-              <span>{exam.durationMinutes} Minutes</span>
-            </Badge>
+            <div className="flex items-center justify-center">
+              <Badge
+                variant="outline"
+                className="rounded-full px-3 py-1 text-xs font-bold border-primary/25 bg-primary/10 text-primary shadow-2xs"
+              >
+                Ready to Start
+              </Badge>
+            </div>
           </div>
+
+          {/* Clean Integrated Assessment Specs Ribbon */}
+          <ExamSpecsBar
+            durationMinutes={exam.durationMinutes}
+            totalQuestions={exam.totalQuestions}
+            totalMarks={exam.totalMarks}
+            maxAttempts={exam.maxAttempts}
+          />
         </CardHeader>
 
         <CardContent className="relative z-10 p-5 sm:p-6 space-y-4 sm:space-y-5">
@@ -415,7 +476,7 @@ export function StudentExamEntryCard({
 
   // Case 3: Registered Students Only (allowGuestAccess = false)
   return (
-    <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs p-6 sm:p-8 text-center space-y-4">
+    <Card className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card shadow-xs">
       {/* Soft Ambient System Gradient Bloom - Light & Clean (matching profile hero) */}
       <div
         aria-hidden="true"
@@ -427,7 +488,17 @@ export function StudentExamEntryCard({
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"
       />
 
-      <div className="relative z-10 space-y-4">
+      {/* Clean Integrated Assessment Specs Ribbon */}
+      <div className="p-4 sm:p-5 pb-0">
+        <ExamSpecsBar
+          durationMinutes={exam.durationMinutes}
+          totalQuestions={exam.totalQuestions}
+          totalMarks={exam.totalMarks}
+          maxAttempts={exam.maxAttempts}
+        />
+      </div>
+
+      <div className="relative z-10 p-6 sm:p-8 text-center space-y-4">
         <div className="size-12 rounded-2xl border border-border/60 bg-muted/40 text-muted-foreground flex items-center justify-center mx-auto shadow-2xs">
           <Lock className="size-5" />
         </div>
