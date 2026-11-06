@@ -189,15 +189,15 @@ export default async function AttemptPage({
 
           {/* Institutional Header: Mobile = Centered Main Logo at Top + Centered Text; Desktop = Horizontal Left-aligned */}
           <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center justify-center sm:justify-start text-center sm:text-left gap-3.5 sm:gap-5 pb-5 sm:pb-6 border-b border-border/60">
-            {/* Main Brand Logo Avatar */}
-            <div className="relative size-14 sm:size-16 rounded-2xl shrink-0 ring-2 ring-primary/20 dark:ring-primary/30 p-1.5 bg-white dark:bg-card shadow-xs flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+            {/* Main Brand Logo - Clean, Large & Borderless */}
+            <div className="relative size-16 sm:size-20 shrink-0 select-none flex items-center justify-center transition-transform hover:scale-105">
               <Image
                 src={settings?.logoUrl ?? "/images/bcs-bank-logo-512.png"}
                 alt={APP_NAME}
-                width={64}
-                height={64}
+                width={80}
+                height={80}
                 priority
-                className="size-full object-contain rounded-xl"
+                className="size-full object-contain drop-shadow-sm"
               />
             </div>
 

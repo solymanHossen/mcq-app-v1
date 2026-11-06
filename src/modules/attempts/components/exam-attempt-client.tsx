@@ -697,13 +697,13 @@ export function ExamAttemptClient({
           <DialogHeader className="relative z-10 p-4.5 sm:p-6 pb-3.5 sm:pb-4 border-b border-border/50 bg-gradient-to-b from-primary/[0.06] via-muted/15 to-transparent shrink-0 text-left">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-                <div className="relative size-12 sm:size-14 rounded-2xl shrink-0 ring-2 ring-primary/20 dark:ring-primary/30 p-1 bg-white dark:bg-card shadow-2xs flex items-center justify-center overflow-hidden">
+                <div className="relative size-13 sm:size-15 shrink-0 select-none flex items-center justify-center">
                   <Image
                     src={logoUrl || "/images/bcs-bank-logo-512.png"}
                     alt="BCS & Bank Aspirants"
-                    width={48}
-                    height={48}
-                    className="size-full object-contain rounded-xl"
+                    width={60}
+                    height={60}
+                    className="size-full object-contain drop-shadow-2xs"
                   />
                 </div>
                 <div className="min-w-0">
