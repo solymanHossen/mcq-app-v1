@@ -238,65 +238,6 @@ export default async function PublicExamLandingPage({
                 {exam.description}
               </div>
             )}
-
-            {/* Key Metrics Strip (Clean Responsive Floating Cards) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 pt-1">
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/70 bg-card/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-2xs hover:border-primary/40 transition-all">
-                <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
-                  <Clock className="size-4 sm:size-4.5" />
-                </span>
-                <div className="min-w-0">
-                  <span className="block font-heading text-sm sm:text-base font-bold text-foreground truncate">
-                    {exam.durationMinutes} mins
-                  </span>
-                  <span className="block text-[10px] sm:text-[11px] font-semibold tracking-wider text-muted-foreground uppercase truncate">
-                    Duration
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/70 bg-card/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-2xs hover:border-primary/40 transition-all">
-                <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
-                  <HelpCircle className="size-4 sm:size-4.5" />
-                </span>
-                <div className="min-w-0">
-                  <span className="block font-heading text-sm sm:text-base font-bold text-foreground truncate">
-                    {totalQuestions} MCQs
-                  </span>
-                  <span className="block text-[10px] sm:text-[11px] font-semibold tracking-wider text-muted-foreground uppercase truncate">
-                    Questions
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/70 bg-card/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-2xs hover:border-primary/40 transition-all">
-                <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
-                  <Award className="size-4 sm:size-4.5" />
-                </span>
-                <div className="min-w-0">
-                  <span className="block font-heading text-sm sm:text-base font-bold text-foreground truncate">
-                    {totalMarks} pts
-                  </span>
-                  <span className="block text-[10px] sm:text-[11px] font-semibold tracking-wider text-muted-foreground uppercase truncate">
-                    Total Marks
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/70 bg-card/70 px-3 py-2.5 sm:px-4 sm:py-3 shadow-2xs hover:border-primary/40 transition-all">
-                <span className="flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
-                  <Calendar className="size-4 sm:size-4.5" />
-                </span>
-                <div className="min-w-0">
-                  <span className="block font-heading text-sm sm:text-base font-bold text-foreground truncate">
-                    {exam.maxAttempts}
-                  </span>
-                  <span className="block text-[10px] sm:text-[11px] font-semibold tracking-wider text-muted-foreground uppercase truncate">
-                    Max Attempts
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -324,6 +265,8 @@ export default async function PublicExamLandingPage({
                 title: exam.title,
                 durationMinutes: exam.durationMinutes,
                 maxAttempts: exam.maxAttempts,
+                totalQuestions,
+                totalMarks,
                 allowGuestAccess: exam.allowGuestAccess,
                 accessCode: exam.accessCode,
                 webcamMonitoringRequired: exam.webcamMonitoringRequired,
