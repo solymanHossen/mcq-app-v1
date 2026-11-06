@@ -124,21 +124,25 @@ export default async function PublicExamLandingPage({
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-        {/* Exam Hero Card - Clean Minimal Institutional Identity */}
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 bg-card p-4.5 sm:p-7 lg:p-9 shadow-xs space-y-4 sm:space-y-6">
-          {/* Subtle Ambient Radial Glow */}
+        {/* Exam Hero Card - Clean Minimal Institutional Identity (Profile-Flow Primary Gradient) */}
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-border/70 sm:border-primary/20 bg-gradient-to-b from-primary/[0.08] via-card to-card p-4.5 sm:p-7 lg:p-9 shadow-xs backdrop-blur-xl space-y-4 sm:space-y-6">
+          {/* Soft Ambient System Gradient Bloom - matching Profile Hero */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-80 rounded-full bg-primary/[0.04] blur-3xl dark:bg-primary/[0.06]"
+            className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-primary/[0.08] blur-3xl dark:bg-primary/[0.12]"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent"
+            className="pointer-events-none absolute -bottom-20 -left-20 size-72 rounded-full bg-primary/[0.05] blur-3xl dark:bg-primary/[0.08]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"
           />
 
           <div className="relative z-10 space-y-4 sm:space-y-5">
-            {/* 1. Big Logo & Minimal Slogan - No surrounding border ring, pure logo */}
-            <div className="flex flex-col items-center text-center space-y-2 sm:space-y-2.5">
+            {/* 1. Big Logo & Highlighted Marketing Tagline */}
+            <div className="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
               <div className="relative size-24 sm:size-28 lg:size-32 shrink-0 select-none">
                 <Image
                   src={settings?.logoUrl || "/images/bcs-bank-logo-512.png"}
@@ -150,10 +154,12 @@ export default async function PublicExamLandingPage({
                 />
               </div>
 
-              {/* Minimal Clean Marketing Slogan (No sparkles, no duplicate text) */}
-              <p className="text-xs sm:text-sm font-semibold tracking-wide text-muted-foreground">
-                Your Dream, Our Support
-              </p>
+              {/* Highlighted Official Motto / Marketing Tagline */}
+              <div className="inline-flex items-center justify-center px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/8 to-primary/15 text-primary shadow-2xs backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/20">
+                <span className="font-heading text-xs sm:text-sm font-extrabold tracking-widest uppercase text-primary">
+                  Your Dream, Our Support
+                </span>
+              </div>
             </div>
 
             {/* Assessment Meta & Policy Badges */}
