@@ -176,7 +176,7 @@ export function SubmissionResultModal({
 
           <div className="relative z-10 px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-8 space-y-5 sm:space-y-6">
             {/* Celebration Header */}
-            <div className="text-center space-y-3">
+            <div className="text-center space-y-2.5 sm:space-y-3">
               {/* Official Brand Logo - Clean, Large & Borderless */}
               <div className="relative size-24 sm:size-28 mx-auto shrink-0 select-none flex items-center justify-center transition-transform duration-300 hover:scale-105">
                 <Image
@@ -187,6 +187,15 @@ export function SubmissionResultModal({
                   priority
                   className="size-full object-contain drop-shadow-sm"
                 />
+              </div>
+
+              {/* Highlighted Official Motto / Marketing Tagline */}
+              <div className="flex items-center justify-center">
+                <div className="inline-flex items-center justify-center px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/8 to-primary/15 text-primary shadow-2xs backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/20">
+                  <span className="font-heading text-[11px] sm:text-xs font-extrabold tracking-widest uppercase text-primary">
+                    Your Dream, Our Support
+                  </span>
+                </div>
               </div>
 
               {/* Status Badge & Brand */}
