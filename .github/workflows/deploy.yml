@@ -23,6 +23,7 @@ jobs:
           cd ~/infrastructure/mcq-app/mcq-app-v1
 
           echo "📥 Pulling latest code..."
+          git reset --hard HEAD
           git pull origin main
 
           echo "🐳 Rebuilding Docker containers..."
